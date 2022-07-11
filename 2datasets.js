@@ -319,7 +319,11 @@ function IndepTtest (data1, data2, deets) {
     p *= 2;
     var d = 0;
     var sdpooled = Math.sqrt((var1 + var2) / (N1 + N2 - 2));
-    d = (M1 - M2) / sdpooled;
+    if ((N1 + N2) >= 50) {
+        d = (M1 - M2) / sdpooled;
+    } else {
+        d = ((M1 - M2) / sdpooled) * ((N1 + N2 - 3) / (N1 + N2 - 2.25)) * (Math.sqrt(((N1 + N2 -2)/ (N1 + N2))))
+    }
     d = Math.abs(d);
     var result1 = "";
     if (t == NaN) {

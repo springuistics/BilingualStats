@@ -1,0 +1,64 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link href="style_2_sets.css" rel="stylesheet" type="text/css">
+    <title>Comparing 2 Data Sets - Cohen's D</title>
+</head>
+<body>
+    <script src="2datasets.js"></script>
+    <h1  id="Title">Statistical Comparison of Two Numberical Data Sets</h1>
+    <br>
+    <h2 id="Subtitle">Answer the following questions about your data sets:</h2>
+    <br>
+    
+    <div id="questions">
+        <div id="ps">
+            <p class="question">Are your data sets paired data?*</p>
+            <br>
+            <p class="question">Are your data sets both continuous data?*</p>
+            <br>
+        </div>
+        <div id="as">
+            <div id="firsty">
+            <input type="radio" id="q1_a" class="radio_btn" name="q1" value="yes">
+            <label for="q1_a" class="answer">Yes</label>
+            <input type="radio" id="q1_b" class="radio_btn" name="q1" value="no">
+            <label for="q1_b" class="answer">No</label>
+            <br>
+            <br>
+            <br>
+            </div>
+            <div id="secondy">
+            <input type="radio" id="q2_a" name = "q2" value = "yes" class="radio_btn">
+            <label for="q2_a" class="answer">Yes</label>
+            <input type="radio" id="q2_b" name = "q2" value = "no" class="radio_btn">
+            <label for="q2_b" class="answer">No</label>
+            </div>
+        </div>
+    <p id="small_text">*Mouse over questions for explanation</p>
+    </div>
+    <div id="datasets">
+        <div id="data1">
+            <h3>Copy and paste data set 1 below:</h3>
+            <br>
+            <textarea id="data_set_1" rows="20" columns="40" text-overflow="visible" placeholder="paste data here"></textarea>
+            <br>
+        </div>
+        <div id="data2">
+            <h3>Copy and paste data set 2 below:</h3>
+            <br>
+            <textarea id="data_set_2" rows="20" columns="40" text-overflow="visible" placeholder="paste data here"></textarea>
+            <br>
+        </div>
+    </div>
+    <div id="activate">
+        <button id="button" onclick="Calculate()">Calculate!</button>
+    </div>
+    <div id="results">
+        <p id="explain_bun">The description of your test will be printed here:</p>
+        <br>
+        <p id="results_bun">Your results will be printed here:</p>
+    </div>
+
+</body>
+</html>

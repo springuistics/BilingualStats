@@ -1,21 +1,20 @@
 
-var ordinal_check = document.getElementsByName("question2").value;
 var details_of_test = "";
 var results_of_test = "";
 
 function Calculate() {
-    var pair_check = document.querySelector('input[name="question1"]:checked').value;
-    var temp = document.getElementById("data1").value;
-    var temp2 = document.getElementById("data2").value;
+    var pair_check = document.querySelector('input[name="q1"]:checked').value;
+    var temp = document.getElementById("data_set_1").value;
+    var temp2 = document.getElementById("data_set_2").value;
     var data_set1 = temp.split("\n").map(Number);
     var data_set2 = temp2.split("\n").map(Number);
     if (data_set1.includes("") || data_set2.includes("") || data_set1.includes("NaN") || data_set2.includes("NaN")) {
-        document.getElementById("results").innerHTML = "You have null values (lines with no values) or non-numbers in your data set. Please delete all null values, check to make sure there are no non-numbers in your data set, and then try again.";
+        document.getElementById("explain_bun").innerHTML = "You have null values (lines with no values) or non-numbers in your data set. Please delete all null values, check to make sure there are no non-numbers in your data set, and then try again.";
     } else if (data_set1.length < 6 || data_set2.length < 6) {
-        document.getElementById("results").innerHTML = "You need at least 6 data points in each data set in order for any proper conclusion to be drawn about your data. Please check your data sets or collect more data if necessary."
+        document.getElementById("explain_bun").innerHTML = "You need at least 6 data points in each data set in order for any proper conclusion to be drawn about your data. Please check your data sets or collect more data if necessary."
     } else {
         if (pair_check == "yes" && data_set1.length !== data_set2.length) {
-            document.getElementById("results").innerHTML = "Paired data sets should contain the same number of values (i.e., participants, instances, etc.). You have selected paired data, but your data sets have different numbers of values. Please check, ammend as necessary and retry.";
+            document.getElementById("explain_bun").innerHTML = "Paired data sets should contain the same number of values (i.e., participants, instances, etc.). You have selected paired data, but your data sets have different numbers of values. Please check, ammend as necessary and retry.";
         } else {
             Begin(data_set1, data_set2);
         }
@@ -28,14 +27,15 @@ function Begin (data1, data2) {
     }
     var dummy1 = CopyArray(data1);
     var dummy2 = CopyArray(data2);
-    var pair_check = document.querySelector('input[name="question1"]:checked').value;
-    if (ordinal_check == "yes") {
+    var pair_check = document.querySelector('input[name="q1"]:checked').value;
+    var ordinal_check = document.querySelector('input[name="q2"]:checked').value;
+    if (ordinal_check == "no") {
         if (pair_check == "yes") {
             details_of_test = "Due to the ordinal nature of the data and the fact that the data was paired, a Wilcoxon Signed-Rank Test was used.";
-            Wilcoxon(data1, data2);
+            Wilcoxon(data1, data2, details_of_test);
         } else if (pair_check == "no") {
             details_of_test = "Due to the ordinal nature of the data and the fact that the data was not paired, a Mann-Whitney Test was used.";
-            MannWhiteny(data1, data2);
+            MannWhiteny(data1, data2, details_of_test);
         }
     } else {
         var check1 = Shapiro_Wilk(dummy1);
@@ -43,18 +43,18 @@ function Begin (data1, data2) {
         if (check1 == false || check2 == false) {
             if (pair_check == "yes") {
                 details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed the Shapiro-Wilk Test of normalcy, and therefore the data was treated as orindal. Since the data was paired, a Wilcoxon Signed-Rank Test was used.";
-                Wilcoxon(data1, data2);
+                Wilcoxon(data1, data2, details_of_test);
             } else if (pair_check == "no") {
                 details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed the Shapiro-Wilk Test of normalcy, and therefore the data was treated as orindal. Since the data was not paired, a Mann-Whitney Test was used.";
-                MannWhiteny(data1, data2);
+                MannWhiteny(data1, data2, details_of_test);
             }
         } else {
             if (pair_check == "yes") {
                 details_of_test = "Due to the continous and normal nature of the data as checked by a Shapiro-Wilk Test, and the fact that the data was paired, a dependent (or paired) t-test was used.";
-                DepTtest(data1, data2);
+                DepTtest(data1, data2, details_of_test);
             } else if (pair_check == "no") {
                 details_of_test = "Due to the continous and normal nature of the data as checked by a Shapiro-Wilk Test, and the fact that the data was not paired, an independent t-test was used.";
-                IndepTtest(data1, data2);
+                IndepTtest(data1, data2, details_of_test);
             }
         }
     }
@@ -215,15 +215,15 @@ function Shapiro_Wilk (data) {
     }
 }
 
-function Wilcoxon (data1, data2) {
+function Wilcoxon (data1, data2, deets) {
 
 }
 
-function MannWhiteny (data1, data2) {
+function MannWhiteny (data1, data2, deets) {
 
 }
 
-function DepTtest (data1, data2) {
+function DepTtest (data1, data2, deets) {
     var N = data1.length;
     var Nm = N -1;
     var sumdif = 0;
@@ -248,11 +248,43 @@ function DepTtest (data1, data2) {
         p = 1 - (cdf(t));
     }
     p *= 2;
-    results_of_test = "The t-value of these groups is: " + t + " and the p-value is: " + p;
-    document.getElementById("results").innerHTML = results_of_test;
+    var variance = 0;
+    for (var number of ss) {
+        variance += ((number - numerator) ** 2); 
+    }
+    var sdford = Math.sqrt(variance / Nm);
+    var d = numerator / sdford;
+    d = Math.abs(d);
+    var result1 = "";
+    if (t == NaN) {
+        result1 = "Your results were too similar and thus incalculable. Did you accidentally insert the same data set twice?"
+    } else if (p <= .05) {
+        result1 = "There is a significant difference in the two groups: "
+    } else {
+        result1 = "There is no significant difference in the two groups: "
+    }
+    var result3 = "";
+    if (d < 0.2) {
+        result3 = "The effect size, as measured by Cohen's d suggests that there is no significant effect."
+    } else if (d < 0.5) {
+        result3 = "The effect size, as measured by Cohen's d suggests that there is a small effect."
+    } else if (d < 0.8) {
+        result3 = "The effect size, as measured by Cohen's d suggests that there is a moderate effect."
+    } else {result3 = "The effect size, as measured by Cohen's d suggests that there is a large effect."}
+    t = t.toFixed(2);
+    d = d.toFixed(2);
+    if (p < 0.01) {
+        var result2 = "t(" + Nm + ") = " + t + ", p < 0.01, d = " + d + ". ";
+    } else {
+        p = p.toFixed(2);
+        var result2 = "t(" + Nm + ") = " + t + ", p = " + p + ", d = " + d + ". ";
+    }
+    results_of_test = result1 + result2 + result3;
+    document.getElementById("explain_bun").innerHTML = deets;
+    document.getElementById("results_bun").innerHTML = results_of_test;
 }
 
-function IndepTtest (data1, data2) {
+function IndepTtest (data1, data2, deets) {
     var N1 = data1.length;
     var N2 = data2.length;
     var sum1 = 0;
@@ -267,11 +299,11 @@ function IndepTtest (data1, data2) {
     var M2 = sum2 / N2;
     var var1 = 0;
     for (var number of data1) {
-        var1 += ((number - M1)^2); 
+        var1 += ((number - M1) ** 2); 
     }
     var var2 = 0;
     for (var number of data2)  {
-        var2 += ((number - M2)^2);
+        var2 += ((number - M2) ** 2);
     }
     var Nm1 = N1 - 1;
     var Nm2 = N2 -1;
@@ -285,11 +317,36 @@ function IndepTtest (data1, data2) {
         p = 1 - (cdf(t));
     }
     p *= 2;
-    results_of_test = "The t-value of these groups is: " + t + " and the p-value is: " + p;
-    document.getElementById("results").innerHTML = results_of_test;
+    var d = 0;
+    var sdpooled = Math.sqrt((var1 + var2) / (N1 + N2 - 2));
+    d = (M1 - M2) / sdpooled;
+    d = Math.abs(d);
+    var result1 = "";
+    if (t == NaN) {
+        result1 = "Your results were too similar and thus incalculable. Did you accidentally insert the same data set twice?"
+    } else if (p <= .05) {
+        result1 = "There is a significant difference in the two groups: "
+    } else {
+        result1 = "There is no significant difference in the two groups: "
+    }
+    var result3 = "";
+    if (d < 0.2) {
+        result3 = "The effect size, as measured by Cohen's d suggests that there is no significant effect."
+    } else if (d < 0.5) {
+        result3 = "The effect size, as measured by Cohen's d suggests that there is a small effect."
+    } else if (d < 0.8) {
+        result3 = "The effect size, as measured by Cohen's d suggests that there is a moderate effect."
+    } else {result3 = "The effect size, as measured by Cohen's d suggests that there is a large effect."}
+    t = t.toFixed(2);
+    d = d.toFixed(2);
+    if (p < 0.01) {
+        var result2 = "t(" + Nm + ") = " + t + ", p < 0.01, d = " + d + ". ";
+    } else {
+        p = p.toFixed(2);
+        var result2 = "t(" + Nm + ") = " + t + ", p = " + p + ", d = " + d + ". ";
+    }
+    results_of_test = result1 + result2 + result3;
+    document.getElementById("explain_bun").innerHTML = deets;
+    document.getElementById("results_bun").innerHTML = results_of_test;
 }
 
-
-function DisplayResults () {
-
-}

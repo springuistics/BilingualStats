@@ -23,6 +23,11 @@ function Calculate() {
 }
 
 function Begin (data1, data2) {
+    function CopyArray (array) {
+        return array.slice(0);
+    }
+    var dummy1 = CopyArray(data1);
+    var dummy2 = CopyArray(data2);
     var pair_check = document.querySelector('input[name="question1"]:checked').value;
     if (ordinal_check == "yes") {
         if (pair_check == "yes") {
@@ -33,8 +38,8 @@ function Begin (data1, data2) {
             MannWhiteny(data1, data2);
         }
     } else {
-        var check1 = Shapiro_Wilk(data1);
-        var check2 = Shapiro_Wilk(data2);
+        var check1 = Shapiro_Wilk(dummy1);
+        var check2 = Shapiro_Wilk(dummy2);
         if (check1 == false || check2 == false) {
             if (pair_check == "yes") {
                 details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed the Shapiro-Wilk Test of normalcy, and therefore the data was treated as orindal. Since the data was paired, a Wilcoxon Signed-Rank Test was used.";
@@ -131,15 +136,16 @@ function Shapiro_Wilk (data) {
         }
         return ret_val;
     }
-    x = data.sort(function (a, b) {return a - b});
+    
+    var x = data.sort(function (a, b) {return a - b});
     var N = data.length;
     var Nn2 = Math.floor(N/2);
     var a = new Array(Math.floor(Nn2) + 1);
     var c1 = [ 0, 0.221157, -0.147981, -2.07119, 4.434685, -2.706056 ];
     var c2 = [ 0, 0.042981, -0.293762, -1.752461, 5.682633, -3.582633 ];
     var i, j, i1;
-    var ssassx, summ2, ssumm2, gamma, range;
-    var a1, a2, an, m, s, sa, xi, sx, xx, y, w1;
+    var ssassx, summ2, ssumm2, range;
+    var a1, a2, an, sa, xi, sx, xx, w1;
     var fac, asa, an25, ssa, sax, rsn, ssx, xsx;
     an = N;
     an25 = an + 0.25;
@@ -218,8 +224,32 @@ function MannWhiteny (data1, data2) {
 }
 
 function DepTtest (data1, data2) {
-    var M1 = data1.reduce((a, b) => a + b, 0) / data1.length;
-    var M2 = data2.reduce((a, b) => a + b, 0) /data2.length;
+    var N = data1.length;
+    var Nm = N -1;
+    var sumdif = 0;
+    var ss = [];
+    for (let i = 0; i < data1.length; i++) {
+        let tempy = (data2[i] - data1[i]);
+        sumdif += tempy;
+        ss.push(tempy);
+    }
+    var ss2 = 0;
+    var numerator = sumdif / N;
+    for (let i = 0; i < ss.length; i++) {
+        ss2 += ((ss[i] - numerator) ** 2);
+    }
+    var ss3 = ss2 / Nm;
+    var denominator = ss3 / data1.length;
+    var t = numerator / (Math.sqrt(denominator));
+    var p = 0;
+    if (t < 0) {
+        p = cdf(t);
+    } else if (t > 0) {
+        p = 1 - (cdf(t));
+    }
+    p *= 2;
+    results_of_test = "The t-value of these groups is: " + t + " and the p-value is: " + p;
+    document.getElementById("results").innerHTML = results_of_test;
 }
 
 function IndepTtest (data1, data2) {

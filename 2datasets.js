@@ -10,23 +10,19 @@ function Calculate() {
     var data_set2 = temp2.split("\n").map(Number);
     if (data_set1.includes("") || data_set2.includes("") || data_set1.includes("NaN") || data_set2.includes("NaN")) {
         document.getElementById("explain_bun").innerHTML = "You have null values (lines with no values) or non-numbers in your data set. Please delete all null values, check to make sure there are no non-numbers in your data set, and then try again.";
-    } else if (data_set1.length < 6 || data_set2.length < 6) {
+    } 
+    if (data_set1.length < 6 || data_set2.length < 6) {
         document.getElementById("explain_bun").innerHTML = "You need at least 6 data points in each data set in order for any proper conclusion to be drawn about your data. Please check your data sets or collect more data if necessary."
-    } else {
-        if (pair_check == "yes" && data_set1.length !== data_set2.length) {
+    } 
+    if (pair_check == "yes" && data_set1.length !== data_set2.length) {
             document.getElementById("explain_bun").innerHTML = "Paired data sets should contain the same number of values (i.e., participants, instances, etc.). You have selected paired data, but your data sets have different numbers of values. Please check, ammend as necessary and retry.";
         } else {
             Begin(data_set1, data_set2);
         }
-    }
 }
 
+
 function Begin (data1, data2) {
-    function CopyArray (array) {
-        return array.slice(0);
-    }
-    var dummy1 = CopyArray(data1);
-    var dummy2 = CopyArray(data2);
     var pair_check = document.querySelector('input[name="q1"]:checked').value;
     var ordinal_check = document.querySelector('input[name="q2"]:checked').value;
     if (ordinal_check == "no") {
@@ -38,6 +34,11 @@ function Begin (data1, data2) {
             MannWhiteny(data1, data2, details_of_test);
         }
     } else {
+        function CopyArray (array) {
+            return array.slice(0);
+        }
+        var dummy1 = CopyArray(data1);
+        var dummy2 = CopyArray(data2);
         var check1 = Shapiro_Wilk(dummy1);
         var check2 = Shapiro_Wilk(dummy2);
         if (check1 == false || check2 == false) {
@@ -220,7 +221,167 @@ function Wilcoxon (data1, data2, deets) {
 }
 
 function MannWhiteny (data1, data2, deets) {
+    var N1 = data1.length;
+    var N2 = data2.length;
+    var TotalN = N1 + N2;
+    var superdata = [];
+    data1.forEach(function(number){
+        superdata.push({"Group":1, "No": number, "Rank": number});
+    });
+    data2.forEach(function(number){
+        superdata.push({"Group":2, "No": + number, "Rank": number});
+    });
+    var sorted = superdata.slice().sort((a, b) => a.No - b.No);
+    for (let i = 0; i < sorted.length; i++) {
+        sorted[i].Rank = i + 1;
+    }
+    var just_numbers = [];
+    for (let i = 0; i < superdata.length; i++) {
+        just_numbers.push(superdata[i].No);
+    }
+    Array.prototype.contains = function(v) {
+        for (var i = 0; i < this.length; i++) {
+          if (this[i] === v) return true;
+        }
+        return false;
+      };
+      
+      Array.prototype.unique = function() {
+        var arr = [];
+        for (var i = 0; i < this.length; i++) {
+          if (!arr.contains(this[i])) {
+            arr.push(this[i]);
+          }
+        }
+        return arr;
+      }
+    var uniques = just_numbers.unique();
+    var ties = [];
+    for (let i = 0; i < uniques.length; i++) {
+        var temp_a = 0;
+        for (let j = 0; j < just_numbers.length; j++){
+            if (uniques[i] == just_numbers[j]){
+            temp_a += 1;
+            }
+        }
+        if (temp_a > 1) {
+            ties.push(uniques[i]);
+        }
+    }
+    var ties2 = [];
+    for (let i = 0; i < ties.length; i++) {
+        for (let j = 0; j < just_numbers.length; j++){    
+            if (ties[i] == just_numbers[j]) {
+            ties2.push(just_numbers[j]);
+            }
+        }
+    }
+    var counter = ties.length;
+    var ha = [];
+    if (counter > 0) {
+        for (let i = 0; i < ties.length; i++){
+            var temp_d = 0;
+            for (let j = 0; j < ties2.length; j++){
+                if (ties[i] == ties2[j]){
+                    temp_d += 1;
+                }
+            }
+            ha.push({"ties": ties[i], "no": temp_d})
+        };
+        
+        var newnum = [];
+        for (let i = 0; i < ha.length; i ++) {
+            let temp_val = 0;
+            for (j = 0; j < superdata.length; j++) {
+                if (superdata[j].No === ha[i].ties){
+                temp_val += superdata[j].Rank;
+                }
+            }
+            if (temp_val > 1) {
+                let me = temp_val / ha[i].no;
+                let you = ha[i].ties;
+                newnum.push({"tie":you, "val":me});
+            }
+        };
+        for (let i = 0; i < superdata.length; i ++) {
+            for (let j = 0; j < newnum.length; j++) {
+            if (superdata[i].No == newnum[j].tie) {
+                superdata[i].Rank = newnum[j].val;
+            } 
+        };
+        }
+    }
 
+
+    var data1_ranks = [];
+    var data2_ranks = [];
+    superdata.forEach(function(number, index) {
+        if (superdata[index].Group === 1) {
+            data1_ranks.push(superdata[index].Rank);
+        }
+        if (superdata[index].Group ===2) {
+            data2_ranks.push(superdata[index].Rank);
+        }
+    });
+    var sumR1 = 0;
+    for (let i = 0; i < data1_ranks.length; i++) {
+        sumR1 += data1_ranks[i];
+    }
+    var sumR2 = 0;
+    for (let i = 0; i < data2_ranks.length; i++) {
+        sumR2 += data2_ranks[i];
+    }
+    var U_1 = (N1 * N2) + ((N1 * (N1 + 1)) / 2) - sumR1;
+    var U_2 = (N1 * N2) + ((N2 * (N2 + 1)) / 2) - sumR2;
+    var mu = (N1 * N2) / 2;
+    if (counter == 0) {
+        var se = Math.sqrt((N1 * N2 * (N1 + N2 + 1)) / 12);
+        var Z = 0;
+        if (U_1 > U_2) {
+            Z = (U_2 - mu) / se;
+        } else {
+            Z = (U_1 - mu) / se;
+        }
+
+    } else {
+        var fixer = 0;
+        for (let i = 0; i < ha.length; i ++) {
+            fixer += (((ha[i].no) **3) - ha[i].no) / 12
+        }
+        var se = (Math.sqrt((N1 * N2) / (TotalN * (TotalN -1)))) * (Math.sqrt((((TotalN ** 3) - TotalN) / 12) - (fixer)))
+        if (U_1 > U_2) {
+            Z = (U_2 - mu) / se;
+        } else {
+            Z = (U_1 - mu) / se;
+        }
+
+    }
+    var p = 2 * (cdf(Z));
+    var r = (Math.abs(Z)) / (Math.sqrt(TotalN));
+    Z = Z.toFixed(2);
+    p = p.toFixed(2);
+    r = r.toFixed(2);
+    var result1 = "";
+    if (p <= .05) {
+        result1 = "There is a significant difference in the two groups: "
+    } else {
+        result1 = "There is no significant difference in the two groups: "
+    }
+    var result3 = "";
+    if (r < 0.3) {
+        result3 = "The effect size suggests a small effect."
+    } else if (r < 0.5) {
+        result3 = "The effect size suggests a medium effect."
+    } else {result3 = "The effect size suggests a large effect."}
+
+    if (p < 0.01) {
+        var result2 = "z = " + Z + ", p < 0.01, r = " + r + ". ";
+    } else {
+        var result2 = "z = " + Z + ", p = " + p + ", r = " + r + ". ";
+    }
+    results_of_test = result1 + result2 + result3;
+    document.getElementById("explain_bun").innerHTML = deets;
+    document.getElementById("results_bun").innerHTML = results_of_test;
 }
 
 function DepTtest (data1, data2, deets) {

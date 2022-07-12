@@ -217,6 +217,150 @@ function Shapiro_Wilk (data) {
 }
 
 function Wilcoxon (data1, data2, deets) {
+    var N1 = data1.length;
+    var N2 = data2.length;
+    var totalN = N1 + N2;
+    var differences = [];
+    for (let i = 0; i < data1.length; i++) {
+        let diff = data2[i] - data1[i];
+        differences.push(diff);
+    }
+    var absolutes = [];
+    for (let i = 0; i < differences.length; i ++){
+        let abs = Math.abs(differences[i]);
+        absolutes.push(abs);
+    }
+    var superdata = [];
+    for (let i = 0; i < differences.length; i++){
+        let posneg = "";
+        if (differences[i] < 0) {
+            posneg = "neg";
+        } else {posneg ="pos"}
+        superdata.push({"PN":posneg, "abs":absolutes[i], "Rank":absolutes[i]});
+    }
+    var sorted = superdata.slice().sort((a, b) => a.abs - b.abs);
+    for (let i = 0; i < sorted.length; i++) {
+        sorted[i].Rank = i + 1;
+    }
+    var just_numbers = [];
+    for (let i = 0; i < superdata.length; i++) {
+        just_numbers.push(superdata[i].abs);
+    }
+    Array.prototype.contains = function(v) {
+        for (var i = 0; i < this.length; i++) {
+          if (this[i] === v) return true;
+        }
+        return false;
+      };
+      
+      Array.prototype.unique = function() {
+        var arr = [];
+        for (var i = 0; i < this.length; i++) {
+          if (!arr.contains(this[i])) {
+            arr.push(this[i]);
+          }
+        }
+        return arr;
+      }
+    var uniques = just_numbers.unique();
+    var ties = [];
+    for (let i = 0; i < uniques.length; i++) {
+        var temp_a = 0;
+        for (let j = 0; j < just_numbers.length; j++){
+            if (uniques[i] == just_numbers[j]){
+            temp_a += 1;
+            }
+        }
+        if (temp_a > 1) {
+            ties.push(uniques[i]);
+        }
+    }
+    var ties2 = [];
+    for (let i = 0; i < ties.length; i++) {
+        for (let j = 0; j < just_numbers.length; j++){    
+            if (ties[i] == just_numbers[j]) {
+            ties2.push(just_numbers[j]);
+            }
+        }
+    }
+    var counter = ties.length;
+    var ha = [];
+    if (counter > 0) {
+        for (let i = 0; i < ties.length; i++){
+            var temp_d = 0;
+            for (let j = 0; j < ties2.length; j++){
+                if (ties[i] == ties2[j]){
+                    temp_d += 1;
+                }
+            }
+            ha.push({"ties": ties[i], "no": temp_d})
+        };
+        
+        var newnum = [];
+        for (let i = 0; i < ha.length; i ++) {
+            let temp_val = 0;
+            for (j = 0; j < superdata.length; j++) {
+                if (superdata[j].No === ha[i].ties){
+                temp_val += superdata[j].Rank;
+                }
+            }
+            if (temp_val > 1) {
+                let me = temp_val / ha[i].no;
+                let you = ha[i].ties;
+                newnum.push({"tie":you, "val":me});
+            }
+        };
+        for (let i = 0; i < superdata.length; i ++) {
+            for (let j = 0; j < newnum.length; j++) {
+            if (superdata[i].No == newnum[j].tie) {
+                superdata[i].Rank = newnum[j].val;
+            } 
+        };
+        }
+    }
+    var signed_ranks = [];
+    for (let i = 0; i < superdata.length; i++){
+        let bob = superdata[i].Rank;
+        if (superdata[i].posneg === "neg") {
+            bob = bob * -1;
+        }
+        signed_ranks.push(bob);
+    }
+    var sumSR = 0;
+    for (let i = 0; i < signed_ranks.length; i++) {
+        if (signed_ranks[i] >= 0){
+        sumSR += signed_ranks[i];
+        }
+    }
+    var mu = ((totalN * (totalN + 1))/4);
+    var se = Math.sqrt(((totalN * (totalN + 1)) * ((2 * totalN) + 1)) / 24);
+    var Z = (sumSR - mu) / se;
+    var p = 2 * (cdf(Z));
+    var r = (Math.abs(Z)) / (Math.sqrt(totalN));
+    Z = Z.toFixed(2);
+    p = p.toFixed(2);
+    r = r.toFixed(2);
+    var result1 = "";
+    if (p <= .05) {
+        result1 = "There is a significant difference in the two groups: "
+    } else {
+        result1 = "There is no significant difference in the two groups: "
+    }
+    var result3 = "";
+    if (r < 0.3) {
+        result3 = "The effect size suggests a small effect."
+    } else if (r < 0.5) {
+        result3 = "The effect size suggests a medium effect."
+    } else {result3 = "The effect size suggests a large effect."}
+
+    if (p < 0.01) {
+        var result2 = "z = " + Z + ", p < 0.01, r = " + r + ". ";
+    } else {
+        var result2 = "z = " + Z + ", p = " + p + ", r = " + r + ". ";
+    }
+    results_of_test = result1 + result2 + result3;
+    document.getElementById("explain_bun").innerHTML = deets;
+    document.getElementById("results_bun").innerHTML = results_of_test;
 
 }
 

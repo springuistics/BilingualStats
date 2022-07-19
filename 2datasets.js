@@ -3,22 +3,36 @@ var details_of_test = "";
 var results_of_test = "";
 
 function Calculate() {
+    document.getElementById('error_text').style.display = "none";
+    var pair_c1 = document.querySelector("[name=q1]:checked");
+    var ord_c1 = document.querySelector("[name=q2]:checked");
+    if (!pair_c1) {
+        document.getElementById('error_text').innerHTML = "Please select whether or not the data is paired. For an explanation, mouse over the question."
+        document.getElementById('error_text').style.display = "inline";
+    } else if (!ord_c1) {
+        document.getElementById("error_text").innerHTML = "Please select whether or not the data is continuous. For an explanation, mouse over the question."
+        document.getElementById('error_text').style.display = "inline";
+    } else {
     var pair_check = document.querySelector('input[name="q1"]:checked').value;
     var temp = document.getElementById("data_set_1").value;
     var temp2 = document.getElementById("data_set_2").value;
     var data_set1 = temp.split("\n").map(Number);
     var data_set2 = temp2.split("\n").map(Number);
     if (data_set1.includes("") || data_set2.includes("") || data_set1.includes("NaN") || data_set2.includes("NaN")) {
-        document.getElementById("explain_bun").innerHTML = "You have null values (lines with no values) or non-numbers in your data set. Please delete all null values, check to make sure there are no non-numbers in your data set, and then try again.";
+        document.getElementById("error_text").innerHTML = "You have null values (lines with no values) or non-numbers in your data set. Please delete all null values, check to make sure there are no non-numbers in your data set, and then try again.";
+        document.getElementById('error_text').style.display = "inline";
     } 
     if (data_set1.length < 6 || data_set2.length < 6) {
-        document.getElementById("explain_bun").innerHTML = "You need at least 6 data points in each data set in order for any proper conclusion to be drawn about your data. Please check your data sets or collect more data if necessary."
+        document.getElementById("error_text").innerHTML = "You need at least 6 data points in each data set in order for any proper conclusion to be drawn about your data. Please check your data sets or collect more data if necessary."
+        document.getElementById('error_text').style.display = "inline";
     } 
     if (pair_check == "yes" && data_set1.length !== data_set2.length) {
-            document.getElementById("explain_bun").innerHTML = "Paired data sets should contain the same number of values (i.e., participants, instances, etc.). You have selected paired data, but your data sets have different numbers of values. Please check, ammend as necessary and retry.";
+            document.getElementById("error_text").innerHTML = "Paired data sets should contain the same number of values (i.e., participants, instances, etc.). You have selected paired data, but your data sets have different numbers of values. Please check, amend as necessary and retry.";
+            document.getElementById('error_text').style.display = "inline";
         } else {
             Begin(data_set1, data_set2);
         }
+}
 }
 
 
@@ -43,18 +57,18 @@ function Begin (data1, data2) {
         var check2 = Shapiro_Wilk(dummy2);
         if (check1 == false || check2 == false) {
             if (pair_check == "yes") {
-                details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed the Shapiro-Wilk Test of normalcy, and therefore the data was treated as orindal. Since the data was paired, a Wilcoxon Signed-Rank Test was used.";
+                details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed the Shapiro-Wilk Test of normalcy, and therefore the data was treated as ordinal. Since the data was paired, a Wilcoxon Signed-Rank Test was used.";
                 Wilcoxon(data1, data2, details_of_test);
             } else if (pair_check == "no") {
-                details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed the Shapiro-Wilk Test of normalcy, and therefore the data was treated as orindal. Since the data was not paired, a Mann-Whitney Test was used.";
+                details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed the Shapiro-Wilk Test of normalcy, and therefore the data was treated as ordinal. Since the data was not paired, a Mann-Whitney Test was used.";
                 MannWhiteny(data1, data2, details_of_test);
             }
         } else {
             if (pair_check == "yes") {
-                details_of_test = "Due to the continous and normal nature of the data as checked by a Shapiro-Wilk Test, and the fact that the data was paired, a dependent (or paired) t-test was used.";
+                details_of_test = "Due to the continuous and normal nature of the data as checked by a Shapiro-Wilk Test, and the fact that the data was paired, a dependent (or paired) t-test was used.";
                 DepTtest(data1, data2, details_of_test);
             } else if (pair_check == "no") {
-                details_of_test = "Due to the continous and normal nature of the data as checked by a Shapiro-Wilk Test, and the fact that the data was not paired, an independent t-test was used.";
+                details_of_test = "Due to the continuous and normal nature of the data as checked by a Shapiro-Wilk Test, and the fact that the data was not paired, an independent t-test was used.";
                 IndepTtest(data1, data2, details_of_test);
             }
         }

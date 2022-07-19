@@ -6,35 +6,77 @@
     text-shadow: 3px 3px 8px gray;
 }
 
+#ps #hover1 {
+    position: absolute;
+    width: 400px;
+    border: 3px black;
+    right: 10px;
+    border-radius: 5px;
+    background-color: rgb(250, 180, 94, 0.95);
+    color: rgb(143, 0, 0);
+    display: none;
+    text-align: left;
+}
+
+#ps #hover2 {
+    position: absolute;
+    width: 400px;
+    border: 3px black;
+    right: 10px;
+    border-radius: 5px;
+    background-color: rgb(250, 180, 94, 0.95);
+    color: rgb(143, 0, 0);
+    display: none;
+    text-align: left;
+}
+
+#qq1:hover + #hover1 {
+    display: block;
+}
+
+#qq2:hover + #hover2 {
+    display: block;
+}
+
 #Subtitle {
     margin: auto;
     text-align: center;
 }
 
 #small_text{
-    font-size: 10px;
+    font-size: 12px;
     text-align: right;
 }
 
-
-#questions {
+#bigger {
     width: 90%;
     border: 3px;
     background-color: aliceblue;
     margin: auto;
     text-align: center;
+}
+
+#questions {
     display: grid;
     grid-template-columns: repeat(2, 50%);
     gap: 1rem;
 }
 
+#error_text {
+    font-size: 20px;
+    font-weight: bold;
+    color: rgb(199, 0, 0);
+    
+}
 
 #questions #ps {
     grid-column:1;
+    position: relative;
     margin-top: 20px;
     padding: 5px;
     text-align: right;
 }
+
 
 #questions #ps.question {
     font-size: 14px;
@@ -98,6 +140,17 @@
 
 #results {
     margin-top: 10px;
+    width: 80%;
+    border: 3px;
+    border-color: rgb(102, 0, 0);
+    background-color: rgb(250, 211, 161);
     margin: auto;
-    text-align: left;
+    text-align: center;
+
+}
+
+#Citation {
+    margin-top: 10px;
+    margin: auto;
+    text-align: center;
 }

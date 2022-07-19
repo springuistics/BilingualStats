@@ -21,12 +21,10 @@ function Calculate() {
     if (data_set1.includes("") || data_set2.includes("") || data_set1.includes("NaN") || data_set2.includes("NaN")) {
         document.getElementById("error_text").innerHTML = "You have null values (lines with no values) or non-numbers in your data set. Please delete all null values, check to make sure there are no non-numbers in your data set, and then try again.";
         document.getElementById('error_text').style.display = "inline";
-    } 
-    if (data_set1.length < 6 || data_set2.length < 6) {
+    } else if (data_set1.length < 6 || data_set2.length < 6) {
         document.getElementById("error_text").innerHTML = "You need at least 6 data points in each data set in order for any proper conclusion to be drawn about your data. Please check your data sets or collect more data if necessary."
         document.getElementById('error_text').style.display = "inline";
-    } 
-    if (pair_check == "yes" && data_set1.length !== data_set2.length) {
+    } else if (pair_check == "yes" && data_set1.length !== data_set2.length) {
             document.getElementById("error_text").innerHTML = "Paired data sets should contain the same number of values (i.e., participants, instances, etc.). You have selected paired data, but your data sets have different numbers of values. Please check, amend as necessary and retry.";
             document.getElementById('error_text').style.display = "inline";
         } else {

@@ -74,7 +74,6 @@ function Begin (data1, data2) {
 }
 
 function cdf(x) {
-
     // constants
     var p  =  0.2316419;
     var b1 =  0.31938153;
@@ -82,13 +81,27 @@ function cdf(x) {
     var b3 =  1.781477937;
     var b4 = -1.821255978;
     var b5 =  1.330274429;
-
     var t = 1 / (1 + p * Math.abs(x));
     var Z = Math.exp(-x * x / 2) / Math.sqrt(2 * Math.PI);
     var y = 1 - Z * ((((b5 * t + b4) * t + b3) * t + b2) * t + b1) * t;
-
     return (x > 0) ? y : 1 - y;
 }
+
+function StatCom(q,i,j,b) {
+    var zz=1; var z=zz; var k=i; while(k<=j) { zz=zz*q*k/(k-b); z=z+zz; k=k+2 }
+    return z
+    }
+
+function StudT(t,n) {
+    var Pi=Math.PI; var PiD2=Pi/2; var PiD4=Pi/4; var Pi2=2*Pi
+    t=Math.abs(t); var w=t/Math.sqrt(n); var th=Math.atan(w)
+    if(n==1) { return 1-th/PiD2 }
+    var sth=Math.sin(th); var cth=Math.cos(th)
+    if((n%2)==1)
+        { return 1-(th+sth*cth*StatCom(cth*cth,2,n-3,-1))/PiD2 }
+        else
+        { return 1-sth*StatCom(cth*cth,1,n-3,-1) }
+    }
 
 function normalQuantile(p, mu, sigma){
     var p, q, r, val;
@@ -222,7 +235,7 @@ function Shapiro_Wilk (data) {
             return true;
         } else {return false;}
     } else {
-        if (w > .94) {
+        if (w > .90) {
             return true;
         } else {return false;}
     }
@@ -359,9 +372,10 @@ function Wilcoxon (data1, data2, deets) {
         result1 = "There is no significant difference in the two groups: "
     }
     var result3 = "";
-    if (r < 0.3) {
+    var tempr = Math.abs(r);
+    if (tempr < 0.3) {
         result3 = "The effect size suggests a small effect."
-    } else if (r < 0.5) {
+    } else if (tempr < 0.5) {
         result3 = "The effect size suggests a medium effect."
     } else {result3 = "The effect size suggests a large effect."}
 
@@ -524,9 +538,10 @@ function MannWhiteny (data1, data2, deets) {
         result1 = "There is no significant difference in the two groups: "
     }
     var result3 = "";
-    if (r < 0.3) {
+    var tempr = Math.abs(r);
+    if (tempr < 0.3) {
         result3 = "The effect size suggests a small effect."
-    } else if (r < 0.5) {
+    } else if (tempr < 0.5) {
         result3 = "The effect size suggests a medium effect."
     } else {result3 = "The effect size suggests a large effect."}
 
@@ -542,7 +557,7 @@ function MannWhiteny (data1, data2, deets) {
 
 function DepTtest (data1, data2, deets) {
     var N = data1.length;
-    var Nm = N -1;
+    var Nm = N - 1;
     var sumdif = 0;
     var ss = [];
     for (let i = 0; i < data1.length; i++) {
@@ -558,13 +573,7 @@ function DepTtest (data1, data2, deets) {
     var ss3 = ss2 / Nm;
     var denominator = ss3 / data1.length;
     var t = numerator / (Math.sqrt(denominator));
-    var p = 0;
-    if (t < 0) {
-        p = cdf(t);
-    } else if (t > 0) {
-        p = 1 - (cdf(t));
-    }
-    p *= 2;
+    var p = StudT(t, Nm);
     var variance = 0;
     for (var number of ss) {
         variance += ((number - numerator) ** 2); 
@@ -623,17 +632,15 @@ function IndepTtest (data1, data2, deets) {
         var2 += ((number - M2) ** 2);
     }
     var Nm1 = N1 - 1;
-    var Nm2 = N2 -1;
-    var S1 = Math.sqrt(var1 / Nm1);
-    var S2 = Math.sqrt(var2 / Nm2);
-    var t = (M1 - M2) / (Math.sqrt(((S1^2)/N1)+((S2^2)/N2)));
-    var p = 0;
-    if (t < 0) {
-        p = cdf(t);
-    } else if (t > 0) {
-        p = 1 - (cdf(t));
-    }
-    p *= 2;
+    var Nm2 = N2 - 1;
+    var S1 = var1 / Nm1;
+    var S2 = var2 / Nm2;
+    var s_help = ((Nm1 / (Nm1 + Nm2))*S1) + ((Nm2 / (Nm1 + Nm2))*S2);
+    var ss1 = s_help / N1;
+    var ss2 = s_help / N2;
+    var t = (M1 - M2) / (Math.sqrt(ss1 + ss2));
+    var df = (Nm1 + Nm2);
+    var p = StudT(t, df);
     var d = 0;
     var sdpooled = Math.sqrt((var1 + var2) / (N1 + N2 - 2));
     if ((N1 + N2) >= 50) {
@@ -661,10 +668,10 @@ function IndepTtest (data1, data2, deets) {
     t = t.toFixed(2);
     d = d.toFixed(2);
     if (p < 0.01) {
-        var result2 = "t(" + Nm + ") = " + t + ", p < 0.01, d = " + d + ". ";
+        var result2 = "t(" + df + ") = " + t + ", p < 0.01, d = " + d + ". ";
     } else {
         p = p.toFixed(2);
-        var result2 = "t(" + Nm + ") = " + t + ", p = " + p + ", d = " + d + ". ";
+        var result2 = "t(" + df + ") = " + t + ", p = " + p + ", d = " + d + ". ";
     }
     results_of_test = result1 + result2 + result3;
     document.getElementById("explain_bun").innerHTML = deets;

@@ -80,6 +80,22 @@
     gap: 10px;
     padding: 10px;
 }
+.g1 {
+    margin: auto;
+    text-align: right;
+}
+.g2 {
+    margin: auto;
+    text-align: left;
+}
+.g3 {
+    margin: auto;
+    text-align: right;
+}
+.g4 {
+    margin: auto;
+    text-align: left;
+}
 
 .results {
     margin: auto;
@@ -100,6 +116,8 @@
     height: 24px;
     font-size: 14px;
     width: auto;
+    padding-left: 5px;
+    padding-right: 5px;
     border-style: outset;
     margin-bottom: 10px;
 }

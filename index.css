@@ -60,6 +60,16 @@
     text-align: center;
     padding-bottom: 20px;
 }
+#border_help {
+    width: 90%;
+    margin: auto;
+    border: solid 5px rgba(0, 0, 0, 0.884);
+    border-radius: 10px;
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 30px;
+}
+
 #t_container {
     margin: auto;
     text-align: center;

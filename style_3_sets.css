@@ -1,0 +1,163 @@
+#Title {
+    margin:auto;
+    padding: 20px;
+    text-align: center;
+    color: black;
+    text-shadow: 3px 3px 8px gray;
+}
+
+#ps .hovery {
+    position: absolute;
+    width: 400px;
+    border: 3px black;
+    right: 10px;
+    border-radius: 5px;
+    background-color: rgb(250, 180, 94, 0.95);
+    color: rgb(143, 0, 0);
+    display: none;
+    text-align: left;
+}
+
+#qq1:hover + #hover1 {
+    display: block;
+}
+#qq2:hover + #hover2 {
+    display: block;
+}
+#qq3:hover + #hover3 {
+    display: block;
+}
+
+#Subtitle {
+    margin: auto;
+    text-align: center;
+}
+
+#small_text{
+    font-size: 12px;
+    text-align: right;
+}
+
+#bigger {
+    width: 90%;
+    border: 3px;
+    background-color: aliceblue;
+    margin: auto;
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+}
+
+#questions {
+    margin: auto;
+    text-align: center;
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 10px;
+    padding: 10px;
+}
+
+#error_text {
+    font-size: 20px;
+    font-weight: bold;
+    color: rgb(199, 0, 0);
+    
+}
+
+#questions #ps {
+    grid-column:1;
+    position: relative;
+    margin-top: 20px;
+    padding: 5px;
+    text-align: right;
+}
+
+
+#questions #ps.question {
+    font-size: 14px;
+    text-align: right;
+}
+
+#questions #as {
+    grid-column:2;
+    margin-top: 38px;
+    padding: 5px;
+    text-align: left;
+}
+
+
+#questions #as.answer {
+    font-size: 14px;
+}
+
+#questions #as #k_value {
+    margin: auto;
+    margin-top: 60px;
+}
+
+#datasets {
+    width: 90%;
+    border: 3px;
+    background-color: rgb(248, 255, 240);
+    margin: auto;
+    text-align: center;
+    grid-column: auto auto;
+}
+
+#datasets #d_container {
+    width: 90%;
+    border: 3px;
+    background-color: rgb(248, 255, 240);
+    margin: auto;
+    text-align: center;
+}
+
+#datasets .dataset {
+    margin: auto;
+    padding: 5px;
+    text-align: right;
+    text-overflow:"visible";
+}
+
+#datasets .data_label {
+    margin: auto;
+    padding: 5px;
+    text-align: center;
+    text-shadow: 1px 1px 1px 1px white;
+}
+
+
+#activate {
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 5px;
+    text-align: center;
+}
+
+.button {
+    width: 200px;
+    height: 30px;
+    font-size: 20px;
+    background-color: blue;
+    border: 3px;
+    border-style: outset;
+    color: white;
+}
+
+#results {
+    margin-top: 10px;
+    width: 80%;
+    border: 3px;
+    border-color: rgb(102, 0, 0);
+    background-color: rgb(250, 211, 161);
+    margin: auto;
+    text-align: center;
+
+}
+
+#Citation {
+    margin-top: 10px;
+    margin: auto;
+    text-align: center;
+}

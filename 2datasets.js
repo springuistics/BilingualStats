@@ -87,13 +87,12 @@ function cdf(x) {
     return (x > 0) ? y : 1 - y;
 }
 
-function StatCom(q,i,j,b) {
-    var zz=1; var z=zz; var k=i; while(k<=j) { zz=zz*q*k/(k-b); z=z+zz; k=k+2 }
-    return z
-    }
-
-function StudT(t,n) {
-    var Pi=Math.PI; var PiD2=Pi/2; var PiD4=Pi/4; var Pi2=2*Pi
+function PtoT(t,n) {
+    var Pi=Math.PI; var PiD2=Pi/2;
+    function StatCom(q,i,j,b) {
+        var zz=1; var z=zz; var k=i; while(k<=j) { zz=zz*q*k/(k-b); z=z+zz; k=k+2 }
+        return z
+        }
     t=Math.abs(t); var w=t/Math.sqrt(n); var th=Math.atan(w)
     if(n==1) { return 1-th/PiD2 }
     var sth=Math.sin(th); var cth=Math.cos(th)
@@ -573,7 +572,7 @@ function DepTtest (data1, data2, deets) {
     var ss3 = ss2 / Nm;
     var denominator = ss3 / data1.length;
     var t = numerator / (Math.sqrt(denominator));
-    var p = StudT(t, Nm);
+    var p = PtoT(t, Nm);
     var variance = 0;
     for (var number of ss) {
         variance += ((number - numerator) ** 2); 
@@ -640,7 +639,7 @@ function IndepTtest (data1, data2, deets) {
     var ss2 = s_help / N2;
     var t = (M1 - M2) / (Math.sqrt(ss1 + ss2));
     var df = (Nm1 + Nm2);
-    var p = StudT(t, df);
+    var p = PtoT(t, df);
     var d = 0;
     var sdpooled = Math.sqrt((var1 + var2) / (N1 + N2 - 2));
     if ((N1 + N2) >= 50) {

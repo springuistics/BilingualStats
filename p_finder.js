@@ -50,7 +50,7 @@ function GetZ() {
     var p = 2 * (cdf(Zval));
     p = p.toFixed(4);
     document.getElementById('z_result').style.display="block";
-    document.getElementById('z_result').innerHTML="p = " + p;
+    document.getElementById('z_result').innerHTML="<i>p</i> = " + p;
 }
 
 function GetT() {
@@ -59,5 +59,5 @@ function GetT() {
     var p = PtoT(t, df);
     p = p.toFixed(4);
     document.getElementById('t_result').style.display="block";
-    document.getElementById('t_result').innerHTML="p = " + p;
+    document.getElementById('t_result').innerHTML="<i>p</i> = " + p;
 }

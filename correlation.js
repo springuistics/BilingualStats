@@ -352,9 +352,9 @@ function Spearman(data1, data2, details) {
     } else {result3 = "The Rs coefficient suggests a very strong correlation."}
 
     if (p < 0.01) {
-        var result2 = "Rs = " + Rs + ", p < 0.01. ";
+        var result2 = "<i>Rs</i> = " + Rs + ", <i>p</i> < 0.01. ";
     } else {
-        var result2 = "Rs = " + Rs + ", p =" + p + ". ";
+        var result2 = "<i>Rs</i> = " + Rs + ", <i>p</i> =" + p + ". ";
     }
     results_of_test = result1 + result2 + result3;
     document.getElementById("explain_bun").innerHTML = details;
@@ -418,6 +418,8 @@ function Pearson(data1, data2, details) {
     var p = StudT(t, df);
     p = p.toFixed(2);
     r = r.toFixed(2);
+    var result1 = "";
+    var result2 = "";
     if (p <= .05) {
         result1 = "There is a significant correlation between the data sets: "
     } else {
@@ -432,9 +434,9 @@ function Pearson(data1, data2, details) {
     } else {result3 = "The Pearson's r coefficient suggests a strong correlation."}
 
     if (p < 0.01) {
-        var result2 = "r = " + r + ", p < 0.01. ";
+        var result2 = "<i>r</i> = " + r + ", <i>p</i> < 0.01. ";
     } else {
-        var result2 = "r = " + r + ", p =" + p + ". ";
+        var result2 = "<i>r</i> = " + r + ", <i>p</i> =" + p + ". ";
     }
     results_of_test = result1 + result2 + result3;
     document.getElementById("explain_bun").innerHTML = details;

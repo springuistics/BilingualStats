@@ -96,9 +96,9 @@ function PtoT(t,n) {
     t=Math.abs(t); var w=t/Math.sqrt(n); var th=Math.atan(w)
     if(n==1) { return 1-th/PiD2 }
     var sth=Math.sin(th); var cth=Math.cos(th)
-    if((n%2)==1)
-        { return 1-(th+sth*cth*StatCom(cth*cth,2,n-3,-1))/PiD2 }
-        else
+    if((n%2)==1) { 
+        return 1-(th+sth*cth*StatCom(cth*cth,2,n-3,-1))/PiD2 
+    } else
         { return 1-sth*StatCom(cth*cth,1,n-3,-1) }
     }
 
@@ -379,9 +379,9 @@ function Wilcoxon (data1, data2, deets) {
     } else {result3 = "The effect size suggests a large effect."}
 
     if (p < 0.01) {
-        var result2 = "z = " + Z + ", p < 0.01, r = " + r + ". ";
+        var result2 = "<i>Z</i> = " + Z + ", <i>p</i> < 0.01, <i>r</i> = " + r + ". ";
     } else {
-        var result2 = "z = " + Z + ", p = " + p + ", r = " + r + ". ";
+        var result2 = "<i>Z</i> = " + Z + ", <i>p</i> = " + p + ", <i>r</i> = " + r + ". ";
     }
     results_of_test = result1 + result2 + result3;
     document.getElementById("explain_bun").innerHTML = deets;
@@ -545,9 +545,9 @@ function MannWhiteny (data1, data2, deets) {
     } else {result3 = "The effect size suggests a large effect."}
 
     if (p < 0.01) {
-        var result2 = "z = " + Z + ", p < 0.01, r = " + r + ". ";
+        var result2 = "<i>Z</i> = " + Z + ", <i>p</i> < 0.01, <i>r</i> = " + r + ". ";
     } else {
-        var result2 = "z = " + Z + ", p = " + p + ", r = " + r + ". ";
+        var result2 = "<i>Z</i> = " + Z + ", <i>p</i> = " + p + ", <i>r</i> = " + r + ". ";
     }
     results_of_test = result1 + result2 + result3;
     document.getElementById("explain_bun").innerHTML = deets;
@@ -599,10 +599,10 @@ function DepTtest (data1, data2, deets) {
     t = t.toFixed(2);
     d = d.toFixed(2);
     if (p < 0.01) {
-        var result2 = "t(" + Nm + ") = " + t + ", p < 0.01, d = " + d + ". ";
+        var result2 = "<i>t</i>(" + Nm + ") = " + t + ", <i>p</i> < 0.01, <i>d</i> = " + d + ". ";
     } else {
         p = p.toFixed(2);
-        var result2 = "t(" + Nm + ") = " + t + ", p = " + p + ", d = " + d + ". ";
+        var result2 = "<i>t</i>(" + Nm + ") = " + t + ", <i>p</i> = " + p + ", <i>d</i> = " + d + ". ";
     }
     results_of_test = result1 + result2 + result3;
     document.getElementById("explain_bun").innerHTML = deets;
@@ -667,10 +667,10 @@ function IndepTtest (data1, data2, deets) {
     t = t.toFixed(2);
     d = d.toFixed(2);
     if (p < 0.01) {
-        var result2 = "t(" + df + ") = " + t + ", p < 0.01, d = " + d + ". ";
+        var result2 = "<i>t</i>(" + df + ") = " + t + ", <i>p</i> < 0.01, <i>d</i> = " + d + ". ";
     } else {
         p = p.toFixed(2);
-        var result2 = "t(" + df + ") = " + t + ", p = " + p + ", d = " + d + ". ";
+        var result2 = "<i>t</i>(" + df + ") = " + t + ", <i>p</i> = " + p + ", <i>d</i> = " + d + ". ";
     }
     results_of_test = result1 + result2 + result3;
     document.getElementById("explain_bun").innerHTML = deets;

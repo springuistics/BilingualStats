@@ -78,10 +78,8 @@ function Calculate() {
             document.getElementById('error_text').style.display = "inline";
         } else {return realdata;}
     }
-    if (k=3) {
-        data_set1 = SetDataSet(0);
-        data_set2 = SetDataSet(1);
-        data_set3 = SetDataSet(2);
+    if (k==3) {
+        data_set1 = SetDataSet(0); data_set2 = SetDataSet(1); data_set3 = SetDataSet(2);
         if (pair_check == "yes" && data_set1.length !== data_set2.length) {
             document.getElementById("error_text").innerHTML = "Paired data sets should contain the same number of values (i.e., participants, instances, etc.). You have selected paired data, but your data sets have different numbers of values. Please check, amend as necessary and retry.";
             document.getElementById('error_text').style.display = "inline";
@@ -89,7 +87,8 @@ function Calculate() {
             Begin(k, data_set1, data_set2, data_set3, data_set4, data_set5, data_set6);
         }
     }
-    if (k=4) {
+    if (k==4) {
+        data_set1 = SetDataSet(0); data_set2 = SetDataSet(1); data_set3 = SetDataSet(2); data_set4 = SetDataSet(3);
         if (pair_check == "yes" && data_set1.length !== data_set2.length && data_set1.length !== data_set3.length && data_set1.length !== data_set4.length) {
             document.getElementById("error_text").innerHTML = "Paired data sets should contain the same number of values (i.e., participants, instances, etc.). You have selected paired data, but your data sets have different numbers of values. Please check, amend as necessary and retry.";
             document.getElementById('error_text').style.display = "inline";
@@ -97,7 +96,8 @@ function Calculate() {
             Begin(k, data_set1, data_set2, data_set3, data_set4);
         }
     }
-    if (k=5) {
+    if (k==5) {
+        data_set1 = SetDataSet(0); data_set2 = SetDataSet(1); data_set3 = SetDataSet(2); data_set4 = SetDataSet(3); data_set5 = SetDataSet(4);
         if (pair_check == "yes" && data_set1.length !== data_set2.length && data_set1.length !== data_set3.length && data_set1.length !== data_set4.length && data_set1.length !== data_set5.length) {
             document.getElementById("error_text").innerHTML = "Paired data sets should contain the same number of values (i.e., participants, instances, etc.). You have selected paired data, but your data sets have different numbers of values. Please check, amend as necessary and retry.";
             document.getElementById('error_text').style.display = "inline";
@@ -105,7 +105,8 @@ function Calculate() {
             Begin(k, data_set1, data_set2, data_set3, data_set4, data_set5);
         }
     }
-    if (k=6) {
+    if (k==6) {
+        data_set1 = SetDataSet(0); data_set2 = SetDataSet(1); data_set3 = SetDataSet(2); data_set4 = SetDataSet(3); data_set5 = SetDataSet(4); data_set6 = SetDataSet(5);
         if (pair_check == "yes" && data_set1.length !== data_set2.length && data_set1.length !== data_set3.length && data_set1.length !== data_set4.length && data_set1.length !== data_set5.length && data_set1.length !== data_set6.length) {
             document.getElementById("error_text").innerHTML = "Paired data sets should contain the same number of values (i.e., participants, instances, etc.). You have selected paired data, but your data sets have different numbers of values. Please check, amend as necessary and retry.";
             document.getElementById('error_text').style.display = "inline";
@@ -198,21 +199,6 @@ function cdf(x) {
     var y = 1 - Z * ((((b5 * t + b4) * t + b3) * t + b2) * t + b1) * t;
     return (x > 0) ? y : 1 - y;
 }
-
-function PtoT(t,n) {
-    var Pi=Math.PI; var PiD2=Pi/2;
-    function StatCom(q,i,j,b) {
-        var zz=1; var z=zz; var k=i; while(k<=j) { zz=zz*q*k/(k-b); z=z+zz; k=k+2 }
-        return z
-        }
-    t=Math.abs(t); var w=t/Math.sqrt(n); var th=Math.atan(w)
-    if(n==1) { return 1-th/PiD2 }
-    var sth=Math.sin(th); var cth=Math.cos(th)
-    if((n%2)==1)
-        { return 1-(th+sth*cth*StatCom(cth*cth,2,n-3,-1))/PiD2 }
-        else
-        { return 1-sth*StatCom(cth*cth,1,n-3,-1) }
-    }
 
 function normalQuantile(p, mu, sigma){
     var p, q, r, val;
@@ -353,9 +339,10 @@ function Shapiro_Wilk (data) {
 }
 
 function FtoP(k, f, n1, n2) {
-    var x=n2/(n1*f+n2)
+    var x=n2/(n1*f+n2);
+    var Pi=Math.PI; var PiD2=Pi/2;
     function StatCom(q,i,j,b) {
-		var zz=1; var z=zz; var k1=i; while(k1<=j) { zz=zz*q*k1/(k1-b); z=z+zz; k1=k1+2 }
+		var zz=1; var z=zz; var k=i; while(k<=j) { zz=zz*q*k/(k-b); z=z+zz; k=k+2 }
 		return z
 		}
     if((n1%2)==0) { return StatCom(1-x,n2,n1+n2-4,n2-2)*Math.pow(x,n2/2) }
@@ -369,7 +356,124 @@ function FtoP(k, f, n1, n2) {
     return 1-a+c
 }
 
+function TukeyMe(q, k, v) {
+    q = Math.abs(q);
+    let text = "";
+    function getit(hs5, hs1) {
+        if (q<hs5) {return "NS"} else if (q>hs1) {return "p < .01"} else {
+        let s=(hs1-hs5)/4; 
+        let p1=hs5+s; let p2=p1+s; let p3=p2+s; let p2d=p1+(s/2); let p3d=p2+(s/2);
+        if (q<p1) {return "p = .05"} else if (q>p1 && q<p2d) {return "p = .04"} else if (q>p2d && q<p2) {return "p = .03"} else if (q>p2 && q<p3d) {return "p = .02"} else if (q>p3d && q<p3) {return "p = .01"} else {return "p < .01"}
+    }}
+    if (k==3) {
+        if (v==5) {let hs5=4.60; let hs1=6.98; text=getit(hs5, hs1);}
+        else if (v==6) {let hs5=4.34; let hs1=6.33; text=getit(hs5, hs1);}
+        else if (v==7) {let hs5=4.16; let hs1=5.92; text=getit(hs5, hs1);}
+        else if (v==8) {let hs5=4.04; let hs1=5.64; text=getit(hs5, hs1);}
+        else if (v==9) {let hs5=3.95; let hs1=5.43; text=getit(hs5, hs1);}
+        else if (v==10) {let hs5=3.88; let hs1=5.27; text=getit(hs5, hs1);}
+        else if (v==11) {let hs5=3.82; let hs1=5.15; text=getit(hs5, hs1);}
+        else if (v==12) {let hs5=3.77; let hs1=5.05; text=getit(hs5, hs1);}
+        else if (v==13) {let hs5=3.73; let hs1=4.96; text=getit(hs5, hs1);}
+        else if (v==14) {let hs5=3.70; let hs1=4.89; text=getit(hs5, hs1);}
+        else if (v==15) {let hs5=3.67; let hs1=4.84; text=getit(hs5, hs1);}
+        else if (v==16) {let hs5=3.65; let hs1=4.79; text=getit(hs5, hs1);}
+        else if (v==17) {let hs5=3.63; let hs1=4.74; text=getit(hs5, hs1);}
+        else if (v==18) {let hs5=3.61; let hs1=4.70; text=getit(hs5, hs1);}
+        else if (v==19) {let hs5=3.59; let hs1=4.67; text=getit(hs5, hs1);}
+        else if (v==20) {let hs5=3.58; let hs1=4.64; text=getit(hs5, hs1);}
+        else if (v>20&&v<30) {let hs5=3.53; let hs1=4.55; text=getit(hs5, hs1);}
+        else if (v>=30&&v<40) {let hs5=3.45; let hs1=4.41; text=getit(hs5, hs1);}
+        else if (v>=40&&v<60) {let hs5=3.42; let hs1=4.32; text=getit(hs5, hs1);}
+        else if (v>=60&&v<120) {let hs5=3.38; let hs1=4.24; text=getit(hs5, hs1);}
+        else if (v>=120) {let hs5=3.34; let hs1=4.16; text=getit(hs5, hs1);}
+    }
+    else if (k==4) {
+        if (v==5) {let hs5=5.22; let hs1=7.80; text=getit(hs5, hs1);}
+        else if (v==6) {let hs5=4.90; let hs1=7.03; text=getit(hs5, hs1);}
+        else if (v==7) {let hs5=4.68; let hs1=6.54; text=getit(hs5, hs1);}
+        else if (v==8) {let hs5=4.53; let hs1=6.20; text=getit(hs5, hs1);}
+        else if (v==9) {let hs5=4.41; let hs1=5.96; text=getit(hs5, hs1);}
+        else if (v==10) {let hs5=4.33; let hs1=5.77; text=getit(hs5, hs1);}
+        else if (v==11) {let hs5=4.26; let hs1=5.62; text=getit(hs5, hs1);}
+        else if (v==12) {let hs5=4.20; let hs1=5.50; text=getit(hs5, hs1);}
+        else if (v==13) {let hs5=4.15; let hs1=5.40; text=getit(hs5, hs1);}
+        else if (v==14) {let hs5=4.11; let hs1=5.32; text=getit(hs5, hs1);}
+        else if (v==15) {let hs5=4.08; let hs1=5.25; text=getit(hs5, hs1);}
+        else if (v==16) {let hs5=4.05; let hs1=5.19; text=getit(hs5, hs1);}
+        else if (v==17) {let hs5=4.02; let hs1=5.14; text=getit(hs5, hs1);}
+        else if (v==18) {let hs5=4.00; let hs1=5.09; text=getit(hs5, hs1);}
+        else if (v==19) {let hs5=3.98; let hs1=5.05; text=getit(hs5, hs1);}
+        else if (v==20) {let hs5=3.96; let hs1=5.02; text=getit(hs5, hs1);}
+        else if (v>20&&v<30) {let hs5=3.90; let hs1=4.91; text=getit(hs5, hs1);}
+        else if (v>=30&&v<40) {let hs5=3.85; let hs1=4.80; text=getit(hs5, hs1);}
+        else if (v>=40&&v<60) {let hs5=3.79; let hs1=4.70; text=getit(hs5, hs1);}
+        else if (v>=60&&v<120) {let hs5=3.70; let hs1=4.54; text=getit(hs5, hs1);}
+        else if (v>=120) {let hs5=3.66; let hs1=4.45; text=getit(hs5, hs1);}
+    }
+    else if (k==5) {
+        if (v==5) {let hs5=5.67; let hs1=8.42; text=getit(hs5, hs1);}
+        else if (v==6) {let hs5=5.30; let hs1=7.56; text=getit(hs5, hs1);}
+        else if (v==7) {let hs5=5.06; let hs1=7.01; text=getit(hs5, hs1);}
+        else if (v==8) {let hs5=4.89; let hs1=6.62; text=getit(hs5, hs1);}
+        else if (v==9) {let hs5=4.76; let hs1=6.35; text=getit(hs5, hs1);}
+        else if (v==10) {let hs5=4.65; let hs1=6.14; text=getit(hs5, hs1);}
+        else if (v==11) {let hs5=4.57; let hs1=5.97; text=getit(hs5, hs1);}
+        else if (v==12) {let hs5=4.51; let hs1=5.84; text=getit(hs5, hs1);}
+        else if (v==13) {let hs5=4.45; let hs1=5.73; text=getit(hs5, hs1);}
+        else if (v==14) {let hs5=4.41; let hs1=5.63; text=getit(hs5, hs1);}
+        else if (v==15) {let hs5=4.37; let hs1=5.56; text=getit(hs5, hs1);}
+        else if (v==16) {let hs5=4.33; let hs1=5.49; text=getit(hs5, hs1);}
+        else if (v==17) {let hs5=4.30; let hs1=5.43; text=getit(hs5, hs1);}
+        else if (v==18) {let hs5=4.28; let hs1=5.38; text=getit(hs5, hs1);}
+        else if (v==19) {let hs5=4.25; let hs1=5.33; text=getit(hs5, hs1);}
+        else if (v==20) {let hs5=4.23; let hs1=5.29; text=getit(hs5, hs1);}
+        else if (v>20&&v<30) {let hs5=4.17; let hs1=5.17; text=getit(hs5, hs1);}
+        else if (v>=30&&v<40) {let hs5=4.07; let hs1=5.00; text=getit(hs5, hs1);}
+        else if (v>=40&&v<60) {let hs5=4.01; let hs1=4.86; text=getit(hs5, hs1);}
+        else if (v>=60&&v<120) {let hs5=3.95; let hs1=4.76; text=getit(hs5, hs1);}
+        else if (v>=120) {let hs5=3.89; let hs1=4.65; text=getit(hs5, hs1);}
+    }
+    else if (k==6) {
+        if (v==5) {let hs5=6.03; let hs1=8.91; text=getit(hs5, hs1);}
+        else if (v==6) {let hs5=5.63; let hs1=7.97; text=getit(hs5, hs1);}
+        else if (v==7) {let hs5=5.36; let hs1=7.37; text=getit(hs5, hs1);}
+        else if (v==8) {let hs5=5.17; let hs1=6.96; text=getit(hs5, hs1);}
+        else if (v==9) {let hs5=5.02; let hs1=6.66; text=getit(hs5, hs1);}
+        else if (v==10) {let hs5=4.91; let hs1=6.43; text=getit(hs5, hs1);}
+        else if (v==11) {let hs5=4.82; let hs1=6.25; text=getit(hs5, hs1);}
+        else if (v==12) {let hs5=4.75; let hs1=6.10; text=getit(hs5, hs1);}
+        else if (v==13) {let hs5=4.69; let hs1=5.98; text=getit(hs5, hs1);}
+        else if (v==14) {let hs5=4.64; let hs1=5.88; text=getit(hs5, hs1);}
+        else if (v==15) {let hs5=4.59; let hs1=5.80; text=getit(hs5, hs1);}
+        else if (v==16) {let hs5=4.56; let hs1=5.72; text=getit(hs5, hs1);}
+        else if (v==17) {let hs5=4.52; let hs1=5.66; text=getit(hs5, hs1);}
+        else if (v==18) {let hs5=4.49; let hs1=5.60; text=getit(hs5, hs1);}
+        else if (v==19) {let hs5=4.47; let hs1=5.55; text=getit(hs5, hs1);}
+        else if (v==20) {let hs5=4.45; let hs1=5.51; text=getit(hs5, hs1);}
+        else if (v>20&&v<30) {let hs5=4.37; let hs1=5.37; text=getit(hs5, hs1);}
+        else if (v>=30&&v<40) {let hs5=4.26; let hs1=5.18; text=getit(hs5, hs1);}
+        else if (v>=40&&v<60) {let hs5=4.19; let hs1=5.05; text=getit(hs5, hs1);}
+        else if (v>=60&&v<120) {let hs5=4.13; let hs1=4.93; text=getit(hs5, hs1);}
+        else if (v>=120) {let hs5=4.06; let hs1=4.82; text=getit(hs5, hs1);}
+    }
+    return text;
+}
 
+function PtoT(t,n) {
+    var Pi=Math.PI; var PiD2=Pi/2;
+    function StatCom(q,i,j,b) {
+        var zz=1; var z=zz; var k=i; while(k<=j) { zz=zz*q*k/(k-b); z=z+zz; k=k+2 }
+        return z
+        }
+    t=Math.abs(t); var w=t/Math.sqrt(n); var th=Math.atan(w)
+    if(n==1) { return 1-th/PiD2 }
+    var sth=Math.sin(th); var cth=Math.cos(th)
+    if((n%2)==1) { 
+        return 1-(th+sth*cth*StatCom(cth*cth,2,n-3,-1))/PiD2 
+    } else
+        { return 1-sth*StatCom(cth*cth,1,n-3,-1) }
+}
 
 function StANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
     var M1; var M2; var M3; var M4; var M5; var M6; var Mg;
@@ -377,6 +481,9 @@ function StANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
     var MB1; var MB2; var MB3; var MB4; var MB5; var MB6;
     var N1; var N2; var N3; var N4; var N5; var N6; var GN;
     var SSW; var MSSB; var MSSW; var dfs; var dfw; var F;
+    var q_1v2; var q_1v3; var q_1v4; var q_1v5; var q_1v6;
+    var q_2v3; var q_2v4; var q_2v5; var q_2v6; var q_3v4;
+    var q_3v5; var q_3v6; var q_4v5; var q_4v6; var q_5v6;
     function CalcMean(data) {
         let N = data.length;
         var sum = 0;
@@ -422,14 +529,14 @@ function StANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
     function SumMean(M, data) {
         let temp = [];
         for (let i = 0; i < data.length; i++) {
-            let temp1 = data[i] - M;
+            let temp1 = (data[i] - M) **2;
             temp.push(temp1);
         }
         let sum = 0;
         for (var number of temp) {sum += number;}
         return sum;
     }
-    if (k=3) {
+    if (k==3) {
         M1 = CalcMean(data1);
         M2 = CalcMean(data2);
         M3 = CalcMean(data3);
@@ -450,19 +557,192 @@ function StANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
         MSSB = (MB1 + MB2 + MB3) / (dfs);
         F = MSSB / MSSW;
         dfw = GN - k;
+        q_1v2 = (M1 - M2) / (Math.sqrt(((MSSW/N1)+(MSSW/N2))/2));
+        q_1v3 = (M1 - M3) / (Math.sqrt(((MSSW/N1)+(MSSW/N3))/2));
+        q_2v3 = (M2 - M3) / (Math.sqrt(((MSSW/N2)+(MSSW/N3))/2));
+        var p1v2 = TukeyMe(q_1v2, k, dfw);
+        var p1v3 = TukeyMe(q_1v3, k, dfw);
+        var p2v3 = TukeyMe(q_2v3, k, dfw);
+    } else if (k==4) {
+        M1 = CalcMean(data1);
+        M2 = CalcMean(data2);
+        M3 = CalcMean(data3);
+        M4 = CalcMean(data4);
+        N1 = data1.length;
+        N2 = data2.length;
+        N3 = data3.length;
+        N4 = data4.length;
+        GN = N1 + N2 + N3 + N4;
+        Mg = BigMean(k, data1, data2, data3, data4);
+        SM1 = SumMean(M1, data1);
+        SM2 = SumMean(M2, data2);
+        SM3 = SumMean(M3, data3);
+        SM4 = SumMean(M4, data4);
+        SSW = SM1 + SM2 + SM3 + SM4;
+        MSSW = SSW / (GN - k);
+        MB1 = N1 * ((M1 - Mg) **2);
+        MB2 = N2 * ((M2 - Mg) **2);
+        MB3 = N3 * ((M3 - Mg) **2);
+        MB4 = N4 * ((M4 - Mg) **2);
+        dfs = k-1;
+        MSSB = (MB1 + MB2 + MB3 + MB4) / (dfs);
+        F = MSSB / MSSW;
+        dfw = GN - k;
+        q_1v2 = (M1 - M2) / (Math.sqrt(((MSSW/N1)+(MSSW/N2))/2));
+        q_1v3 = (M1 - M3) / (Math.sqrt(((MSSW/N1)+(MSSW/N3))/2));
+        q_1v4 = (M1 - M4) / (Math.sqrt(((MSSW/N1)+(MSSW/N4))/2));
+        q_2v3 = (M2 - M3) / (Math.sqrt(((MSSW/N2)+(MSSW/N3))/2));
+        q_2v4 = (M2 - M4) / (Math.sqrt(((MSSW/N2)+(MSSW/N4))/2));
+        q_3v4 = (M3 - M4) / (Math.sqrt(((MSSW/N3)+(MSSW/N4))/2));
+        var p1v2 = TukeyMe(q_1v2, k, dfw);
+        var p1v3 = TukeyMe(q_1v3, k, dfw);
+        var p1v4 = TukeyMe(q_1v4, k, dfw);
+        var p2v3 = TukeyMe(q_2v3, k, dfw);
+        var p2v4 = TukeyMe(q_2v4, k, dfw);
+        var p3v4 = TukeyMe(q_3v4, k, dfw);
+    } else if (k==5) {
+        M1 = CalcMean(data1);
+        M2 = CalcMean(data2);
+        M3 = CalcMean(data3);
+        M4 = CalcMean(data4);
+        M5 = CalcMean(data5);
+        N1 = data1.length;
+        N2 = data2.length;
+        N3 = data3.length;
+        N4 = data4.length;
+        N5 = data5.length;
+        GN = N1 + N2 + N3 + N4+ N5;
+        Mg = BigMean(k, data1, data2, data3, data4, data5);
+        SM1 = SumMean(M1, data1);
+        SM2 = SumMean(M2, data2);
+        SM3 = SumMean(M3, data3);
+        SM4 = SumMean(M4, data4);
+        SM5 = SumMean(M5, data5);
+        SSW = SM1 + SM2 + SM3 + SM4 + SM5;
+        MSSW = SSW / (GN - k);
+        MB1 = N1 * ((M1 - Mg) **2);
+        MB2 = N2 * ((M2 - Mg) **2);
+        MB3 = N3 * ((M3 - Mg) **2);
+        MB4 = N4 * ((M4 - Mg) **2);
+        MB5 = N5 * ((M5 - Mg) **2);
+        dfs = k-1;
+        MSSB = (MB1 + MB2 + MB3 + MB4 + MB5) / (dfs);
+        F = MSSB / MSSW;
+        dfw = GN - k;
+        q_1v2 = (M1 - M2) / (Math.sqrt(((MSSW/N1)+(MSSW/N2))/2));
+        q_1v3 = (M1 - M3) / (Math.sqrt(((MSSW/N1)+(MSSW/N3))/2));
+        q_1v4 = (M1 - M4) / (Math.sqrt(((MSSW/N1)+(MSSW/N4))/2));
+        q_1v5 = (M1 - M5) / (Math.sqrt(((MSSW/N1)+(MSSW/N5))/2));
+        q_2v3 = (M2 - M3) / (Math.sqrt(((MSSW/N2)+(MSSW/N3))/2));
+        q_2v4 = (M2 - M4) / (Math.sqrt(((MSSW/N2)+(MSSW/N4))/2));
+        q_2v5 = (M2 - M5) / (Math.sqrt(((MSSW/N2)+(MSSW/N5))/2));
+        q_3v4 = (M3 - M4) / (Math.sqrt(((MSSW/N3)+(MSSW/N4))/2));
+        q_3v5 = (M3 - M5) / (Math.sqrt(((MSSW/N3)+(MSSW/N5))/2));
+        q_4v5 = (M4 - M5) / (Math.sqrt(((MSSW/N4)+(MSSW/N5))/2));
+        var p1v2 = TukeyMe(q_1v2, k, dfw);
+        var p1v3 = TukeyMe(q_1v3, k, dfw);
+        var p1v4 = TukeyMe(q_1v4, k, dfw);
+        var p1v5 = TukeyMe(q_1v5, k, dfw);
+        var p2v3 = TukeyMe(q_2v3, k, dfw);
+        var p2v4 = TukeyMe(q_2v4, k, dfw);
+        var p2v5 = TukeyMe(q_2v5, k, dfw);
+        var p3v4 = TukeyMe(q_3v4, k, dfw);
+        var p3v5 = TukeyMe(q_3v5, k, dfw);
+        var p4v5 = TukeyMe(q_4v5, k, dfw);
+    } else if (k==6) {
+        M1 = CalcMean(data1);
+        M2 = CalcMean(data2);
+        M3 = CalcMean(data3);
+        M4 = CalcMean(data4);
+        M5 = CalcMean(data5);
+        M6 = CalcMean(data6);
+        N1 = data1.length;
+        N2 = data2.length;
+        N3 = data3.length;
+        N4 = data4.length;
+        N5 = data5.length;
+        N6 = data6.length;
+        GN = N1 + N2 + N3 + N4+ N5 + N6;
+        Mg = BigMean(k, data1, data2, data3, data4, data5, data6);
+        SM1 = SumMean(M1, data1);
+        SM2 = SumMean(M2, data2);
+        SM3 = SumMean(M3, data3);
+        SM4 = SumMean(M4, data4);
+        SM5 = SumMean(M5, data5);
+        SM6 = SumMean(M6, data6);
+        SSW = SM1 + SM2 + SM3 + SM4 + SM5 + SM6;
+        MSSW = SSW / (GN - k);
+        MB1 = N1 * ((M1 - Mg) **2);
+        MB2 = N2 * ((M2 - Mg) **2);
+        MB3 = N3 * ((M3 - Mg) **2);
+        MB4 = N4 * ((M4 - Mg) **2);
+        MB5 = N5 * ((M5 - Mg) **2);
+        MB6 = N6 * ((M6 - Mg) **2);
+        dfs = k-1;
+        MSSB = (MB1 + MB2 + MB3 + MB4 + MB5 + MB6) / (dfs);
+        F = MSSB / MSSW;
+        dfw = GN - k;
+        q_1v2 = (M1 - M2) / (Math.sqrt(((MSSW/N1)+(MSSW/N2))/2));
+        q_1v3 = (M1 - M3) / (Math.sqrt(((MSSW/N1)+(MSSW/N3))/2));
+        q_1v4 = (M1 - M4) / (Math.sqrt(((MSSW/N1)+(MSSW/N4))/2));
+        q_1v5 = (M1 - M5) / (Math.sqrt(((MSSW/N1)+(MSSW/N5))/2));
+        q_1v6 = (M1 - M6) / (Math.sqrt(((MSSW/N1)+(MSSW/N6))/2));
+        q_2v3 = (M2 - M3) / (Math.sqrt(((MSSW/N2)+(MSSW/N3))/2));
+        q_2v4 = (M2 - M4) / (Math.sqrt(((MSSW/N2)+(MSSW/N4))/2));
+        q_2v5 = (M2 - M5) / (Math.sqrt(((MSSW/N2)+(MSSW/N5))/2));
+        q_2v6 = (M2 - M6) / (Math.sqrt(((MSSW/N2)+(MSSW/N6))/2));
+        q_3v4 = (M3 - M4) / (Math.sqrt(((MSSW/N3)+(MSSW/N4))/2));
+        q_3v5 = (M3 - M5) / (Math.sqrt(((MSSW/N3)+(MSSW/N5))/2));
+        q_3v6 = (M3 - M6) / (Math.sqrt(((MSSW/N3)+(MSSW/N6))/2));
+        q_4v5 = (M4 - M5) / (Math.sqrt(((MSSW/N4)+(MSSW/N5))/2));
+        q_4v6 = (M4 - M6) / (Math.sqrt(((MSSW/N4)+(MSSW/N6))/2));
+        q_5v6 = (M5 - M6) / (Math.sqrt(((MSSW/N5)+(MSSW/N6))/2));
+        var p1v2 = TukeyMe(q_1v2, k, dfw);
+        var p1v3 = TukeyMe(q_1v3, k, dfw);
+        var p1v4 = TukeyMe(q_1v4, k, dfw);
+        var p1v5 = TukeyMe(q_1v5, k, dfw);
+        var p1v6 = TukeyMe(q_1v6, k, dfw);
+        var p2v3 = TukeyMe(q_2v3, k, dfw);
+        var p2v4 = TukeyMe(q_2v4, k, dfw);
+        var p2v5 = TukeyMe(q_2v5, k, dfw);
+        var p2v6 = TukeyMe(q_2v6, k, dfw);
+        var p3v4 = TukeyMe(q_3v4, k, dfw);
+        var p3v5 = TukeyMe(q_3v5, k, dfw);
+        var p3v6 = TukeyMe(q_3v6, k, dfw);
+        var p4v5 = TukeyMe(q_4v5, k, dfw);
+        var p4v6 = TukeyMe(q_4v6, k, dfw);
+        var p5v6 = TukeyMe(q_5v6, k, dfw);
     }
 
     var p = FtoP(k, F, dfs, dfw);
     F = F.toFixed(2);
     var result1 = "";
     var result3 = "";
-    if (p < 0.01) {
-        var result2 = "F[" + dfs + ", " + dfw + "] = " + F + ", p < 0.01. ";
-    } else {
+    if (p > 0.05) {
+        var result1 = "There was no significant difference amongst any of the groups; "
         p = p.toFixed(2);
-        var result2 = "F[" + dfs + ", " + dfw + "] = " + F + ", p = " + p;
+        var result2 = "<i>F</i>[" + dfs + ", " + dfw + "] = " + F + ", <i>p</i> = " + p;
+        var result3 = ". Therefore, no pair-wise analysis will be conducted."
+        results_of_test = result1 + result2 + result3;
+    } else {
+        var result1 = "There was a significant difference between at least two of the groups; "
+        if (p < 0.01) {
+            var result2 = "<i>F</i>[" + dfs + ", " + dfw + "] = " + F + ", <i>p</i> < 0.01. ";
+        } else {
+            p = p.toFixed(2);
+            var result2 = "<i>F</i>[" + dfs + ", " + dfw + "] = " + F + ", <i>p</i> = " + p;
+        }
+        if (k==3) {
+            result3 = "The significant differences between specific groups, as tested by a Tukey's HSD post-hoc analysis, is shown below: <br>Group 1 x Group 2: " + p1v2 + "<br>Group 1 x Group 3: " + p1v3 + "<br>Group 2 x Group 3: " + p2v3;
+        } else if (k==4) {
+            result3 = "The significant differences between specific groups, as tested by a Tukey's HSD post-hoc analysis, is shown below: <br>Group 1 x Group 2: " + p1v2 + "<br>Group 1 x Group 3: " + p1v3 + "<br>Group 1 x Group 4: " + p1v4 + "<br>Group 2 x Group 3: " + p2v3 + "<br>Group 2 x Group 4: " + p2v4 + "<br>Group 3 x Group 4: " + p3v4;
+        } else if (k==5) {
+            result3 = "The significant differences between specific groups, as tested by a Tukey's HSD post-hoc analysis, is shown below: <br>Group 1 x Group 2: " + p1v2 + "<br>Group 1 x Group 3: " + p1v3 +  "<br>Group 1 x Group 4: " + p1v4 + "<br>Group 1 x Group 5: " + p1v5 + "<br>Group 2 x Group 3: " + p2v3 + "<br>Group 2 x Group 4: " + p2v4 + "<br>Group 2 x Group 5: " + p2v5 + "<br>Group 3 x Group 4: " + p3v4 + "<br>Group 3 x Group 5: " + p3v5 + "<br>Group 4 x Group 5: " + p4v5;
+        } else if (k==6) {
+            result3 = "The significant differences between specific groups, as tested by a Tukey's HSD post-hoc analysis, is shown below: <br>Group 1 x Group 2: " + p1v2 + "<br>Group 1 x Group 3: " + p1v3 +  "<br>Group 1 x Group 4: " + p1v4 + "<br>Group 1 x Group 5: " + p1v5 + "<br>Group 1 x Group 6: " + p1v6 + "<br>Group 2 x Group 3: " + p2v3 + "<br>Group 2 x Group 4: " + p2v4 + "<br>Group 2 x Group 5: " + p2v5 + "<br>Group 2 x Group 6: " + p2v6 + "<br>Group 3 x Group 4: " + p3v4 + "<br>Group 3 x Group 5: " + p3v5 + "<br>Group 3 x Group 6: " + p3v6 + "<br>Group 4 x Group 5: " + p4v5 + "<br>Group 4 x Group 6: " + p4v6 + "<br>Group 5 x Group 6: " + p5v6;
+        }
+        results_of_test = result1 + result2 + "<br>" + result3;
     }
-    results_of_test = result1 + result2 + result3;
     document.getElementById("explain_bun").innerHTML = deets;
     document.getElementById("results_bun").innerHTML = results_of_test;
     

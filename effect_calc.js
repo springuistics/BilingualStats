@@ -4,5 +4,5 @@ function GetR() {
     var r = (Math.abs(z)) / (Math.sqrt(TotalN));
     r = r.toFixed(2);
     document.getElementById('r_result').style.display="block";
-    document.getElementById('r_result').innerHTML="r = " + r;
+    document.getElementById('r_result').innerHTML="<i>r</i> = " + r;
 }

@@ -398,7 +398,7 @@ function MannWhiteny (data1, data2, deets) {
         superdata.push({"Group":1, "No": number, "Rank": number});
     });
     data2.forEach(function(number){
-        superdata.push({"Group":2, "No": + number, "Rank": number});
+        superdata.push({"Group":2, "No": number, "Rank": number});
     });
     var sorted = superdata.slice().sort((a, b) => a.No - b.No);
     for (let i = 0; i < sorted.length; i++) {

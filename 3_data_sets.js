@@ -475,44 +475,18 @@ function PtoT(t,n) {
         { return 1-sth*StatCom(cth*cth,1,n-3,-1) }
 }
 
-function ChiSquare(x, df) {
-    var a, y, s;
-    var e, c, z;
-    var even; 
-    var LOG_SQRT_PI = 0.5723649429247000870717135; 
-    var I_SQRT_PI = 0.5641895835477562869480795; 
-    if (x <= 0.0 || df < 1) { return 1.0; }
-    
-    a = 0.5 * x;
-    even = !(df & 1);
-    if (df > 1) { y = Math.exp(-a); }
-    s = (even ? y : (2.0 * poz(-Math.sqrt(x))));
-    if (df > 2) {
-        x = 0.5 * (df - 1.0);
-        z = (even ? 1.0 : 0.5);
-        if (a > BIGX) {
-            e = (even ? 0.0 : LOG_SQRT_PI);
-            c = Math.log(a);
-            while (z <= x) {
-                e = Math.log(z) + e;
-                s += ex(c * z - a - e);
-                z += 1.0;
-            }
-            return s;
-        } else {
-            e = (even ? 1.0 : (I_SQRT_PI / Math.sqrt(a)));
-            c = 0.0;
-            while (z <= x) {
-                e = e * (a / z);
-                c = c + e;
-                z += 1.0;
-            }
-            return c * y + s;
+function ChiSq(x,n) {
+    if(n==1 & x>1000) {return 0}
+    if(x>1000 | n>1000) {
+        var q=ChiSq((x-n)*(x-n)/(2*n),1)/2
+        if(x>n) {return q} {return 1-q}
         }
-    } else {
-        return s;
+    var Pi=Math.PI;
+    var p=Math.exp(-0.5*x); if((n%2)==1) { p=p*Math.sqrt(2*x/Pi) }
+    var k=n; while(k>=2) { p=p*x/k; k=k-2 }
+    var t=p; var a=n; while(t>0.0000000001*p) { a=a+2; t=t*x/a; p=p+t }
+    return 1-p
     }
-}
 
 function CalcMean(data) {
     let N = data.length;
@@ -1215,11 +1189,12 @@ function CalcDunn(data1, data2) {
     var RS1 = 0;
     for (let i=0; i<data1.length; i++) {RS1 += data1[i]}
     var RS2 = 0;
-    for (let i=0; i<data1.length; i++) {RS2 += data1[i]}
+    for (let i=0; i<data2.length; i++) {RS2 += data2[i]}
     var M1 = RS1 / data1.length;
     var M2 = RS2 / data2.length;
     var diff = M1-M2;
     var v = A * ((1/data1.length) + (1/data2.length));
+    v = Math.abs(v);
     var z = diff / (Math.sqrt(v));
     var p = cdf(z);
     return p;
@@ -1384,7 +1359,7 @@ function KW(k, deets, data1, data2, data3, data4, data5, data6) {
         var dunn4v6 = CalcDunn(data4, data6); dunn4v6 = dunn4v6.toFixed(2);
         var dunn5v6 = CalcDunn(data5, data6); dunn5v6 = dunn5v6.toFixed(2);
     }
-    var p = ChiSquare(KH, df);
+    var p = ChiSq(KH, df);
     var eta = (KH - k + 1) / (GN - k);
     KH = KH.toFixed(2);
     var result1 = "";
@@ -1403,7 +1378,7 @@ function KW(k, deets, data1, data2, data3, data4, data5, data6) {
     if (p > 0.05) {
         var result1 = "There was no significant difference amongst any of the groups; "
         p = p.toFixed(2);
-        var result2 = "<i>H</i> = " + KH + ", <i>p</i> = " + p;
+        var result2 = "<i>H</i> = " + KH + ", <i>p</i> = " + p + ". ";
         var result3 = ". Therefore, no pair-wise analysis will be conducted."
         results_of_test = result1 + result2 + result3 + results4;
     } else {
@@ -1412,7 +1387,7 @@ function KW(k, deets, data1, data2, data3, data4, data5, data6) {
             var result2 = "<i>H</i> = " + KH + ", <i>p</i> < 0.01. ";
         } else {
             p = p.toFixed(2);
-            var result2 = "<i>H</i> = " + KH + ", <i>p</i> = " + p;
+            var result2 = "<i>H</i> = " + KH + ", <i>p</i> = " + p + ". ";
         }
         if (k==3) {
             result3 = "The significant differences between specific groups, as tested by a Dunn's post-hoc analysis, is shown below: <br>Group 1 x Group 2: <i>p</i> = " + dunn1v2 + "<br>Group 1 x Group 3: <i>p</i> = " + dunn1v3 + "<br>Group 2 x Group 3: <i>p</i> = " + dunn2v3;
@@ -1582,7 +1557,7 @@ function Friedman(k, deets, data1, data2, data3, data4, data5, data6) {
         var sum4 = 0;
         for (let i=0; i<N; i++) {sum4 += data4_ranks[i];}
         var first = 12 / (N * k * (k+1))
-        var second = (sum1 **2) + (sum2 **2) + (sum3 **2)
+        var second = (sum1 **2) + (sum2 **2) + (sum3 **2) + (sum4 **2);
         var third = 3 * (N * (k+1));
         var KH = (first * second) - third;
         var dunn1v2 = CalcDunn(data1, data2); dunn1v2 = dunn1v2.toFixed(2);
@@ -1623,7 +1598,7 @@ function Friedman(k, deets, data1, data2, data3, data4, data5, data6) {
         var sum5 = 0;
         for (let i=0; i<N; i++) {sum5 += data5_ranks[i];}
         var first = 12 / (N * k * (k+1))
-        var second = (sum1 **2) + (sum2 **2) + (sum3 **2)
+        var second = (sum1 **2) + (sum2 **2) + (sum3 **2) + (sum4 **2) + (sum5 **2);
         var third = 3 * (N * (k+1));
         var KH = (first * second) - third;
         var dunn1v2 = CalcDunn(data1, data2); dunn1v2 = dunn1v2.toFixed(2);
@@ -1673,7 +1648,7 @@ function Friedman(k, deets, data1, data2, data3, data4, data5, data6) {
         var sum6 = 0;
         for (let i=0; i<N; i++) {sum6 += data6_ranks[i];}
         var first = 12 / (N * k * (k+1))
-        var second = (sum1 **2) + (sum2 **2) + (sum3 **2)
+        var second = (sum1 **2) + (sum2 **2) + (sum3 **2) + (sum4 **2) + (sum5 **2) + (sum6 **2);
         var third = 3 * (N * (k+1));
         var KH = (first * second) - third;
         var dunn1v2 = CalcDunn(data1, data2); dunn1v2 = dunn1v2.toFixed(2);
@@ -1692,7 +1667,7 @@ function Friedman(k, deets, data1, data2, data3, data4, data5, data6) {
         var dunn4v6 = CalcDunn(data4, data6); dunn4v6 = dunn4v6.toFixed(2);
         var dunn5v6 = CalcDunn(data5, data6); dunn5v6 = dunn5v6.toFixed(2);
     }
-    var p = ChiSquare(KH, df);
+    var p = ChiSq(KH, df);
     var W = (KH **2) / (N * (k-1));
     W = W.toFixed(2);
     KH = KH.toFixed(2);
@@ -1718,7 +1693,7 @@ function Friedman(k, deets, data1, data2, data3, data4, data5, data6) {
             var result2 = "<i>Q</i> = " + KH + ", <i>p</i> < 0.01. ";
         } else {
             p = p.toFixed(2);
-            var result2 = "<i>Q</i> = " + KH + ", <i>p</i> = " + p;
+            var result2 = "<i>Q</i> = " + KH + ", <i>p</i> = " + p + ". ";
         }
         if (k==3) {
             result3 = "The significant differences between specific groups, as tested by a Dunn's post-hoc analysis, is shown below: <br>Group 1 x Group 2: <i>p</i> = " + dunn1v2 + "<br>Group 1 x Group 3: <i>p</i> = " + dunn1v3 + "<br>Group 2 x Group 3: <i>p</i> = " + dunn2v3;

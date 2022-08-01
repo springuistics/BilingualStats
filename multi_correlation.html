@@ -1,11 +1,11 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link href="style_3_sets.css" rel="stylesheet" type="text/css">
-    <title>Comparing 3+ Data Sets</title>
+    <link href="multi_correlation.css" rel="stylesheet" type="text/css">
+    <title>Correlation for 3+ Data Sets</title>
 </head>
 <body>
-    <script src="3_data_sets.js"></script>
+    <script src="multiple_correlation.js"></script>
     <div id="langauge_bar">
         <p id="lang_bun">Select Language:</p>
         <select id="lang_s" onchange="L_Change()">
@@ -13,21 +13,19 @@
             <option value="jp">Japanese</option>
         </select>
     </div>
-    <h1  id="Title">Statistical Comparison of Three or More Numerical Data Sets</h1>
     <br>
-    <h2 id="Subtitle">Answer the following questions about your data sets:</h2>
+    <h1  id="Title">Statistical Correlation Between One Measurement and Several Other Co-Measurements</h1>
+    <br>
+    <h2 id="Subtitle">Answer the following questions about your data :</h2>
     <br>
     <div id="bigger">
     <div id="questions">
         <div id="ps">
-            <p class="question" id="qq1">Are your data sets paired data?*</p>
-            <div id="hover1" class="hovery">You should select "yes" if your  data sets consist of the same participants. For example, select "yes" if you are testing the same participants at several points over time, or if you are comparing their answers to many different survey questions.</div>
+            <p class="question" id="qq1">Are your data sets all continuous data?*</p>
+            <div id="hover1" class="hovery">You should select "yes" if ALL of your data sets are measured on scales in which: a) many different numerical answers are possible, and b) a score higher by "1" is equally opposite to a score lower by "1". For example, data measured in time, percentages, number of times, and number of correct answers are often considered to be continuous scales. Likert-scale survey questions are NOT considered to be continuous, so if either of your data sets are of this type, you should select "no." If you are unsure, you can select "yes," and the program will automatically check the data for normalcy via a Shapiro-Wilks Test. If either sets of your data fail this test, it will automatically be considered ordinal and not continuous.</div>
             <br>
-            <p class="question" id="qq2">Are your data sets all continuous data?*</p>
-            <div id="hover2" class="hovery">You should select "yes" if ALL of your data sets are measured on scales in which: a) many different numerical answers are possible, and b) a score higher by "1" is equally opposite to a score lower by "1". For example, data measured in time, percentages, number of times, and number of correct answers are often considered to be continuous scales. Likert-scale survey questions are NOT considered to be continuous, so if either of your data sets are of this type, you should select "no." If you are unsure, you can select "yes," and the program will automatically check the data for normalcy via a Shapiro-Wilks Test. If either sets of your data fail this test, it will automatically be considered ordinal and not continuous.</div>
-            <br>
-            <p id="qq3" class="question">How many data sets do you have?*</p>
-            <div id ="hover3" class="hovery">Please select a number between 3 and 6.</div>
+            <p id="qq2" class="question">How many co-measurements do you have?*</p>
+            <div id ="hover2" class="hovery">This is the number of measurements in ADDITION to your main measurement. For example, if you are trying to determine how 3 different variables are related to test scores, please write '3.' You must write a number between 2 and 5.</div>
             <br>
         </div>
         <div id="as">
@@ -41,11 +39,6 @@
             <br>
             </div>
             <div id="secondy">
-            <input type="radio" id="q2_a" name = "q2" value = "yes" class="radio_btn">
-            <label for="q2_a" class="answer">Yes</label>
-            <input type="radio" id="q2_b" name = "q2" value = "no" class="radio_btn">
-            <label for="q2_b" class="answer">No</label>
-            <br>
             <input type="text" id="k_value" placeholder="Input number of data sets">
             <br>
             </div>
@@ -58,6 +51,13 @@
     <br>
     </div>
     <div id="datasets" style="display: none">
+        <div id="data1">
+            <h3 id="qq3">Copy and paste your dependent variable* data here:</h3>
+            <div id ="hover3" class="hovery">This is the measurement that you are trying to predict with other co-measurements. It is the main number that you are checking for multiple correlations to. For example, if you are trying to determine which of three variables has the largest impact on test scores, please paste the test scores here and the three variables' data in the other areas.</div>
+            <br>
+            <textarea id="y_data" rows="30" columns="40" text-overflow="visible" placeholder="Copy and paste data here"></textarea>
+            <br>
+        </div>
         <div id="d_container"></div>
     </div>
     <div id="activate">

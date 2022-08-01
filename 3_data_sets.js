@@ -1,3 +1,9 @@
+function L_Change() {
+    var language = document.getElementById('lang_s').value;
+    if (language = "jp") {
+        location.href = "3_data_sets_jp.html"
+    }
+}
 var details_of_test = "";
 var results_of_test = "";
 
@@ -71,10 +77,10 @@ function Calculate() {
         let temp = document.getElementById(name).value;
         let realdata = temp.split("\n").map(Number);
         if (realdata.includes("") || realdata.includes("NaN")) {
-            document.getElementById("error_text").innerHTML = "You have null values (lines with no values) or non-numbers in data set " + n + ". Please delete all null values, check to make sure there are no non-numbers in your data set, and then try again.";
+            document.getElementById("error_text").innerHTML = "You have null values (lines with no values) or non-numbers in data set " + (n+1) + ". Please delete all null values, check to make sure there are no non-numbers in your data set, and then try again.";
             document.getElementById('error_text').style.display = "inline";
         } else if (realdata.length < 6) {
-            document.getElementById("error_text").innerHTML = "You need at least 6 data points in each data set in order for any proper conclusion to be drawn about your data. Data set " + n + " does not have enough data points. Please check your data sets or collect more data if necessary.";
+            document.getElementById("error_text").innerHTML = "You need at least 6 data points in each data set in order for any proper conclusion to be drawn about your data. Data set " + (n+1) + " does not have enough data points. Please check your data sets or collect more data if necessary.";
             document.getElementById('error_text').style.display = "inline";
         } else {return realdata;}
     }

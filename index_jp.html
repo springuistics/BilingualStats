@@ -1,4 +1,4 @@
-<html lang="en">
+<html lang="jp">
 <head>
     <meta charset="UTF-8">
     <link href="index.css" rel="stylesheet" type="text/css">
@@ -6,15 +6,15 @@
 </head>
 <body>
     <div id="langauge_bar">
-        <p id="lang_bun">Select Language:</p>
+        <p id="lang_bun">言語設定：</p>
         <select id="lang_s" onchange="L_Change()">
-            <option value="en">English</option>
-            <option value="jp">Japanese</option>
+            <option value="en">日本語</option>
+            <option value="jp">英語</option>
         </select>
     </div>
     <br>
     <div id="title_stuff">
-    <h1 id="main_title">Multilingual Statistics for Linguistics and Language Teaching Studies</h1>
+    <h1 id="main_title">言語学・言語教育研究のためのマルチリンガル統計分析</h1>
     <br>
     <h3 id="instructions">Choose the type of calculation and data set that you have from the options below. Hover over section titles for details.</h3>
     <div id="title_hover" class="hover_text">If using for research, please cite as requested at the bottom of this page.</div>
@@ -65,8 +65,8 @@
 <script>
     function L_Change() {
     var language = document.getElementById('lang_s').value;
-    if (language = "jp") {
-        location.href = "index_jp.html"
+    if (language = "en") {
+        location.href = "index.html"
     }
 }
 </script>

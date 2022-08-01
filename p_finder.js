@@ -1,3 +1,10 @@
+function L_Change() {
+    var language = document.getElementById('lang_s').value;
+    if (language = "jp") {
+        location.href = "p_finder_jp.html"
+    }
+}
+
 function SetUp() {
     var durr = document.querySelector("[name=q1]:checked");
     var whichone = document.querySelector('input[name="q1"]:checked').value;

@@ -24,19 +24,7 @@
     display: inline-block;
 }
 
-#ps #hover1 {
-    position: absolute;
-    width: 400px;
-    border: 3px black;
-    right: 10px;
-    border-radius: 5px;
-    background-color: rgb(250, 180, 94, 0.95);
-    color: rgb(143, 0, 0);
-    display: none;
-    text-align: left;
-}
-
-#ps #hover2 {
+.hovery {
     position: absolute;
     width: 400px;
     border: 3px black;
@@ -51,8 +39,10 @@
 #qq1:hover + #hover1 {
     display: block;
 }
-
 #qq2:hover + #hover2 {
+    display: block;
+}
+#qq3:hover + #hover3 {
     display: block;
 }
 
@@ -67,17 +57,22 @@
 }
 
 #bigger {
-    width: 90%;
+    width: 80%;
     border: 3px;
     background-color: aliceblue;
     margin: auto;
     text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
 }
 
 #questions {
+    margin: auto;
+    text-align: center;
     display: grid;
-    grid-template-columns: repeat(2, 50%);
-    gap: 1rem;
+    grid-template-columns: auto auto;
+    gap: 10px;
+    padding: 10px;
 }
 
 #error_text {
@@ -113,30 +108,42 @@
     font-size: 14px;
 }
 
+#questions #as #k_value {
+    margin: auto;
+    margin-top: 5px;
+}
+
 #datasets {
     width: 90%;
     border: 3px;
     background-color: rgb(248, 255, 240);
     margin: auto;
     text-align: center;
-    display: grid;
-    grid-template-columns: repeat(2, 50%);
-    gap: 1rem;
+    grid-column: auto auto;
 }
 
-#datasets #data1 {
-    grid-column:1;
+#datasets #d_container {
+    width: 90%;
+    border: 3px;
+    background-color: rgb(248, 255, 240);
     margin: auto;
-    padding: 5px;
     text-align: center;
 }
 
-#datasets #data2 {
-    grid-column:2;
+#datasets .dataset {
+    margin: auto;
+    padding: 5px;
+    text-align: right;
+    text-overflow:"visible";
+}
+
+#datasets .data_label {
     margin: auto;
     padding: 5px;
     text-align: center;
+    text-shadow: 1px 1px 1px 1px white;
 }
+
 
 #activate {
     margin: auto;
@@ -146,7 +153,7 @@
     text-align: center;
 }
 
-#activate #button {
+.button {
     width: 200px;
     height: 30px;
     font-size: 20px;

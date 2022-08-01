@@ -1,3 +1,9 @@
+function L_Change() {
+    var language = document.getElementById('lang_s').value;
+    if (language = "jp") {
+        location.href = "correlation_jp.html"
+    }
+}
 var details_of_test = "";
 var results_of_test = "";
 

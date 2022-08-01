@@ -1,3 +1,9 @@
+function L_Change() {
+    var language = document.getElementById('lang_s').value;
+    if (language = "jp") {
+        location.href = "cohens_d_jp.html"
+    }
+}
 function GetResults() {
     var M1 = document.getElementById('M1').value;
     var S1 = document.getElementById("S1").value;

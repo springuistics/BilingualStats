@@ -1,0 +1,57 @@
+<html>
+<head>
+    <meta charset="UTF-8" lang="jp">
+    <link href="../css/general.css" rel="stylesheet" type="text/css">
+    <title>Cohen's D Calculator</title>
+</head>
+<body>
+    <script src="cohens_d_jp.js"></script>
+    <div id="langauge_bar">
+        <p id="lang_bun">言語設定:</p>
+        <select id="lang_s" onchange="L_Change()">
+            <option value="jp">日本語</option>
+            <option value="en">English</option>
+        </select>
+    </div>
+    <div id="setup">
+    <h1  id="title_bun">Cohen's d の計算</h1>
+    <br>
+
+    <div id="ZtoP" style="width: 80%; margin: auto; background-color: rgb(253, 234, 198); border: solid, 3px, black">
+        <h2 class="subheader">平均値、標準偏差、サンプル（<i>N</i>）からCohen's dを計算する</h2>
+        <br>
+        <div class="grid_container4">
+            <p class="g1">平均値 1:</p>
+            <input id="M1" type="text" class="g2">
+            <p class="g3">平均値 2:</p>
+            <input id="M2" type="text" class="g4">
+        </div>
+        <br>
+        <div class="grid_container4">
+            <p class="g1">標準偏差 1:</p>
+            <input id="S1" type="text" class="g2">
+            <p class="g2">標準偏差 2:</p>
+            <input id="S2" type="text" class="g4">
+        </div>
+        <br>
+        <div class="grid_container4">
+            <p class="g1"><i>N</i> 1:</p>
+            <input id="N1" type="text" class="g2">
+            <p class="g3"><i>N</i> 2:</p>
+            <input id="N2" type="text" class="g4">
+        </div>
+        <br>
+        <p id="results_bun" class="results">Results go here</p>
+        <br>
+        <div class="bcon"><button id="zbtn" class="button" onclick="GetResults()"><i>d</i>を計算</button>
+        <br>
+        </div>
+    </div>
+    <div id="citation">
+        <p>本プログラムやその関連している説明文などを研究で使った場合は下記の論文を引用してください。</p>
+        <br>
+        <p id="paper"> Spring, R. (2022). Online Bilingual Statistics Calculations for Langauge Education and Linguistics. Coming soon.</p>
+        <br>
+        <div id="personal_hp"><p >Visit the <a style="color: darkblue; text-decoration: underline;" href="https://sites.google.com/view/ryanspring/home">research page</a> of the creator, Ryan Spring, for examples of these tests used in practical research.</p>
+    </div>
+</body>

@@ -1,0 +1,79 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link href="../css/multi_correlation.css" rel="stylesheet" type="text/css">
+    <title>Correlation for 3+ Data Sets</title>
+</head>
+<body>
+    <script src="multiple_correlation.js"></script>
+    <div id="langauge_bar">
+        <p id="lang_bun">Select Language:</p>
+        <select id="lang_s" onchange="L_Change()">
+            <option value="en">English</option>
+            <option value="jp">Japanese</option>
+        </select>
+    </div>
+    <br>
+    <h1  id="Title">Statistical Correlation Between One Measurement and Several Other Co-Measurements</h1>
+    <br>
+    <h2 id="Subtitle">Answer the following questions about your data :</h2>
+    <br>
+    <div id="bigger">
+    <div id="questions">
+        <div id="ps">
+            <p class="question" id="qq1">Are your data sets all continuous data?*</p>
+            <div id="hover1" class="hovery">You should select "yes" if ALL of your data sets are measured on scales in which: a) many different numerical answers are possible, and b) a score higher by "1" is equally opposite to a score lower by "1". For example, data measured in time, percentages, number of times, and number of correct answers are often considered to be continuous scales. Likert-scale survey questions are NOT considered to be continuous, so if either of your data sets are of this type, you should select "no." If you are unsure, you can select "yes," and the program will automatically check the data for normalcy via a Shapiro-Wilks Test. If either sets of your data fail this test, it will automatically be considered ordinal and not continuous.</div>
+            <br>
+            <p id="qq2" class="question">How many co-measurements do you have?*</p>
+            <div id ="hover2" class="hovery">This is the number of measurements in ADDITION to your main measurement. For example, if you are trying to determine how 3 different variables are related to test scores, please write '3.' You must write a number between 2 and 5.</div>
+            <br>
+        </div>
+        <div id="as">
+            <div id="firsty">
+            <input type="radio" id="q1_a" class="radio_btn" name="q1" value="yes">
+            <label for="q1_a" class="answer">Yes</label>
+            <input type="radio" id="q1_b" class="radio_btn" name="q1" value="no">
+            <label for="q1_b" class="answer">No</label>
+            <br>
+            <br>
+            <br>
+            </div>
+            <div id="secondy">
+            <input type="text" id="k_value" placeholder="Input number of data sets">
+            <br>
+            </div>
+        </div>
+    </div>
+    <p id="error_text" style="display: none">Error will appear here.</p>
+    <p id="small_text">*Mouse over questions for explanation</p>
+    <br>
+    <button id="SetUp" class="button" onclick="SetUp()">Set Up the Test</button>
+    <br>
+    </div>
+    <div id="datasets" style="display: none">
+        <div id="data1">
+            <h3 id="qq3">Copy and paste your dependent variable* data here:</h3>
+            <div id ="hover3" class="hovery">This is the measurement that you are trying to predict with other co-measurements. It is the main number that you are checking for multiple correlations to. For example, if you are trying to determine which of three variables has the largest impact on test scores, please paste the test scores here and the three variables' data in the other areas.</div>
+            <br>
+            <textarea id="y_data" rows="30" columns="40" text-overflow="visible" placeholder="Copy and paste data here"></textarea>
+            <br>
+        </div>
+        <div id="d_container"></div>
+    </div>
+    <div id="activate">
+        <button id="button" class="button" style="display: none" onclick="Calculate()">Calculate!</button>
+    </div>
+    <div id="results">
+        <p id="explain_bun" style="font-weight: bold; font-size: 16px; color: rgb(105, 0, 0)">The description of your test will be printed here:</p>
+        <p id="results_bun" style="font-weight: bold; font-size: 18px">Your results will be printed here:</p>
+        <div id="table_holder"></div>
+        <br>
+        <button id="reset" class="button" style="display: none; background-color: rgb(139, 0, 0);" onclick="Reset()">Reset!</button>
+    </div>
+    <div id="Citation">
+        <p>Please cite the following paper if you use this program or any of the statistics herein. The justifications are included in the paper, linked below for your reference.</p>
+        <p> Spring, R. (2022). Online Bilingual Statistics Calculations for Langauge Education and Linguistics. Coming soon.</p>
+    </div>
+
+</body>
+</html>

@@ -1,7 +1,7 @@
 <html lang="jp">
 <head>
     <meta charset="UTF-8">
-    <link href="index.css" rel="stylesheet" type="text/css">
+    <link href="css/index.css" rel="stylesheet" type="text/css">
     <title>Multilingual Stats for Language Studies</title>
 </head>
 <body>
@@ -17,49 +17,49 @@
     <h1 id="main_title">言語学・言語教育研究のためのマルチリンガル統計分析</h1>
     <br>
     <h3 id="instructions">Choose the type of calculation and data set that you have from the options below. Hover over section titles for details.</h3>
-    <div id="title_hover" class="hover_text">If using for research, please cite as requested at the bottom of this page.</div>
+    <div id="title_hover" class="hover_text">本プログラムやその関連している説明文などを研究で使った場合はページ下の論文を引用してください</div>
     </div>
     <div id="tests">
         <br>
         <div id="border_help">
-        <h3 style="font:bold; font-size: 20px; text-shadow: 2px 2px 6px grey">Recommended Calculators that Help Select Proper Tests:</h3>
+        <h3 style="font:bold; font-size: 20px; text-shadow: 2px 2px 6px grey">統計テスト選定のガイダンスある推奨計算プログラム</h3>
         <div id="t_container">
         <div id="twocomps">
-            <a href="2_data_sets.html" class="linky" id="tc1">Checking for Differences in Two Data Sets</a>
-            <div id="two_comps_hover" class="hover_text">Provides p values and effect sizes to check if there is a statistically significant difference and how strong any measurable effect is. Also helps you to choose the proper test and report it correctly in an academic paper. Examples include: pre/post comparison, comparing two different groups, comparing differences in two survey questions, etc.</div>
+            <a href="jp/2_data_sets_jp.html" class="linky" id="tc1">2組の数値データの統計比較を計算する</a>
+            <div id="two_comps_hover" class="hover_text">2組に有意義な差があるかどうかの判断に使う <i>p</i> 値、または、2組の相違性がどのぐらい強いかの判断に使う効果量を計算してくれるプログラムです。適切な統計分析テストの選定、学術論文での表記文も協力します。例えば、事前・事後テストの分析、異なる2組の差の分析、リッカート尺度のアンケート質問の比較分析などがしたい方はクリックしてください。</div>
         </div>
         <div id="twocorrs">
-            <a href="correlation.html" class="linky" id="tc2">Checking for Correlation in Two Data Sets</a>
-            <div id="two_corrs_hover" class="hover_text">Provides correlation value and p value to check if there is a statistically significant correlation or not and if so, how strong it is. Also helps you to choose the proper test and report it correctly in an academic paper. Requires two measurements from the same population sample (i.e. from the same participants). Examples include: checking for relationship between survey question and learning outcome, checking for relationship between two learning outcomes, checking for relationship between two features of the participants, etc.</div>
+            <a href="jp/correlation_jp.html" class="linky" id="tc2">2組の数値データの相関関係を計算する</a>
+            <div id="two_corrs_hover" class="hover_text">どのぐらいの関係があるかの判断に使う相関係数、または、有意義な関係性があるかどうかの判断に使う<i>p</i>値を計算してくれるプログラムです。適切な統計分析テストの選定、学術論文での表記文も協力します。同じ参加者から2変数を測ったデータが必要です。例えば、リッカート尺度のアンケート質問と学習効果が関連しているかどうかの分析、二つの学習効果の間に関連性があるかどうかの分析、同じ参加者の2つの特徴に関連性があるかどうかの分析がしたい方はクリックしてください。</div>
         </div>
         <div id="multi_comps">
-            <a href="3_data_sets.html" class="linky" id="mc1">Checking for Differences in Multiple Data Sets</a>
-            <div id="multi_comps_hover" class="hover_text">Provides p values and effect sizes to check if there are any statistically significant differences and how strong any measurable effects are. Also helps you to choose the proper test and report it correctly in an academic paper. Examples include: comparing three or more different groups, comparing progress of students at multiple points in time, comparing differences in multiple survey questions, etc.</div>
+            <a href="jp/3_data_sets_jp.html" class="linky" id="mc1">3組以上の数値データの統計比較を計算する</a>
+            <div id="multi_comps_hover" class="hover_text">3組に有意義な差があるかどうかの判断に使う <i>p</i> 値、または、3組の相違性がどのぐらい強いかの判断に使う効果量を計算してくれるプログラムです。適切な統計分析テストの選定、学術論文での表記文も協力します。例えば、異なる3組の差の分析、3つ以上のリッカート尺度のアンケート質問の比較分析、同じ参加者を複数の時点で測ったデータの比較分析などがしたい方はクリックしてください。</div>
         </div>
         <div id="multi_corrs">
-            <a href="multi_correlation.html" class="linky" id="mc2">Checking for Correlation in Multiple Data Sets</a>
-            <div id="multi_corrs_hover" class="hover_text">Provides correlation value and p value to check if there is a statistically significant correlation between a single variable and multiple other variables or not and if so, how strong it is, and also shows correlation for each variable when others are nullified. Also helps you to choose the proper test and report it correctly in an academic paper. Requires several measurements from the same population sample (i.e. from the same participants). Examples include: checking for relationship between multiple survey questions and a single learning outcome, checking for relationship between several measurements on a single learning outcomes, etc.</div>
+            <a href="jp/multi_correlation_jp.html" class="linky" id="mc2">複数の変数の関係性を計算する</a>
+            <div id="multi_corrs_hover" class="hover_text">一つの変数と2つ以上他の変数の間に、総合的にどのぐらいの関係があるかの判断に使う相関係数、または、有意義な関係性があるかどうかの判断に使う<i>p</i>値を計算してくれるプログラムです。また、各変数が総合的にどのぐらい元の変数に影響を及ぼすのかの判断に使う<i>b</i>や<i>beta</i>を計算してくれるプログラムです。適切な統計分析テストの選定、学術論文での表記文も協力します。同じ参加者から複数の変数データが必要です。例えば、一つの学習効果に複数のアンケート質問がどのぐらい影響を及ぼすかの分析、一つの学習効果に複数の要因がどのぐらい影響を及ぼすかの分析などがしたい方はクリックしてください。</div>
         </div>
         </div>
     </div>
         <div id="advanced">
-            <h3 style="font:bold; font-size: 20px; text-shadow: 2px 2px 6px grey">Various Calculators for Advanced Users:</h3>
-            <a href="effect_calc.html" class="linky">Effect Size Calculator (<i>r</i> from <i>Z</i> and <i>N</i>)</a><br>
-            <a href="cohens_d.html" class="linky">Calculate Cohen's D</a><br>
-            <a href="p_finder.html" class="linky">Calculate <i>p</i> from <i>Z</i> or <i>t</i> values</a><br>
+            <h3 style="font:bold; font-size: 20px; text-shadow: 2px 2px 6px grey">上級者向けの計算プログラム</h3>
+            <a href="jp/effect_calc_jp.html" class="linky">効果量 (<i>r</i> を <i>Z</i> と <i>N</i>から計算する</a><br>
+            <a href="jp/cohens_d_jp.html" class="linky">Cohen's dを計算する</a><br>
+            <a href="jp/p_finder_jp.html" class="linky"><i>p</i> 値を <i>Z</i> あるいは <i>t</i> から計算する</a><br>
             <br>
         </div>
     </div>
     <br>
     <div id="citation">
         <br>
-        <h3 style="margin-top: 10px">For details on the calculations provided by this website, please see the paper below. If you use the calculations provided by this website, please cite the paper.</h3>
+        <h3 style="margin-top: 10px">計算方法や詳細が知りたい方は下記の論文をご参照ください。また、本プログラムやその関連している説明文などを研究で使った場合、下記の論文の引用を宜しくお願いします</h3>
         <br>
         <p id="paper">Spring, R. (2022) Free, Online, Multilingual Statistics for Linguistics and Langauge Education Researchers. 2021 Tohoku University IEHE Nenpo 8, pp.??-??.</p>
         <br>
-        <a id="paper_link" href="??" class="linky">Click here to read the paper.</a>
+        <a id="paper_link" href="??" class="linky">論文を読む</a>
         <br>
-        <div id="personal_hp"><p >Visit the <a style="color: darkblue; text-decoration: underline;" href="https://sites.google.com/view/ryanspring/home">research page</a> of the creator, Ryan Spring, for examples of these tests used in practical research.</p>
+        <div id="personal_hp"><p >上記の検定や計算を活かしている研究の実例を見る際は、本プログラムを作ったスプリング・ライアンの<a style="color: darkblue; text-decoration: underline;" href="https://sites.google.com/view/ryanspring/home">研究ホームページ</a> に訪れてください。</p>
     </div>
 </body>
 <script>

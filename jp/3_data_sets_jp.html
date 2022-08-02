@@ -1,0 +1,78 @@
+<html>
+<head>
+    <meta charset="UTF-8" lang="jp">
+    <link href="../css/style_3_sets.css" rel="stylesheet" type="text/css">
+    <title>Comparing 3+ Data Sets</title>
+</head>
+<body>
+    <script src="3_data_sets_jp.js"></script>
+    <div id="langauge_bar">
+        <p id="lang_bun">言語設定:</p>
+        <select id="lang_s" onchange="L_Change()">
+            <option value="jp">日本語</option>
+            <option value="en">English</option>
+        </select>
+    </div>
+    <h1  id="Title">3組以上の数値データの統計比較</h1>
+    <br>
+    <h2 id="Subtitle">データについて、以下の質問を答えてください。</h2>
+    <br>
+    <div id="bigger">
+    <div id="questions">
+        <div id="ps">
+            <p class="question" id="qq1">対応のあるデータですか？*</p>
+            <div id="hover1" class="hovery">全組のデータを同じ参加者から収集した場合は、「はい」を選んでください。例えば、同じ参加者から複数の時点でデータを取った場合や、同じ参加者によって回答された3つ以上の異なるアンケートの質問を比較している場合は「はい」を選びます。</div>
+            <br>
+            <p class="question" id="qq2">全組のデータは連続データですか？*</p>
+            <div id="hover2" class="hovery">全べてのデータ組に関しては、多数の数字が可能であり、平均より１つ大きいデータが平均より1つ小さいデータと同等に平均値から離れているという二つの条件を満たしている場合、「はい」と答えてください。時間、割合、回数、正解率などは多くの場合、「連続的データ」と見なされます。リッカート尺度のアンケート質問は継続的データと見なさらないため、いずれのデータ組はこのようなデータである場合は「いいえ」と答えてください。もしどちらになるか分からない場合は「はい」と答えても構いません。「はい」と答えた際、本プログラムは自動的にシャピロ－ウィルク検定を実施して、データがパラメトリック検定を利用できるかどうかを確認してから、その結果に基づいて、自動的に適切なテストを選択してくれます。</div>
+            <br>
+            <p id="qq3" class="question">何組を比較しますか？*</p>
+            <div id ="hover3" class="hovery">３～６の数字を入力してください</div>
+            <br>
+        </div>
+        <div id="as">
+            <div id="firsty">
+            <input type="radio" id="q1_a" class="radio_btn" name="q1" value="yes">
+            <label for="q1_a" class="answer">はい</label>
+            <input type="radio" id="q1_b" class="radio_btn" name="q1" value="no">
+            <label for="q1_b" class="answer">いいえ</label>
+            <br>
+            <br>
+            <br>
+            </div>
+            <div id="secondy">
+            <input type="radio" id="q2_a" name = "q2" value = "yes" class="radio_btn">
+            <label for="q2_a" class="answer">はい</label>
+            <input type="radio" id="q2_b" name = "q2" value = "no" class="radio_btn">
+            <label for="q2_b" class="answer">いいえ</label>
+            <br>
+            <input type="text" id="k_value" placeholder="Input number of data sets">
+            <br>
+            </div>
+        </div>
+    </div>
+    <p id="error_text" style="display: none">Error will appear here.</p>
+    <p id="small_text">*マウスポインターを質問の上に載せると、説明が標示されます</p>
+    <br>
+    <button id="SetUp" class="button" onclick="SetUp()">データ入力開始</button>
+    <br>
+    </div>
+    <div id="datasets" style="display: none">
+        <div id="d_container"></div>
+    </div>
+    <div id="activate">
+        <button id="button" class="button" style="display: none" onclick="Calculate()">計算</button>
+    </div>
+    <div id="results">
+        <p id="explain_bun" style="font-weight: bold; font-size: 16px; color: rgb(105, 0, 0)">利用された検定の詳細はここに書かれます</p>
+        <p id="results_bun" style="font-weight: bold; font-size: 18px">結果はここに書かれます</p>
+        <br>
+        <button id="reset" class="button" style="display: none; background-color: rgb(139, 0, 0);" onclick="Reset()">Reset!</button>
+    </div>
+    <div id="Citation">
+        <p>本プログラムやその関連している説明文などを研究で使った場合は下記の論文を引用してください。</p>
+        <p> Spring, R. (2022). Online Bilingual Statistics Calculations for Langauge Education and Linguistics. Coming soon.</p>
+    </div>
+
+</body>
+</html>

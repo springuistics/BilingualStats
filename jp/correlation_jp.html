@@ -1,0 +1,58 @@
+<html>
+<head>
+    <meta charset="UTF-8" lang="jp">
+    <link href="../css/correlation.css" rel="stylesheet" type="text/css">
+    <title>Correlation Between 2 Data Sets</title>
+</head>
+<body>
+    <script src="correlation_jp.js"></script>
+    <div id="langauge_bar">
+        <p id="lang_bun">言語設定:</p>
+        <select id="lang_s" onchange="L_Change()">
+            <option value="jp">日本語</option>
+            <option value="en">English</option>
+        </select>
+    </div>
+    <h1  id="Title">2組の数値データの相関関係</h1>
+    <br>
+    <h2 id="Subtitle">データについて、以下の質問を答えてください。</h2>
+    <br>
+    <div id="questions">
+            <p id="the_question_bun">両方とも連続データですか？*</p>
+            <div id="hover1">2組のデータを同じ参加者から収集した場合は、「はい」を選んでください。例えば、事前・事後テストを使用している場合や、同じ参加者によって回答された2つの異なるアンケートの質問を比較している場合は「はい」を選びます。</div>
+            <input type="radio" id="q1_a" class="radio_btn" name="q1" value="yes">
+            <label for="q1_a" class="answer">はい</label>
+            <input type="radio" id="q1_b" class="radio_btn" name="q1" value="no">
+            <label for="q1_b" class="answer">いいえ</label>
+    <br>
+    <p id="error_text" style="display: none">Error will appear here.</p>
+    <p id="small_text">*マウスポインターを質問の上に載せると、説明が表示されます</p>
+    </div>
+    <div id="datasets">
+        <div id="data1">
+            <h3>データ①をコピーして、以下にペーストしてください</h3>
+            <br>
+            <textarea id="data_set_1" rows="30" columns="40" text-overflow="visible" placeholder="paste data here"></textarea>
+            <br>
+        </div>
+        <div id="data2">
+            <h3>データ②をコピーして、以下にペーストしてください</h3>
+            <br>
+            <textarea id="data_set_2" rows="30" columns="40" text-overflow="visible" placeholder="paste data here"></textarea>
+            <br>
+        </div>
+    </div>
+    <div id="activate">
+        <button id="button" onclick="Calculate()">計算</button>
+    </div>
+    <div id="results">
+        <p id="explain_bun" style="font-weight: bold; font-size: 16px; color: rgb(105, 0, 0)">利用された検定の詳細はここに書かれます</p>
+        <p id="results_bun" style="font-weight: bold; font-size: 18px">結果はここに書かれます</p>
+    </div>
+    <div id="Citation">
+        <p>本プログラムやその関連している説明文などを研究で使った場合は下記の論文を引用してください。</p>
+        <p> Spring, R. (2022). Online Bilingual Statistics Calculations for Langauge Education and Linguistics. Coming soon.</p>
+    </div>
+
+</body>
+</html>

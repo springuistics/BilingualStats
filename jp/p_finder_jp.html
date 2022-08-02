@@ -1,0 +1,69 @@
+<html>
+<head>
+    <meta charset="UTF-8" lang="jp">
+    <link href="../css/general.css" rel="stylesheet" type="text/css">
+    <title>P Value Calculator</title>
+</head>
+<body>
+    <script src="p_finder_jp.js"></script>
+    <div id="langauge_bar">
+        <p id="lang_bun">言語設定:</p>
+        <select id="lang_s" onchange="L_Change()">
+            <option value="jp">日本語</option>
+            <option value="en">English</option>
+        </select>
+    </div>
+    <div id="setup">
+    <h1  id="title_bun">を <i>Z</i> あるいは <i>t</i> から<i>p</i> 値の計算</h1>
+    <br>
+    <p id="data_q" class="data_q"><i>p</i>は何から計算しますか？</p>
+    <br>
+    <input type="radio" id="q1_a" class="radio_btn" name="q1" value="Z_value">
+            <label for="q1_a" class="answer"><i>Z</i>値から</label>
+            <input type="radio" id="q1_b" class="radio_btn" name="q1" value="t_value">
+            <label for="q1_b" class="answer"><i>t</i>値から</label>
+    <br>
+    <br>
+    <button id="setting_btn" class="button" onclick="SetUp()">データ入力開始</button>
+    <br>
+    </div>
+    <br>
+    <div id="ZtoP" class="hidden" style="width: 80%; margin: auto; background-color: rgb(253, 234, 198); border: solid, 3px, black">
+        <h2 class="subheader"><i>Z</i>値から<i>p</i>値を計算する</h2>
+        <br>
+        <div class="grid_container2">
+            <p class="g1"><i>Z</i>値:</p>
+            <input id="zv" type="text" class="g2">
+            <br>
+        </div>
+        <br>
+        <p id="z_result" class="results">Results go here</p>
+        <br>
+        <div class="bcon"><button id="zbtn" class="button" onclick="GetZ()"><i>p</i>を計算</button>
+        <br>
+        </div>
+    </div>
+    <div id="TtoP" class="hidden" style="width: 80%; margin: auto; background-color: rgb(195, 252, 203); border: solid, 3px, black">
+        <h2 class="subheader"><i>t</i>値から<i>p</i>を計算する</h2>
+        <br>
+        <div class="grid_container4">
+            <p class="g1"><i>t</i>値:</p>
+            <input id="tv" type="text" class="g2">
+            <p class="g3">自由度（df）:</p>
+            <input id="dfv" type="text" class="g4">
+        </div>
+        <br>
+        <p id="t_result" class="results">Results go here</p>
+        <br>
+        <div class="bcon"><button id="tbtn" class="button" onclick="GetT()"><i>p</i>を計算</button>
+        <br>
+        </div>
+    </div>
+    <div id="citation">
+        <p>本プログラムやその関連している説明文などを研究で使った場合は下記の論文を引用してください。</p>
+        <br>
+        <p id="paper"> Spring, R. (2022). Online Bilingual Statistics Calculations for Langauge Education and Linguistics. Coming soon.</p>
+        <br>
+        <div id="personal_hp"><p >Visit the <a style="color: darkblue; text-decoration: underline;" href="https://sites.google.com/view/ryanspring/home">research page</a> of the creator, Ryan Spring, for examples of these tests used in practical research.</p>
+    </div>
+</body>

@@ -1,0 +1,150 @@
+.hover_text{
+    display: none;
+    width: 80%;
+    left: 10px;
+    position: absolute;
+    border: 3px black;
+    border-radius: 5px;
+    background-color: rgb(250, 180, 94, 0.95);
+    color: rgb(143, 0, 0);
+    text-align: left;
+    z-index: 2;
+}
+.linky{
+    font-size: 16px;
+    font-weight: bold;
+    color: darkblue;
+    text-decoration: underline;
+}
+
+#langauge_bar {
+    margin: auto;
+    width: 80%;
+    text-align: right;
+    background-color: rgb(1, 1, 121);
+}
+#langauge_bar #lang_bun{
+    display: inline-block;
+    color: white;
+    font-size: 12pt;
+    font-weight: bold;
+}
+#langauge_bar #lang_s{
+    font-size: 12pt;
+    display: inline-block;
+}
+
+#title_stuff {
+    text-align: center;
+    margin: auto;
+    width: 80%;
+    background-color: aliceblue;
+    position: relative;
+}
+#main_title {
+    margin:auto;
+    padding: 20px;
+    color: black;
+    text-shadow: 3px 3px 8px gray;
+}
+#instructions:hover + #title_hover {
+    display: block;
+}
+
+#tests {
+    width: 80%;
+    border: 3px;
+    border-color:black;
+    background-color: rgb(176, 255, 214);
+    margin: auto;
+    text-align: center;
+    padding-bottom: 20px;
+}
+#border_help {
+    width: 90%;
+    margin: auto;
+    border: solid 5px rgba(0, 0, 0, 0.884);
+    border-radius: 10px;
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 30px;
+}
+
+#t_container {
+    margin: auto;
+    text-align: center;
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 10px;
+    padding: 10px;
+}
+#t_container #twocomps {
+    position: relative;
+    margin-top: 10px;
+    padding: 5px;
+    padding-top: 10px;
+    padding-bottom:10px;
+}
+#t_container #twocorrs {
+    position: relative;
+    margin-top: 10px;
+    padding: 5px;
+    padding-top: 10px;
+    padding-bottom:10px;
+}
+#t_container #multi_comps {
+    position: relative;
+    margin-top: 10px;
+    padding: 5px;
+    padding-top: 10px;
+    padding-bottom:10px;
+}
+#t_container #multi_corrs {
+    position: relative;
+    margin-top: 10px;
+    padding: 5px;
+    padding-top: 10px;
+    padding-bottom:10px;
+}
+#tc1:hover + #two_comps_hover {
+    display: block;
+}
+#tc2:hover + #two_corrs_hover {
+    display: block;
+}
+#mc1:hover + #multi_comps_hover {
+    display: block;
+}
+#mc2:hover + #multi_corrs_hover {
+    display: block;
+}
+#tests #advanced {
+    margin: auto;
+    width: 80%;
+    text-align: center;
+    border: solid 5px rgba(0, 0, 0, 0.884);
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+#citation {
+    background-color: plum;
+    width: 80%;
+    text-align: center;
+    margin: auto;
+}
+#citation #paper {
+    text-align: left;
+    width: 80%;
+    margin: auto;
+    font-size: 14px;
+    font: bold;
+    text-shadow: 2px 2px 6px white;
+}
+#citation #personal_hp {
+    margin-top: 5px;
+    margin: auto;
+    font-size: 12px;
+    width: 75%;
+    text-align: center;
+}

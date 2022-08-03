@@ -14,13 +14,13 @@ function SetUp() {
     var ord_c1 = document.querySelector("[name=q1]:checked");
     var ord_check = document.querySelector('input[name="q1"]:checked').value;
     if (!ord_c1) {
-        document.getElementById("error_text").innerHTML = "Please select whether or not the data is continuous. For an explanation, mouse over the question."
+        document.getElementById("error_text").innerHTML = "データは全て連続データかどうかを選んでください。説明が必要な場合はマウスポインターを質問の上に乗せてください。"
         document.getElementById('error_text').style.display = "inline";
     } else if (ord_check=="no") {
-        document.getElementById("error_text").innerHTML = "Sorry, ordinal regression is not available yet. Check back soon.";
+        document.getElementById("error_text").innerHTML = "申し訳ないのですが、純情データ（連続ではないデータ）の計算機は準備中です。";
         document.getElementById('error_text').style.display = "inline";
     } else if (ord_check == "yes") {
-        document.getElementById("error_text").innerHTML = "Currently, multiple regression of continuous variables only accepts two independent variables. Sorry for any inconvenience."
+        document.getElementById("error_text").innerHTML = "申し訳ないのですが、現在の重回帰分析計算機はまだ2つの説明変数しか取り扱えないんです。"
         document.getElementById('error_text').style.display = "inline";
         k = 2;
         document.getElementById('button').style.display = "inline";
@@ -37,7 +37,7 @@ function SetUpP2(k) {
         data.className = "dataset";
         let label = document.createElement("h3");
         let n = i+1;
-        let text = "Copy and paste variable data set " + n + " below:";
+        let text = "説明変数" + n + "のデータを以下にペーストしてください";
         label.innerHTML = text;
         label.className = "data_label";
         label.id = "label_" + i;
@@ -64,8 +64,8 @@ function Reset() {
     document.getElementById('button').style.display = "none";
     document.getElementById('datasets').style.display = "none";
     document.getElementById('reset').style.display = "none";
-    document.getElementById('explain_bun').innerHTML = "The description of your test will be printed here:";
-    document.getElementById('results_bun').innerHTML = "Your results will be printed here:"
+    document.getElementById('explain_bun').innerHTML = "利用された検定の詳細はここに書かれます";
+    document.getElementById('results_bun').innerHTML = "結果はここに書かれます"
 }
 
 function Calculate() {
@@ -79,10 +79,10 @@ function Calculate() {
     let temp2 = document.getElementById("y_data").value;
     y_data_set = temp2.split("\n").map(Number); 
     if (y_data_set.includes("") || y_data_set.includes("NaN")) {
-        document.getElementById("error_text").innerHTML = "You have null values (lines with no values) or non-numbers in your dependent variable data. Please delete all null values, check to make sure there are no non-numbers in your data set, and then try again.";
+        document.getElementById("error_text").innerHTML = "予測変数データに数字ではない行、あるいはデータのない行があります。データのない行は全て削除し、全てのデータが半角数字になっていることを確認してください。";
         document.getElementById('error_text').style.display = "inline";
     } else if (y_data_set.length < 6) {
-        document.getElementById("error_text").innerHTML = "You need at least 6 data points in each data set in order for any proper conclusion to be drawn about your data. Your dependent variable data does not have enough data points. Please check your data sets or collect more data if necessary.";
+        document.getElementById("error_text").innerHTML = "適切な結果を得るには、それぞれの組に少なくとも6つのデータが必要です。予測変数データの量が足りません。データを確認し、必要に応じてより多くのデータを集めてください。";
         document.getElementById('error_text').style.display = "inline";
     } 
     function SetDataSet(n) {
@@ -90,10 +90,10 @@ function Calculate() {
         let temp = document.getElementById(name).value;
         let realdata = temp.split("\n").map(Number);
         if (realdata.includes("") || realdata.includes("NaN")) {
-            document.getElementById("error_text").innerHTML = "You have null values (lines with no values) or non-numbers in data set " + (n+1) + ". Please delete all null values, check to make sure there are no non-numbers in your data set, and then try again.";
+            document.getElementById("error_text").innerHTML = "予測変数データ" + (n+1) + "に数字ではない行、あるいはデータのない行があります。データのない行は全て削除し、全てのデータが半角数字になっていることを確認してください。";
             document.getElementById('error_text').style.display = "inline";
         } else if (realdata.length < 6) {
-            document.getElementById("error_text").innerHTML = "You need at least 6 data points in each data set in order for any proper conclusion to be drawn about your data. Data set " + n + " does not have enough data points. Please check your data sets or collect more data if necessary.";
+            document.getElementById("error_text").innerHTML = "適切な結果を得るには、それぞれの組に少なくとも6つのデータが必要です。予測変数データ" + (n+1) + "の量が足りません。データを確認し、必要に応じてより多くのデータを集めてください。";
             document.getElementById('error_text').style.display = "inline";
         } else {return realdata;}
     }
@@ -101,7 +101,7 @@ function Calculate() {
     if (k==2) {
         data_set1 = SetDataSet(0); data_set2 = SetDataSet(1);
         if (data_set1.length !== y_data_set.length || data_set2.length !== y_data_set.length){
-            document.getElementById("error_text").innerHTML = "Correlation analysis presumes measurements of the same data points (i.e., participants, instances, etc.) and therefore your data sets should have the same numbers of values, but yours do not. Please check, amend as necessary and retry.";
+            document.getElementById("error_text").innerHTML = "関連性を分析する際、全ての変数には同じデータの数が必要ですが、入力したデータに相違があります。データの数を確認した上で、もう一度、計算ボタンを押してみてください。";
             document.getElementById('error_text').style.display = "inline";
         } else {Begin(k, y_data_set, data_set1, data_set2);}
     } 
@@ -237,12 +237,12 @@ function Begin(k, datay, x1, x2, x3) {
     var result1 = "";
     if (p <= .05) {
         if (p <= 0) {
-        result1 = "The comibnation of these variables significantly predict the main variable: <i>F</i> = " + F + ", <i>p</i> < .01, <i>R<sup>2</sup></i> = " + R2 + "<br>";
+        result1 = "重回帰モデルは目的変数を有意差に予測できます。 <i>F</i> = " + F + ", <i>p</i> < .01, <i>R<sup>2</sup></i> = " + R2 + "<br>";
         } else {
-        result1 = "The comibnation of these variables significantly predict the main variable: <i>F</i> = " + F + ", <i>p</i> = " + p + ", <i>R<sup>2</sup></i> = " + R2 + "<br>";
+        result1 = "重回帰モデルは目的変数を有意差に予測できます。 <i>F</i> = " + F + ", <i>p</i> = " + p + ", <i>R<sup>2</sup></i> = " + R2 + "<br>";
         }
     } else {
-        result1 = "The comibnation of these variables do not significantly predict the main variable: <i>F</i> = " + F + ", <i>p</i> = " + p + ", <i>R<sup>2</sup></i> = " + R2 + "<br>";
+        result1 = "重回帰モデルは目的変数を有意差に予測できません。 <i>F</i> = " + F + ", <i>p</i> = " + p + ", <i>R<sup>2</sup></i> = " + R2 + "<br>";
     }
     document.getElementById("results_bun").innerHTML = result1;
 

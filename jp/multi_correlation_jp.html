@@ -14,46 +14,46 @@
         </select>
     </div>
     <br>
-    <h1  id="Title">Statistical Correlation Between One Measurement and Several Other Co-Measurements</h1>
+    <h1  id="Title">1つのデータと複数の説明変数の関係性の計算</h1>
     <br>
-    <h2 id="Subtitle">Answer the following questions about your data :</h2>
+    <h2 id="Subtitle">データについて、以下の質問を答えてください。</h2>
     <br>
     <div id="bigger">
     <div id="questions">
         <div id="ps">
-            <p class="question" id="qq1">Are your data sets all continuous data?*</p>
-            <div id="hover1" class="hovery">You should select "yes" if ALL of your data sets are measured on scales in which: a) many different numerical answers are possible, and b) a score higher by "1" is equally opposite to a score lower by "1". For example, data measured in time, percentages, number of times, and number of correct answers are often considered to be continuous scales. Likert-scale survey questions are NOT considered to be continuous, so if either of your data sets are of this type, you should select "no." If you are unsure, you can select "yes," and the program will automatically check the data for normalcy via a Shapiro-Wilks Test. If either sets of your data fail this test, it will automatically be considered ordinal and not continuous.</div>
+            <p class="question" id="qq1">全べてのデータは連続データですか？*</p>
+            <div id="hover1" class="hovery">全べてのデータに関しては、多数の数字が可能であり、平均より１つ大きいデータが平均より1つ小さいデータと同等に平均値から離れているという二つの条件を満たしている場合、「はい」と答えてください。時間、割合、回数、正解率などは多くの場合、「連続的データ」と見なされます。リッカート尺度のアンケート質問は継続的データと見なさらないため、いずれのデータ組はこのようなデータである場合は「いいえ」と答えてください。もしどちらになるか分からない場合は「はい」と答えても構いません。</div>
             <br>
-            <p id="qq2" class="question">How many co-measurements do you have?*</p>
-            <div id ="hover2" class="hovery">This is the number of measurements in ADDITION to your main measurement. For example, if you are trying to determine how 3 different variables are related to test scores, please write '3.' You must write a number between 2 and 5.</div>
+            <p id="qq2" class="question">説明変数はいくつありますか？*</p>
+            <div id ="hover2" class="hovery">予測しようとしている変数（データ）ではない、同じ参加者から取った他のデータを意味にします。例えば、テストの点数が複数のクイズの点数とどのように関連しているかを分析したい場合、テストの点数は予測変数となり、それぞれのクイズの点数が説明変数になります。残念ながら、現時点では、本プログラムは2つの説明変数しか計算できないんです。</div>
             <br>
         </div>
         <div id="as">
             <div id="firsty">
             <input type="radio" id="q1_a" class="radio_btn" name="q1" value="yes">
-            <label for="q1_a" class="answer">Yes</label>
+            <label for="q1_a" class="answer">はい</label>
             <input type="radio" id="q1_b" class="radio_btn" name="q1" value="no">
-            <label for="q1_b" class="answer">No</label>
+            <label for="q1_b" class="answer">いいえ</label>
             <br>
             <br>
             <br>
             </div>
             <div id="secondy">
-            <input type="text" id="k_value" placeholder="Input number of data sets">
+            <input type="text" id="k_value" placeholder="説明変数の数を入力してください">
             <br>
             </div>
         </div>
     </div>
     <p id="error_text" style="display: none">Error will appear here.</p>
-    <p id="small_text">*Mouse over questions for explanation</p>
+    <p id="small_text">*マウスポインターを質問の上に載せると、説明が標示されます</p>
     <br>
-    <button id="SetUp" class="button" onclick="SetUp()">Set Up the Test</button>
+    <button id="SetUp" class="button" onclick="SetUp()">データ入力開始</button>
     <br>
     </div>
     <div id="datasets" style="display: none">
         <div id="data1">
-            <h3 id="qq3">Copy and paste your dependent variable* data here:</h3>
-            <div id ="hover3" class="hovery">This is the measurement that you are trying to predict with other co-measurements. It is the main number that you are checking for multiple correlations to. For example, if you are trying to determine which of three variables has the largest impact on test scores, please paste the test scores here and the three variables' data in the other areas.</div>
+            <h3 id="qq3">予測変数データ*を以下にペーストしてください</h3>
+            <div id ="hover3" class="hovery">予測したい変数のこと。例えば、テストの点数が複数のクイズの点数とどのように関連しているかを分析したい場合、テストの点数は予測変数となり、それぞれのクイズの点数が説明変数になります。</div>
             <br>
             <textarea id="y_data" rows="30" columns="40" text-overflow="visible" placeholder="Copy and paste data here"></textarea>
             <br>
@@ -64,14 +64,14 @@
         <button id="button" class="button" style="display: none" onclick="Calculate()">Calculate!</button>
     </div>
     <div id="results">
-        <p id="explain_bun" style="font-weight: bold; font-size: 16px; color: rgb(105, 0, 0)">The description of your test will be printed here:</p>
-        <p id="results_bun" style="font-weight: bold; font-size: 18px">Your results will be printed here:</p>
+        <p id="explain_bun" style="font-weight: bold; font-size: 16px; color: rgb(105, 0, 0)">利用された検定の詳細はここに書かれます</p>
+        <p id="results_bun" style="font-weight: bold; font-size: 18px">結果はここに書かれます</p>
         <div id="table_holder"></div>
         <br>
         <button id="reset" class="button" style="display: none; background-color: rgb(139, 0, 0);" onclick="Reset()">Reset!</button>
     </div>
     <div id="Citation">
-        <p>Please cite the following paper if you use this program or any of the statistics herein. The justifications are included in the paper, linked below for your reference.</p>
+        <p>本プログラムやその関連している説明文などを研究で使った場合は下記の論文を引用してください。</p>
         <p> Spring, R. (2022). Online Bilingual Statistics Calculations for Langauge Education and Linguistics. Coming soon.</p>
     </div>
 

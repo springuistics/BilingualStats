@@ -16,7 +16,7 @@ function SetUp() {
         document.getElementById('error_text').innerHTML = "対応のあるデータかどうかを選んでください。説明が必要な場合はマウスポインターを質問の上に乗せてください。"
         document.getElementById('error_text').style.display = "inline";
     } else if (!ord_c1) {
-        document.getElementById("error_text").innerHTML = "両方とも連続データかどうかを選んでください。説明が必要な場合はマウスポインターを質問の上に乗せてください。"
+        document.getElementById("error_text").innerHTML = "データは全て連続データかどうかを選んでください。説明が必要な場合はマウスポインターを質問の上に乗せてください。"
         document.getElementById('error_text').style.display = "inline";
     } else if (k < 3) {
         document.getElementById("error_text").innerHTML = "３～６の数字を入力してください。"

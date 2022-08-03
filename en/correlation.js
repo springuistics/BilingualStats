@@ -348,14 +348,14 @@ function Spearman(data1, data2, details) {
     var result3 = "";
     var tempr = Math.abs(Rs);
     if (tempr < 0.2) {
-        result3 = "The Rs coefficient suggests a very weak correlation."
+        result3 = "The <i>Rs</i> coefficient suggests a very weak correlation."
     } else if (tempr < 0.4) {
-        result3 = "The Rs coefficient suggests a weak correlation."
+        result3 = "The <i>Rs</i> coefficient suggests a weak correlation."
     } else if (tempr < 0.6) {
-        result3 = "The Rs coefficient suggests a moderate correlation."
+        result3 = "The <i>Rs</i> coefficient suggests a moderate correlation."
     } else if (tempr < 0.8) {
-        result3 = "The Rs coefficient suggests a strong correlation."
-    } else {result3 = "The Rs coefficient suggests a very strong correlation."}
+        result3 = "The <i>Rs</i> coefficient suggests a strong correlation."
+    } else {result3 = "The <i>Rs</i> coefficient suggests a very strong correlation."}
 
     if (p < 0.01) {
         var result2 = "<i>Rs</i> = " + Rs + ", <i>p</i> < 0.01. ";
@@ -434,10 +434,10 @@ function Pearson(data1, data2, details) {
     var result3 = "";
     var tempr = Math.abs(r);
     if (tempr < 0.3) {
-        result3 = "The Pearson's r coefficient suggests a weak correlation."
+        result3 = "The Pearson's <i>r</i> coefficient suggests a weak correlation."
     } else if (tempr < 0.5) {
-        result3 = "The Pearson's r coefficient suggests a moderate correlation."
-    } else {result3 = "The Pearson's r coefficient suggests a strong correlation."}
+        result3 = "The Pearson's <i>r</i> coefficient suggests a moderate correlation."
+    } else {result3 = "The Pearson's <i>r</i> coefficient suggests a strong correlation."}
 
     if (p < 0.01) {
         var result2 = "<i>r</i> = " + r + ", <i>p</i> < 0.01. ";

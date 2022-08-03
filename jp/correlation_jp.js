@@ -11,7 +11,7 @@ function Calculate() {
     document.getElementById('error_text').style.display = "none";
     var ord_c1 = document.querySelector("[name=q1]:checked");
     if (!ord_c1) {
-        document.getElementById('error_text').innerHTML = "Please select whether or not the data is continous. For an explanation, mouse over the question."
+        document.getElementById('error_text').innerHTML = "データは全て連続データかどうかを選んでください。説明が必要な場合はマウスポインターを質問の上に乗せてください。"
         document.getElementById('error_text').style.display = "inline";
     } else {
     var temp = document.getElementById("data_set_1").value;
@@ -19,13 +19,13 @@ function Calculate() {
     var data_set1 = temp.split("\n").map(Number);
     var data_set2 = temp2.split("\n").map(Number);
     if (data_set1.includes("") || data_set2.includes("") || data_set1.includes("NaN") || data_set2.includes("NaN")) {
-        document.getElementById("error_text").innerHTML = "You have null values (lines with no values) or non-numbers in your data set. Please delete all null values, check to make sure there are no non-numbers in your data set, and then try again.";
+        document.getElementById("error_text").innerHTML = "データが数字ではない行、あるいはデータのない行があります。データのない行は全て削除し、全てのデータが半角数字になっていることを確認してください。";
         document.getElementById('error_text').style.display = "inline";
     } else if (data_set1.length < 6 || data_set2.length < 6) {
-        document.getElementById("error_text").innerHTML = "You need at least 6 data points in each data set in order for any proper conclusion to be drawn about your data. Please check your data sets or collect more data if necessary."
+        document.getElementById("error_text").innerHTML = "適切な結果を得るには、それぞれの組に少なくとも6つのデータが必要ですので、データ量が足りません。データを確認し、必要に応じてより多くのデータを集めてください。"
         document.getElementById('error_text').style.display = "inline";
     } else if (data_set1.length !== data_set2.length) {
-            document.getElementById("error_text").innerHTML = "Correlation analysis presumes two measurements on the same data points (i.e., participants, instances, etc.) and therefore your data sets should have the same numbers of values, but yours do not. Please check, amend as necessary and retry.";
+            document.getElementById("error_text").innerHTML = "関連性を分析する際、両方の変数には同じデータの数が必要ですが、入力したデータに相違があります。データの数を確認した上で、もう一度、計算ボタンを押してみてください。";
             document.getElementById('error_text').style.display = "inline";
         } else {
             Begin(data_set1, data_set2);
@@ -35,7 +35,7 @@ function Calculate() {
 function Begin (data1, data2) {
     var ordinal_check = document.querySelector('input[name="q1"]:checked').value;
     if (ordinal_check == "no") {
-            details_of_test = "Due to the ordinal nature of the data, a Spearman's Rank Correlation Test was used.";
+            details_of_test = "本データは順序データであるため、スピアマンの順位相関係数検定で計算しました。";
             Spearman(data1, data2, details_of_test);
     } else {
         function CopyArray (array) {
@@ -46,10 +46,10 @@ function Begin (data1, data2) {
         var check1 = Shapiro_Wilk(dummy1);
         var check2 = Shapiro_Wilk(dummy2);
         if (check1 == false || check2 == false) {
-            details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed the Shapiro-Wilk Test of normalcy. Therefore, the data was treated as ordinaland a Spearman's Rank Correlation Test was used.";
+            details_of_test = "本データは連続データですが、シャピロ－ウィルク検定の結果によると、いずれか（あるいは両方）のデータセットがノンパラメトリックとみなされましたため、スピアマンの順位相関係数検定で計算しました。";
                 Spearman(data1, data2, details_of_test);
         } else {
-            details_of_test = "Due to the continuous and normal nature of the data as checked by a Shapiro-Wilk Test, a Pearson's Correlation Test was used.";
+            details_of_test = "本データは連続データで、シャピロ－ウィルク検定の結果によると、全てのデータはパラメトリックとみなされましたため、ピアソンの積率相関係数検定で計算しました。";
             Pearson(data1, data2, details_of_test);
             } 
         }
@@ -341,26 +341,26 @@ function Spearman(data1, data2, details) {
     Rs = Rs.toFixed(2);
     var result1 = "";
     if (p <= .05) {
-        result1 = "There is a significant correlation between the data sets: "
+        result1 = "二つの変数間に有意義な関係が確認できました（"
     } else {
-        result1 = "There is no significant correlation between the data sets: "
+        result1 = "二つの変数間に有意義な関係が確認できませんでした（"
     }
     var result3 = "";
     var tempr = Math.abs(Rs);
     if (tempr < 0.2) {
-        result3 = "The Rs coefficient suggests a very weak correlation."
+        result3 = "<i>Rs</i>値は2つの変数の間に、ほとんど関連性がないことを示します。"
     } else if (tempr < 0.4) {
-        result3 = "The Rs coefficient suggests a weak correlation."
+        result3 = "<i>Rs</i>値は2つの変数の間に、弱い関連性があることを示します。"
     } else if (tempr < 0.6) {
-        result3 = "The Rs coefficient suggests a moderate correlation."
+        result3 = "<i>Rs</i>値は2つの変数の間に、中ぐらいの関連性があることを示します。"
     } else if (tempr < 0.8) {
-        result3 = "The Rs coefficient suggests a strong correlation."
-    } else {result3 = "The Rs coefficient suggests a very strong correlation."}
+        result3 = "<i>Rs</i>値は2つの変数の間に、強い関連性があることを示します。"
+    } else {result3 = "<i>Rs</i>値は2つの変数の間に、非常に弱い関連性があることを示します。"}
 
     if (p < 0.01) {
-        var result2 = "<i>Rs</i> = " + Rs + ", <i>p</i> < 0.01. ";
+        var result2 = "<i>Rs</i> = " + Rs + ", <i>p</i> < 0.01）。";
     } else {
-        var result2 = "<i>Rs</i> = " + Rs + ", <i>p</i> =" + p + ". ";
+        var result2 = "<i>Rs</i> = " + Rs + ", <i>p</i> =" + p + "）。";
     }
     results_of_test = result1 + result2 + result3;
     document.getElementById("explain_bun").innerHTML = details;
@@ -427,22 +427,22 @@ function Pearson(data1, data2, details) {
     var result1 = "";
     var result2 = "";
     if (p <= .05) {
-        result1 = "There is a significant correlation between the data sets: "
+        result1 = "二つの変数間に有意義な関係が確認できました（"
     } else {
-        result1 = "There is no significant correlation between the data sets: "
+        result1 = "二つの変数間に有意義な関係が確認できませんでした（"
     }
     var result3 = "";
     var tempr = Math.abs(r);
     if (tempr < 0.3) {
-        result3 = "The Pearson's r coefficient suggests a weak correlation."
+        result3 = "<i>rs</i>値は2つの変数の間に、弱い関連性があることを示します。"
     } else if (tempr < 0.5) {
-        result3 = "The Pearson's r coefficient suggests a moderate correlation."
-    } else {result3 = "The Pearson's r coefficient suggests a strong correlation."}
+        result3 = "<i>rs</i>値は2つの変数の間に、中ぐらいの関連性があることを示します。"
+    } else {result3 = "<i>rs</i>値は2つの変数の間に、強い関連性があることを示します。"}
 
     if (p < 0.01) {
-        var result2 = "<i>r</i> = " + r + ", <i>p</i> < 0.01. ";
+        var result2 = "<i>r</i> = " + r + ", <i>p</i> < 0.01）。";
     } else {
-        var result2 = "<i>r</i> = " + r + ", <i>p</i> =" + p + ". ";
+        var result2 = "<i>r</i> = " + r + ", <i>p</i> =" + p + "）。";
     }
     results_of_test = result1 + result2 + result3;
     document.getElementById("explain_bun").innerHTML = details;

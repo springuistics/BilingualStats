@@ -366,10 +366,10 @@ function TukeyMe(q, k, v) {
     q = Math.abs(q);
     let text = "";
     function getit(hs5, hs1) {
-        if (q<hs5) {return "NS"} else if (q>hs1) {return "p < .01"} else {
+        if (q<hs5) {return "<i>n.s.</i>"} else if (q>hs1) {return "p < .01"} else {
         let s=(hs1-hs5)/4; 
         let p1=hs5+s; let p2=p1+s; let p3=p2+s; let p2d=p1+(s/2); let p3d=p2+(s/2);
-        if (q<p1) {return "p = .05"} else if (q>p1 && q<p2d) {return "p = .04"} else if (q>p2d && q<p2) {return "p = .03"} else if (q>p2 && q<p3d) {return "p = .02"} else if (q>p3d && q<p3) {return "p = .01"} else {return "p < .01"}
+        if (q<p1) {return "p = .05"} else if (q>p1 && q<p2d) {return "p = .04"} else if (q>p2d && q<p2) {return "p = .03"} else if (q>p2 && q<p3d) {return "p = .02"} else if (q>p3d && q<p3) {text = "p = .01"} else {return "p < .01"}
     }}
     if (k==3) {
         if (v==5) {let hs5=4.60; let hs1=6.98; text=getit(hs5, hs1);}
@@ -554,10 +554,10 @@ function sterror(d1, d2){
         temp_d.push(temp);
     }
     let sum = 0;
-    for (let i=0; temp_d.length; i++) {sum += temp_d[i];}
+    for (var number of temp_d) {sum += number;}
     let avg = sum / temp_d.length;
     let sum2 = 0;
-    for (let i=0; temp_d.length; i++) {sum2 += ((temp_d[i] - avg)**2)}
+    for (var number of temp_d) {sum2 += ((number - avg)**2)}
     let sd = Math.sqrt((sum2/(temp_d.length-1)));
     let se = sd / (Math.sqrt(temp_d.length));
     return se;
@@ -778,6 +778,7 @@ function StANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
     var p = FtoP(k, F, dfs, dfw);
     F = F.toFixed(2);
     var W2 = (SSB - (dfs * MSSW)) / (MSSW + SSB + SSW)
+    W2 =W2.toFixed(2);
     var result1 = "";
     var result3 = "";
     var results4 = "";
@@ -791,8 +792,8 @@ function StANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
     if (p > 0.05) {
         var result1 = "There was no significant difference amongst any of the groups; "
         p = p.toFixed(2);
-        var result2 = "<i>F</i>[" + dfs + ", " + dfw + "] = " + F + ", <i>p</i> = " + p;
-        var result3 = ". Therefore, no pair-wise analysis will be conducted."
+        var result2 = "<i>F</i>[" + dfs + ", " + dfw + "] = " + F + ", <i>p</i> = " + p ;
+        var result3 = ". Therefore, no pair-wise analysis will be conducted. "
         results_of_test = result1 + result2 + result3 + results4;
     } else {
         var result1 = "There was a significant difference between at least two of the groups; "
@@ -800,7 +801,7 @@ function StANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
             var result2 = "<i>F</i>[" + dfs + ", " + dfw + "] = " + F + ", <i>p</i> < 0.01. ";
         } else {
             p = p.toFixed(2);
-            var result2 = "<i>F</i>[" + dfs + ", " + dfw + "] = " + F + ", <i>p</i> = " + p;
+            var result2 = "<i>F</i>[" + dfs + ", " + dfw + "] = " + F + ", <i>p</i> = " + p + ". ";
         }
         if (k==3) {
             result3 = "The significant differences between specific groups, as tested by a Tukey's HSD post-hoc analysis, is shown below: <br>Group 1 x Group 2: " + p1v2 + "<br>Group 1 x Group 3: " + p1v3 + "<br>Group 2 x Group 3: " + p2v3;
@@ -816,6 +817,21 @@ function StANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
     document.getElementById("explain_bun").innerHTML = deets;
     document.getElementById("results_bun").innerHTML = results_of_test;
     
+}
+
+function variance (data) {
+    let sum = 0;
+    let M =0;
+    let ss =0;
+    let N = data.length;
+    for (let i=0; i<N; i++) {
+        sum += data[i];
+    }
+    M = sum / N;
+    for (let i=0; i<N; i++) {
+        ss += ((data[i] - M) **2)
+    }
+    return (ss / (N-1)); 
 }
 
 function RepANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
@@ -840,33 +856,45 @@ function RepANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
         GN = N1 + N2 + N3;
         Mg = BigMean(k, data1, data2, data3);
         for (let i=0; i<N1; i++) {fulldata.push(data1[i]); fulldata.push(data2[i]); fulldata.push(data3[i]);}
-        fulls = SumMean(Mg, fulldata);
-        SST = fulls / (GN-1);
+        fulls = variance(fulldata);
+        SST = (fulls) * (GN-1);
         MB1 = N1 * ((M1 - Mg) **2);
         MB2 = N2 * ((M2 - Mg) **2);
         MB3 = N3 * ((M3 - Mg) **2);
-        dfs = k-1;
         var GT=0;
         for (let i=0; i<fulldata.length; i++) {GT += fulldata[i]}
         var SShelper = [];
-        for (let i=0; i<N1; i++) {let temp=(data1[i] + data2[i] + data3[i])**2; SShelper.push(temp)};
+        for (let i=0; i<N1; i++) {
+            let temp = (data1[i] + data2[i] + data3[i])**2; 
+            SShelper.push(temp);
+        }
         var SShelper2 = 0;
         for (let i=0; i<SShelper.length; i++) {SShelper2 += SShelper[i];}
-        var SSS = (SShelper2 / k) - ((GT**2)/(N1*k));
+        var SSB = N1 * (((M1 - Mg) **2) + ((M2 - Mg) **2) + ((M3 - Mg) **2)); 
+        var sumhelper = [];
+        for (let i=0; i<N1; i++) {
+            let temp = data1[i] + data2[i] + data3[i];
+            sumhelper.push(temp);
+        }
+        var supersum = 0;
+        for (let i=0; i<sumhelper.length; i++) {
+            supersum += sumhelper[i]
+        }
+        var SSS = (SShelper2 / k) - ((supersum**2) / (N1 * k));
         var SSE = SST - SSB - SSS;
-        var dfb = GN-1;
-        var dfs = k-1;
+        var dfb = k-1;
+        var dfs = N1-1;
         var dfe = dfb * dfs;
         MSSB = SSB / dfb;
         MSSS = SSS / dfs;
-        MSE = SSE / dfe;
+        MSE = SSE / (dfb * dfs);
         F = MSSB / MSE; 
-        q_1v2 = (M1 - M2) / (sterr(data1, data2));
-        q_1v3 = (M1 - M3) / (sterr(data1, data3));
-        q_2v3 = (M2 - M3) / (sterr(data2, data3));
-        var p1v2 = TukeyMe(q_1v2, k, dfs);
-        var p1v3 = TukeyMe(q_1v3, k, dfs);
-        var p2v3 = TukeyMe(q_2v3, k, dfs);
+        q_1v2 = (M1 - M2) / (sterror(data1, data2));
+        q_1v3 = (M1 - M3) / (sterror(data1, data3));
+        q_2v3 = (M2 - M3) / (sterror(data2, data3));
+        var p1v2 = TukeyMe(q_1v2, k, (N1-1));
+        var p1v3 = TukeyMe(q_1v3, k, (N1-1));
+        var p2v3 = TukeyMe(q_2v3, k, (N1-1));
     } else if (k==4) {
         M1 = CalcMean(data1);
         M2 = CalcMean(data2);
@@ -879,8 +907,8 @@ function RepANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
         GN = N1 + N2 + N3 + N4;
         Mg = BigMean(k, data1, data2, data3, data4);
         for (let i=0; i<N1; i++) {fulldata.push(data1[i]); fulldata.push(data2[i]); fulldata.push(data3[i]); fulldata.push(data4[i]);}
-        fulls = SumMean(Mg, fulldata);
-        SST = fulls / (GN-1);
+        fulls = variance(fulldata);
+        SST = (fulls) * (GN-1);
         MB1 = N1 * ((M1 - Mg) **2);
         MB2 = N2 * ((M2 - Mg) **2);
         MB3 = N3 * ((M3 - Mg) **2);
@@ -892,27 +920,37 @@ function RepANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
         for (let i=0; i<N1; i++) {let temp=(data1[i] + data2[i] + data3[i] + data4[i])**2; SShelper.push(temp)};
         var SShelper2 = 0;
         for (let i=0; i<SShelper.length; i++) {SShelper2 += SShelper[i];}
-        var SSS = (SShelper2 / k) - ((GT**2)/(N1*k));
+        var SSB = N1 * (((M1 - Mg) **2) + ((M2 - Mg) **2) + ((M3 - Mg) **2) + ((M4 - Mg) **2)); 
+        var sumhelper = [];
+        for (let i=0; i<N1; i++) {
+            let temp = data1[i] + data2[i] + data3[i] + data4[i];
+            sumhelper.push(temp);
+        }
+        var supersum = 0;
+        for (let i=0; i<sumhelper.length; i++) {
+            supersum += sumhelper[i]
+        }
+        var SSS = (SShelper2 / k) - ((supersum**2) / (N1 * k));
         var SSE = SST - SSB - SSS;
-        var dfb = GN-1;
-        var dfs = k-1;
+        var dfb = k-1;
+        var dfs = N1-1;
         var dfe = dfb * dfs;
         MSSB = SSB / dfb;
         MSSS = SSS / dfs;
-        MSE = SSE / dfe;
+        MSE = SSE / (dfb * dfs);
         F = MSSB / MSE; 
-        q_1v2 = (M1 - M2) / (sterr(data1, data2));
-        q_1v3 = (M1 - M3) / (sterr(data1, data3));
-        q_1v4 = (M1 - M4) / (sterr(data1, data4));
-        q_2v3 = (M2 - M3) / (sterr(data2, data3));
-        q_2v4 = (M2 - M4) / (sterr(data2, data4));
-        q_3v4 = (M3 - M4) / (sterr(data3, data4));
-        var p1v2 = TukeyMe(q_1v2, k, dfs);
-        var p1v3 = TukeyMe(q_1v3, k, dfs);
-        var p1v4 = TukeyMe(q_1v4, k, dfs);
-        var p2v3 = TukeyMe(q_2v3, k, dfs);
-        var p2v4 = TukeyMe(q_2v4, k, dfs);
-        var p3v4 = TukeyMe(q_3v4, k, dfs);
+        q_1v2 = (M1 - M2) / (sterror(data1, data2));
+        q_1v3 = (M1 - M3) / (sterror(data1, data3));
+        q_1v4 = (M1 - M4) / (sterror(data1, data4));
+        q_2v3 = (M2 - M3) / (sterror(data2, data3));
+        q_2v4 = (M2 - M4) / (sterror(data2, data4));
+        q_3v4 = (M3 - M4) / (sterror(data3, data4));
+        var p1v2 = TukeyMe(q_1v2, k, (N1-1));
+        var p1v3 = TukeyMe(q_1v3, k, (N1-1));
+        var p1v4 = TukeyMe(q_1v4, k, (N1-1));
+        var p2v3 = TukeyMe(q_2v3, k, (N1-1));
+        var p2v4 = TukeyMe(q_2v4, k, (N1-1));
+        var p3v4 = TukeyMe(q_3v4, k, (N1-1));
     } else if (k==5) {
         M1 = CalcMean(data1);
         M2 = CalcMean(data2);
@@ -927,49 +965,58 @@ function RepANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
         GN = N1 + N2 + N3 + N4 + N5;
         Mg = BigMean(k, data1, data2, data3, data4, data5);
         for (let i=0; i<N1; i++) {fulldata.push(data1[i]); fulldata.push(data2[i]); fulldata.push(data3[i]); fulldata.push(data4[i]); fulldata.push(data5[i]);}
-        fulls = SumMean(Mg, fulldata);
-        SST = fulls / (GN-1);
+        fulls = variance(fulldata);
+        SST = (fulls) * (GN-1);
         MB1 = N1 * ((M1 - Mg) **2);
         MB2 = N2 * ((M2 - Mg) **2);
         MB3 = N3 * ((M3 - Mg) **2);
         MB4 = N4 * ((M4 - Mg) **2);
         MB5 = N5 * ((M5 - Mg) **2);
-        dfs = k-1;
         var GT=0;
         for (let i=0; i<fulldata.length; i++) {GT += fulldata[i]}
         var SShelper = [];
         for (let i=0; i<N1; i++) {let temp=(data1[i] + data2[i] + data3[i] + data4[i] + data5[i])**2; SShelper.push(temp)};
         var SShelper2 = 0;
         for (let i=0; i<SShelper.length; i++) {SShelper2 += SShelper[i];}
-        var SSS = (SShelper2 / k) - ((GT**2)/(N1*k));
+        var SSB = N1 * (((M1 - Mg) **2) + ((M2 - Mg) **2) + ((M3 - Mg) **2) + ((M4 - Mg) **2) + ((M5 - Mg) **2)); 
+        var sumhelper = [];
+        for (let i=0; i<N1; i++) {
+            let temp = data1[i] + data2[i] + data3[i] + data4[i] + data5[i];
+            sumhelper.push(temp);
+        }
+        var supersum = 0;
+        for (let i=0; i<sumhelper.length; i++) {
+            supersum += sumhelper[i]
+        }
+        var SSS = (SShelper2 / k) - ((supersum**2) / (N1 * k));
         var SSE = SST - SSB - SSS;
-        var dfb = GN-1;
-        var dfs = k-1;
+        var dfb = k-1;
+        var dfs = N1-1;
         var dfe = dfb * dfs;
         MSSB = SSB / dfb;
         MSSS = SSS / dfs;
-        MSE = SSE / dfe;
+        MSE = SSE / (dfb * dfs);
         F = MSSB / MSE; 
-        q_1v2 = (M1 - M2) / (sterr(data1, data2));
-        q_1v3 = (M1 - M3) / (sterr(data1, data3));
-        q_1v4 = (M1 - M4) / (sterr(data1, data4));
-        q_1v5 = (M1 - M5) / (sterr(data1, data5));
-        q_2v3 = (M2 - M3) / (sterr(data2, data3));
-        q_2v4 = (M2 - M4) / (sterr(data2, data4));
-        q_2v5 = (M2 - M5) / (sterr(data2, data5));
-        q_3v4 = (M3 - M4) / (sterr(data3, data4));
-        q_3v5 = (M3 - M5) / (sterr(data3, data5));
-        q_4v5 = (M4 - M5) / (sterr(data4, data5));
-        var p1v2 = TukeyMe(q_1v2, k, dfs);
-        var p1v3 = TukeyMe(q_1v3, k, dfs);
-        var p1v4 = TukeyMe(q_1v4, k, dfs);
-        var p1v5 = TukeyMe(q_1v5, k, dfs);
-        var p2v3 = TukeyMe(q_2v3, k, dfs);
-        var p2v4 = TukeyMe(q_2v4, k, dfs);
-        var p2v5 = TukeyMe(q_2v5, k, dfs);
-        var p3v4 = TukeyMe(q_3v4, k, dfs);
-        var p3v5 = TukeyMe(q_3v5, k, dfs);
-        var p4v5 = TukeyMe(q_4v5, k, dfs);
+        q_1v2 = (M1 - M2) / (sterror(data1, data2));
+        q_1v3 = (M1 - M3) / (sterror(data1, data3));
+        q_1v4 = (M1 - M4) / (sterror(data1, data4));
+        q_1v5 = (M1 - M5) / (sterror(data1, data5));
+        q_2v3 = (M2 - M3) / (sterror(data2, data3));
+        q_2v4 = (M2 - M4) / (sterror(data2, data4));
+        q_2v5 = (M2 - M5) / (sterror(data2, data5));
+        q_3v4 = (M3 - M4) / (sterror(data3, data4));
+        q_3v5 = (M3 - M5) / (sterror(data3, data5));
+        q_4v5 = (M4 - M5) / (sterror(data4, data5));
+        var p1v2 = TukeyMe(q_1v2, k, (N1-1));
+        var p1v3 = TukeyMe(q_1v3, k, (N1-1));
+        var p1v4 = TukeyMe(q_1v4, k, (N1-1));
+        var p1v5 = TukeyMe(q_1v5, k, (N1-1));
+        var p2v3 = TukeyMe(q_2v3, k, (N1-1));
+        var p2v4 = TukeyMe(q_2v4, k, (N1-1));
+        var p2v5 = TukeyMe(q_2v5, k, (N1-1));
+        var p3v4 = TukeyMe(q_3v4, k, (N1-1));
+        var p3v5 = TukeyMe(q_3v5, k, (N1-1));
+        var p4v5 = TukeyMe(q_4v5, k, (N1-1));
     } else if (k==6) {
         M1 = CalcMean(data1);
         M2 = CalcMean(data2);
@@ -986,64 +1033,74 @@ function RepANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
         GN = N1 + N2 + N3 + N4 + N5 + N6;
         Mg = BigMean(k, data1, data2, data3, data4, data5, data6);
         for (let i=0; i<N1; i++) {fulldata.push(data1[i]); fulldata.push(data2[i]); fulldata.push(data3[i]); fulldata.push(data4[i]); fulldata.push(data5[i]); fulldata.push(data6[i]);}
-        fulls = SumMean(Mg, fulldata);
-        SST = fulls / (GN-1);
+        fulls = variance(fulldata);
+        SST = (fulls) * (GN-1);
         MB1 = N1 * ((M1 - Mg) **2);
         MB2 = N2 * ((M2 - Mg) **2);
         MB3 = N3 * ((M3 - Mg) **2);
         MB4 = N4 * ((M4 - Mg) **2);
         MB5 = N5 * ((M5 - Mg) **2);
         MB6 = N6 * ((M6 - Mg) **2);
-        dfs = k-1;
         var GT=0;
         for (let i=0; i<fulldata.length; i++) {GT += fulldata[i]}
         var SShelper = [];
         for (let i=0; i<N1; i++) {let temp=(data1[i] + data2[i] + data3[i] + data4[i] + data5[i] + data6[i])**2; SShelper.push(temp)};
         var SShelper2 = 0;
         for (let i=0; i<SShelper.length; i++) {SShelper2 += SShelper[i];}
-        var SSS = (SShelper2 / k) - ((GT**2)/(N1*k));
+        var SSB = N1 * (((M1 - Mg) **2) + ((M2 - Mg) **2) + ((M3 - Mg) **2) + ((M4 - Mg) **2) + ((M5 - Mg) **2) + ((M6 - Mg) **2)); 
+        var sumhelper = [];
+        for (let i=0; i<N1; i++) {
+            let temp = data1[i] + data2[i] + data3[i] + data4[i] + data5[i] + data6[i];
+            sumhelper.push(temp);
+        }
+        var supersum = 0;
+        for (let i=0; i<sumhelper.length; i++) {
+            supersum += sumhelper[i]
+        }
+        var SSS = (SShelper2 / k) - ((supersum**2) / (N1 * k));
         var SSE = SST - SSB - SSS;
-        var dfb = GN-1;
-        var dfs = k-1;
+        var dfb = k-1;
+        var dfs = N1-1;
         var dfe = dfb * dfs;
         MSSB = SSB / dfb;
         MSSS = SSS / dfs;
-        MSE = SSE / dfe;
+        MSE = SSE / (dfb * dfs);
         F = MSSB / MSE; 
-        q_1v2 = (M1 - M2) / (sterr(data1, data2));
-        q_1v3 = (M1 - M3) / (sterr(data1, data3));
-        q_1v4 = (M1 - M4) / (sterr(data1, data4));
-        q_1v5 = (M1 - M5) / (sterr(data1, data5));
-        q_1v6 = (M1 - M6) / (sterr(data1, data6));
-        q_2v3 = (M2 - M3) / (sterr(data2, data3));
-        q_2v4 = (M2 - M4) / (sterr(data2, data4));
-        q_2v5 = (M2 - M5) / (sterr(data2, data5));
-        q_2v6 = (M2 - M6) / (sterr(data2, data6));
-        q_3v4 = (M3 - M4) / (sterr(data3, data4));
-        q_3v5 = (M3 - M5) / (sterr(data3, data5));
-        q_3v6 = (M3 - M6) / (sterr(data3, data6));
-        q_4v5 = (M4 - M5) / (sterr(data4, data5));
-        q_4v6 = (M4 - M6) / (sterr(data4, data6));
-        q_5v6 = (M5 - M6) / (sterr(data5, data6));
-        var p1v2 = TukeyMe(q_1v2, k, dfs);
-        var p1v3 = TukeyMe(q_1v3, k, dfs);
-        var p1v4 = TukeyMe(q_1v4, k, dfs);
-        var p1v5 = TukeyMe(q_1v5, k, dfs);
-        var p1v6 = TukeyMe(q_1v6, k, dfs);
-        var p2v3 = TukeyMe(q_2v3, k, dfs);
-        var p2v4 = TukeyMe(q_2v4, k, dfs);
-        var p2v5 = TukeyMe(q_2v5, k, dfs);
-        var p2v6 = TukeyMe(q_2v6, k, dfs);
-        var p3v4 = TukeyMe(q_3v4, k, dfs);
-        var p3v5 = TukeyMe(q_3v5, k, dfs);
-        var p3v6 = TukeyMe(q_3v6, k, dfs);
-        var p4v5 = TukeyMe(q_4v5, k, dfs);
-        var p4v6 = TukeyMe(q_4v6, k, dfs);
-        var p5v6 = TukeyMe(q_5v6, k, dfs);
+        q_1v2 = (M1 - M2) / (sterror(data1, data2));
+        q_1v3 = (M1 - M3) / (sterror(data1, data3));
+        q_1v4 = (M1 - M4) / (sterror(data1, data4));
+        q_1v5 = (M1 - M5) / (sterror(data1, data5));
+        q_1v6 = (M1 - M6) / (sterror(data1, data6));
+        q_2v3 = (M2 - M3) / (sterror(data2, data3));
+        q_2v4 = (M2 - M4) / (sterror(data2, data4));
+        q_2v5 = (M2 - M5) / (sterror(data2, data5));
+        q_2v6 = (M2 - M6) / (sterror(data2, data6));
+        q_3v4 = (M3 - M4) / (sterror(data3, data4));
+        q_3v5 = (M3 - M5) / (sterror(data3, data5));
+        q_3v6 = (M3 - M6) / (sterror(data3, data6));
+        q_4v5 = (M4 - M5) / (sterror(data4, data5));
+        q_4v6 = (M4 - M6) / (sterror(data4, data6));
+        q_5v6 = (M5 - M6) / (sterror(data5, data6));
+        var p1v2 = TukeyMe(q_1v2, k, (N1-1));
+        var p1v3 = TukeyMe(q_1v3, k, (N1-1));
+        var p1v4 = TukeyMe(q_1v4, k, (N1-1));
+        var p1v5 = TukeyMe(q_1v5, k, (N1-1));
+        var p1v6 = TukeyMe(q_1v6, k, (N1-1));
+        var p2v3 = TukeyMe(q_2v3, k, (N1-1));
+        var p2v4 = TukeyMe(q_2v4, k, (N1-1));
+        var p2v5 = TukeyMe(q_2v5, k, (N1-1));
+        var p2v6 = TukeyMe(q_2v6, k, (N1-1));
+        var p3v4 = TukeyMe(q_3v4, k, (N1-1));
+        var p3v5 = TukeyMe(q_3v5, k, (N1-1));
+        var p3v6 = TukeyMe(q_3v6, k, (N1-1));
+        var p4v5 = TukeyMe(q_4v5, k, (N1-1));
+        var p4v6 = TukeyMe(q_4v6, k, (N1-1));
+        var p5v6 = TukeyMe(q_5v6, k, (N1-1));
     }
     var p = FtoP(k, F, dfs, dfb);
     F = F.toFixed(2);
-    var W2 = (SSE - (dfe * MSE)) / ((SSE - (dfe * MSE))+(N1*MSSS))
+    var W2 = SSB / (SST - SSS);
+    W2 = W2.toFixed(2);
     var result1 = "";
     var result3 = "";
     var results4 = "";
@@ -1057,16 +1114,16 @@ function RepANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
     if (p > 0.05) {
         var result1 = "There was no significant difference amongst any of the groups; "
         p = p.toFixed(2);
-        var result2 = "<i>F</i>[" + dfs + ", " + dfw + "] = " + F + ", <i>p</i> = " + p;
+        var result2 = "<i>F</i>[" + dfb + ", " + dfs + "] = " + F + ", <i>p</i> = " + p + ". ";
         var result3 = ". Therefore, no pair-wise analysis will be conducted."
         results_of_test = result1 + result2 + result3 + results4;
     } else {
         var result1 = "There was a significant difference between at least two of the groups; "
         if (p < 0.01) {
-            var result2 = "<i>F</i>[" + dfs + ", " + dfw + "] = " + F + ", <i>p</i> < 0.01. ";
+            var result2 = "<i>F</i>[" + dfb + ", " + dfs + "] = " + F + ", <i>p</i> < 0.01. ";
         } else {
             p = p.toFixed(2);
-            var result2 = "<i>F</i>[" + dfs + ", " + dfw + "] = " + F + ", <i>p</i> = " + p;
+            var result2 = "<i>F</i>[" + dfb + ", " + dfs + "] = " + F + ", <i>p</i> = " + p + ". ";
         }
         if (k==3) {
             result3 = "The significant differences between specific groups, as tested by a Tukey's HSD post-hoc analysis, is shown below: <br>Group 1 x Group 2: " + p1v2 + "<br>Group 1 x Group 3: " + p1v3 + "<br>Group 2 x Group 3: " + p2v3;
@@ -1148,62 +1205,77 @@ function SuperDataHandling(superdata) {
     return superdata;
 }
 
-function CalcDunn(data1, data2) {
-    var N = data1.length + data2.length;
-    var ties = [];
-    for (let i=0; i<data1.length; i++){
-        for (let j=0; j<data1.length; j++) {
-        if (i!==j) {if (data1[i] == data1[j]){ties.push(data1[i])}}
-        }
-    }
-    for (let i=0; i<data2.length; i++){
-        for (let j=0; j<data2.length; j++) {
-        if (i!==j) {if (data2[i] == data2[j]){ties.push(data2[i])}}
-        }
-    }
-    for (let i=0; i<data1.length; i++){
-        for (let j=0; j<data2.length; j++) {
-            if (data1[i] == data2[j]) {ties.push(data1[i])}
-        }
-    }
-    var t = 0;
-    for (let i=0; i<ties.length; i++) {t += 1}
-    var A;
-    if (t==0) {
-        A = ((N * (N-1)) / 12)
+function CalcDunn(SE, data1, data2) {
+    var N1 = data1.length;
+    var N2 = data2.length;
+    var sum1 = 0;
+    for (let i=0; i<N1; i++) {sum1 += data1[i];}
+    var sum2 = 0;
+    for (let i=0; i<N2; i++) {sum2 += data2[i];}
+    var M1 = sum1 / N1;
+    var M2 = sum2 / N2;
+    var diff = Math.abs(M1-M2);
+    var right = (1/N1) + (1/N2);
+    var true_se = Math.sqrt((SE * right))
+    var z = diff/true_se;
+    var p = 2 * (1-cdf(z));
+    p = p.toFixed(2);
+    var final = "";
+    if (p<.01) {
+        final = "<i>p</i> < .01";
     } else {
-        Array.prototype.contains = function(v) {
-            for (var i = 0; i < this.length; i++) {if (this[i] === v) return true;}
-            return false;};
-        Array.prototype.unique = function() {
-            var arr = [];
-            for (var i = 0; i < this.length; i++) {
-            if (!arr.contains(this[i])) {
-                arr.push(this[i]);}}
-            return arr;}
-        var uniques = ties.unique();
-        var Ahelper = 0;
-        uniques.forEach(function(n){
-            var counter_helper = 0;
-            for (let i=0; i<ties.length; i++){
-                counter_helper += 1;
-            }
-            Ahelper += (counter_helper **3) - counter_helper;
-        });
-        var A = ((N * (N-1)) / 12) - (Ahelper / (12 * (N-1)));
+        final = "<i>p</i> = " + p;
     }
-    var RS1 = 0;
-    for (let i=0; i<data1.length; i++) {RS1 += data1[i]}
-    var RS2 = 0;
-    for (let i=0; i<data2.length; i++) {RS2 += data2[i]}
-    var M1 = RS1 / data1.length;
-    var M2 = RS2 / data2.length;
-    var diff = M1-M2;
-    var v = A * ((1/data1.length) + (1/data2.length));
-    v = Math.abs(v);
-    var z = diff / (Math.sqrt(v));
-    var p = cdf(z);
-    return p;
+    return final;
+}
+
+function Dunn_SE(superdata) {
+    var N = superdata.length;
+    var just_numbers = [];
+        for (let i = 0; i < superdata.length; i++) {just_numbers.push(superdata[i].No);}
+        Array.prototype.contains = function(v) {
+        for (var i = 0; i < this.length; i++) {if (this[i] === v) return true;}
+        return false;};
+        Array.prototype.unique = function() {
+        var arr = [];
+        for (var i = 0; i < this.length; i++) {
+          if (!arr.contains(this[i])) {
+            arr.push(this[i]);}}
+        return arr;}
+        var uniques = just_numbers.unique();
+        var ties = [];
+        for (let i = 0; i < uniques.length; i++) {
+            var temp_a = 0;
+            for (let j = 0; j < just_numbers.length; j++){
+                if (uniques[i] == just_numbers[j]){
+                temp_a += 1;}
+            }
+            if (temp_a > 1) {ties.push(uniques[i]);}
+        }
+        var ties2 = [];
+        for (let i = 0; i < ties.length; i++) {
+            for (let j = 0; j < just_numbers.length; j++){    
+                if (ties[i] == just_numbers[j]) {
+                ties2.push(just_numbers[j]);}
+            }
+        }
+        var ha = [];
+            for (let i = 0; i < ties.length; i++){
+                var temp_d = 0;
+                for (let j = 0; j < ties2.length; j++){
+                    if (ties[i] == ties2[j]){
+                        temp_d += 1;}
+                }
+                ha.push({"ties": ties[i], "no": temp_d})
+            };
+        var Ahelper = 0;
+        for (let i =0; i < ha.length; i++) {
+            temp = ha[i].no;
+            temp2 = (temp **3) - temp;
+            Ahelper += temp2;
+        }
+    var final = (N * (N+1) / 12) - (Ahelper / (12 * (N-1)))
+    return final    
 }
 
 function KW(k, deets, data1, data2, data3, data4, data5, data6) {
@@ -1215,6 +1287,7 @@ function KW(k, deets, data1, data2, data3, data4, data5, data6) {
         data1.forEach(function(number){superdata.push({"Group":1, "No": number, "Rank": number});});
         data2.forEach(function(number){superdata.push({"Group":2, "No": number, "Rank": number});});
         data3.forEach(function(number){superdata.push({"Group":3, "No": number, "Rank": number});});
+        var se = Dunn_SE(superdata);
         var superdata2 = SuperDataHandling(superdata);
         var data1_ranks = [];
         var data2_ranks = [];
@@ -1231,9 +1304,9 @@ function KW(k, deets, data1, data2, data3, data4, data5, data6) {
         var sum3 = 0;
         for (let i=0; i<N3; i++) {sum3 += data3_ranks[i];}
         var KH = ((12 / (GN * (GN + 1))) * (((sum1 **2)/N1) + ((sum2 **2)/N2) + ((sum3 **2)/N3))) - (3 * (GN +1));
-        var dunn1v2 = CalcDunn(data1, data2); dunn1v2 = dunn1v2.toFixed(2);
-        var dunn1v3 = CalcDunn(data1, data3); dunn1v3 = dunn1v3.toFixed(2);
-        var dunn2v3 = CalcDunn(data2, data3); dunn2v3 = dunn2v3.toFixed(2);
+        var dunn1v2 = CalcDunn(se, data1_ranks, data2_ranks); 
+        var dunn1v3 = CalcDunn(se, data1_ranks, data3_ranks); 
+        var dunn2v3 = CalcDunn(se, data2_ranks, data3_ranks); 
     } else if (k==4) {
         var N1 = data1.length; var N2 = data2.length; var N3 = data3.length; var N4 = data4.length;
         var GN = N1 + N2 + N3 + N4;
@@ -1242,6 +1315,7 @@ function KW(k, deets, data1, data2, data3, data4, data5, data6) {
         data2.forEach(function(number){superdata.push({"Group":2, "No": number, "Rank": number});});
         data3.forEach(function(number){superdata.push({"Group":3, "No": number, "Rank": number});});
         data4.forEach(function(number){superdata.push({"Group":4, "No": number, "Rank": number});});
+        var se = Dunn_SE(superdata);
         var superdata2 = SuperDataHandling(superdata);
         var data1_ranks = [];
         var data2_ranks = [];
@@ -1262,12 +1336,12 @@ function KW(k, deets, data1, data2, data3, data4, data5, data6) {
         var sum4 = 0;
         for (let i=0; i<N4; i++) {sum4 += data4_ranks[i];}
         var KH = ((12 / (GN * (GN + 1))) * (((sum1 **2)/N1) + ((sum2 **2)/N2) + ((sum3 **2)/N3) + ((sum4 **2)/N4)) - (3 * (GN +1)));
-        var dunn1v2 = CalcDunn(data1, data2); dunn1v2 = dunn1v2.toFixed(2);
-        var dunn1v3 = CalcDunn(data1, data3); dunn1v3 = dunn1v3.toFixed(2);
-        var dunn1v4 = CalcDunn(data1, data4); dunn1v4 = dunn1v4.toFixed(2);
-        var dunn2v3 = CalcDunn(data2, data3); dunn2v3 = dunn2v3.toFixed(2);
-        var dunn2v4 = CalcDunn(data2, data4); dunn2v4 = dunn2v4.toFixed(2);
-        var dunn3v4 = CalcDunn(data3, data4); dunn3v4 = dunn3v4.toFixed(2);
+        var dunn1v2 = CalcDunn(se, data1_ranks, data2_ranks);
+        var dunn1v3 = CalcDunn(se, data1_ranks, data3_ranks);
+        var dunn1v4 = CalcDunn(se, data1_ranks, data4_ranks);
+        var dunn2v3 = CalcDunn(se, data2_ranks, data3_ranks);
+        var dunn2v4 = CalcDunn(se, data2_ranks, data4_ranks);
+        var dunn3v4 = CalcDunn(se, data3_ranks, data4_ranks);
     } else if (k==5) {
         var N1 = data1.length; var N2 = data2.length; var N3 = data3.length; var N4 = data4.length; var N5 = data5.length;
         var GN = N1 + N2 + N3 + N4 + N5;
@@ -1278,6 +1352,7 @@ function KW(k, deets, data1, data2, data3, data4, data5, data6) {
         data4.forEach(function(number){superdata.push({"Group":4, "No": number, "Rank": number});});
         data5.forEach(function(number){superdata.push({"Group":5, "No": number, "Rank": number});});
         var superdata2 = SuperDataHandling(superdata);
+        var se = Dunn_SE(superdata);
         var data1_ranks = [];
         var data2_ranks = [];
         var data3_ranks = [];
@@ -1301,16 +1376,16 @@ function KW(k, deets, data1, data2, data3, data4, data5, data6) {
         var sum5 = 0;
         for (let i=0; i<N5; i++) {sum5 += data5_ranks[i];}
         var KH = ((12 / (GN * (GN + 1))) * (((sum1 **2)/N1) + ((sum2 **2)/N2) + ((sum3 **2)/N3) + ((sum4 **2)/N4) + ((sum5 **2)/N5)) - (3 * (GN +1)));
-        var dunn1v2 = CalcDunn(data1, data2); dunn1v2 = dunn1v2.toFixed(2);
-        var dunn1v3 = CalcDunn(data1, data3); dunn1v3 = dunn1v3.toFixed(2);
-        var dunn1v4 = CalcDunn(data1, data4); dunn1v4 = dunn1v4.toFixed(2);
-        var dunn1v5 = CalcDunn(data1, data5); dunn1v5 = dunn1v5.toFixed(2);
-        var dunn2v3 = CalcDunn(data2, data3); dunn2v3 = dunn2v3.toFixed(2);
-        var dunn2v4 = CalcDunn(data2, data4); dunn2v4 = dunn2v4.toFixed(2);
-        var dunn2v5 = CalcDunn(data2, data5); dunn2v5 = dunn2v5.toFixed(2);
-        var dunn3v4 = CalcDunn(data3, data4); dunn3v4 = dunn3v4.toFixed(2);
-        var dunn3v5 = CalcDunn(data3, data5); dunn3v5 = dunn3v5.toFixed(2);
-        var dunn4v5 = CalcDunn(data4, data5); dunn4v5 = dunn4v5.toFixed(2);
+        var dunn1v2 = CalcDunn(se, data1_ranks, data2_ranks);
+        var dunn1v3 = CalcDunn(se, data1_ranks, data3_ranks);
+        var dunn1v4 = CalcDunn(se, data1_ranks, data4_ranks);
+        var dunn1v5 = CalcDunn(se, data1_ranks, data5_ranks);
+        var dunn2v3 = CalcDunn(se, data2_ranks, data3_ranks);
+        var dunn2v4 = CalcDunn(se, data2_ranks, data4_ranks);
+        var dunn2v5 = CalcDunn(se, data2_ranks, data5_ranks);
+        var dunn3v4 = CalcDunn(se, data3_ranks, data4_ranks);
+        var dunn3v5 = CalcDunn(se, data3_ranks, data5_ranks);
+        var dunn4v5 = CalcDunn(se, data4_ranks, data5_ranks);
     } else if (k==6) {
         var N1 = data1.length; var N2 = data2.length; var N3 = data3.length; var N4 = data4.length; var N5 = data5.length; var N6 = data6.length;
         var GN = N1 + N2 + N3 + N4 + N5 + N6;
@@ -1321,6 +1396,7 @@ function KW(k, deets, data1, data2, data3, data4, data5, data6) {
         data4.forEach(function(number){superdata.push({"Group":4, "No": number, "Rank": number});});
         data5.forEach(function(number){superdata.push({"Group":5, "No": number, "Rank": number});});
         data6.forEach(function(number){superdata.push({"Group":6, "No": number, "Rank": number});});
+        var se = Dunn_SE(superdata);
         var superdata2 = SuperDataHandling(superdata);
         var data1_ranks = [];
         var data2_ranks = [];
@@ -1349,21 +1425,21 @@ function KW(k, deets, data1, data2, data3, data4, data5, data6) {
         var sum6 = 0;
         for (let i=0; i<N6; i++) {sum6 += data6_ranks[i];}
         var KH = ((12 / (GN * (GN + 1))) * (((sum1 **2)/N1) + ((sum2 **2)/N2) + ((sum3 **2)/N3) + ((sum4 **2)/N4) + ((sum5 **2)/N5) + ((sum6 **2)/N6)) - (3 * (GN +1)));
-        var dunn1v2 = CalcDunn(data1, data2); dunn1v2 = dunn1v2.toFixed(2);
-        var dunn1v3 = CalcDunn(data1, data3); dunn1v3 = dunn1v3.toFixed(2);
-        var dunn1v4 = CalcDunn(data1, data4); dunn1v4 = dunn1v4.toFixed(2);
-        var dunn1v5 = CalcDunn(data1, data5); dunn1v5 = dunn1v5.toFixed(2);
-        var dunn1v6 = CalcDunn(data1, data6); dunn1v6 = dunn1v6.toFixed(2);
-        var dunn2v3 = CalcDunn(data2, data3); dunn2v3 = dunn2v3.toFixed(2);
-        var dunn2v4 = CalcDunn(data2, data4); dunn2v4 = dunn2v4.toFixed(2);
-        var dunn2v5 = CalcDunn(data2, data5); dunn2v5 = dunn2v5.toFixed(2);
-        var dunn2v6 = CalcDunn(data2, data6); dunn2v6 = dunn2v6.toFixed(2);
-        var dunn3v4 = CalcDunn(data3, data4); dunn3v4 = dunn3v4.toFixed(2);
-        var dunn3v5 = CalcDunn(data3, data5); dunn3v5 = dunn3v5.toFixed(2);
-        var dunn3v6 = CalcDunn(data3, data6); dunn3v6 = dunn3v6.toFixed(2);
-        var dunn4v5 = CalcDunn(data4, data5); dunn4v5 = dunn4v5.toFixed(2);
-        var dunn4v6 = CalcDunn(data4, data6); dunn4v6 = dunn4v6.toFixed(2);
-        var dunn5v6 = CalcDunn(data5, data6); dunn5v6 = dunn5v6.toFixed(2);
+        var dunn1v2 = CalcDunn(se, data1_ranks, data2_ranks);
+        var dunn1v3 = CalcDunn(se, data1_ranks, data3_ranks);
+        var dunn1v4 = CalcDunn(se, data1_ranks, data4_ranks);
+        var dunn1v5 = CalcDunn(se, data1_ranks, data5_ranks);
+        var dunn1v6 = CalcDunn(se, data1_ranks, data6_ranks);
+        var dunn2v3 = CalcDunn(se, data2_ranks, data3_ranks);
+        var dunn2v4 = CalcDunn(se, data2_ranks, data4_ranks);
+        var dunn2v5 = CalcDunn(se, data2_ranks, data5_ranks);
+        var dunn2v6 = CalcDunn(se, data2_ranks, data6_ranks);
+        var dunn3v4 = CalcDunn(se, data3_ranks, data4_ranks);
+        var dunn3v5 = CalcDunn(se, data3_ranks, data5_ranks);
+        var dunn3v6 = CalcDunn(se, data3_ranks, data6_ranks);
+        var dunn4v5 = CalcDunn(se, data4_ranks, data5_ranks);
+        var dunn4v6 = CalcDunn(se, data4_ranks, data6_ranks);
+        var dunn5v6 = CalcDunn(se, data5_ranks, data6_ranks);
     }
     var p = ChiSq(KH, df);
     var eta = (KH - k + 1) / (GN - k);
@@ -1396,13 +1472,13 @@ function KW(k, deets, data1, data2, data3, data4, data5, data6) {
             var result2 = "<i>H</i> = " + KH + ", <i>p</i> = " + p + ". ";
         }
         if (k==3) {
-            result3 = "The significant differences between specific groups, as tested by a Dunn's post-hoc analysis, is shown below: <br>Group 1 x Group 2: <i>p</i> = " + dunn1v2 + "<br>Group 1 x Group 3: <i>p</i> = " + dunn1v3 + "<br>Group 2 x Group 3: <i>p</i> = " + dunn2v3;
+            result3 = "The significant differences between specific groups, as tested by a Dunn's post-hoc analysis, is shown below: <br>Group 1 x Group 2: " + dunn1v2 + "<br>Group 1 x Group 3: " + dunn1v3 + "<br>Group 2 x Group 3: " + dunn2v3;
         } else if (k==4) {
-            result3 = "The significant differences between specific groups, as tested by a Dunn's post-hoc analysis, is shown below: <br>Group 1 x Group 2: <i>p</i> = " + dunn1v2 + "<br>Group 1 x Group 3: <i>p</i> = " + dunn1v3 + "<br>Group 1 x Group 4: <i>p</i> = " + dunn1v4 + "<br>Group 2 x Group 3: <i>p</i> = " + dunn2v3 + "<br>Group 2 x Group 4: <i>p</i> = " + dunn2v4 + "<br>Group 3 x Group 4: <i>p</i> = " + dunn3v4;
+            result3 = "The significant differences between specific groups, as tested by a Dunn's post-hoc analysis, is shown below: <br>Group 1 x Group 2: " + dunn1v2 + "<br>Group 1 x Group 3: " + dunn1v3 + "<br>Group 1 x Group 4: " + dunn1v4 + "<br>Group 2 x Group 3: " + dunn2v3 + "<br>Group 2 x Group 4: " + dunn2v4 + "<br>Group 3 x Group 4: " + dunn3v4;
         } else if (k==5) {
-            result3 = "The significant differences between specific groups, as tested by a Dunn's post-hoc analysis, is shown below: <br>Group 1 x Group 2: <i>p</i> = " + dunn1v2 + "<br>Group 1 x Group 3: <i>p</i> = " + dunn1v3 + "<br>Group 1 x Group 4: <i>p</i> = " + dunn1v4 + "<br>Group 1 x Group 5: <i>p</i> = " + dunn1v5 + "<br>Group 2 x Group 3: <i>p</i> = " + dunn2v3 + "<br>Group 2 x Group 4: <i>p</i> = " + dunn2v4 + "<br>Group 2 x Group 5: <i>p</i> = " + dunn2v5 + "<br>Group 3 x Group 4: <i>p</i> = " + dunn3v4 + "<br>Group 3 x Group 5: <i>p</i> = " + dunn3v5 + "<br>Group 4 x Group 5: <i>p</i> = " + dunn4v5;
+            result3 = "The significant differences between specific groups, as tested by a Dunn's post-hoc analysis, is shown below: <br>Group 1 x Group 2: " + dunn1v2 + "<br>Group 1 x Group 3: " + dunn1v3 + "<br>Group 1 x Group 4: " + dunn1v4 + "<br>Group 1 x Group 5: " + dunn1v5 + "<br>Group 2 x Group 3: " + dunn2v3 + "<br>Group 2 x Group 4: " + dunn2v4 + "<br>Group 2 x Group 5: " + dunn2v5 + "<br>Group 3 x Group 4: " + dunn3v4 + "<br>Group 3 x Group 5: " + dunn3v5 + "<br>Group 4 x Group 5: " + dunn4v5;
         } else if (k==6) {
-            result3 = "The significant differences between specific groups, as tested by a Dunn's post-hoc analysis, is shown below: <br>Group 1 x Group 2: <i>p</i> = " + dunn1v2 + "<br>Group 1 x Group 3: <i>p</i> = " + dunn1v3 + "<br>Group 1 x Group 4: <i>p</i> = " + dunn1v4 + "<br>Group 1 x Group 5: <i>p</i> = " + dunn1v5 + "<br>Group 1 x Group 6: <i>p</i> = " + dunn1v6 + "<br>Group 2 x Group 3: <i>p</i> = " + dunn2v3 + "<br>Group 2 x Group 4: <i>p</i> = " + dunn2v4 + "<br>Group 2 x Group 5: <i>p</i> = " + dunn2v5 + "<br>Group 2 x Group 6: <i>p</i> = " + dunn2v6 + "<br>Group 3 x Group 4: <i>p</i> = " + dunn3v4 + "<br>Group 3 x Group 5: <i>p</i> = " + dunn3v5 + "<br>Group 3 x Group 6: <i>p</i> = " + dunn3v6 + "<br>Group 4 x Group 5: <i>p</i> = " + dunn4v5 + "<br>Group 4 x Group 6: <i>p</i> = " + dunn4v6 + "<br>Group 5 x Group 6: <i>p</i> = " + dunn5v6;
+            result3 = "The significant differences between specific groups, as tested by a Dunn's post-hoc analysis, is shown below: <br>Group 1 x Group 2: " + dunn1v2 + "<br>Group 1 x Group 3: " + dunn1v3 + "<br>Group 1 x Group 4: " + dunn1v4 + "<br>Group 1 x Group 5: " + dunn1v5 + "<br>Group 1 x Group 6: " + dunn1v6 + "<br>Group 2 x Group 3: " + dunn2v3 + "<br>Group 2 x Group 4: " + dunn2v4 + "<br>Group 2 x Group 5: " + dunn2v5 + "<br>Group 2 x Group 6: " + dunn2v6 + "<br>Group 3 x Group 4: " + dunn3v4 + "<br>Group 3 x Group 5: " + dunn3v5 + "<br>Group 3 x Group 6: " + dunn3v6 + "<br>Group 4 x Group 5: " + dunn4v5 + "<br>Group 4 x Group 6: " + dunn4v6 + "<br>Group 5 x Group 6: " + dunn5v6;
         }
         results_of_test = result1 + result2 + results4 + "<br>" + result3;
     }
@@ -1503,7 +1579,7 @@ function FriedmanSuperDataHandling(k, N, superdata) {
 
         
 }
- 
+
 
 function Friedman(k, deets, data1, data2, data3, data4, data5, data6) {
     k = parseInt(k);
@@ -1515,6 +1591,7 @@ function Friedman(k, deets, data1, data2, data3, data4, data5, data6) {
         data2.forEach(function(number){superdata.push({"Group":2, "No": number, "Rank": number});});
         data3.forEach(function(number){superdata.push({"Group":3, "No": number, "Rank": number});});
         FriedmanSuperDataHandling(k, N, superdata);
+        var se = Dunn_SE(superdata);
         var data1_ranks = [];
         var data2_ranks = [];
         var data3_ranks = [];
@@ -1533,9 +1610,9 @@ function Friedman(k, deets, data1, data2, data3, data4, data5, data6) {
         var second = (sum1 **2) + (sum2 **2) + (sum3 **2)
         var third = 3 * (N * (k+1));
         var KH = (first * second) - third;
-        var dunn1v2 = CalcDunn(data1, data2); dunn1v2 = dunn1v2.toFixed(2);
-        var dunn1v3 = CalcDunn(data1, data3); dunn1v3 = dunn1v3.toFixed(2);
-        var dunn2v3 = CalcDunn(data2, data3); dunn2v3 = dunn2v3.toFixed(2);
+        var dunn1v2 = CalcDunn(se, data1_ranks, data2_ranks); 
+        var dunn1v3 = CalcDunn(se, data1_ranks, data3_ranks); 
+        var dunn2v3 = CalcDunn(se, data2_ranks, data3_ranks); 
     } else if (k==4) {
         var N = data1.length;
         var superdata = [];
@@ -1544,6 +1621,7 @@ function Friedman(k, deets, data1, data2, data3, data4, data5, data6) {
         data3.forEach(function(number){superdata.push({"Group":3, "No": number, "Rank": number});});
         data4.forEach(function(number){superdata.push({"Group":4, "No": number, "Rank": number});});
         FriedmanSuperDataHandling(k, N, superdata);
+        var se = Dunn_SE(superdata);
         var data1_ranks = [];
         var data2_ranks = [];
         var data3_ranks = [];
@@ -1566,12 +1644,12 @@ function Friedman(k, deets, data1, data2, data3, data4, data5, data6) {
         var second = (sum1 **2) + (sum2 **2) + (sum3 **2) + (sum4 **2);
         var third = 3 * (N * (k+1));
         var KH = (first * second) - third;
-        var dunn1v2 = CalcDunn(data1, data2); dunn1v2 = dunn1v2.toFixed(2);
-        var dunn1v3 = CalcDunn(data1, data3); dunn1v3 = dunn1v3.toFixed(2);
-        var dunn1v4 = CalcDunn(data1, data4); dunn1v4 = dunn1v4.toFixed(2);
-        var dunn2v3 = CalcDunn(data2, data3); dunn2v3 = dunn2v3.toFixed(2);
-        var dunn2v4 = CalcDunn(data2, data4); dunn2v4 = dunn2v4.toFixed(2);
-        var dunn3v4 = CalcDunn(data3, data4); dunn3v4 = dunn3v4.toFixed(2);
+        var dunn1v2 = CalcDunn(se, data1_ranks, data2_ranks); 
+        var dunn1v3 = CalcDunn(se, data1_ranks, data3_ranks); 
+        var dunn1v4 = CalcDunn(se, data1_ranks, data4_ranks); 
+        var dunn2v3 = CalcDunn(se, data2_ranks, data3_ranks); 
+        var dunn2v4 = CalcDunn(se, data2_ranks, data4_ranks); 
+        var dunn3v4 = CalcDunn(se, data3_ranks, data4_ranks); 
     } else if (k==5) {
         var N = data1.length;
         var superdata = [];
@@ -1581,6 +1659,7 @@ function Friedman(k, deets, data1, data2, data3, data4, data5, data6) {
         data4.forEach(function(number){superdata.push({"Group":4, "No": number, "Rank": number});});
         data5.forEach(function(number){superdata.push({"Group":5, "No": number, "Rank": number});});
         FriedmanSuperDataHandling(k, N, superdata);
+        var se = Dunn_SE(superdata);
         var data1_ranks = [];
         var data2_ranks = [];
         var data3_ranks = [];
@@ -1607,16 +1686,16 @@ function Friedman(k, deets, data1, data2, data3, data4, data5, data6) {
         var second = (sum1 **2) + (sum2 **2) + (sum3 **2) + (sum4 **2) + (sum5 **2);
         var third = 3 * (N * (k+1));
         var KH = (first * second) - third;
-        var dunn1v2 = CalcDunn(data1, data2); dunn1v2 = dunn1v2.toFixed(2);
-        var dunn1v3 = CalcDunn(data1, data3); dunn1v3 = dunn1v3.toFixed(2);
-        var dunn1v4 = CalcDunn(data1, data4); dunn1v4 = dunn1v4.toFixed(2);
-        var dunn1v5 = CalcDunn(data1, data5); dunn1v5 = dunn1v5.toFixed(2);
-        var dunn2v3 = CalcDunn(data2, data3); dunn2v3 = dunn2v3.toFixed(2);
-        var dunn2v4 = CalcDunn(data2, data4); dunn2v4 = dunn2v4.toFixed(2);
-        var dunn2v5 = CalcDunn(data2, data5); dunn2v5 = dunn2v5.toFixed(2);
-        var dunn3v4 = CalcDunn(data3, data4); dunn3v4 = dunn3v4.toFixed(2);
-        var dunn3v5 = CalcDunn(data3, data5); dunn3v5 = dunn3v5.toFixed(2);
-        var dunn4v5 = CalcDunn(data4, data5); dunn4v5 = dunn4v5.toFixed(2);
+        var dunn1v2 = CalcDunn(se, data1_ranks, data2_ranks);
+        var dunn1v3 = CalcDunn(se, data1_ranks, data3_ranks);
+        var dunn1v4 = CalcDunn(se, data1_ranks, data4_ranks);
+        var dunn1v5 = CalcDunn(se, data1_ranks, data5_ranks);
+        var dunn2v3 = CalcDunn(se, data2_ranks, data3_ranks);
+        var dunn2v4 = CalcDunn(se, data2_ranks, data4_ranks);
+        var dunn2v5 = CalcDunn(se, data2_ranks, data5_ranks);
+        var dunn3v4 = CalcDunn(se, data3_ranks, data4_ranks);
+        var dunn3v5 = CalcDunn(se, data3_ranks, data5_ranks);
+        var dunn4v5 = CalcDunn(se, data4_ranks, data5_ranks);
     } else if (k==6) {
         var N = data1.length;
         var superdata = [];
@@ -1627,6 +1706,7 @@ function Friedman(k, deets, data1, data2, data3, data4, data5, data6) {
         data5.forEach(function(number){superdata.push({"Group":5, "No": number, "Rank": number});});
         data6.forEach(function(number){superdata.push({"Group":6, "No": number, "Rank": number});});
         FriedmanSuperDataHandling(k, N, superdata);
+        var se = Dunn_SE(superdata);
         var data1_ranks = [];
         var data2_ranks = [];
         var data3_ranks = [];
@@ -1657,24 +1737,24 @@ function Friedman(k, deets, data1, data2, data3, data4, data5, data6) {
         var second = (sum1 **2) + (sum2 **2) + (sum3 **2) + (sum4 **2) + (sum5 **2) + (sum6 **2);
         var third = 3 * (N * (k+1));
         var KH = (first * second) - third;
-        var dunn1v2 = CalcDunn(data1, data2); dunn1v2 = dunn1v2.toFixed(2);
-        var dunn1v3 = CalcDunn(data1, data3); dunn1v3 = dunn1v3.toFixed(2);
-        var dunn1v4 = CalcDunn(data1, data4); dunn1v4 = dunn1v4.toFixed(2);
-        var dunn1v5 = CalcDunn(data1, data5); dunn1v5 = dunn1v5.toFixed(2);
-        var dunn1v6 = CalcDunn(data1, data6); dunn1v6 = dunn1v6.toFixed(2);
-        var dunn2v3 = CalcDunn(data2, data3); dunn2v3 = dunn2v3.toFixed(2);
-        var dunn2v4 = CalcDunn(data2, data4); dunn2v4 = dunn2v4.toFixed(2);
-        var dunn2v5 = CalcDunn(data2, data5); dunn2v5 = dunn2v5.toFixed(2);
-        var dunn2v6 = CalcDunn(data2, data6); dunn2v6 = dunn2v6.toFixed(2);
-        var dunn3v4 = CalcDunn(data3, data4); dunn3v4 = dunn3v4.toFixed(2);
-        var dunn3v5 = CalcDunn(data3, data5); dunn3v5 = dunn3v5.toFixed(2);
-        var dunn3v6 = CalcDunn(data3, data6); dunn3v6 = dunn3v6.toFixed(2);
-        var dunn4v5 = CalcDunn(data4, data5); dunn4v5 = dunn4v5.toFixed(2);
-        var dunn4v6 = CalcDunn(data4, data6); dunn4v6 = dunn4v6.toFixed(2);
-        var dunn5v6 = CalcDunn(data5, data6); dunn5v6 = dunn5v6.toFixed(2);
+        var dunn1v2 = CalcDunn(se, data1_ranks, data2_ranks);
+        var dunn1v3 = CalcDunn(se, data1_ranks, data3_ranks);
+        var dunn1v4 = CalcDunn(se, data1_ranks, data4_ranks);
+        var dunn1v5 = CalcDunn(se, data1_ranks, data5_ranks);
+        var dunn1v6 = CalcDunn(se, data1_ranks, data6_ranks);
+        var dunn2v3 = CalcDunn(se, data2_ranks, data3_ranks);
+        var dunn2v4 = CalcDunn(se, data2_ranks, data4_ranks);
+        var dunn2v5 = CalcDunn(se, data2_ranks, data5_ranks);
+        var dunn2v6 = CalcDunn(se, data2_ranks, data6_ranks);
+        var dunn3v4 = CalcDunn(se, data3_ranks, data4_ranks);
+        var dunn3v5 = CalcDunn(se, data3_ranks, data5_ranks);
+        var dunn3v6 = CalcDunn(se, data3_ranks, data6_ranks);
+        var dunn4v5 = CalcDunn(se, data4_ranks, data5_ranks);
+        var dunn4v6 = CalcDunn(se, data4_ranks, data6_ranks);
+        var dunn5v6 = CalcDunn(se, data5_ranks, data6_ranks);
     }
     var p = ChiSq(KH, df);
-    var W = (KH **2) / (N * (k-1));
+    var W = (KH) / (N * (k-1));
     W = W.toFixed(2);
     KH = KH.toFixed(2);
     var result1 = "";
@@ -1702,13 +1782,13 @@ function Friedman(k, deets, data1, data2, data3, data4, data5, data6) {
             var result2 = "<i>Q</i> = " + KH + ", <i>p</i> = " + p + ". ";
         }
         if (k==3) {
-            result3 = "The significant differences between specific groups, as tested by a Dunn's post-hoc analysis, is shown below: <br>Group 1 x Group 2: <i>p</i> = " + dunn1v2 + "<br>Group 1 x Group 3: <i>p</i> = " + dunn1v3 + "<br>Group 2 x Group 3: <i>p</i> = " + dunn2v3;
+            result3 = "The significant differences between specific groups, as tested by a Dunn's post-hoc analysis, is shown below: <br>Group 1 x Group 2: " + dunn1v2 + "<br>Group 1 x Group 3: " + dunn1v3 + "<br>Group 2 x Group 3: " + dunn2v3;
         } else if (k==4) {
-            result3 = "The significant differences between specific groups, as tested by a Dunn's post-hoc analysis, is shown below: <br>Group 1 x Group 2: <i>p</i> = " + dunn1v2 + "<br>Group 1 x Group 3: <i>p</i> = " + dunn1v3 + "<br>Group 1 x Group 4: <i>p</i> = " + dunn1v4 + "<br>Group 2 x Group 3: <i>p</i> = " + dunn2v3 + "<br>Group 2 x Group 4: <i>p</i> = " + dunn2v4 + "<br>Group 3 x Group 4: <i>p</i> = " + dunn3v4;
+            result3 = "The significant differences between specific groups, as tested by a Dunn's post-hoc analysis, is shown below: <br>Group 1 x Group 2: " + dunn1v2 + "<br>Group 1 x Group 3: " + dunn1v3 + "<br>Group 1 x Group 4: " + dunn1v4 + "<br>Group 2 x Group 3: " + dunn2v3 + "<br>Group 2 x Group 4: " + dunn2v4 + "<br>Group 3 x Group 4: " + dunn3v4;
         } else if (k==5) {
-            result3 = "The significant differences between specific groups, as tested by a Dunn's post-hoc analysis, is shown below: <br>Group 1 x Group 2: <i>p</i> = " + dunn1v2 + "<br>Group 1 x Group 3: <i>p</i> = " + dunn1v3 + "<br>Group 1 x Group 4: <i>p</i> = " + dunn1v4 + "<br>Group 1 x Group 5: <i>p</i> = " + dunn1v5 + "<br>Group 2 x Group 3: <i>p</i> = " + dunn2v3 + "<br>Group 2 x Group 4: <i>p</i> = " + dunn2v4 + "<br>Group 2 x Group 5: <i>p</i> = " + dunn2v5 + "<br>Group 3 x Group 4: <i>p</i> = " + dunn3v4 + "<br>Group 3 x Group 5: <i>p</i> = " + dunn3v5 + "<br>Group 4 x Group 5: <i>p</i> = " + dunn4v5;
+            result3 = "The significant differences between specific groups, as tested by a Dunn's post-hoc analysis, is shown below: <br>Group 1 x Group 2: " + dunn1v2 + "<br>Group 1 x Group 3: " + dunn1v3 + "<br>Group 1 x Group 4: " + dunn1v4 + "<br>Group 1 x Group 5: " + dunn1v5 + "<br>Group 2 x Group 3: " + dunn2v3 + "<br>Group 2 x Group 4: " + dunn2v4 + "<br>Group 2 x Group 5: " + dunn2v5 + "<br>Group 3 x Group 4: " + dunn3v4 + "<br>Group 3 x Group 5: " + dunn3v5 + "<br>Group 4 x Group 5: " + dunn4v5;
         } else if (k==6) {
-            result3 = "The significant differences between specific groups, as tested by a Dunn's post-hoc analysis, is shown below: <br>Group 1 x Group 2: <i>p</i> = " + dunn1v2 + "<br>Group 1 x Group 3: <i>p</i> = " + dunn1v3 + "<br>Group 1 x Group 4: <i>p</i> = " + dunn1v4 + "<br>Group 1 x Group 5: <i>p</i> = " + dunn1v5 + "<br>Group 1 x Group 6: <i>p</i> = " + dunn1v6 + "<br>Group 2 x Group 3: <i>p</i> = " + dunn2v3 + "<br>Group 2 x Group 4: <i>p</i> = " + dunn2v4 + "<br>Group 2 x Group 5: <i>p</i> = " + dunn2v5 + "<br>Group 2 x Group 6: <i>p</i> = " + dunn2v6 + "<br>Group 3 x Group 4: <i>p</i> = " + dunn3v4 + "<br>Group 3 x Group 5: <i>p</i> = " + dunn3v5 + "<br>Group 3 x Group 6: <i>p</i> = " + dunn3v6 + "<br>Group 4 x Group 5: <i>p</i> = " + dunn4v5 + "<br>Group 4 x Group 6: <i>p</i> = " + dunn4v6 + "<br>Group 5 x Group 6: <i>p</i> = " + dunn5v6;
+            result3 = "The significant differences between specific groups, as tested by a Dunn's post-hoc analysis, is shown below: <br>Group 1 x Group 2: " + dunn1v2 + "<br>Group 1 x Group 3: " + dunn1v3 + "<br>Group 1 x Group 4: " + dunn1v4 + "<br>Group 1 x Group 5: " + dunn1v5 + "<br>Group 1 x Group 6: " + dunn1v6 + "<br>Group 2 x Group 3: " + dunn2v3 + "<br>Group 2 x Group 4: " + dunn2v4 + "<br>Group 2 x Group 5: " + dunn2v5 + "<br>Group 2 x Group 6: " + dunn2v6 + "<br>Group 3 x Group 4: " + dunn3v4 + "<br>Group 3 x Group 5: " + dunn3v5 + "<br>Group 3 x Group 6: " + dunn3v6 + "<br>Group 4 x Group 5: " + dunn4v5 + "<br>Group 4 x Group 6: " + dunn4v6 + "<br>Group 5 x Group 6: " + dunn5v6;
         }
         results_of_test = result1 + result2 + results4 + "<br>" + result3;
     }

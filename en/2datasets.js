@@ -378,16 +378,16 @@ function Wilcoxon (data1, data2, deets) {
     }
     var result3 = "";
     var tempr = Math.abs(r);
-    if (tempr < 0.3) {
+    if (tempr < 0.35) {
         result3 = "The effect size suggests a small effect."
-    } else if (tempr < 0.5) {
+    } else if (tempr < 0.55) {
         result3 = "The effect size suggests a medium effect."
     } else {result3 = "The effect size suggests a large effect."}
 
     if (p < 0.01) {
-        var result2 = "<i>Z</i> = " + Z + ", <i>p</i> < 0.01, <i>r</i> = " + r + ". ";
+        var result2 = "<i>Z</i> = " + Z + ", <i>p</i> < 0.01, <i>rs</i> = " + r + ". ";
     } else {
-        var result2 = "<i>Z</i> = " + Z + ", <i>p</i> = " + p + ", <i>r</i> = " + r + ". ";
+        var result2 = "<i>Z</i> = " + Z + ", <i>p</i> = " + p + ", <i>rs</i> = " + r + ". ";
     }
     results_of_test = result1 + result2 + result3;
     document.getElementById("explain_bun").innerHTML = deets;
@@ -544,16 +544,16 @@ function MannWhiteny (data1, data2, deets) {
     }
     var result3 = "";
     var tempr = Math.abs(r);
-    if (tempr < 0.3) {
+    if (tempr < 0.35) {
         result3 = "The effect size suggests a small effect."
-    } else if (tempr < 0.5) {
+    } else if (tempr < 0.55) {
         result3 = "The effect size suggests a medium effect."
     } else {result3 = "The effect size suggests a large effect."}
 
     if (p < 0.01) {
-        var result2 = "<i>Z</i> = " + Z + ", <i>p</i> < 0.01, <i>r</i> = " + r + ". ";
+        var result2 = "<i>Z</i> = " + Z + ", <i>p</i> < 0.01, <i>rs</i> = " + r + ". ";
     } else {
-        var result2 = "<i>Z</i> = " + Z + ", <i>p</i> = " + p + ", <i>r</i> = " + r + ". ";
+        var result2 = "<i>Z</i> = " + Z + ", <i>p</i> = " + p + ", <i>rs</i> = " + r + ". ";
     }
     results_of_test = result1 + result2 + result3;
     document.getElementById("explain_bun").innerHTML = deets;
@@ -597,9 +597,9 @@ function DepTtest (data1, data2, deets) {
     var result3 = "";
     if (d < 0.2) {
         result3 = "The effect size, as measured by Cohen's d suggests that there is no significant effect."
-    } else if (d < 0.5) {
+    } else if (d < 0.6) {
         result3 = "The effect size, as measured by Cohen's d suggests that there is a small effect."
-    } else if (d < 0.8) {
+    } else if (d < 0.9) {
         result3 = "The effect size, as measured by Cohen's d suggests that there is a moderate effect."
     } else {result3 = "The effect size, as measured by Cohen's d suggests that there is a large effect."}
     t = t.toFixed(2);
@@ -665,9 +665,9 @@ function IndepTtest (data1, data2, deets) {
     var result3 = "";
     if (d < 0.2) {
         result3 = "The effect size, as measured by Cohen's d suggests that there is no significant effect."
-    } else if (d < 0.5) {
+    } else if (d < 0.6) {
         result3 = "The effect size, as measured by Cohen's d suggests that there is a small effect."
-    } else if (d < 0.8) {
+    } else if (d < 0.9) {
         result3 = "The effect size, as measured by Cohen's d suggests that there is a moderate effect."
     } else {result3 = "The effect size, as measured by Cohen's d suggests that there is a large effect."}
     t = t.toFixed(2);

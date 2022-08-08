@@ -349,9 +349,9 @@ function Spearman(data1, data2, details) {
     var tempr = Math.abs(Rs);
     if (tempr < 0.2) {
         result3 = "The <i>Rs</i> coefficient suggests a very weak correlation."
-    } else if (tempr < 0.4) {
+    } else if (tempr < 0.35) {
         result3 = "The <i>Rs</i> coefficient suggests a weak correlation."
-    } else if (tempr < 0.6) {
+    } else if (tempr < 0.55) {
         result3 = "The <i>Rs</i> coefficient suggests a moderate correlation."
     } else if (tempr < 0.8) {
         result3 = "The <i>Rs</i> coefficient suggests a strong correlation."
@@ -433,9 +433,9 @@ function Pearson(data1, data2, details) {
     }
     var result3 = "";
     var tempr = Math.abs(r);
-    if (tempr < 0.3) {
+    if (tempr < 0.35) {
         result3 = "The Pearson's <i>r</i> coefficient suggests a weak correlation."
-    } else if (tempr < 0.5) {
+    } else if (tempr < 0.55) {
         result3 = "The Pearson's <i>r</i> coefficient suggests a moderate correlation."
     } else {result3 = "The Pearson's <i>r</i> coefficient suggests a strong correlation."}
 

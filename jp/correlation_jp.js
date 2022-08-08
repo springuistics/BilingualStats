@@ -349,9 +349,9 @@ function Spearman(data1, data2, details) {
     var tempr = Math.abs(Rs);
     if (tempr < 0.2) {
         result3 = "<i>Rs</i>値は2つの変数の間に、ほとんど関連性がないことを示します。"
-    } else if (tempr < 0.4) {
+    } else if (tempr < 0.35) {
         result3 = "<i>Rs</i>値は2つの変数の間に、弱い関連性があることを示します。"
-    } else if (tempr < 0.6) {
+    } else if (tempr < 0.55) {
         result3 = "<i>Rs</i>値は2つの変数の間に、中ぐらいの関連性があることを示します。"
     } else if (tempr < 0.8) {
         result3 = "<i>Rs</i>値は2つの変数の間に、強い関連性があることを示します。"
@@ -433,9 +433,9 @@ function Pearson(data1, data2, details) {
     }
     var result3 = "";
     var tempr = Math.abs(r);
-    if (tempr < 0.3) {
+    if (tempr < 0.35) {
         result3 = "<i>rs</i>値は2つの変数の間に、弱い関連性があることを示します。"
-    } else if (tempr < 0.5) {
+    } else if (tempr < 0.55) {
         result3 = "<i>rs</i>値は2つの変数の間に、中ぐらいの関連性があることを示します。"
     } else {result3 = "<i>rs</i>値は2つの変数の間に、強い関連性があることを示します。"}
 

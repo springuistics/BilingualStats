@@ -45,10 +45,10 @@ function Begin (data1, data2) {
     var ordinal_check = document.querySelector('input[name="q2"]:checked').value;
     if (ordinal_check == "no") {
         if (pair_check == "yes") {
-            details_of_test = "本データは順序データであり、かつ対応のあるデータであるため、ウィルコクソンの符号順位検定で計算しました。";
+            details_of_test = "本データは順序データであり、かつ、対応のあるデータであるため、ウィルコクソンの符号順位検定で計算しました。";
             Wilcoxon(data1, data2, details_of_test);
         } else if (pair_check == "no") {
-            details_of_test = "本データは順序データであり、かつ対応のないデータであるため、マン・ホイットニーのU検定で計算しました。";
+            details_of_test = "本データは順序データであり、かつ、対応のないデータであるため、マン・ホイットニーのU検定で計算しました。";
             MannWhiteny(data1, data2, details_of_test);
         }
     } else {

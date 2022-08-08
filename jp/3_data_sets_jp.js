@@ -128,10 +128,10 @@ function Begin(k, data1, data2, data3, data4, data5, data6) {
     var ordinal_check = document.querySelector('input[name="q2"]:checked').value;
     if (ordinal_check == "no") {
         if (pair_check == "yes") {
-            details_of_test = "本データは順序データであり、かつ対応のあるデータであるため、フリードマン検定で計算しました。";
+            details_of_test = "本データは順序データであり、かつ、対応のあるデータであるため、フリードマン検定で計算しました。";
             Friedman(k, details_of_test, data1, data2, data3, data4, data5, data6);
         } else if (pair_check == "no") {
-            details_of_test = "本データは順序データであり、かつ対応のないデータであるため、クラスカル=ウォリス検定で計算しました。";
+            details_of_test = "本データは順序データであり、かつ、対応のないデータであるため、クラスカル=ウォリス検定で計算しました。";
             KW(k, details_of_test, data1, data2, data3, data4, data5, data6);
         }
     } else {

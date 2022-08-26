@@ -228,7 +228,9 @@ function StudT(t,n) {
     }
 
 function Spearman(data1, data2, details) {
-    function rankit(data) {
+    var cf_x = 0;
+    var cf_y = 0;
+    function rankit(data, tf) {
     var superdata1 = [];
         data.forEach(function(number){
             superdata1.push({"No":number, "Rank": number});
@@ -280,6 +282,8 @@ function Spearman(data1, data2, details) {
     }
     var counter = ties.length;
     var ha = [];
+    var cf = [];
+    
     if (counter > 0) {
         for (let i = 0; i < ties.length; i++){
             var temp_d = 0;
@@ -291,6 +295,21 @@ function Spearman(data1, data2, details) {
             ha.push({"ties": ties[i], "no": temp_d})
         };
         
+        for (let i=0; i<ha.length; i++){
+            let cx = ha[i].no;
+            let correction = (cx * ((cx**2) - 1));
+            cf.push(correction);
+        }
+        var sumcf = 0;
+        for (let i=0; i<cf.length; i++) {
+            sumcf += cf[i];
+        }
+        if (tf == true) {
+            cf_x = sumcf;
+        } else if (tf == false) {
+            cf_y = sumcf;
+        }
+
         var newnum = [];
         for (let i = 0; i < ha.length; i ++) {
             let temp_val = 0;
@@ -319,8 +338,8 @@ function Spearman(data1, data2, details) {
         })
     return actualranks;
     }
-    var data1_ranks = rankit(data1);
-    var data2_ranks = rankit(data2);
+    var data1_ranks = rankit(data1, true);
+    var data2_ranks = rankit(data2, false);
     var d2 = [];
     for (let i = 0; i < data1_ranks.length; i++) {
         let rando = (data1_ranks[i] - data2_ranks[i]);
@@ -332,7 +351,9 @@ function Spearman(data1, data2, details) {
         sumofd2 += d2[i];
     }
     var N = data1_ranks.length;
-    var Rs = 1 - ((6 * sumofd2) / ((Math.pow(N, 3)) - N));
+    var top = (((Math.pow(N, 3)) - N) - (6 * sumofd2) - ((cf_x + cf_y) / 2));
+    var bottom = (((Math.pow(N, 3)) - N)**2) - ((cf_x + cf_y) * ((Math.pow(N, 3)) - N)) + (cf_x * cf_y);
+    var Rs =  top / Math.sqrt(bottom);
     var df = N-2;
     var helper = (1 - (Math.pow(Rs, 2))) / df;
     var t = Rs / (Math.sqrt(helper));

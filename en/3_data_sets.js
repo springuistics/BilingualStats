@@ -33,6 +33,7 @@ function SetUp() {
 }
 
 function SetUpP2(k) {
+    if (!document.getElementById('dataset_0')){
     for (let i=0; i < k; i++ ) {
         let data = document.createElement("textarea");
         data.id = "dataset_" + i;
@@ -49,6 +50,7 @@ function SetUpP2(k) {
         document.getElementById(data.id).columns = "40";
         document.getElementById(data.id).placeholder="Copy and paste data here.";
     }
+    }
 }
 
 function Reset() {
@@ -64,6 +66,8 @@ function Reset() {
     document.getElementById('button').style.display = "none";
     document.getElementById('datasets').style.display = "none";
     document.getElementById('reset').style.display = "none";
+    document.getElementById('explain_bun').innerHTML = "The description of your test will be printed here:";
+    document.getElementById('results_bun').innerHTML = "Your results will be printed here:";
 }
 
 function Calculate() {

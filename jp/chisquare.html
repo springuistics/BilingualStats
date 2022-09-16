@@ -1,0 +1,69 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link href="../css/chisq.css" rel="stylesheet" type="text/css">
+    <title>Comparing Counts of Non-numerial Data</title>
+</head>
+<body>
+    <script src="chisq.js"></script>
+    <div id="langauge_bar">
+        <div style="text-align:left; margin-top: 2px; margin-left: 10px; position:absolute"><a href="../index.html"><img src="../css/back.png" alt="index"></a></div>
+        <p id="lang_bun">言語設定:</p>
+        <select id="lang_s" onchange="L_Change()">
+            <option value="jp">日本語</option>
+            <option value="en">English</option>
+        </select>
+    </div>
+    <h1  id="Title">カテゴリー別の総数データの統計比較</h1>
+    <br>
+    <h2 id="Subtitle">データについて、以下の質問に答えてください</h2>
+    <br>
+    <div id="bigger">
+    <div id="questions">
+        <div id="ps">
+            <p class="question" id="qq1">何グループを比較しますか？*</p>
+            <div id="hover1" class="hovery">比較したいグループ、あるいはカテゴリー、の数です。例えば、男女を比較する場合は「２」と入力してください。中級・上級・超級の学習者グループを比較する場合は「３」と入力してください。</div>
+            <br>
+            <p class="question" id="qq2">選択肢はいくつが可能ですか？*</p>
+            <div id="hover2" class="hovery">可能な選択肢・回答・カテゴリー（など）の数を入力してください。例えば、「Yes/No」を比較する場合は「２」と入力してください。アンケートで３つの回答から選択してもらおう項目があれば、「３」と入力してください。</div>
+            <br>
+        </div>
+        <div id="as">
+            <div id="firsty">
+            <input type="text" id="g_no" placeholder="Input number of groups">
+            <br>
+            <br>
+            <br>
+            <input type="text" id="k_no" placeholder="Input number of possibilities">
+            <br>
+            </div>
+        </div>
+    </div>
+    <p id="error_text" style="display: none">Error will appear here.</p>
+    <p id="small_text">*マウスポインターを質問の上に乗せると、説明が表示されます</p>
+    <br>
+    <button id="SetUp" class="button" onclick="SetUp()">データ入力開始</button>
+    <br>
+    </div>
+    <div id="datasets" style="display: none">
+        <h2>各グループ・カテゴリーの総数を入力してください*:</h2>
+        <p>*本検定では、「0」を入力してはいけない</p>
+        <div id="d_container"></div>
+    </div>
+    <div id="activate">
+        <button id="button" class="button" style="display: none" onclick="Calculate()">計算</button>
+    </div>
+    <div id="results">
+        <p id="explain_bun" style="font-weight: bold; font-size: 16px; color: rgb(105, 0, 0)">利用された検定の詳細はここに書かれます</p>
+        <br>
+        <p id="results_bun" style="font-weight: bold; font-size: 18px">結果はここに書かれます</p>
+        <br>
+        <button id="reset" class="button" style="display: none; background-color: rgb(139, 0, 0);" onclick="Reset()">Reset!</button>
+    </div>
+    <div id="Citation">
+        <p>本プログラムや関連する説明文などを研究で使用する場合、下記の論文を引用してください。</p>
+        <p> Spring, R. (2022). Online Bilingual Statistics Calculations for Langauge Education and Linguistics. Coming soon.</p>
+    </div>
+
+</body>
+</html>

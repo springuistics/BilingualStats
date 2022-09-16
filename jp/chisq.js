@@ -1,10 +1,10 @@
 function L_Change() {
     var language = document.getElementById('lang_s').value;
-    if (language = "jp") {
-        location.href = "../jp/chisquare.html"
+    if (language = "en") {
+        location.href = "../en/chisquare.html"
     }
 }
-var deets = "A Chi-Square test was used to check for significance due to the nominal nature of both variables.";
+var deets = "本データは名義データであるため、カイ二乗検定で比較した。";
 var results_of_test = "";
 
 function SetUp() {
@@ -12,10 +12,10 @@ function SetUp() {
     var k = document.getElementById('k_no').value;
     var g = document.getElementById('g_no').value;
     if (k>10 || g>10) {
-        document.getElementById("error_text").innerHTML = "Sorry, this site currently only allows up to a 10x10 chi square."
+        document.getElementById("error_text").innerHTML = "本プログラムの可能比較テーブルは最大で１０ｘ１０です。２～１０の数字を入力してください。"
         document.getElementById('error_text').style.display = "inline";
     } else if (k<2 || g<2) {
-        document.getElementById("error_text").innerHTML = "You need to have at least 2 groups and 2 answers/options."
+        document.getElementById("error_text").innerHTML = "グループ・カテゴリーの両方において、少なくとも２項が必要です。２～１０の数字を入力してください。"
         document.getElementById('error_text').style.display = "inline";
     } else if (!document.getElementById('dataset_k0_g0')){
         document.getElementById('button').style.display="inline";
@@ -32,20 +32,20 @@ function SetUp() {
         heading_start.innerHTML= "";
         row_1.appendChild(heading_start);
             let heading = document.createElement('th');
-            heading.innerHTML = "Answers:"
+            heading.innerHTML = "選択肢・回答・カテゴリー"
             row_1.appendChild(heading);
         thead.appendChild(row_1);
         for (let i=0; i < g; i++) {
             let row = document.createElement('tr');
             let header = document.createElement('th');
-            header.innerHTML = "Group " + (i+1);
+            header.innerHTML = "グループ " + (i+1);
             row.appendChild(header);
             for (let j=0; j<k; j++) {
                 let data = document.createElement("input");
                 data.type = "text";
                 data.id = "dataset_k" + j + "_g" + i;
                 data.classname = "dataset";
-                data.placeholder = "Group " + (i+1) + ", Answer " + (j+1);
+                data.placeholder = "Group " + (i+1) + "のAnswer " + (j+1) + " の総数を入力";
                 row.appendChild(data);
             }
             thead.appendChild(row);
@@ -57,7 +57,7 @@ function SetUp() {
 
 function Calculate() {
     if (!document.getElementById('dataset_k1_g0') && !document.getElementById('dataset_k0_g1')){
-        document.getElementById("error_text").innerHTML = "You must have at least 2 groups or 2 answers/options."
+        document.getElementById("error_text").innerHTML = "グループ・カテゴリーの両方において、少なくとも２項が必要です。"
         document.getElementById('error_text').style.display = "inline";
     } else {
         var k = document.getElementById('k_no').value;
@@ -113,19 +113,19 @@ function Calculate() {
         }
         var result1 = "";
         if (p>.05) {
-            result1 = "There was no significant difference amongst the groups; "
+            result1 = "総合的な有意差はありませんでした（"
         } else {
-            result1 = "There was a significant difference between at least two of the groups; "
+            result1 = "総合的な有意差はありました（"
         }
         var w = Math.sqrt(Chi / (bigN*df));
         w = w.toFixed(2);
         var effect_size = "";
         if (w<.20) {
-            effect_size = ". Furthermore, there was a small effect size; <i>V</i> = " + w;
+            effect_size = "）。また、 小さい効果が観察されました： <i>V</i> = " + w;
         } else if (w<0.40) {
-            effect_size =  ". Furthermore, there was a medium effect size; <i>V</i> = " + w;
+            effect_size =  "）。また、中くらいの効果が観察されました： <i>V</i> = " + w;
         } else if (w>=0.4) {
-            effect_size =  ". Furthermore, there was a large effect size; <i>V</i> = " + w;
+            effect_size =  "）。また、大きい効果が観察されました： <i>V</i> = " + w;
         }
         results_of_test = result1 + result2 + effect_size;
         document.getElementById("explain_bun").innerHTML = deets;
@@ -154,6 +154,6 @@ function Reset() {
     document.getElementById('button').style.display = "none";
     document.getElementById('datasets').style.display = "none";
     document.getElementById('reset').style.display = "none";
-    document.getElementById('explain_bun').innerHTML = "The description of your test will be printed here:";
-    document.getElementById('results_bun').innerHTML = "Your results will be printed here:";
+    document.getElementById('explain_bun').innerHTML = "利用された検定の詳細はここに書かれます";
+    document.getElementById('results_bun').innerHTML = "結果はここに書かれます";
 }

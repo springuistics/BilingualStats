@@ -1,0 +1,72 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link href="../css/pp_testing.css" rel="stylesheet" type="text/css">
+    <title>２組の事前・事後比較</title>
+</head>
+<body>
+    <script src="pp_testing.js"></script>
+    <div id="langauge_bar">
+        <div style="text-align:left; margin-top: 2px; margin-left: 10px; position:absolute"><a href="../index_jp.html"><img src="../css/back.png" alt="index"></a></div>
+        <p id="lang_bun">言語設定:</p>
+        <select id="lang_s" onchange="L_Change()">
+            <option value="jp">日本語</option>
+            <option value="en">English</option>
+        </select>
+    </div>
+    <h1  id="Title">実験群・対照群の事前・事後データ比較</h1>
+    <br>
+    <h2 id="Subtitle">本検定を使う際、以下のようなデータを求める</h2>
+    <br>
+    <div id="bigger">
+        <h3>１．継続的なデータ（e.g., 試験データ、時間など様々な値が可能なデータ）</h3>
+        <h3>２．２組から取った事前・事後データ（実験群と対照群の被験者は異なる）</h3>
+        <h3>３．事前と事後のデータ（事前・事後の被験者は同じ）</h3>
+    <p id="error_text" style="display: none">Error will appear here.</p>
+    </div>
+    <div id="datasets">
+        <table id="table_me">
+            <tr>
+        <td><div id="data1">
+            <h3>実験群<br> 事前データ：</h3>
+            <br>
+            <textarea id="data_set_1" rows="30" columns="40" text-overflow="visible" placeholder="paste data here"></textarea>
+            <br>
+        </div></td>
+        <td><div id="data2">
+            <h3>実験群<br> 事後データ：</h3>
+            <br>
+            <textarea id="data_set_2" rows="30" columns="40" text-overflow="visible" placeholder="paste data here"></textarea>
+            <br>
+        </div></td>
+            </tr>
+            <tr>
+            <td><div id="data3">
+                <h3>対照群<br> 事前データ：</h3>
+                <br>
+                <textarea id="data_set_3" rows="30" columns="40" text-overflow="visible" placeholder="paste data here"></textarea>
+                <br>
+            </div></td>
+            <td><div id="data4">
+                <h3>対照群<br> 事後データ：</h3>
+                <br>
+                <textarea id="data_set_4" rows="30" columns="40" text-overflow="visible" placeholder="paste data here"></textarea>
+                <br>
+            </div></td>
+        </tr>
+        </table>
+    </div>
+    <div id="activate">
+        <button id="button" onclick="Calculate()">計算</button>
+    </div>
+    <div id="results">
+        <p id="explain_bun" style="font-weight: bold; font-size: 16px; color: rgb(105, 0, 0)">利用された検定の詳細はここに書かれます</p>
+        <p id="results_bun" style="font-weight: bold; font-size: 18px">結果はここに書かれます</p>
+    </div>
+    <div id="Citation">
+        <p>本プログラムや関連する説明文などを研究で使用する場合、下記の論文を引用してください。</p>
+        <p> Spring, R. (2022). Online Bilingual Statistics Calculations for Langauge Education and Linguistics. Coming soon.</p>
+    </div>
+
+</body>
+</html>

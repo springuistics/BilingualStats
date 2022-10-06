@@ -9,6 +9,8 @@ var details_of_test = "";
 var results_of_test = "";
 
 function Calculate() {
+    data_set1 = [];
+    data_set2 = [];
     document.getElementById('error_text').style.display = "none";
     var pair_c1 = document.querySelector("[name=q1]:checked");
     var ord_c1 = document.querySelector("[name=q2]:checked");

@@ -75,8 +75,8 @@ function GetT() {
     p = p.toFixed(4);
     document.getElementById('t_result').style.display="block";
     if (p < 0.0001) {
-        document.getElementById('z_result').innerHTML="<i>p</i> < .0001 ";
+        document.getElementById('t_result').innerHTML="<i>p</i> < .0001 ";
     } else {
-    document.getElementById('z_result').innerHTML="<i>p</i> = " + p;
+    document.getElementById('t_result').innerHTML="<i>p</i> = " + p;
     }
 }

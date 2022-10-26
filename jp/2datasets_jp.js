@@ -367,7 +367,11 @@ function Wilcoxon (data1, data2, deets) {
     var mu = ((totalN * (totalN + 1))/4);
     var se = Math.sqrt(((totalN * (totalN + 1)) * ((2 * totalN) + 1)) / 24);
     var Z = (sumSR - mu) / se;
-    var p = 2 * (cdf(Z));
+    var Zval = Z;
+    if (Zval > 0) {
+        Zval *= -1 
+    }
+    var p = 2 * (cdf(Zval));
     var r = (Math.abs(Z)) / (Math.sqrt(totalN));
     Z = Z.toFixed(2);
     p = p.toFixed(2);
@@ -533,7 +537,11 @@ function MannWhiteny (data1, data2, deets) {
         }
 
     }
-    var p = 2 * (cdf(Z));
+    var Zval = Z;
+    if (Zval > 0) {
+        Zval *= -1 
+    }
+    var p = 2 * (cdf(Zval));
     var r = (Math.abs(Z)) / (Math.sqrt(TotalN));
     Z = Z.toFixed(2);
     p = p.toFixed(2);

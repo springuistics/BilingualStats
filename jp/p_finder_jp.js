@@ -54,10 +54,18 @@ function PtoT(t,n) {
 
 function GetZ() {
     var Zval = document.getElementById('zv').value;
+    Zval = parseFloat(Zval)
+    if (Zval > 0) {
+        Zval *= -1 
+    }
     var p = 2 * (cdf(Zval));
     p = p.toFixed(4);
     document.getElementById('z_result').style.display="block";
+    if (p < 0.0001) {
+        document.getElementById('z_result').innerHTML="<i>p</i> < .0001 ";
+    } else {
     document.getElementById('z_result').innerHTML="<i>p</i> = " + p;
+    }
 }
 
 function GetT() {
@@ -66,5 +74,9 @@ function GetT() {
     var p = PtoT(t, df);
     p = p.toFixed(4);
     document.getElementById('t_result').style.display="block";
-    document.getElementById('t_result').innerHTML="<i>p</i> = " + p;
+    if (p < 0.0001) {
+        document.getElementById('z_result').innerHTML="<i>p</i> < .0001 ";
+    } else {
+    document.getElementById('z_result').innerHTML="<i>p</i> = " + p;
+    }
 }

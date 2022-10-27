@@ -69,6 +69,8 @@ function Reset() {
 }
 
 function Calculate() {
+    let fixer = document.getElementById('data_table');
+    if (fixer) {document.getElementById('table_holder').removeChild(fixer);}
     document.getElementById("error_text").innerHTML = "";
     document.getElementById('error_text').style.display = "none";
     var ord_check = document.querySelector('input[name="q1"]:checked').value;
@@ -244,8 +246,7 @@ function Begin(k, datay, x1, x2, x3) {
     } else {
         result1 = "The comibnation of these variables do not significantly predict the main variable: <i>F</i> = " + F + ", <i>p</i> = " + p + ", <i>R<sup>2</sup></i> = " + R2 + "<br>";
     }
-    document.getElementById("results_bun").innerHTML = result1;
-
+    document.getElementById("results_bun").innerHTML = result1;    
     let table = document.createElement('table');
     let thead = document.createElement('thead');
     let tbody = document.createElement('tbody');
@@ -312,25 +313,25 @@ function Begin(k, datay, x1, x2, x3) {
     thead.appendChild(row_3);
 
     if (k==3) {
-    let row_4 = document.createElement('tr');
-    let v3_1 = document.createElement('td');
-    v3_1.innerHTML = "3";
-    let v3_2 = document.createElement('td');
-    v3_2.innerHTML = b3.toFixed(2);
-    let v3_3 = document.createElement('td');
-    v3_3.innerHTML = betax3.toFixed(2);
-    let v3_4 = document.createElement('td');
-    v3_4.innerHTML = tx3.toFixed(2);
-    let v3_5 = document.createElement('td');
-    v3_5.innerHTML = px3.toFixed(2);
+        let row_4 = document.createElement('tr');
+        let v3_1 = document.createElement('td');
+        v3_1.innerHTML = "3";
+        let v3_2 = document.createElement('td');
+        v3_2.innerHTML = b3.toFixed(2);
+        let v3_3 = document.createElement('td');
+        v3_3.innerHTML = betax3.toFixed(2);
+        let v3_4 = document.createElement('td');
+        v3_4.innerHTML = tx3.toFixed(2);
+        let v3_5 = document.createElement('td');
+        v3_5.innerHTML = px3.toFixed(2);
 
-    row_4.appendChild(v3_1);
-    row_4.appendChild(v3_2);
-    row_4.appendChild(v3_3);
-    row_4.appendChild(v3_4);
-    row_4.appendChild(v3_5);
-    thead.appendChild(row_4);
-    }
+        row_4.appendChild(v3_1);
+        row_4.appendChild(v3_2);
+        row_4.appendChild(v3_3);
+        row_4.appendChild(v3_4);
+        row_4.appendChild(v3_5);
+        thead.appendChild(row_4);
+        }
 
 }
 

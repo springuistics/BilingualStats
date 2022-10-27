@@ -69,6 +69,8 @@ function Reset() {
 }
 
 function Calculate() {
+    let fixer = document.getElementById('data_table');
+    if (fixer) {document.getElementById('table_holder').removeChild(fixer);}
     document.getElementById("error_text").innerHTML = "";
     document.getElementById('error_text').style.display = "none";
     var ord_check = document.querySelector('input[name="q1"]:checked').value;

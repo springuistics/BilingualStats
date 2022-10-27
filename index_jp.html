@@ -12,59 +12,67 @@
             <option value="jp">英語</option>
         </select>
     </div>
-    <br>
     <div id="title_stuff">
     <h1 id="main_title">言語学・言語教育研究のためのマルチリンガル統計分析</h1>
-    <br>
     <h3 id="instructions">以下の項目から計算とデータの種類を選んでください。マウスポインターを項目の上に乗せると詳細が表示されます。</h3>
-    <div id="title_hover" class="hover_text">本プログラムや関連する説明文などを研究で使用する場合、ページ下の論文を引用してください</div>
+    <br>
     </div>
     <div id="tests">
         <br>
         <div id="border_help">
-        <h3 style="font:bold; font-size: 20px; text-shadow: 2px 2px 6px grey">統計テスト選定のガイダンスある推奨計算プログラム</h3>
-        <div id="chisq_cont">
-            <a href="jp/chisquare.html" class="linky" id="cmi">割合や総数の統計比較を計算する</a>
-            <div id="chi_hover" class="hover_text">データはカテゴリーやグループの行動や数字ではない回答（e.g. yes/no）の総数である場合はこちらを使ってください。例えば、男女のYes/Noクエスチョンの比較、母語が異なるグループが同じ比率で特定の言語的特徴を現したかどうかを検証する場合はクリックしてください。<i>p</i> 値、または、カテゴリーやグループの相違性がどのぐらい強いかの判断に使う効果量を計算してくれるプログラムです。</div>
-        </div>
+        <h2 style="font:bold; font-size: 24px; color: white">統計テスト選定のガイダンス：</h3>
+        <h3 style="font:bold; font-size: 20px; text-shadow: 2px 2px 6px rgb(255, 255, 255)">検定の目的は？</h3>
         <div id="t_container">
-        <div id="twocomps">
-            <a href="jp/2_data_sets_jp.html" class="linky" id="tc1">2組の数値データの統計比較を計算する</a>
-            <div id="two_comps_hover" class="hover_text">2組に有意義な差があるかどうかの判断に使う <i>p</i> 値、または、2組の相違性がどのぐらい強いかの判断に使う効果量を計算してくれるプログラムです。適切な統計分析テストの選定、学術論文での表記文も協力します。例えば、事前・事後テストの分析、異なる2組の差の分析、リッカート尺度のアンケート質問の比較分析などがしたい方はクリックしてください。</div>
+            <div id="differences" class="subheading">
+                <p id="diff_text">グループを比較する</p>
+                <div id="chisq_cont">
+                    <a href="jp/chisquare.html" class="linky" id="cmi">割合や総数の比較</a>
+                    <div id="chi_hover" class="hover_text">データはカテゴリーやグループの行動や数字ではない回答（e.g. yes/no）の総数である場合はこちらを使ってください。例えば、男女のYes/Noクエスチョンの比較、母語が異なるグループが同じ比率で特定の言語的特徴を現したかどうかを検証する場合はクリックしてください。<i>p</i> 値、または、カテゴリーやグループの相違性がどのぐらい強いかの判断に使う効果量を計算してくれるプログラムです。</div>
+                </div>
+                <div id="twocomps">
+                    <a href="jp/2_data_sets_jp.html" class="linky" id="tc1">2組の数値データの比較</a>
+                    <div id="two_comps_hover" class="hover_text">2組に有意義な差があるかどうかの判断に使う <i>p</i> 値、または、2組の相違性がどのぐらい強いかの判断に使う効果量を計算してくれるプログラムです。適切な統計分析テストの選定、学術論文での表記文も協力します。例えば、事前・事後テストの分析、異なる2組の差の分析、リッカート尺度のアンケート質問の比較分析などがしたい方はクリックしてください。</div>
+                </div>
+                <div id="multi_comps">
+                    <a href="jp/3_data_sets_jp.html" class="linky" id="mc1">3組以上の数値データの比較</a>
+                    <div id="multi_comps_hover" class="hover_text">3組に有意義な差があるかどうかの判断に使う <i>p</i> 値、または、3組の相違性がどのぐらい強いかの判断に使う効果量を計算してくれるプログラムです。適切な統計分析テストの選定、学術論文での表記文も協力します。例えば、異なる3組の差の分析、3つ以上のリッカート尺度のアンケート質問の比較分析、同じ参加者を複数の時点で測ったデータの比較分析などがしたい方はクリックしてください。</div>
+                </div>
+                <div id="pre_post">
+                    <a href="jp/pp_testing.html" class="linky"  id="pp2">実験群・対照群の事前・事後データ比較</a>
+                    <div id="pre_post_hover" class="hover_text">実験群と対照群などの2組が同じ事前・事後テストを受けた場合の検査です。実験群と対照群の相違点と事前・事後テストでの変化に相互作用があるかどうかが分かるように、<i>p</i> 値と効果量を計算するプログラムです。</div>
+                </div>
+            </div>
+            <div id="correls">
+                <p id="correl_text" class="subheading">関連性を計る</p>
+                <div id="twocorrs">
+                    <a href="jp/correlation_jp.html" class="linky" id="tc2">2組の数値データ</a>
+                    <div id="two_corrs_hover" class="hover_text_jp">どのぐらいの関係があるかの判断に使う相関係数、または、有意義な関係性があるかどうかの判断に使う<i>p</i>値を計算してくれるプログラムです。適切な統計分析テストの選定、学術論文での表記文も協力します。同じ参加者から2変数を測ったデータが必要です。例えば、リッカート尺度のアンケート質問と学習効果が関連しているかどうかの分析、二つの学習効果の間に関連性があるかどうかの分析、同じ参加者の2つの特徴に関連性があるかどうかの分析がしたい方はクリックしてください。</div>
+                </div>
+                <div id="multi_corrs">
+                    <a href="jp/multi_correlation_jp.html" class="linky" id="mc2">3組以上の数値データ</a>
+                    <div id="multi_corrs_hover" class="hover_text_jp">一つの変数と2つ以上他の変数の間に、総合的にどのぐらいの関係があるかの判断に使う相関係数、または、有意義な関係性があるかどうかの判断に使う<i>p</i>値を計算してくれるプログラムです。また、各変数が総合的にどのぐらい元の変数に影響を及ぼすのかの判断に使う<i>b</i>や<i>beta</i>を計算してくれるプログラムです。適切な統計分析テストの選定、学術論文での表記文も協力します。同じ参加者から複数の変数データが必要です。例えば、一つの学習効果に複数のアンケート質問がどのぐらい影響を及ぼすかの分析、一つの学習効果に複数の要因がどのぐらい影響を及ぼすかの分析などがしたい方はクリックしてください。</div>
+                </div>
+            </div>
         </div>
-        <div id="twocorrs">
-            <a href="jp/correlation_jp.html" class="linky" id="tc2">2組の数値データの相関関係を計算する</a>
-            <div id="two_corrs_hover" class="hover_text">どのぐらいの関係があるかの判断に使う相関係数、または、有意義な関係性があるかどうかの判断に使う<i>p</i>値を計算してくれるプログラムです。適切な統計分析テストの選定、学術論文での表記文も協力します。同じ参加者から2変数を測ったデータが必要です。例えば、リッカート尺度のアンケート質問と学習効果が関連しているかどうかの分析、二つの学習効果の間に関連性があるかどうかの分析、同じ参加者の2つの特徴に関連性があるかどうかの分析がしたい方はクリックしてください。</div>
         </div>
-        <div id="multi_comps">
-            <a href="jp/3_data_sets_jp.html" class="linky" id="mc1">3組以上の数値データの統計比較を計算する</a>
-            <div id="multi_comps_hover" class="hover_text">3組に有意義な差があるかどうかの判断に使う <i>p</i> 値、または、3組の相違性がどのぐらい強いかの判断に使う効果量を計算してくれるプログラムです。適切な統計分析テストの選定、学術論文での表記文も協力します。例えば、異なる3組の差の分析、3つ以上のリッカート尺度のアンケート質問の比較分析、同じ参加者を複数の時点で測ったデータの比較分析などがしたい方はクリックしてください。</div>
-        </div>
-        <div id="multi_corrs">
-            <a href="jp/multi_correlation_jp.html" class="linky" id="mc2">複数の変数の関係性を計算する</a>
-            <div id="multi_corrs_hover" class="hover_text">一つの変数と2つ以上他の変数の間に、総合的にどのぐらいの関係があるかの判断に使う相関係数、または、有意義な関係性があるかどうかの判断に使う<i>p</i>値を計算してくれるプログラムです。また、各変数が総合的にどのぐらい元の変数に影響を及ぼすのかの判断に使う<i>b</i>や<i>beta</i>を計算してくれるプログラムです。適切な統計分析テストの選定、学術論文での表記文も協力します。同じ参加者から複数の変数データが必要です。例えば、一つの学習効果に複数のアンケート質問がどのぐらい影響を及ぼすかの分析、一つの学習効果に複数の要因がどのぐらい影響を及ぼすかの分析などがしたい方はクリックしてください。</div>
-        </div>
-        </div>
-    </div>
+    
         <div id="advanced">
             <h3 style="font:bold; font-size: 20px; text-shadow: 2px 2px 6px grey">上級者向けの計算プログラム</h3>
-            <a href="en/pp_testing.html" class="linky">実験群・対照群の事前・事後データ比較</a><br>
             <a href="jp/effect_calc_jp.html" class="linky">効果量 (<i>r</i> を <i>Z</i> と <i>N</i>から計算する</a><br>
             <a href="jp/cohens_d_jp.html" class="linky">Cohen's dを計算する</a><br>
             <a href="jp/p_finder_jp.html" class="linky"><i>p</i> 値を <i>Z</i> あるいは <i>t</i> から計算する</a><br>
             <br>
         </div>
     </div>
-    <br>
     <div id="citation">
         <br>
-        <h3 style="margin-top: 10px">計算方法や詳細が知りたい方は下記の論文をご参照ください。また、本プログラムや関連する説明文などを研究で使用する場合、下記の論文を引用してください。</h3>
+        <h3 style="margin-top: 10px; width: 90%; margin: auto; text-align: center">計算方法や詳細が知りたい方は下記の論文をご参照ください。また、本プログラムや関連する説明文などを研究で使用する場合、下記の論文を引用してください。</h3>
         <br>
         <p id="paper">Spring, R. (2022) Free, Online, Multilingual Statistics for Linguistics and Langauge Education Researchers. 2021 Tohoku University IEHE Nenpo 8, pp.??-??.</p>
         <br>
         <a id="paper_link" href="??" class="linky">論文を読む</a>
         <br>
-        <div id="personal_hp"><p >上記の検定や計算を活用した研究の実例を見る際は、本プログラムを作ったスプリング・ライアンの<a style="color: darkblue; text-decoration: underline;" href="https://sites.google.com/view/ryanspring/home">研究ホームページ</a> に訪れてください。</p>
+        <div id="personal_hp"><p >上記の検定や計算を活用した研究の実例を見る際は、本プログラムを作ったスプリング・ライアンの <a style="color: rgb(181, 250, 255); text-decoration: underline;" href="https://sites.google.com/view/ryanspring/home">研究ホームページ</a> に訪れる。</p>
     </div>
 </body>
 <script>

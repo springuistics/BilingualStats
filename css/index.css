@@ -1,7 +1,7 @@
 .hover_text{
     display: none;
     width: 80%;
-    left: 10px;
+    left: 5px;
     position: absolute;
     border: 3px black;
     border-radius: 5px;
@@ -9,17 +9,37 @@
     color: rgb(143, 0, 0);
     text-align: left;
     z-index: 2;
+    font-size: 14px;
+    font-weight: 100;
+}
+.hover_text_jp{
+    display: none;
+    width: 120%;
+    left: 5px;
+    position: absolute;
+    border: 3px black;
+    border-radius: 5px;
+    background-color: rgb(250, 180, 94, 0.95);
+    color: rgb(143, 0, 0);
+    text-align: left;
+    z-index: 2;
+    font-size: 14px;
 }
 .linky{
     font-size: 16px;
     font-weight: bold;
-    color: darkblue;
+    color: rgb(242, 253, 220);
     text-decoration: underline;
+}
+.subheading {
+    font-size: 20px;
+    font-weight: bold;
+    color: whitesmoke;
 }
 
 #langauge_bar {
     margin: auto;
-    width: 80%;
+    width: 90%;
     text-align: right;
     background-color: rgb(1, 1, 121);
 }
@@ -37,8 +57,8 @@
 #title_stuff {
     text-align: center;
     margin: auto;
-    width: 80%;
-    background-color: aliceblue;
+    width: 90%;
+    background-color: rgb(196, 226, 253);
     position: relative;
 }
 #main_title {
@@ -47,15 +67,12 @@
     color: black;
     text-shadow: 3px 3px 8px gray;
 }
-#instructions:hover + #title_hover {
-    display: block;
-}
 
 #tests {
-    width: 80%;
+    width: 90%;
     border: 3px;
     border-color:black;
-    background-color: rgb(176, 255, 214);
+    background-color: rgb(45, 176, 194);
     margin: auto;
     text-align: center;
     padding-bottom: 20px;
@@ -63,19 +80,13 @@
 #border_help {
     width: 90%;
     margin: auto;
-    border: solid 5px rgba(0, 0, 0, 0.884);
+    border: solid 5px rgba(255, 255, 255, 0.884);
     border-radius: 10px;
     text-align: center;
     margin-top: 15px;
     margin-bottom: 30px;
-}
-#chisq_cont{
-    position: relative;
-    margin-left: 20px;
-    margin-top: 10px;
-    padding: 5px;
-    padding-top: 10px;
-    padding-bottom:10px;
+    gap: 10px;
+    padding: 10px;
 }
 
 #t_container {
@@ -86,28 +97,57 @@
     gap: 10px;
     padding: 10px;
 }
-#t_container #twocomps {
+#t_container #differences {
+    margin: auto;
+    vertical-align: top;
+    margin-top: 5px;
+    text-align: center;
+    padding: 5px;
+}
+#t_container #correls {
+    margin: auto;
+    vertical-align: top;
+    margin-top: 5px;
+    text-align: center;
+    padding: 5px;
+}
+
+#chisq_cont{
     position: relative;
     margin-top: 10px;
     padding: 5px;
     padding-top: 10px;
     padding-bottom:10px;
 }
-#t_container #twocorrs {
+#twocomps {
     position: relative;
     margin-top: 10px;
     padding: 5px;
     padding-top: 10px;
     padding-bottom:10px;
 }
-#t_container #multi_comps {
+#twocorrs {
     position: relative;
     margin-top: 10px;
     padding: 5px;
     padding-top: 10px;
     padding-bottom:10px;
 }
-#t_container #multi_corrs {
+#multi_comps {
+    position: relative;
+    margin-top: 10px;
+    padding: 5px;
+    padding-top: 10px;
+    padding-bottom:10px;
+}
+#pre_post {
+    position: relative;
+    margin-top: 10px;
+    padding: 5px;
+    padding-top: 10px;
+    padding-bottom:10px;
+}
+#multi_corrs {
     position: relative;
     margin-top: 10px;
     padding: 5px;
@@ -126,12 +166,17 @@
 #mc2:hover + #multi_corrs_hover {
     display: block;
 }
+#pp2:hover + #pre_post_hover {
+    display: block;
+}
 #cmi:hover + #chi_hover {
     display: block;
 }
+
+
 #tests #advanced {
     margin: auto;
-    width: 80%;
+    width: 90%;
     text-align: center;
     border: solid 5px rgba(0, 0, 0, 0.884);
     border-radius: 10px;
@@ -139,14 +184,14 @@
 }
 
 #citation {
-    background-color: plum;
-    width: 80%;
+    background-color: rgb(87, 190, 66);
+    width: 90%;
     text-align: center;
     margin: auto;
 }
 #citation #paper {
-    text-align: left;
-    width: 80%;
+    text-align: center;
+    width: 90%;
     margin: auto;
     font-size: 14px;
     font: bold;

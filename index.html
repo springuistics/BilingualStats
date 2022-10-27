@@ -12,59 +12,68 @@
             <option value="jp">Japanese</option>
         </select>
     </div>
-    <br>
     <div id="title_stuff">
     <h1 id="main_title">Multilingual Statistics for Linguistics and Language Teaching Studies</h1>
-    <br>
     <h3 id="instructions">Choose the type of calculation and data set that you have from the options below. Hover over section titles for details.</h3>
-    <div id="title_hover" class="hover_text">If using for research, please cite as requested at the bottom of this page.</div>
+    <br>
     </div>
     <div id="tests">
         <br>
         <div id="border_help">
-        <h3 style="font:bold; font-size: 20px; text-shadow: 2px 2px 6px grey">Recommended Calculators that Help Select Proper Tests:</h3>
-        <div id="chisq_cont">
-            <a href="en/chisquare.html" class="linky" id="cmi">Checking for Differences in Counts of Items or Percentages</a>
-            <div id="chi_hover" class="hover_text">For use with data that is based on counting non-numerical answers or observations. Provides <i>p</i> value and effect size to check if there is a statistically significant difference and how strong any measurable effect is. Examples include: comparing the number of males and females that answered either "yes" or "no" to a survey question, comparing whether or not speakers of one langauge used / didn't use a linguistc feature more than speakers of another langauge, etc.</div>
-        </div>
+        <h2 style="font:bold; font-size: 24px; color: white">Get Help Choosing A Test:</h3>
+        <h3 style="font:bold; font-size: 20px; text-shadow: 2px 2px 6px rgb(255, 255, 255)">What do you want to check?</h3>
         <div id="t_container">
-        <div id="twocomps">
-            <a href="en/2_data_sets.html" class="linky" id="tc1">Checking for Differences in Two Data Sets</a>
-            <div id="two_comps_hover" class="hover_text">For use with two sets of numbers. Provides <i>p</i> values and effect sizes to check if there is a statistically significant difference and how strong any measurable effect is. Also helps you to choose the proper test and report it correctly in an academic paper. Examples include: pre/post test comparison, comparing two different groups' average scores, comparing differences in two Likert-scale style survey questions, etc.</div>
+            <div id="differences" class="subheading">
+                <p id="diff_text">Is there a difference between groups?</p>
+                <div id="chisq_cont">
+                    <a href="en/chisquare.html" class="linky" id="cmi">Counts or Percentages</a>
+                    <div id="chi_hover" class="hover_text">For use with data that is based on counting non-numerical answers or observations. Provides <i>p</i> value and effect size to check if there is a statistically significant difference and how strong any measurable effect is. Examples include: comparing the number of males and females that answered either "yes" or "no" to a survey question, comparing whether or not speakers of one langauge used / didn't use a linguistc feature more than speakers of another langauge, etc.</div>
+                </div>
+                <div id="twocomps">
+                    <a href="en/2_data_sets.html" class="linky" id="tc1">2 Numerical Data Sets</a>
+                    <div id="two_comps_hover" class="hover_text">For use with two sets of numbers. Provides <i>p</i> values and effect sizes to check if there is a statistically significant difference and how strong any measurable effect is. Also helps you to choose the proper test and report it correctly in an academic paper. Examples include: pre/post test comparison, comparing two different groups' average scores, comparing differences in two Likert-scale style survey questions, etc.</div>
+                </div>
+                <div id="multi_comps">
+                    <a href="en/3_data_sets.html" class="linky" id="mc1">3+ Numerical Data Sets</a>
+                    <div id="multi_comps_hover" class="hover_text">Provides <i>p</i> values and effect sizes to check if there are any statistically significant differences and how strong any measurable effects are. Also helps you to choose the proper test and report it correctly in an academic paper. Examples include: comparing three or more different groups, comparing progress of students at multiple points in time, comparing differences in multiple survey questions, etc.</div>
+                </div>
+                <div id="pre_post">
+                    <a href="en/pp_testing.html" class="linky"  id="pp2">Pre/Post Tests of Experimental and Control Groups</a>
+                    <div id="pre_post_hover" class="hover_text">Provides <i>p</i> value and effect size to check if there is a statistically significant relationship between changes in pre- and posttests and the differences in an experiment and control group. You should choose this if you have two different groups who received different treatment, but both took the same pre- and posttest.</div>
+                </div>
+            </div>
+            <div id="correls">
+                <p id="correl_text" class="subheading">Is there a correlation between data sets?</p>
+                <div id="twocorrs">
+                    <a href="en/correlation.html" class="linky" id="tc2">For 2 Data Sets</a>
+                    <div id="two_corrs_hover" class="hover_text">Provides correlation value and <i>p</i> value to check if there is a statistically significant correlation or not and if so, how strong it is. Also helps you to choose the proper test and report it correctly in an academic paper. Requires two measurements from the same population sample (i.e. from the same participants). Examples include: checking for relationship between survey question and learning outcome, checking for relationship between two learning outcomes, checking for relationship between two features of the participants, etc.</div>
+                </div>
+                <div id="multi_corrs">
+                    <a href="en/multi_correlation.html" class="linky" id="mc2">Checking for Correlation in Multiple Data Sets</a>
+                    <div id="multi_corrs_hover" class="hover_text">Provides correlation value and <i>p</i> value to check if there is a statistically significant correlation between a single variable and multiple other variables or not and if so, how strong it is, and also shows correlation for each variable when others are nullified. Also helps you to choose the proper test and report it correctly in an academic paper. Requires several measurements from the same population sample (i.e. from the same participants). Examples include: checking for relationship between multiple survey questions and a single learning outcome, checking for relationship between several measurements on a single learning outcomes, etc.</div>
+                </div>
+            </div>
         </div>
-        <div id="twocorrs">
-            <a href="en/correlation.html" class="linky" id="tc2">Checking for Correlation in Two Data Sets</a>
-            <div id="two_corrs_hover" class="hover_text">Provides correlation value and <i>p</i> value to check if there is a statistically significant correlation or not and if so, how strong it is. Also helps you to choose the proper test and report it correctly in an academic paper. Requires two measurements from the same population sample (i.e. from the same participants). Examples include: checking for relationship between survey question and learning outcome, checking for relationship between two learning outcomes, checking for relationship between two features of the participants, etc.</div>
         </div>
-        <div id="multi_comps">
-            <a href="en/3_data_sets.html" class="linky" id="mc1">Checking for Differences in Multiple Data Sets</a>
-            <div id="multi_comps_hover" class="hover_text">Provides <i>p</i> values and effect sizes to check if there are any statistically significant differences and how strong any measurable effects are. Also helps you to choose the proper test and report it correctly in an academic paper. Examples include: comparing three or more different groups, comparing progress of students at multiple points in time, comparing differences in multiple survey questions, etc.</div>
-        </div>
-        <div id="multi_corrs">
-            <a href="en/multi_correlation.html" class="linky" id="mc2">Checking for Correlation in Multiple Data Sets</a>
-            <div id="multi_corrs_hover" class="hover_text">Provides correlation value and <i>p</i> value to check if there is a statistically significant correlation between a single variable and multiple other variables or not and if so, how strong it is, and also shows correlation for each variable when others are nullified. Also helps you to choose the proper test and report it correctly in an academic paper. Requires several measurements from the same population sample (i.e. from the same participants). Examples include: checking for relationship between multiple survey questions and a single learning outcome, checking for relationship between several measurements on a single learning outcomes, etc.</div>
-        </div>
-        </div>
-    </div>
+    
         <div id="advanced">
-            <h3 style="font:bold; font-size: 20px; text-shadow: 2px 2px 6px grey">Various Calculators for Advanced Users:</h3>
-            <a href="en/pp_testing.html" class="linky">Pre/Post Testing of an Experiment and Control Group</a><br>
+            <h3 style="font:bold; font-size: 20px; text-shadow: 2px 2px 6px grey">Calculators for Advanced Users:</h3>
+            
             <a href="en/effect_calc.html" class="linky">Effect Size Calculator (<i>r</i> from <i>Z</i> and <i>N</i>)</a><br>
             <a href="en/cohens_d.html" class="linky">Calculate Cohen's D</a><br>
             <a href="en/p_finder.html" class="linky">Calculate <i>p</i> from <i>Z</i> or <i>t</i> values</a><br>
             <br>
         </div>
     </div>
-    <br>
     <div id="citation">
         <br>
-        <h3 style="margin-top: 10px">For details on the calculations provided by this website, please see the paper below. If you use the calculations provided by this website, please cite the paper.</h3>
+        <h3 style="margin-top: 10px; width: 90%; margin: auto; text-align: center">For details on the calculations provided by this website, please see the paper below. Please cite the paper if used for research purposes.</h3>
         <br>
         <p id="paper">Spring, R. (2022) Free, Online, Multilingual Statistics for Linguistics and Langauge Education Researchers. 2021 Tohoku University IEHE Nenpo 8, pp.??-??.</p>
         <br>
         <a id="paper_link" href="??" class="linky">Click here to read the paper.</a>
         <br>
-        <div id="personal_hp"><p >Visit the <a style="color: darkblue; text-decoration: underline;" href="https://sites.google.com/view/ryanspring/home">research page</a> of the creator, Ryan Spring, for examples of these tests used in practical research.</p>
+        <div id="personal_hp"><p >Visit the <a style="color: rgb(181, 250, 255); text-decoration: underline;" href="https://sites.google.com/view/ryanspring/home">research page</a> of the creator, Ryan Spring, for examples of these tests used in practical research.</p>
     </div>
 </body>
 <script>

@@ -24,7 +24,7 @@ function SetUp() {
         let tbody = document.createElement('tbody');
         table.appendChild(thead);
         table.appendChild(tbody);
-        document.getElementById('d_container').appendChild(table);
+        document.getElementById('jesus').appendChild(table);
         table.className = "data_table";
         table.id = "data_table";
         let row_1 = document.createElement('tr');
@@ -129,10 +129,10 @@ function Calculate() {
         }
         results_of_test = result1 + result2 + effect_size;
         document.getElementById("explain_bun").innerHTML = deets;
-        document.getElementById("explain_bun").style.display="inline";
+        document.getElementById("explain_bun").style.display="block";
         document.getElementById("results_bun").innerHTML = results_of_test;
-        document.getElementById("results_bun").style.display="inline";
-        document.getElementById("reset").style.display="inline";
+        document.getElementById("results_bun").style.display="block";
+        document.getElementById("reset").style.display="block";
     }
 }
 
@@ -150,7 +150,7 @@ function GimmietheP(x,n) {
     } 
 
 function Reset() {
-    document.getElementById('d_container').removeChild(document.getElementById('data_table'));
+    document.getElementById('jesus').removeChild(document.getElementById('data_table'));
     document.getElementById('button').style.display = "none";
     document.getElementById('datasets').style.display = "none";
     document.getElementById('reset').style.display = "none";

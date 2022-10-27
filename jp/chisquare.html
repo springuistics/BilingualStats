@@ -14,11 +14,10 @@
             <option value="en">English</option>
         </select>
     </div>
-    <h1  id="Title">カテゴリー別の総数データの統計比較</h1>
-    <br>
-    <h2 id="Subtitle">データについて、以下の質問に答えてください</h2>
-    <br>
     <div id="bigger">
+        <h1  id="Title" style="color:aliceblue">カテゴリー別の総数データの統計比較</h1>
+        <br>
+        <h2 id="Subtitle" style="color:aliceblue">データについて、以下の質問に答えてください</h2>
     <div id="questions">
         <div id="ps">
             <p class="question" id="qq1">何グループを比較しますか？*</p>
@@ -46,19 +45,21 @@
     <br>
     </div>
     <div id="datasets" style="display: none">
+        <div id="d_container">
         <h2>各グループ・カテゴリーの総数を入力してください*:</h2>
         <p>*本検定では、「0」を入力してはいけない</p>
-        <div id="d_container"></div>
-    </div>
-    <div id="activate">
-        <button id="button" class="button" style="display: none" onclick="Calculate()">計算</button>
+        <div id="jesus"></div>
+        <div id="activate">
+            <button id="button" class="button" style="display: none" onclick="Calculate()">計算</button>
+        </div>
+        <br>
+        </div>
     </div>
     <div id="results">
-        <p id="explain_bun" style="font-weight: bold; font-size: 16px; color: rgb(105, 0, 0)">利用された検定の詳細はここに書かれます</p>
+        <p id="explain_bun">利用された検定の詳細はここに書かれます</p>
+        <p id="results_bun">結果はここに書かれます</p>
+        <button id="reset" class="button" style="display: none" onclick="Reset()">Reset!</button>
         <br>
-        <p id="results_bun" style="font-weight: bold; font-size: 18px">結果はここに書かれます</p>
-        <br>
-        <button id="reset" class="button" style="display: none; background-color: rgb(139, 0, 0);" onclick="Reset()">Reset!</button>
     </div>
     <div id="Citation">
         <p>本プログラムや関連する説明文などを研究で使用する場合、下記の論文を引用してください。</p>

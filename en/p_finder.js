@@ -12,11 +12,11 @@ function SetUp() {
         alert("Please select which value you want to use to calculate p");
     } else {
         if (whichone == "Z_value") {
-            document.getElementById('ZtoP').style.display="block";
+            document.getElementById('ZtoP_p').style.display="block";
             document.getElementById('TtoP').style.display="none";
         } else if (whichone == "t_value") {
             document.getElementById('TtoP').style.display="block";
-            document.getElementById('ZtoP').style.display="none";
+            document.getElementById('ZtoP_p').style.display="none";
         }
     }
 }

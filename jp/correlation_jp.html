@@ -14,42 +14,43 @@
             <option value="en">English</option>
         </select>
     </div>
+    <div id="bigger">
     <h1  id="Title">2組の数値データの相関関係</h1>
-    <br>
     <h2 id="Subtitle">データについて、以下の質問を答えてください。</h2>
-    <br>
-    <div id="questions">
-            <p id="the_question_bun">両方とも連続データですか？*</p>
-            <div id="hover1">2つのデータ組に関しては、１，２，３のような決まっている数字しか出れないものではなく、様々な数字が可能の場合は連続データです。平均より１つ大きいデータが平均より1つ小さいデータと同等に平均値から離れているという二つの条件を満たしている場合、「はい」と答えてください。時間、割合、回数、正解率などは多くの場合、「連続的データ」と見なされます。リッカート尺度のアンケート質問は継続的データとみなさらないため、いずれかのデータ組はこのようなデータである場合は「いいえ」と答えてください。もしどちらになるか分からない場合は「はい」と答えても構いません。「はい」と答えた場合、自動的にシャピロ・ウィルク検定によって正規分布を検定し、パラメトリック検定を利用できるかを確認します。その結果に基づいて、あなたのデータ分析に適切な統計手法を自動的に提示します。</div>
-            <input type="radio" id="q1_a" class="radio_btn" name="q1" value="yes">
-            <label for="q1_a" class="answer">はい</label>
-            <input type="radio" id="q1_b" class="radio_btn" name="q1" value="no">
-            <label for="q1_b" class="answer">いいえ</label>
-    <br>
-    <p id="error_text" style="display: none">Error will appear here.</p>
-    <p id="small_text">*マウスポインターを質問の上に乗せると、説明が表示されます</p>
-    </div>
-    <div id="datasets">
-        <div id="data1">
-            <h3>データ①をコピーして、以下にペーストしてください</h3>
-            <br>
-            <textarea id="data_set_1" rows="30" columns="40" text-overflow="visible" placeholder="paste data here"></textarea>
-            <br>
+        <div id="questions">
+                <p id="the_question_bun">両方とも連続データですか？*</p>
+                <div id="hover1">2つのデータ組に関しては、１，２，３のような決まっている数字しか出れないものではなく、様々な数字が可能の場合は連続データです。平均より１つ大きいデータが平均より1つ小さいデータと同等に平均値から離れているという二つの条件を満たしている場合、「はい」と答えてください。時間、割合、回数、正解率などは多くの場合、「連続的データ」と見なされます。リッカート尺度のアンケート質問は継続的データとみなさらないため、いずれかのデータ組はこのようなデータである場合は「いいえ」と答えてください。もしどちらになるか分からない場合は「はい」と答えても構いません。「はい」と答えた場合、自動的にシャピロ・ウィルク検定によって正規分布を検定し、パラメトリック検定を利用できるかを確認します。その結果に基づいて、あなたのデータ分析に適切な統計手法を自動的に提示します。</div>
+                <input type="radio" id="q1_a" class="radio_btn" name="q1" value="yes">
+                <label for="q1_a" class="answer">はい</label>
+                <input type="radio" id="q1_b" class="radio_btn" name="q1" value="no">
+                <label for="q1_b" class="answer">いいえ</label>
         </div>
-        <div id="data2">
-            <h3>データ②をコピーして、以下にペーストしてください</h3>
-            <br>
-            <textarea id="data_set_2" rows="30" columns="40" text-overflow="visible" placeholder="paste data here"></textarea>
-            <br>
-        </div>
+        <p id="error_text" style="display: none">Error will appear here.</p>
+        <p id="small_text">*マウスポインターを質問の上に乗せると、説明が表示されます</p>
     </div>
-    <div><p style="font-size: 12px; text-align: right; margin: auto; width: 80%;">*半角数字でデータが縦になるように、Excelなどから直接にペーストしてください</p></div>
-    <div id="activate">
-        <button id="button" onclick="Calculate()">計算</button>
+    <div id="dataholder">
+        <div id="datasets">
+            <div id="data1">
+                <h3>データ①をコピーして、以下にペーストしてください</h3>
+                <br>
+                <textarea id="data_set_1" style="text-align: right" rows="30" columns="40" text-overflow="visible" placeholder="データをここに貼付：&#10;1&#10;2&#10;3&#10;4&#10;など"></textarea>
+                <br>
+            </div>
+            <div id="data2">
+                <h3>データ②をコピーして、以下にペーストしてください</h3>
+                <br>
+                <textarea id="data_set_2" style="text-align: right" rows="30" columns="40" text-overflow="visible" placeholder="データをここに貼付：&#10;1&#10;2&#10;3&#10;4&#10;など"></textarea>
+                <br>
+            </div>
+        </div>
+        <div><p style="font-size: 12px; text-align: center; margin: auto; width: 80%;">*半角数字でデータが縦になるように、Excelなどから直接にペーストしてください</p></div>
+        <div id="activate">
+            <button id="button" class="button" onclick="Calculate()">計算</button>
+        </div>
     </div>
     <div id="results">
-        <p id="explain_bun" style="font-weight: bold; font-size: 16px; color: rgb(105, 0, 0)">利用された検定の詳細はここに書かれます</p>
-        <p id="results_bun" style="font-weight: bold; font-size: 18px">結果はここに書かれます</p>
+        <p id="explain_bun">利用された検定の詳細はここに書かれます</p>
+        <p id="results_bun">結果はここに書かれます</p>
     </div>
     <div id="Citation">
         <p>本プログラムや関連する説明文などを研究で使用する場合、下記の論文を引用してください。</p>

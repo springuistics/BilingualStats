@@ -12,11 +12,11 @@ function SetUp() {
         alert("どの値から<i>p</i>を計算するか選択してください");
     } else {
         if (whichone == "Z_value") {
-            document.getElementById('ZtoP').style.display="block";
+            document.getElementById('ZtoP_p').style.display="block";
             document.getElementById('TtoP').style.display="none";
         } else if (whichone == "t_value") {
             document.getElementById('TtoP').style.display="block";
-            document.getElementById('ZtoP').style.display="none";
+            document.getElementById('ZtoP_p').style.display="none";
         }
     }
 }

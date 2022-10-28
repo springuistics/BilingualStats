@@ -14,14 +14,14 @@
             <option value="jp">Japanese</option>
         </select>
     </div>
-    <h1  id="Title">Pre/Post Testing of An Experimental and Control/Comparison Group</h1>
-    <br>
-    <h2 id="Subtitle">Please be aware that your data should:</h2>
-    <br>
     <div id="bigger">
-        <h3>1. Be measured on a continuous scale</h3>
-        <h3>2. Contain two different groups of participants</h3>
-        <h3>3. Contain measuements for the same participants in the pre- and post-tests</h3>
+        <h1  id="Title">Pre/Post Testing of An Experimental and Control/Comparison Group</h1>
+        <h2 id="Subtitle">Please be aware that your data should:</h2>
+        <div id="rules">
+            <p>1. Be measured on a continuous scale</p>
+            <p>2. Contain two different groups of participants</p>
+            <p>3. Contain measuements for the same participants in the pre- and post-tests</p>
+        </div>
     <p id="error_text" style="display: none">Error will appear here.</p>
     </div>
     <div id="datasets">
@@ -30,13 +30,13 @@
         <td><div id="data1">
             <h3>Experiment Group <br> Pre-Test Data:</h3>
             <br>
-            <textarea id="data_set_1" rows="30" columns="40" text-overflow="visible" placeholder="paste data here"></textarea>
+            <textarea id="data_set_1" style="text-align: right" rows="30" columns="40" text-overflow="visible" placeholder="paste data here:&#10;1&#10;2&#10;3&#10;etc."></textarea>
             <br>
         </div></td>
         <td><div id="data2">
             <h3>Experiment Group <br> Post-Test Data:</h3>
             <br>
-            <textarea id="data_set_2" rows="30" columns="40" text-overflow="visible" placeholder="paste data here"></textarea>
+            <textarea id="data_set_2" style="text-align: right" rows="30" columns="40" text-overflow="visible" placeholder="paste data here:&#10;1&#10;2&#10;3&#10;etc."></textarea>
             <br>
         </div></td>
             </tr>
@@ -44,24 +44,24 @@
             <td><div id="data3">
                 <h3>Control Group <br> Pre-Test Data:</h3>
                 <br>
-                <textarea id="data_set_3" rows="30" columns="40" text-overflow="visible" placeholder="paste data here"></textarea>
+                <textarea id="data_set_3" style="text-align: right" rows="30" columns="40" text-overflow="visible" placeholder="paste data here:&#10;1&#10;2&#10;3&#10;etc."></textarea>
                 <br>
             </div></td>
             <td><div id="data4">
                 <h3>Control Group <br> Post-Test Data:</h3>
                 <br>
-                <textarea id="data_set_4" rows="30" columns="40" text-overflow="visible" placeholder="paste data here"></textarea>
+                <textarea id="data_set_4" style="text-align: right" rows="30" columns="40" text-overflow="visible" placeholder="paste data here:&#10;1&#10;2&#10;3&#10;etc."></textarea>
                 <br>
             </div></td>
         </tr>
         </table>
-    </div>
-    <div id="activate">
-        <button id="button" onclick="Calculate()">Calculate!</button>
+        <div id="activate">
+            <button id="button" onclick="Calculate()">Calculate!</button>
+        </div>
     </div>
     <div id="results">
-        <p id="explain_bun" style="font-weight: bold; font-size: 16px; color: rgb(105, 0, 0)">The description of your test will be printed here:</p>
-        <p id="results_bun" style="font-weight: bold; font-size: 18px">Your results will be printed here:</p>
+        <p id="explain_bun">The description of your test will be printed here:</p>
+        <p id="results_bun">Your results will be printed here:</p>
     </div>
     <div id="Citation">
         <p>Please cite the following paper if you use this program or any of the statistics herein. The justifications are included in the paper, linked below for your reference.</p>

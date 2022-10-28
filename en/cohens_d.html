@@ -15,37 +15,38 @@
         </select>
     </div>
     <div id="setup">
-    <h1  id="title_bun">Cohen's D Calculator</h1>
-    <br>
-
-    <div id="ZtoP" style="width: 80%; margin: auto; background-color: rgb(253, 234, 198); border: solid, 3px, black">
-        <h2 class="subheader">Calculate Cohen's D from Means, SDs, and Numbers</h2>
+        <h1  id="title_bun">Cohen's D Calculator</h1>
         <br>
-        <div class="grid_container4">
-            <p class="g1">Mean 1:</p>
-            <input id="M1" type="text" class="g2">
-            <p class="g3">Mean 2:</p>
-            <input id="M2" type="text" class="g4">
-        </div>
-        <br>
-        <div class="grid_container4">
-            <p class="g1">SD1:</p>
-            <input id="S1" type="text" class="g2">
-            <p class="g2">SD2:</p>
-            <input id="S2" type="text" class="g4">
-        </div>
-        <br>
-        <div class="grid_container4">
-            <p class="g1">N1:</p>
-            <input id="N1" type="text" class="g2">
-            <p class="g3">N2:</p>
-            <input id="N2" type="text" class="g4">
-        </div>
-        <br>
-        <p id="results_bun" class="results">Results go here</p>
-        <br>
-        <div class="bcon"><button id="zbtn" class="button" onclick="GetResults()">Calculate <i>d</i></button>
-        <br>
+        <div id="ZtoP">
+            <h2 class="subheader">Calculate Cohen's D from Means, SDs, and Numbers</h2>
+            <br>
+            <table id="Cohen_table">
+                <tr>
+                    <td class="tblwords">M 1:</td>
+                    <td class="tblbox"><input id="M1" type="text" class="adjustobox"></td>
+                    <td class="tblwords">M 2:</td>
+                    <td class="tblbox"><input id="M2" type="text" class="adjustobox"></td>
+                </tr>
+                <tr>
+                    <td class="tblwords">SD 1:</td>
+                    <td class="tblbox"><input id="S1" type="text" class="adjustobox"></td>
+                    <td class="tblwords">SD 2:</td>
+                    <td class="tblbox"><input id="S2" type="text" class="adjustobox"></td>
+                </tr>
+                <tr>
+                    <td class="tblwords"><i>N</i> 1:</td>
+                    <td class="tblbox"><input id="N1" type="text" class="adjustobox"></td>
+                    <td class="tblwords"><i>N</i> 2:</td>
+                    <td class="tblbox"><input id="N2" type="text" class="adjustobox"></td>
+                </tr>
+            </table>
+            <br>
+            <p id="results_bun" class="results">Results go here</p>
+            <br>
+            <div class="bcon">
+                <button id="zbtn" class="button" onclick="GetResults()">Calculate <i>d</i></button>
+                <br>
+            </div>
         </div>
     </div>
     <div id="citation">

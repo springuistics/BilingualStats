@@ -15,11 +15,9 @@
         </select>
     </div>
     <br>
-    <h1  id="Title">Statistical Correlation Between One Measurement and Several Other Co-Measurements</h1>
-    <br>
-    <h2 id="Subtitle">Answer the following questions about your data :</h2>
-    <br>
     <div id="bigger">
+        <h1  id="Title">Statistical Correlation Between One Measurement and Several Other Co-Measurements</h1>
+        <h2 id="Subtitle">Answer the following questions about your data :</h2>
     <div id="questions">
         <div id="ps">
             <p class="question" id="qq1">Are your data sets all continuous data?*</p>
@@ -52,21 +50,23 @@
     <br>
     </div>
     <div id="datasets" style="display: none">
-        <div id="data1">
-            <h3 id="qq3">Copy and paste your dependent variable* data here:</h3>
-            <div id ="hover3" class="hovery">This is the measurement that you are trying to predict with other co-measurements. It is the main number that you are checking for multiple correlations to. For example, if you are trying to determine which of three variables has the largest impact on test scores, please paste the test scores here and the three variables' data in the other areas.</div>
-            <br>
-            <textarea id="y_data" rows="30" columns="40" text-overflow="visible" placeholder="Copy and paste data here"></textarea>
-            <br>
+        <div id="jesus">
+            <div id="data1" class="dumb_div" style="background:rgb(144, 240, 247)">
+                <h3 id="qq3">Copy and paste your dependent variable* data here:</h3>
+                <div id ="hover3" class="hovery">This is the measurement that you are trying to predict with other co-measurements. It is the main number that you are checking for multiple correlations to. For example, if you are trying to determine which of three variables has the largest impact on test scores, please paste the test scores here and the three variables' data in the other areas.</div>
+                <br>
+                <textarea id="y_data" rows="30" columns="40" text-overflow="visible" placeholder="Copy and paste data here"></textarea>
+                <br>
+            </div>
+            <div id="d_container"></div>
+            <div id="activate">
+                <button id="button" class="button" style="display: none" onclick="Calculate()">Calculate!</button>
+            </div>
         </div>
-        <div id="d_container"></div>
-    </div>
-    <div id="activate">
-        <button id="button" class="button" style="display: none" onclick="Calculate()">Calculate!</button>
     </div>
     <div id="results">
-        <p id="explain_bun" style="font-weight: bold; font-size: 16px; color: rgb(105, 0, 0)">The description of your test will be printed here:</p>
-        <p id="results_bun" style="font-weight: bold; font-size: 18px">Your results will be printed here:</p>
+        <p id="explain_bun">The description of your test will be printed here:</p>
+        <p id="results_bun">Your results will be printed here:</p>
         <div id="table_holder"></div>
         <br>
         <button id="reset" class="button" style="display: none; background-color: rgb(139, 0, 0);" onclick="Reset()">Reset!</button>

@@ -2,14 +2,14 @@
     margin:auto;
     padding: 20px;
     text-align: center;
-    color: black;
+    color: rgb(255, 255, 255);
     text-shadow: 3px 3px 8px gray;
     width: 80%;
 }
 
 #langauge_bar {
     margin: auto;
-    width: 80%;
+    width: 90%;
     text-align: right;
     height: 65px;
     background-color: rgb(1, 1, 121);
@@ -50,21 +50,21 @@
 #Subtitle {
     margin: auto;
     text-align: center;
+    color: white;
 }
-
 #small_text{
     font-size: 12px;
     text-align: right;
+    margin-right: 30px;
+    color: white;
+    margin: auto;
 }
 
 #bigger {
-    width: 80%;
-    border: 3px;
-    background-color: aliceblue;
+    width: 90%;
+    background-color:rgb(45, 176, 194);
     margin: auto;
     text-align: center;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
 }
 
 #questions {
@@ -92,9 +92,10 @@
 }
 
 
-#questions #ps.question {
+#questions #ps .question {
     font-size: 14px;
     text-align: right;
+    color: white;
 }
 
 #questions #as {
@@ -105,8 +106,9 @@
 }
 
 
-#questions #as.answer {
+#questions #as .answer {
     font-size: 14px;
+    color: white;
 }
 
 #questions #as #k_value {
@@ -114,23 +116,23 @@
     margin-top: 5px;
 }
 
-#datasets {
+#datasets #jesus {
     width: 90%;
-    border: 3px;
-    background-color: rgb(248, 255, 240);
+    background: rgb(229, 248, 207);
     margin: auto;
     text-align: center;
-    grid-column: auto auto;
 }
 
 #datasets #d_container {
-    width: 90%;
-    border: 3px;
-    background-color: rgb(248, 255, 240);
     margin: auto;
     text-align: center;
+    display: grid;
+    grid-template-columns: auto auto;
 }
-
+#datasets .dumb_div {
+    margin: auto;
+    padding: 10px;
+}
 #datasets .dataset {
     margin: auto;
     padding: 5px;
@@ -140,7 +142,8 @@
 
 #datasets .data_label {
     margin: auto;
-    padding: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     text-align: center;
     text-shadow: 1px 1px 1px 1px white;
 }
@@ -148,15 +151,14 @@
 
 #activate {
     margin: auto;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    padding: 5px;
+    padding-top: 15px;
+    padding-bottom: 15px;
     text-align: center;
 }
 
 .button {
     width: 200px;
-    height: 30px;
+    height: 35px;
     font-size: 20px;
     background-color: blue;
     border: 3px;
@@ -164,15 +166,33 @@
     color: white;
 }
 
-#results {
-    margin-top: 10px;
-    width: 80%;
-    border: 3px;
-    border-color: rgb(102, 0, 0);
-    background-color: rgb(250, 211, 161);
-    margin: auto;
-    text-align: center;
+#SetUp {
+    margin-bottom: 20px;
+}
 
+#reset {
+    text-align: center;
+    margin: auto;
+    background-color: rgb(139, 0, 0); 
+    margin-bottom: 10px;
+}
+#results {
+    margin: auto;
+    width: 90%;
+    background-color:rgb(87, 190, 66);
+    text-align: center;
+}
+#explain_bun {
+    margin: auto;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    font-weight: bold; font-size: 16px; 
+    color: rgb(217, 255, 253);
+}
+#results_bun {
+    margin: auto;
+    font-weight: bold; font-size: 18px; color:rgb(255, 252, 217);
+    padding: 5px;
 }
 
 #Citation {
@@ -196,11 +216,13 @@
 }
 .data_table td {
     text-align: right;
+    background-color: rgb(233, 255, 205);
 }
 .data_table tr:hover {
-    background-color: #ddd;
+    background-color: #ddd !important;
 }
 .data_table th, td {
-    border: 1px solid black;
+    border: 2px solid black;
     padding: 8px;
 }
+

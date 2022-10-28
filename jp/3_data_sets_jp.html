@@ -14,11 +14,9 @@
             <option value="en">English</option>
         </select>
     </div>
-    <h1  id="Title">3組以上の数値データの統計比較</h1>
-    <br>
-    <h2 id="Subtitle">データについて、以下の質問を答えてください。</h2>
-    <br>
     <div id="bigger">
+        <h1  id="Title">3組以上の数値データの統計比較</h1>
+        <h2 id="Subtitle">データについて、以下の質問を答えてください。</h2>
     <div id="questions">
         <div id="ps">
             <p class="question" id="qq1">対応のあるデータですか？*</p>
@@ -33,43 +31,45 @@
         </div>
         <div id="as">
             <div id="firsty">
-            <input type="radio" id="q1_a" class="radio_btn" name="q1" value="yes">
-            <label for="q1_a" class="answer">はい</label>
-            <input type="radio" id="q1_b" class="radio_btn" name="q1" value="no">
-            <label for="q1_b" class="answer">いいえ</label>
-            <br>
-            <br>
-            <br>
-            </div>
+                <input type="radio" id="q1_a" class="radio_btn" name="q1" value="yes">
+                <label for="q1_a" class="answer">はい</label>
+                <input type="radio" id="q1_b" class="radio_btn" name="q1" value="no">
+                <label for="q1_b" class="answer">いいえ</label>
+                <br>
+                <br>
+                <br>
+                </div>
             <div id="secondy">
-            <input type="radio" id="q2_a" name = "q2" value = "yes" class="radio_btn">
-            <label for="q2_a" class="answer">はい</label>
-            <input type="radio" id="q2_b" name = "q2" value = "no" class="radio_btn">
-            <label for="q2_b" class="answer">いいえ</label>
-            <br>
-            <input type="text" id="k_value" placeholder="Input number of data sets">
-            <br>
+                <input type="radio" id="q2_a" name = "q2" value = "yes" class="radio_btn">
+                <label for="q2_a" class="answer">はい</label>
+                <input type="radio" id="q2_b" name = "q2" value = "no" class="radio_btn">
+                <label for="q2_b" class="answer">いいえ</label>
+                <br>
+                <input type="text" id="k_value" placeholder="３～６を入力してください">
+                <br>
+            </div>
+        </div>
+        </div>
+        <p id="error_text" style="display: none">Error will appear here.</p>
+        <p id="small_text">*マウスポインターを質問の上に乗せると、説明が表示されます</p>
+        <br>
+        <button id="SetUp" class="button" onclick="SetUp()">データ入力開始</button>
+        <br>
+    </div>
+    <div id="datasets" style="display: none">
+        <div id="jesus">
+            <div id="d_container"></div>
+            <div><p style="font-size: 12px; text-align: center; margin: auto; width: 80%; padding-top: 15px;">*半角数字でデータが縦になるように、Excelなどから直接にペーストしてください</p></div>
+            <div id="activate">
+                <button id="button" class="button" style="display: none" onclick="Calculate()">計算</button>
             </div>
         </div>
     </div>
-    <p id="error_text" style="display: none">Error will appear here.</p>
-    <p id="small_text">*マウスポインターを質問の上に乗せると、説明が表示されます</p>
-    <br>
-    <button id="SetUp" class="button" onclick="SetUp()">データ入力開始</button>
-    <br>
-    </div>
-    <div id="datasets" style="display: none">
-        <div id="d_container"></div>
-    </div>
-    <div><p style="font-size: 12px; text-align: right; margin: auto; width: 80%;">*半角数字でデータが縦になるように、Excelなどから直接にペーストしてください</p></div>
-    <div id="activate">
-        <button id="button" class="button" style="display: none" onclick="Calculate()">計算</button>
-    </div>
     <div id="results">
-        <p id="explain_bun" style="font-weight: bold; font-size: 16px; color: rgb(105, 0, 0)">利用された検定の詳細はここに書かれます</p>
-        <p id="results_bun" style="font-weight: bold; font-size: 18px">結果はここに書かれます</p>
+        <p id="explain_bun">利用された検定の詳細はここに書かれます</p>
+        <p id="results_bun">結果はここに書かれます</p>
         <br>
-        <button id="reset" class="button" style="display: none; background-color: rgb(139, 0, 0);" onclick="Reset()">Reset!</button>
+        <button id="reset" class="button" onclick="Reset()">Reset!</button>
     </div>
     <div id="Citation">
         <p>本プログラムや関連する説明文などを研究で使用する場合、下記の論文を引用してください。</p>

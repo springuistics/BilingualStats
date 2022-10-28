@@ -35,6 +35,10 @@ function SetUp() {
 function SetUpP2(k) {
     if (!document.getElementById('dataset_0')){
     for (let i=0; i < k; i++ ) {
+        let dumb_div = document.createElement("div");
+        dumb_div.id = "dumb_div_" + i;
+        dumb_div.className = "dumb_div"
+        let helper = dumb_div.id;
         let data = document.createElement("textarea");
         data.id = "dataset_" + i;
         data.className = "dataset";
@@ -44,11 +48,12 @@ function SetUpP2(k) {
         label.innerHTML = text;
         label.className = "data_label";
         label.id = "label_" + i;
-        document.getElementById('d_container').appendChild(label);
-        document.getElementById('d_container').appendChild(data);
+        document.getElementById('d_container').appendChild(dumb_div);
+        document.getElementById(helper).appendChild(label);
+        document.getElementById(helper).appendChild(data);
         document.getElementById(data.id).rows = "30";
         document.getElementById(data.id).columns = "40";
-        document.getElementById(data.id).placeholder="Copy and paste data here.";
+        document.getElementById(data.id).placeholder="1\n 2\n 3\n 4\n etc.";
     }
     }
 }

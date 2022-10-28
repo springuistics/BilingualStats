@@ -14,11 +14,9 @@
             <option value="jp">Japanese</option>
         </select>
     </div>
-    <h1  id="Title">Statistical Comparison of Two Numerical Data Sets</h1>
-    <br>
-    <h2 id="Subtitle">Answer the following questions about your data sets:</h2>
-    <br>
     <div id="bigger">
+        <h1  id="Title">Statistical Comparison of Two Numerical Data Sets</h1>
+        <h2 id="Subtitle">Answer the following questions about your data sets:</h2>
     <div id="questions">
         <div id="ps">
             <p class="question" id="qq1">Are your data sets paired data?*</p>
@@ -30,45 +28,48 @@
         </div>
         <div id="as">
             <div id="firsty">
-            <input type="radio" id="q1_a" class="radio_btn" name="q1" value="yes">
-            <label for="q1_a" class="answer">Yes</label>
-            <input type="radio" id="q1_b" class="radio_btn" name="q1" value="no">
-            <label for="q1_b" class="answer">No</label>
+                <input type="radio" id="q1_a" class="radio_btn" name="q1" value="yes">
+                <label for="q1_a" class="answer">Yes</label>
+                <input type="radio" id="q1_b" class="radio_btn" name="q1" value="no">
+                <label for="q1_b" class="answer">No</label>
             <br>
             <br>
             <br>
             </div>
             <div id="secondy">
-            <input type="radio" id="q2_a" name = "q2" value = "yes" class="radio_btn">
-            <label for="q2_a" class="answer">Yes</label>
-            <input type="radio" id="q2_b" name = "q2" value = "no" class="radio_btn">
-            <label for="q2_b" class="answer">No</label>
+                <input type="radio" id="q2_a" name = "q2" value = "yes" class="radio_btn">
+                <label for="q2_a" class="answer">Yes</label>
+                <input type="radio" id="q2_b" name = "q2" value = "no" class="radio_btn">
+                <label for="q2_b" class="answer">No</label>
             </div>
         </div>
     </div>
     <p id="error_text" style="display: none">Error will appear here.</p>
     <p id="small_text">*Mouse over questions for explanation</p>
     </div>
-    <div id="datasets">
-        <div id="data1">
-            <h3>Copy and paste data set 1 below:</h3>
-            <br>
-            <textarea id="data_set_1" rows="30" columns="40" text-overflow="visible" placeholder="paste data here"></textarea>
-            <br>
+    <div id="data_holder">
+        <div id="datasets">
+            <div id="data1">
+                <h3>Copy and paste data set 1 below:</h3>
+                <br>
+                <textarea id="data_set_1" class="txtarea" rows="30" columns="40" text-overflow="visible" placeholder="paste data here:&#10;1&#10;2&#10;3&#10;etc."></textarea>
+                <br>
+            </div>
+            <div id="data2">
+                <h3>Copy and paste data set 2 below:</h3>
+                <br>
+                <textarea id="data_set_2" class="txtarea" rows="30" columns="40" text-overflow="visible" placeholder="paste data here:&#10;1&#10;2&#10;3&#10;etc."></textarea>
+                <br>
+            </div>
         </div>
-        <div id="data2">
-            <h3>Copy and paste data set 2 below:</h3>
-            <br>
-            <textarea id="data_set_2" rows="30" columns="40" text-overflow="visible" placeholder="paste data here"></textarea>
-            <br>
+        <div id="activate">
+            <button id="button" onclick="Calculate()">Calculate!</button>
         </div>
-    </div>
-    <div id="activate">
-        <button id="button" onclick="Calculate()">Calculate!</button>
+        <br>
     </div>
     <div id="results">
-        <p id="explain_bun" style="font-weight: bold; font-size: 16px; color: rgb(105, 0, 0)">The description of your test will be printed here:</p>
-        <p id="results_bun" style="font-weight: bold; font-size: 18px">Your results will be printed here:</p>
+        <p id="explain_bun">The description of your test will be printed here:</p>
+        <p id="results_bun">Your results will be printed here:</p>
     </div>
     <div id="Citation">
         <p>Please cite the following paper if you use this program or any of the statistics herein. The justifications are included in the paper, linked below for your reference.</p>

@@ -1,3 +1,7 @@
+h1, h2, h3, p, a {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
 .hover_text{
     display: none;
     width: 80%;

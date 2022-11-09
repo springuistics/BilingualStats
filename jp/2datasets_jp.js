@@ -249,13 +249,12 @@ function Shapiro_Wilk (data) {
 }
 
 function Wilcoxon (data1, data2, deets) {
-    var N1 = data1.length;
-    var N2 = data2.length;
-    var totalN = N1 + N2;
     var differences = [];
     for (let i = 0; i < data1.length; i++) {
         let diff = data2[i] - data1[i];
+        if (diff !== 0){
         differences.push(diff);
+        }
     }
     var absolutes = [];
     for (let i = 0; i < differences.length; i ++){
@@ -332,7 +331,7 @@ function Wilcoxon (data1, data2, deets) {
         for (let i = 0; i < ha.length; i ++) {
             let temp_val = 0;
             for (j = 0; j < superdata.length; j++) {
-                if (superdata[j].No === ha[i].ties){
+                if (superdata[j].abs === ha[i].ties){
                 temp_val += superdata[j].Rank;
                 }
             }
@@ -344,29 +343,66 @@ function Wilcoxon (data1, data2, deets) {
         };
         for (let i = 0; i < superdata.length; i ++) {
             for (let j = 0; j < newnum.length; j++) {
-            if (superdata[i].No == newnum[j].tie) {
+            if (superdata[i].abs == newnum[j].tie) {
                 superdata[i].Rank = newnum[j].val;
             } 
         };
         }
     }
+
+
     var signed_ranks = [];
-    for (let i = 0; i < superdata.length; i++){
+    var pos_ranks = [];
+    var neg_ranks = [];
+    for (let i = 0; i < superdata.length; i++) {
         let bob = superdata[i].Rank;
-        if (superdata[i].posneg === "neg") {
+        if (superdata[i].PN == "neg") {
             bob = bob * -1;
-        }
+            neg_ranks.push(superdata[i].Rank)
+        } else {pos_ranks.push(superdata[i].Rank)}
         signed_ranks.push(bob);
     }
-    var sumSR = 0;
-    for (let i = 0; i < signed_ranks.length; i++) {
-        if (signed_ranks[i] >= 0){
-        sumSR += signed_ranks[i];
+
+    function SumArray(array) {
+        var sum = 0;
+        for (let i=0; i<array.length; i++){
+            sum += array[i];
+        }
+        return sum;
+    }
+
+    var sumSR = SumArray(signed_ranks);
+    var sumPos = SumArray(pos_ranks);
+    var sumNeg = SumArray(neg_ranks);
+    var totalN = sorted.length;
+    var mu = 0;
+    var Z = 0;
+    var se = 0;
+
+    if (counter == 0) {
+        mu = (totalN * (totalN + 1)) / 4;
+        se = Math.sqrt(((totalN * (totalN + 1)) * ((2 * totalN) + 1)) / 24);
+        if (sumPos > sumNeg) {
+            Z = (sumPos - mu) / se;
+        } else {
+            Z = (sumNeg - mu) / se;
+        }
+
+    } else {
+        var fixer = 0;
+        for (let i = 0; i < ha.length; i ++) {
+            fixer += (((ha[i].no) **3) - ha[i].no) / 48;
+        }
+        mu = (totalN * (totalN + 1)) / 4;
+        mu2 = ((totalN * (totalN + 1)) * ((2 * totalN) + 1) / 24);
+        se = Math.sqrt(mu2 - fixer)
+        if (sumPos > sumNeg) {
+            Z = (sumPos - mu) / se;
+        } else {
+            Z = (sumNeg - mu) / se;
         }
     }
-    var mu = ((totalN * (totalN + 1))/4);
-    var se = Math.sqrt(((totalN * (totalN + 1)) * ((2 * totalN) + 1)) / 24);
-    var Z = (sumSR - mu) / se;
+    
     var Zval = Z;
     if (Zval > 0) {
         Zval *= -1 
@@ -377,12 +413,14 @@ function Wilcoxon (data1, data2, deets) {
     p = p.toFixed(2);
     r = r.toFixed(2);
     var result1 = "";
+    var result2 = "";
+    var result3 = "";
+    results_of_test = "";
     if (p <= .05) {
         result1 = "二組の間に有意差が見られました。"
     } else {
         result1 = "二組の間に有意差が確認できませんでした。"
     }
-    var result3 = "";
     var tempr = Math.abs(r);
     if (tempr < 0.35) {
         result3 = "また、小さい効果が観察されました。"
@@ -391,9 +429,9 @@ function Wilcoxon (data1, data2, deets) {
     } else {result3 = "また、大きい効果が観察されました。"}
 
     if (p < 0.01) {
-        var result2 = "<i>Z</i> = " + Z + ", <i>p</i> < 0.01, <i>rs</i> = " + r + ". ";
+        result2 = "<i>Z</i> = " + Z + ", <i>p</i> < 0.01, <i>rs</i> = " + r + ". ";
     } else {
-        var result2 = "<i>Z</i> = " + Z + ", <i>p</i> = " + p + ", <i>rs</i> = " + r + ". ";
+        result2 = "<i>Z</i> = " + Z + ", <i>p</i> = " + p + ", <i>rs</i> = " + r + ". ";
     }
     results_of_test = result1 + result2 + result3;
     document.getElementById("explain_bun").innerHTML = deets;

@@ -84,47 +84,65 @@ function Calculate() {
     function SetDataSet(n) {
         let name = "dataset_"+n;
         let temp = document.getElementById(name).value;
-        let realdata = temp.split("\n").map(Number);
-        if (realdata.includes("") || realdata.includes("NaN")) {
+        let prerealdata = temp.split("\n");
+        if (prerealdata.includes("") || prerealdata.includes("NaN")) {
             document.getElementById("error_text").innerHTML = (n+1) + "組にはデータが数字ではない行、あるいはデータのない行があります。データのない行は全て削除し、全てのデータが半角数字になっていることを確認してください。";
             document.getElementById('error_text').style.display = "inline";
-        } else if (realdata.length < 6) {
+        } else {
+            function numberify(set_o_data) {
+                temp_arry = [];
+                for (let i=0; i<set_o_data.length; i++){
+                    var holder = Number(set_o_data[i]);
+                    temp_arry.push(holder);
+                }
+                return temp_arry;
+            }
+            let realdata = numberify(prerealdata);
+            if (realdata.length < 6) {
             document.getElementById("error_text").innerHTML = "適切な結果を得るには、それぞれの組に少なくとも6つのデータが必要です。" + (n+1) + "組のデータ量が足りません。データを確認し、必要に応じてより多くのデータを集めてください。";
             document.getElementById('error_text').style.display = "inline";
         } else {return realdata;}
-    }
+    }}
     if (k==3) {
         data_set1 = SetDataSet(0); data_set2 = SetDataSet(1); data_set3 = SetDataSet(2);
-        if (pair_check == "yes" && data_set1.length !== data_set2.length) {
+        if (pair_check == "yes"){
+            if (data_set1.length !== data_set2.length) {
             document.getElementById("error_text").innerHTML = "組に異なる数のデータが入力されています（対応のあるデータは、全組に同じ数のデータを含みます）。それぞれの組に同数のデータが入っているかを確認し、もう一度試してみてください。";
-            document.getElementById('error_text').style.display = "inline";
-        } else {
-            Begin(k, data_set1, data_set2, data_set3, data_set4, data_set5, data_set6);
+            document.getElementById('error_text').style.display = "inline";}
+            else {Begin(k, data_set1, data_set2, data_set3)}
+        }else {
+            Begin(k, data_set1, data_set2, data_set3);
         }
     }
     if (k==4) {
         data_set1 = SetDataSet(0); data_set2 = SetDataSet(1); data_set3 = SetDataSet(2); data_set4 = SetDataSet(3);
-        if (pair_check == "yes" && data_set1.length !== data_set2.length && data_set1.length !== data_set3.length && data_set1.length !== data_set4.length) {
+        if (pair_check == "yes"){
+            if (data_set1.length !== data_set2.length || data_set1.length !== data_set3.length || data_set1.length !== data_set4.length) {
             document.getElementById("error_text").innerHTML = "組に異なる数のデータが入力されています（対応のあるデータは、全組に同じ数のデータを含みます）。それぞれの組に同数のデータが入っているかを確認し、もう一度試してみてください。";
-            document.getElementById('error_text').style.display = "inline";
+            document.getElementById('error_text').style.display = "inline";}
+            else {Begin(k, data_set1, data_set2, data_set3, data_set4)}
         } else {
             Begin(k, data_set1, data_set2, data_set3, data_set4);
         }
     }
     if (k==5) {
         data_set1 = SetDataSet(0); data_set2 = SetDataSet(1); data_set3 = SetDataSet(2); data_set4 = SetDataSet(3); data_set5 = SetDataSet(4);
-        if (pair_check == "yes" && data_set1.length !== data_set2.length && data_set1.length !== data_set3.length && data_set1.length !== data_set4.length && data_set1.length !== data_set5.length) {
+        if (pair_check == "yes") {
+            if(data_set1.length !== data_set2.length || data_set1.length !== data_set3.length || data_set1.length !== data_set4.length || data_set1.length !== data_set5.length) {
             document.getElementById("error_text").innerHTML = "組に異なる数のデータが入力されています（対応のあるデータは、全組に同じ数のデータを含みます）。それぞれの組に同数のデータが入っているかを確認し、もう一度試してみてください。";
-            document.getElementById('error_text').style.display = "inline";
+            document.getElementById('error_text').style.display = "inline";}
+            else {Begin(k, data_set1, data_set2, data_set3, data_set4, data_set5)}
         } else {
             Begin(k, data_set1, data_set2, data_set3, data_set4, data_set5);
         }
     }
     if (k==6) {
         data_set1 = SetDataSet(0); data_set2 = SetDataSet(1); data_set3 = SetDataSet(2); data_set4 = SetDataSet(3); data_set5 = SetDataSet(4); data_set6 = SetDataSet(5);
-        if (pair_check == "yes" && data_set1.length !== data_set2.length && data_set1.length !== data_set3.length && data_set1.length !== data_set4.length && data_set1.length !== data_set5.length && data_set1.length !== data_set6.length) {
+        if (pair_check == "yes") {
+            if (data_set1.length !== data_set2.length || data_set1.length !== data_set3.length || data_set1.length !== data_set4.length || data_set1.length !== data_set5.length || data_set1.length !== data_set6.length) {
             document.getElementById("error_text").innerHTML = "組に異なる数のデータが入力されています（対応のあるデータは、全組に同じ数のデータを含みます）。それぞれの組に同数のデータが入っているかを確認し、もう一度試してみてください。";
-            document.getElementById('error_text').style.display = "inline";
+            document.getElementById('error_text').style.display = "inline";}
+            else {Begin(k, data_set1, data_set2, data_set3, data_set4, data_set5, data_set6)}
         } else {
             Begin(k, data_set1, data_set2, data_set3, data_set4, data_set5, data_set6);
         }

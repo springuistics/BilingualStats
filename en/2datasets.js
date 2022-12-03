@@ -24,12 +24,23 @@ function Calculate() {
     var pair_check = document.querySelector('input[name="q1"]:checked').value;
     var temp = document.getElementById("data_set_1").value;
     var temp2 = document.getElementById("data_set_2").value;
-    var data_set1 = temp.split("\n").map(Number);
-    var data_set2 = temp2.split("\n").map(Number);
-    if (data_set1.includes("") || data_set2.includes("") || data_set1.includes("NaN") || data_set2.includes("NaN")) {
+    var dataset1 = temp.split("\n");
+    var dataset2 = temp2.split("\n");
+    if (dataset1.includes("") || dataset2.includes("") || dataset1.includes("NaN") || dataset2.includes("NaN")) {
         document.getElementById("error_text").innerHTML = "You have null values (lines with no values) or non-numbers in your data set. Please delete all null values, check to make sure there are no non-numbers in your data set, and then try again.";
         document.getElementById('error_text').style.display = "inline";
-    } else if (data_set1.length < 6 || data_set2.length < 6) {
+    } else {
+    function numberify(set_o_data) {
+        temp_arry = [];
+        for (let i=0; i<set_o_data.length; i++){
+            var holder = Number(set_o_data[i]);
+            temp_arry.push(holder);
+        }
+        return temp_arry;
+    }
+    var data_set1 = numberify(dataset1);
+    var data_set2 = numberify(dataset2);
+    if (data_set1.length < 6 || data_set2.length < 6) {
         document.getElementById("error_text").innerHTML = "You need at least 6 data points in each data set in order for any proper conclusion to be drawn about your data. Please check your data sets or collect more data if necessary."
         document.getElementById('error_text').style.display = "inline";
     } else if (pair_check == "yes" && data_set1.length !== data_set2.length) {
@@ -39,7 +50,7 @@ function Calculate() {
             Begin(data_set1, data_set2);
         }
 }
-}
+}}
 
 
 function Begin (data1, data2) {

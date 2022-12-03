@@ -16,12 +16,23 @@ function Calculate() {
     } else {
     var temp = document.getElementById("data_set_1").value;
     var temp2 = document.getElementById("data_set_2").value;
-    var data_set1 = temp.split("\n").map(Number);
-    var data_set2 = temp2.split("\n").map(Number);
-    if (data_set1.includes("") || data_set2.includes("") || data_set1.includes("NaN") || data_set2.includes("NaN")) {
+    var predata_set1 = temp.split("\n")
+    var predata_set2 = temp2.split("\n")
+    if (predata_set1.includes("") || predata_set2.includes("") || predata_set1.includes("NaN") || predata_set2.includes("NaN")) {
         document.getElementById("error_text").innerHTML = "データが数字ではない行、あるいはデータのない行があります。データのない行は全て削除し、全てのデータが半角数字になっていることを確認してください。";
         document.getElementById('error_text').style.display = "inline";
-    } else if (data_set1.length < 6 || data_set2.length < 6) {
+    } else {
+        function numberify(set_o_data) {
+            temp_arry = [];
+            for (let i=0; i<set_o_data.length; i++){
+                var holder = Number(set_o_data[i]);
+                temp_arry.push(holder);
+            }
+            return temp_arry;
+        }
+        let data_set1 = numberify(predata_set1);
+        let data_set2 = numberify(predata_set2);
+        if (data_set1.length < 6 || data_set2.length < 6) {
         document.getElementById("error_text").innerHTML = "適切な結果を得るには、それぞれの組に少なくとも6つのデータが必要ですので、データ量が足りません。データを確認し、必要に応じてより多くのデータを集めてください。"
         document.getElementById('error_text').style.display = "inline";
     } else if (data_set1.length !== data_set2.length) {
@@ -30,7 +41,7 @@ function Calculate() {
         } else {
             Begin(data_set1, data_set2);
         }
-}
+}}
 }
 function Begin (data1, data2) {
     var ordinal_check = document.querySelector('input[name="q1"]:checked').value;

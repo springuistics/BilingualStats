@@ -14,15 +14,30 @@ function Calculate() {
     var allpre = []; var allpost = []; var allg1 = []; var allg2 = []; var all = [];
     function SetDataSet(n) {
         let name = "data_set_"+n;
+        let foruser = ""
+        if (n==1) {foruser = "group 1 'pre' data set"}
+        else if (n==2) {foruser = "group 1 'post' data set"}
+        else if (n==3) {foruser = "group 2 'pre' data set"}
+        else if (n==4) {foruser = "group 2 'post' data set"}
         let temp = document.getElementById(name).value;
-        let realdata = temp.split("\n").map(Number);
-        if (realdata.includes("") || realdata.includes("NaN")) {
-            document.getElementById("error_text").innerHTML = "You have null values (lines with no values) or non-numbers in data set " + n + ". Please delete all null values, check to make sure there are no non-numbers in your data set, and then try again.";
+        let prerealdata = temp.split("\n");
+        if (prerealdata.includes("") || prerealdata.includes("NaN")) {
+            document.getElementById("error_text").innerHTML = "You have null values (lines with no values) or non-numbers in the " + foruser + ". Please delete all null values, check to make sure there are no non-numbers in your data set, and then try again.";
             document.getElementById('error_text').style.display = "inline";
-        } else if (realdata.length < 6) {
+        } else {
+            function numberify(set_o_data) {
+                temp_arry = [];
+                for (let i=0; i<set_o_data.length; i++){
+                    var holder = Number(set_o_data[i]);
+                    temp_arry.push(holder);
+                }
+                return temp_arry;
+            }
+            let realdata = numberify(prerealdata);
+            if (realdata.length < 6) {
             document.getElementById("error_text").innerHTML = "You need at least 6 data points in each data set in order for any proper conclusion to be drawn about your data. Data set " + n + " does not have enough data points. Please check your data sets or collect more data if necessary.";
             document.getElementById('error_text').style.display = "inline";
-        } else {return realdata;}
+            } else {return realdata;}}
     }
     g1pre = SetDataSet(1); g1post = SetDataSet(2); g2pre = SetDataSet(3); g2post = SetDataSet(4); 
     if (g1pre.length != g1post.length) {

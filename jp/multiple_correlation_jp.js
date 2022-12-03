@@ -74,6 +74,14 @@ function Reset() {
 }
 
 function Calculate() {
+    function numberify(set_o_data) {
+        temp_arry = [];
+        for (let i=0; i<set_o_data.length; i++){
+            var holder = Number(set_o_data[i]);
+            temp_arry.push(holder);
+        }
+        return temp_arry;
+    }
     let fixer = document.getElementById('data_table');
     if (fixer) {document.getElementById('table_holder').removeChild(fixer);}
     document.getElementById("error_text").innerHTML = "";
@@ -84,26 +92,30 @@ function Calculate() {
     document.getElementById('k_value').value = k;
     var y_data_set = []; var data_set1 = []; var data_set2 = []; var data_set3 = []; var data_set4 = []; var data_set5 = [];
     let temp2 = document.getElementById("y_data").value;
-    y_data_set = temp2.split("\n").map(Number); 
-    if (y_data_set.includes("") || y_data_set.includes("NaN")) {
+    let prey_data_set = temp2.split("\n");
+    if (prey_data_set.includes("") || prey_data_set.includes("NaN")) {
         document.getElementById("error_text").innerHTML = "予測変数データに数字ではない行、あるいはデータのない行があります。データのない行は全て削除し、全てのデータが半角数字になっていることを確認してください。";
         document.getElementById('error_text').style.display = "inline";
-    } else if (y_data_set.length < 6) {
+    } else {
+        y_data_set = numberify(prey_data_set);
+        if (y_data_set.length < 6) {
         document.getElementById("error_text").innerHTML = "適切な結果を得るには、それぞれの組に少なくとも6つのデータが必要です。予測変数データの量が足りません。データを確認し、必要に応じてより多くのデータを集めてください。";
         document.getElementById('error_text').style.display = "inline";
-    } 
+    }} 
     function SetDataSet(n) {
         let name = "dataset_"+n;
         let temp = document.getElementById(name).value;
-        let realdata = temp.split("\n").map(Number);
-        if (realdata.includes("") || realdata.includes("NaN")) {
+        let prerealdata = temp.split("\n");
+        if (prerealdata.includes("") || prerealdata.includes("NaN")) {
             document.getElementById("error_text").innerHTML = "予測変数データ" + (n+1) + "に数字ではない行、あるいはデータのない行があります。データのない行は全て削除し、全てのデータが半角数字になっていることを確認してください。";
             document.getElementById('error_text').style.display = "inline";
-        } else if (realdata.length < 6) {
+        } else {
+            let realdata = numberify(prerealdata);
+            if (realdata.length < 6) {
             document.getElementById("error_text").innerHTML = "適切な結果を得るには、それぞれの組に少なくとも6つのデータが必要です。予測変数データ" + (n+1) + "の量が足りません。データを確認し、必要に応じてより多くのデータを集めてください。";
             document.getElementById('error_text').style.display = "inline";
         } else {return realdata;}
-    }
+    }}
     
     if (k==2) {
         data_set1 = SetDataSet(0); data_set2 = SetDataSet(1);

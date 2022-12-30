@@ -198,6 +198,18 @@ function variance (data) {
     return (ss / (N-1)); 
 }
 
+function Stdev (data) {
+    let N = data.length;
+    let m = Sum(data) / N;
+    let s_values = [];
+    for (let i=0; i<N; i++) {
+        let temp = (data[i] - m)**2;
+        s_values.push(temp);
+    }
+    let denom = Sum(s_values)
+    return (denom / N)
+}
+
 function Begin(k, datay, x1, x2, x3) {
     var N = datay.length;
     var x1s; var x2s; var x3s; 
@@ -205,7 +217,7 @@ function Begin(k, datay, x1, x2, x3) {
     var x1x2; var x1x3; var x2x3; 
     var b0; var b1; var b2; var b3; 
     var ryx1; var ryx2; var rx1x2;
-    var ybar = []; var avgy; var residuals = [];
+    var ybar = []; var avgy; var residuals = []; var yvars = [];
     var avgx1; var avgx2; var avgx3; 
 
     if (k==2) {
@@ -221,34 +233,42 @@ function Begin(k, datay, x1, x2, x3) {
         b2 = ((x1s * x2y) - (x1x2 * x1y)) / ((x1s * x2s) - (x1x2 ** 2));
         b0 = avgy - (b1 * avgx1) - (b2 * avgx2);
         for (let i=0; i<N; i++) {
-            let temp = b0 - (b1 * x1[i]) - (b2 * x2[i]);
+            let temp = b0 + (b1 * x1[i]) + (b2 * x2[i]);
             ybar.push(temp);
         }
         for (let i=0; i<N; i++) {
             let temp = datay[i] - ybar[i];
             residuals.push(temp);
         }
+        for (let i=0; i<N; i++) {
+            let temp = ybar[i] - avgy;
+            yvars.push(temp);
+        }
+        var ytotals = [];
+        for (let i=0; i<N; i++) {
+            let temp = datay[i] - avgy;
+            ytotals.push(temp);
+        }
         var MSE = SumSquare(residuals) / (N-3);
-        var SE = Math.sqrt(MSE);
+        var SSM = SumSquare(yvars);
+        var SSE = SumSquare(residuals);
+        var SST = SumSquare(ytotals);
+        var MSM = SSM / (k);
+        var MSE = SSE / (N-3);
+        var F = MSM / MSE;
         ryx1 = Pearson(datay, x1);
         ryx2 = Pearson(datay, x2);
         rx1x2 = Pearson(x1, x2);
-        var R2 = (variance(ybar) / variance(datay)) **2;
-        var sex1a = Math.sqrt((1-R2)/((1-(rx1x2**2))*(N-3))) * (variance(datay) / (variance(x1)));
-        var sex1b = Math.sqrt((1-R2)/((1-(rx1x2**2))*(N-3))) * ((Math.sqrt(variance(datay))) / (Math.sqrt(variance(x1))));
-        var sex1 = (sex1a + sex1b) / 2;
+        var R2 = 1 - ((variance(ybar) / variance(datay)) **2);
+        var sex1 = Math.sqrt((1-R2)/((1-(rx1x2**2))*(N-3))) * ((Math.sqrt(variance(datay))) / (Math.sqrt(variance(x1))));
         var tx1 = b1 / sex1;
         var px1 = StudT(tx1, (N-3));
         var betax1 = (ryx1 - (ryx2 * rx1x2)) / (1 - (rx1x2 **2));
-        var sex2a = Math.sqrt((1-R2)/((1-(rx1x2**2))*(N-3))) * (variance(datay) / (variance(x2)));
-        var sex2b = Math.sqrt((1-R2)/((1-(rx1x2**2))*(N-3))) * (Math.sqrt(variance(datay)) / Math.sqrt(variance(x2)));
-        var sex2 = (sex2a + sex2b) / 2;
+        var sex2 = Math.sqrt((1-R2)/((1-(rx1x2**2))*(N-3))) * (Math.sqrt(variance(datay)) / Math.sqrt(variance(x2)));
         var tx2 = b2 / sex2;
         var px2 = StudT(tx2, (N-3));
         var betax2 = (ryx2 - (ryx1 * rx1x2)) / (1 - (rx1x2 **2));
     } 
-    var R2 = (variance(ybar) / variance(datay)) **2;
-    var F = (R2) / ((1-R2) / (N-3));
     var p = FtoP((k+1), F, k, (N-3));
     R2 = R2.toFixed(2);
     F = F.toFixed(2);

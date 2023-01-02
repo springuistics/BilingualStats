@@ -11,6 +11,7 @@ var results_of_test = "";
 function SetUp() {
     document.getElementById('error_text').style.display = "none";
     var k = document.getElementById('k_value').value;
+    k = parseInt(k);
     var ord_c1 = document.querySelector("[name=q1]:checked");
     var ord_check = document.querySelector('input[name="q1"]:checked').value;
     if (!ord_c1) {
@@ -20,13 +21,15 @@ function SetUp() {
         document.getElementById("error_text").innerHTML = "Sorry, ordinal regression is not available yet. Check back soon.";
         document.getElementById('error_text').style.display = "inline";
     } else if (ord_check == "yes") {
-        document.getElementById("error_text").innerHTML = "Currently, multiple regression of continuous variables only accepts two independent variables. Sorry for any inconvenience."
-        document.getElementById('error_text').style.display = "inline";
-        k = 2;
         document.getElementById('button').style.display = "inline";
         document.getElementById('datasets').style.display = "inline";
         document.getElementById('reset').style.display = "inline";
-        SetUpP2(k);
+        if (k ==2 || k ==3){
+            SetUpP2(k);
+        } else {
+            document.getElementById("error_text").innerHTML = "Currently, multiple regression of continuous variables only accepts two or three independent variables. Sorry for any inconvenience."
+            document.getElementById('error_text').style.display = "inline";
+        }        
     }
 }
 
@@ -87,9 +90,8 @@ function Calculate() {
     document.getElementById("error_text").innerHTML = "";
     document.getElementById('error_text').style.display = "none";
     var ord_check = document.querySelector('input[name="q1"]:checked').value;
-    //var k = document.getElementById('k_value').value;
-    var k = 2;
-    document.getElementById('k_value').value = k;
+    var k = document.getElementById('k_value').value;
+    k = parseInt(k);
     var y_data_set = []; var data_set1 = []; var data_set2 = []; var data_set3 = []; var data_set4 = []; var data_set5 = [];
     let temp2 = document.getElementById("y_data").value;
     let prey_data_set = temp2.split("\n");
@@ -123,6 +125,12 @@ function Calculate() {
             document.getElementById("error_text").innerHTML = "Correlation analysis presumes measurements of the same data points (i.e., participants, instances, etc.) and therefore your data sets should have the same numbers of values, but yours do not. Please check, amend as necessary and retry.";
             document.getElementById('error_text').style.display = "inline";
         } else {Begin(k, y_data_set, data_set1, data_set2);}
+    } else if (k==3) {
+        data_set1 = SetDataSet(0); data_set2 = SetDataSet(1); data_set3 = SetDataSet(2);
+        if (data_set1.length !== y_data_set.length || data_set2.length !== y_data_set.length || data_set3.length !== y_data_set.length){
+            document.getElementById("error_text").innerHTML = "Correlation analysis presumes measurements of the same data points (i.e., participants, instances, etc.) and therefore your data sets should have the same numbers of values, but yours do not. Please check, amend as necessary and retry.";
+            document.getElementById('error_text').style.display = "inline";
+        } else {Begin(k, y_data_set, data_set1, data_set2, data_set3);}
     } 
 }
 
@@ -210,16 +218,67 @@ function Stdev (data) {
     return (denom / N)
 }
 
+function fourway_matrix(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p){
+    let first = a * ( ( f * ((k*p) - (l*o))) - (g* ((j*p) - (l*n))) + (h * ((j*o)-(k*n) ))  );
+    let second = b * ( (e * ((k*p)-(l*o))) - (g* ((i*p) - (l*m))) + (h * ((i*o)-(k*m) ))  );
+    let third = c * ( (e * ((j*p)-(l*n))) - (f* ((i*p) - (l*m))) + (h * ((i*n)-(j*m) ))  );
+    let fourth = d * ( (e * ((j*o)-(k*n))) - (f* ((i*o) - (k*m))) + (g * ((i*n)-(j*m) ))  );
+    return (first-second+third-fourth);
+}
+
+function fkyou3iv(fd1, fd2, fd3) {
+    let N0 = fd1.length;
+    var fd2s; var fd3s;
+    var fd2fd1; var fd3fd1;
+    var fd2fd3;
+    var b_0; var b_1; var b_2;
+    var fd1bar = []; var avgfd1; var residuals_fd = []; var fd_vars = [];
+    var avgfd2; var avgfd3;
+    fd2s = SumSquare(fd2) - ((Sum(fd2)**2) / N0);
+    fd3s = SumSquare(fd3) - ((Sum(fd3)**2) / N0);
+    fd2fd1 = TwoDataSum(fd1, fd2) - ((Sum(fd1)*Sum(fd2)) / N0);
+    fd3fd1 = TwoDataSum(fd1, fd3) - ((Sum(fd1)*Sum(fd3)) / N0);
+    fd2fd3 = TwoDataSum(fd2, fd3) - ((Sum(fd2)*Sum(fd3)) / N0);
+    avgfd1 = Sum(fd1) / N0;
+    avgfd2 = Sum(fd2) / N0;
+    avgfd3 = Sum(fd3) / N0;
+    b_1 = ((fd3s * fd2fd1) - (fd2fd3 * fd3fd1)) / ((fd2s * fd3s) - (fd2fd3 ** 2));
+    b_2 = ((fd2s * fd3fd1) - (fd2fd3 * fd2fd1)) / ((fd2s * fd3s) - (fd2fd3 ** 2));
+    b_0 = avgfd1 - (b_1 * avgfd2) - (b_2 * avgfd3);
+    for (let i=0; i<N0; i++) {
+        let temp = b_0 + (b_1 * fd2[i]) + (b_2 * fd3[i]);
+        fd1bar.push(temp);
+    }
+    for (let i=0; i<N0; i++) {
+        let temp = fd1[i] - fd1bar[i];
+        residuals_fd.push(temp);
+    }
+    for (let i=0; i<N0; i++) {
+        let temp = fd1bar[i] - avgfd1;
+        fd_vars.push(temp);
+    }
+    var fd_totals = [];
+    for (let i=0; i<N0; i++) {
+        let temp = fd1[i] - avgfd1;
+        fd_totals.push(temp);
+    }
+    var temp_MSE = SumSquare(residuals_fd) / (N0-4);
+    var temp_SSM = SumSquare(fd_vars);
+    var temp_SSE = SumSquare(residuals_fd);
+    var temp_SST = SumSquare(fd_totals);
+    var temp_R2 = temp_SSM / temp_SST
+    return (temp_R2);
+}
+
 function Begin(k, datay, x1, x2, x3) {
     var N = datay.length;
     var x1s; var x2s; var x3s; 
     var x1y; var x2y; var x3y;
     var x1x2; var x1x3; var x2x3; 
     var b0; var b1; var b2; var b3; 
-    var ryx1; var ryx2; var rx1x2;
+    var ryx1; var ryx2; var ryx3; var rx1x2; var rx1x3; var rx2x3; 
     var ybar = []; var avgy; var residuals = []; var yvars = [];
     var avgx1; var avgx2; var avgx3; 
-
     if (k==2) {
         x1s = SumSquare(x1) - ((Sum(x1)**2) / N);
         x2s = SumSquare(x2) - ((Sum(x2)**2) / N);
@@ -259,7 +318,7 @@ function Begin(k, datay, x1, x2, x3) {
         ryx1 = Pearson(datay, x1);
         ryx2 = Pearson(datay, x2);
         rx1x2 = Pearson(x1, x2);
-        var R2 = 1 - ((variance(ybar) / variance(datay)) **2);
+        var R2 = SSM / SST;
         var sex1 = Math.sqrt((1-R2)/((1-(rx1x2**2))*(N-3))) * ((Math.sqrt(variance(datay))) / (Math.sqrt(variance(x1))));
         var tx1 = b1 / sex1;
         var px1 = StudT(tx1, (N-3));
@@ -268,15 +327,75 @@ function Begin(k, datay, x1, x2, x3) {
         var tx2 = b2 / sex2;
         var px2 = StudT(tx2, (N-3));
         var betax2 = (ryx2 - (ryx1 * rx1x2)) / (1 - (rx1x2 **2));
+        var p = FtoP((k+1), F, k, (N-3));
     } 
-    var p = FtoP((k+1), F, k, (N-3));
-    R2 = R2.toFixed(2);
-    F = F.toFixed(2);
-    p = p.toFixed(2);
+    else if (k==3) {
+        var detA = fourway_matrix(N, Sum(x1), Sum(x2), Sum(x3), Sum(x1), SumSquare(x1), TwoDataSum(x1,x2), TwoDataSum(x1,x3), Sum(x2), TwoDataSum(x1, x2), SumSquare(x2), TwoDataSum(x2,x3), Sum(x3), TwoDataSum(x1,x3), TwoDataSum(x2,x3), SumSquare(x3));
+        var detA1 = fourway_matrix(Sum(datay), Sum(x1), Sum(x2), Sum(x3), TwoDataSum(x1,datay), SumSquare(x1), TwoDataSum(x1,x2), TwoDataSum(x1,x3), TwoDataSum(x2,datay), TwoDataSum(x1, x2), SumSquare(x2), TwoDataSum(x2,x3), TwoDataSum(x3,datay), TwoDataSum(x1,x3), TwoDataSum(x2,x3), SumSquare(x3));
+        var detA2 = fourway_matrix(N, Sum(datay), Sum(x2), Sum(x3), Sum(x1), TwoDataSum(x1,datay), TwoDataSum(x1,x2), TwoDataSum(x1,x3), Sum(x2), TwoDataSum(x2, datay), SumSquare(x2), TwoDataSum(x2,x3), Sum(x3), TwoDataSum(x3,datay), TwoDataSum(x2,x3), SumSquare(x3));
+        var detA3 = fourway_matrix(N, Sum(x1), Sum(datay), Sum(x3), Sum(x1), SumSquare(x1), TwoDataSum(x1,datay), TwoDataSum(x1,x3), Sum(x2), TwoDataSum(x1, x2), TwoDataSum(x2,datay), TwoDataSum(x2,x3), Sum(x3), TwoDataSum(x1,x3), TwoDataSum(x3,datay), SumSquare(x3));
+        var detA4 = fourway_matrix(N, Sum(x1), Sum(x2), Sum(datay), Sum(x1), SumSquare(x1), TwoDataSum(x1,x2), TwoDataSum(x1,datay), Sum(x2), TwoDataSum(x1, x2), SumSquare(x2), TwoDataSum(x2,datay), Sum(x3), TwoDataSum(x1,x3), TwoDataSum(x2,x3), TwoDataSum(x3,datay));
+        b0 = detA1 / detA;
+        b1 = detA2 / detA;
+        b2 = detA3 / detA;
+        b3 = detA4 / detA;
+        avgy = Sum(datay) / N;
+        for (let i=0; i<N; i++) {
+            let temp = b0 + (b1 * x1[i]) + (b2 * x2[i]) + (b3 * x3[i]);
+            ybar.push(temp);
+        }
+        for (let i=0; i<N; i++) {
+            let temp = datay[i] - ybar[i];
+            residuals.push(temp);
+        }
+        for (let i=0; i<N; i++) {
+            let temp = ybar[i] - avgy;
+            yvars.push(temp);
+        }
+        var ytotals = [];
+        for (let i=0; i<N; i++) {
+            let temp = datay[i] - avgy;
+            ytotals.push(temp);
+        }
+        var MSE = SumSquare(residuals) / (N-4);
+        var SSM = SumSquare(yvars);
+        var SSE = SumSquare(residuals);
+        var SST = SumSquare(ytotals);
+        var MSM = SSM / (k);
+        var MSE = SSE / (N-4);
+        var F = MSM / MSE;
+        var helper_sex1 = fkyou3iv(x1, x2, x3);
+        var helper_sex2 = fkyou3iv(x2, x1, x3);
+        var helper_sex3 = fkyou3iv(x3, x1, x2);
+        ryx1 = Pearson(datay, x1);
+        ryx2 = Pearson(datay, x2);
+        ryx3 = Pearson(datay, x3);
+        rx1x2 = Pearson(x1, x2);
+        rx1x3 = Pearson(x1, x3);
+        rx2x3 = Pearson(x2, x3);
+        var R2 = SSM / SST;
+        var sex1 = Math.sqrt((1-R2)/((1-(helper_sex1))*(N-4))) * ((Math.sqrt(variance(datay))) / (Math.sqrt(variance(x1))));
+        var tx1 = b1 / sex1;
+        var px1 = StudT(tx1, (N-4));
+        var betax1 = b1 * ((Math.sqrt(variance(x1))) / (Math.sqrt(variance(datay))));
+        var sex2 = Math.sqrt((1-R2)/((1-(helper_sex2))*(N-4))) * (Math.sqrt(variance(datay)) / Math.sqrt(variance(x2)));
+        var tx2 = b2 / sex2;
+        var px2 = StudT(tx2, (N-4));
+        var betax2 = b2 * ((Math.sqrt(variance(x2))) / (Math.sqrt(variance(datay))));
+        var sex3 = Math.sqrt((1-R2)/((1-(helper_sex3))*(N-4))) * (Math.sqrt(variance(datay)) / Math.sqrt(variance(x3)));
+        var tx3 = b3 / sex3;
+        var px3 = StudT(tx3, (N-4));
+        var betax3 = b3 * ((Math.sqrt(variance(x3))) / (Math.sqrt(variance(datay))));
+        var p = FtoP((k+1), F, k, (N-4));
+    } 
+    
+    R2 = R2.toFixed(3);
+    F = F.toFixed(3);
+    p = p.toFixed(3);
     var result1 = "";
     if (p <= .05) {
         if (p <= 0) {
-        result1 = "The comibnation of these variables significantly predict the main variable: <i>F</i> = " + F + ", <i>p</i> < .01, <i>R<sup>2</sup></i> = " + R2 + "<br>";
+        result1 = "The comibnation of these variables significantly predict the main variable: <i>F</i> = " + F + ", <i>p</i> < .001, <i>R<sup>2</sup></i> = " + R2 + "<br>";
         } else {
         result1 = "The comibnation of these variables significantly predict the main variable: <i>F</i> = " + F + ", <i>p</i> = " + p + ", <i>R<sup>2</sup></i> = " + R2 + "<br>";
         }
@@ -319,9 +438,9 @@ function Begin(k, datay, x1, x2, x3) {
     let v1_3 = document.createElement('td');
     v1_3.innerHTML = betax1.toFixed(3);
     let v1_4 = document.createElement('td');
-    v1_4.innerHTML = tx1.toFixed(2);
+    v1_4.innerHTML = tx1.toFixed(3);
     let v1_5 = document.createElement('td');
-    v1_5.innerHTML = px1.toFixed(2);
+    v1_5.innerHTML = px1.toFixed(3);
 
     row_2.appendChild(v1_1);
     row_2.appendChild(v1_2);
@@ -338,9 +457,9 @@ function Begin(k, datay, x1, x2, x3) {
     let v2_3 = document.createElement('td');
     v2_3.innerHTML = betax2.toFixed(3);
     let v2_4 = document.createElement('td');
-    v2_4.innerHTML = tx2.toFixed(2);
+    v2_4.innerHTML = tx2.toFixed(3);
     let v2_5 = document.createElement('td');
-    v2_5.innerHTML = px2.toFixed(2);
+    v2_5.innerHTML = px2.toFixed(3);
 
     row_3.appendChild(v2_1);
     row_3.appendChild(v2_2);
@@ -354,13 +473,13 @@ function Begin(k, datay, x1, x2, x3) {
         let v3_1 = document.createElement('td');
         v3_1.innerHTML = "3";
         let v3_2 = document.createElement('td');
-        v3_2.innerHTML = b3.toFixed(2);
+        v3_2.innerHTML = b3.toFixed(3);
         let v3_3 = document.createElement('td');
-        v3_3.innerHTML = betax3.toFixed(2);
+        v3_3.innerHTML = betax3.toFixed(3);
         let v3_4 = document.createElement('td');
-        v3_4.innerHTML = tx3.toFixed(2);
+        v3_4.innerHTML = tx3.toFixed(3);
         let v3_5 = document.createElement('td');
-        v3_5.innerHTML = px3.toFixed(2);
+        v3_5.innerHTML = px3.toFixed(3);
 
         row_4.appendChild(v3_1);
         row_4.appendChild(v3_2);

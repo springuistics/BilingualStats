@@ -323,10 +323,14 @@ function Begin(k, datay, x1, x2, x3) {
         var tx1 = b1 / sex1;
         var px1 = StudT(tx1, (N-3));
         var betax1 = (ryx1 - (ryx2 * rx1x2)) / (1 - (rx1x2 **2));
+        var rel1x1 = ((ryx1**2) + (R2-(ryx2**2))) / 2;
+        var rel2x1 = rel1x1 / R2;
         var sex2 = Math.sqrt((1-R2)/((1-(rx1x2**2))*(N-3))) * (Math.sqrt(variance(datay)) / Math.sqrt(variance(x2)));
         var tx2 = b2 / sex2;
         var px2 = StudT(tx2, (N-3));
         var betax2 = (ryx2 - (ryx1 * rx1x2)) / (1 - (rx1x2 **2));
+        var rel1x2 = ((ryx2**2) + (R2-(ryx1**2))) / 2;
+        var rel2x2 = rel1x2 / R2;
         var p = FtoP((k+1), F, k, (N-3));
     } 
     else if (k==3) {
@@ -367,6 +371,9 @@ function Begin(k, datay, x1, x2, x3) {
         var helper_sex1 = fkyou3iv(x1, x2, x3);
         var helper_sex2 = fkyou3iv(x2, x1, x3);
         var helper_sex3 = fkyou3iv(x3, x1, x2);
+        var ryx1x2 = fkyou3iv(datay, x1, x2);
+        var ryx1x3 = fkyou3iv(datay, x1, x3);
+        var ryx2x3 = fkyou3iv(datay, x2, x3);
         ryx1 = Pearson(datay, x1);
         ryx2 = Pearson(datay, x2);
         ryx3 = Pearson(datay, x3);
@@ -378,14 +385,29 @@ function Begin(k, datay, x1, x2, x3) {
         var tx1 = b1 / sex1;
         var px1 = StudT(tx1, (N-4));
         var betax1 = b1 * ((Math.sqrt(variance(x1))) / (Math.sqrt(variance(datay))));
+        var relx1_k1 = ((ryx1x2-(ryx2**2)) + (ryx1x3-(ryx3**2))) / 2;
+        var relx1_k2 = R2-ryx2x3; 
+        var rel1x1 = ((ryx1**2) + relx1_k1 + relx1_k2) / 3;
+        var rel2x1 = rel1x1 / R2;
+
         var sex2 = Math.sqrt((1-R2)/((1-(helper_sex2))*(N-4))) * (Math.sqrt(variance(datay)) / Math.sqrt(variance(x2)));
         var tx2 = b2 / sex2;
         var px2 = StudT(tx2, (N-4));
         var betax2 = b2 * ((Math.sqrt(variance(x2))) / (Math.sqrt(variance(datay))));
+        var relx2_k1 = ((ryx1x2-(ryx1**2)) + (ryx2x3-(ryx3**2))) / 2;
+        var relx2_k2 = R2-ryx1x3; 
+        var rel1x2 = ((ryx2**2) + relx2_k1 + relx2_k2) / 3;
+        var rel2x2 = rel1x2 / R2;
+
         var sex3 = Math.sqrt((1-R2)/((1-(helper_sex3))*(N-4))) * (Math.sqrt(variance(datay)) / Math.sqrt(variance(x3)));
         var tx3 = b3 / sex3;
         var px3 = StudT(tx3, (N-4));
         var betax3 = b3 * ((Math.sqrt(variance(x3))) / (Math.sqrt(variance(datay))));
+        var relx3_k1 = ((ryx1x3-(ryx1**2)) + (ryx2x3-(ryx2**2))) / 2;
+        var relx3_k2 = R2-ryx1x2; 
+        var rel1x3 = ((ryx3**2) + relx3_k1 + relx3_k2) / 3;
+        var rel2x3 = rel1x3 / R2;
+
         var p = FtoP((k+1), F, k, (N-4));
     } 
     
@@ -393,6 +415,7 @@ function Begin(k, datay, x1, x2, x3) {
     F = F.toFixed(3);
     p = p.toFixed(3);
     var result1 = "";
+    var result2 = ". The following variables with <i>p</i> values lower than 0.05 are significant predictors, and the relative weights suggest how much each contributes to the predictive power of the model.";
     if (p <= .05) {
         if (p <= 0) {
         result1 = "The comibnation of these variables significantly predict the main variable: <i>F</i> = " + F + ", <i>p</i> < .001, <i>R<sup>2</sup></i> = " + R2 + "<br>";
@@ -402,7 +425,7 @@ function Begin(k, datay, x1, x2, x3) {
     } else {
         result1 = "The comibnation of these variables do not significantly predict the main variable: <i>F</i> = " + F + ", <i>p</i> = " + p + ", <i>R<sup>2</sup></i> = " + R2 + "<br>";
     }
-    document.getElementById("results_bun").innerHTML = result1;    
+    document.getElementById("results_bun").innerHTML = result1 + result2;    
     let table = document.createElement('table');
     let thead = document.createElement('thead');
     let tbody = document.createElement('tbody');
@@ -422,12 +445,15 @@ function Begin(k, datay, x1, x2, x3) {
     heading_4.innerHTML = "<i>t</i> value";
     let heading_5 = document.createElement('th');
     heading_5.innerHTML = "<i>p</i> value";
+    let heading_6 = document.createElement('th');
+    heading_6.innerHTML = "Relative Weight";
 
     row_1.appendChild(heading_1);
     row_1.appendChild(heading_2);
     row_1.appendChild(heading_3);
     row_1.appendChild(heading_4);
     row_1.appendChild(heading_5);
+    row_1.appendChild(heading_6);
     thead.appendChild(row_1);
 
     let row_2 = document.createElement('tr');
@@ -441,12 +467,16 @@ function Begin(k, datay, x1, x2, x3) {
     v1_4.innerHTML = tx1.toFixed(3);
     let v1_5 = document.createElement('td');
     v1_5.innerHTML = px1.toFixed(3);
+    let v1_6 = document.createElement('td');
+    rel2x1 = rel2x1 * 100;
+    v1_6.innerHTML = rel1x1.toFixed(3) + " (" + rel2x1.toFixed(2) + "%)"
 
     row_2.appendChild(v1_1);
     row_2.appendChild(v1_2);
     row_2.appendChild(v1_3);
     row_2.appendChild(v1_4);
     row_2.appendChild(v1_5);
+    row_2.appendChild(v1_6);
     thead.appendChild(row_2);
 
     let row_3 = document.createElement('tr');
@@ -460,12 +490,16 @@ function Begin(k, datay, x1, x2, x3) {
     v2_4.innerHTML = tx2.toFixed(3);
     let v2_5 = document.createElement('td');
     v2_5.innerHTML = px2.toFixed(3);
+    let v2_6 = document.createElement('td');
+    rel2x2 = rel2x2 * 100;
+    v2_6.innerHTML = rel1x2.toFixed(3) + " (" + rel2x2.toFixed(2) + "%)"
 
     row_3.appendChild(v2_1);
     row_3.appendChild(v2_2);
     row_3.appendChild(v2_3);
     row_3.appendChild(v2_4);
     row_3.appendChild(v2_5);
+    row_3.appendChild(v2_6);
     thead.appendChild(row_3);
 
     if (k==3) {
@@ -480,12 +514,16 @@ function Begin(k, datay, x1, x2, x3) {
         v3_4.innerHTML = tx3.toFixed(3);
         let v3_5 = document.createElement('td');
         v3_5.innerHTML = px3.toFixed(3);
+        let v3_6 = document.createElement('td');
+        rel2x3 = rel2x3 * 100;
+        v3_6.innerHTML = rel1x3.toFixed(3) + " (" + rel2x3.toFixed(2) + "%)"
 
         row_4.appendChild(v3_1);
         row_4.appendChild(v3_2);
         row_4.appendChild(v3_3);
         row_4.appendChild(v3_4);
         row_4.appendChild(v3_5);
+        row_4.appendChild(v3_6);
         thead.appendChild(row_4);
         }
 

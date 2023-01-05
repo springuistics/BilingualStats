@@ -140,7 +140,7 @@ function GimmietheP(x,n) {
     var Pi=Math.PI;
     if(n==1 & x>1000) {return 0} 
     if(x>1000 | n>1000) { 
-        var q=ChiSq((x-n)*(x-n)/(2*n),1)/2 
+        var q=GimmietheP((x-n)*(x-n)/(2*n),1)/2 
         if(x>n) {return q} {return 1-q} 
         } 
     var p=Math.exp(-0.5*x); if((n%2)==1) { p=p*Math.sqrt(2*x/Pi) } 

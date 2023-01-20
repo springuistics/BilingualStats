@@ -151,6 +151,13 @@ h1, h2, h3, p, a {
     margin: auto;
 }
 
+#XtoP {
+    width: 90%;
+    color: white;
+    background-color: rgb(181, 223, 243);
+    margin: auto;
+}
+
 .data_q {
     color: white;
 }

@@ -19,10 +19,12 @@
     <br>
     <p id="data_q" class="data_q"><i>p</i>は何から計算しますか？</p>
     <br>
-    <input type="radio" id="q1_a" class="radio_btn" name="q1" value="Z_value">
-            <label for="q1_a" class="answer"><i>Z</i> 値から</label>
-            <input type="radio" id="q1_b" class="radio_btn" name="q1" value="t_value">
-            <label for="q1_b" class="answer"><i>t</i> 値から</label>
+        <input type="radio" id="q1_a" class="radio_btn" name="q1" value="Z_value">
+        <label for="q1_a" class="answer"><i>Z</i> 値から</label>
+        <input type="radio" id="q1_b" class="radio_btn" name="q1" value="t_value">
+        <label for="q1_b" class="answer"><i>t</i> 値から</label>
+        <input type="radio" id="q1_b" class="radio_btn" name="q1" value="x_value">
+        <label for="q1_b" class="answer"><i>Χ<sup>2</sup></i> 値から</label>
     <br>
     <br>
     <button id="setting_btn" class="button" onclick="SetUp()">データ入力開始</button>
@@ -62,6 +64,24 @@
         <div class="bcon">
             <button id="tbtn" class="button" onclick="GetT()"><i>p</i>を計算</button>
             <br>
+        </div>
+    </div>
+    <div id="XtoP" class="hidden">
+        <h2 class="subheader"><i>Χ<sup>2</sup></i> 値から <i>p</i> を計算する</h2>
+        <br>
+        <table id="Cohen_table">
+            <tr>
+                <td class="tblwords"><i>Χ<sup>2</sup></i> 値:</td>
+                <td class="tblbox"><input id="xv" type="text" class="adjustobox"></td>
+                <td class="tblwords">自由度（df）:</td>
+                <td class="tblbox"><input id="dfxv" type="text" class="adjustobox"></td>
+            </tr>
+        </table>
+        <br>
+        <p id="x_result" class="results">Results go here</p>
+        <br>
+        <div class="bcon"><button id="zbtn" class="button" onclick="GetX()">Calculate <i>p</i></button>
+        <br>
         </div>
     </div>
     <div id="citation">

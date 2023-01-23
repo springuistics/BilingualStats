@@ -121,8 +121,7 @@ function Calculate() {
                 document.getElementById("error_text").innerHTML = "Paired data sets should contain the same number of values (i.e., participants, instances, etc.). You have selected paired data, but your data sets have different numbers of values. Please check, amend as necessary and retry.";
                 document.getElementById('error_text').style.display = "inline";}
                 else {Begin(k, data_set1, data_set2, data_set3, data_set4)}
-            } 
-        else {
+            } else {
             Begin(k, data_set1, data_set2, data_set3, data_set4);
         }
     }
@@ -390,108 +389,153 @@ function FtoP(k, f, n1, n2) {
     return 1-a+c
 }
 
-function TukeyMe(q, k, v) {
-    q = Math.abs(q);
-    let text = "";
-    function getit(hs5, hs1) {
-        if (q<hs5) {return "<i>n.s.</i>"} else if (q>hs1) {return "p < .01"} else {
-        let s=(hs1-hs5)/4; 
-        let p1=hs5+s; let p2=p1+s; let p3=p2+s; let p2d=p1+(s/2); let p3d=p2+(s/2);
-        if (q<p1) {return "p = .05"} else if (q>p1 && q<p2d) {return "p = .04"} else if (q>p2d && q<p2) {return "p = .03"} else if (q>p2 && q<p3d) {return "p = .02"} else if (q>p3d && q<p3) {text = "p = .01"} else {return "p < .01"}
-    }}
-    if (k==3) {
-        if (v==5) {let hs5=4.60; let hs1=6.98; text=getit(hs5, hs1);}
-        else if (v==6) {let hs5=4.34; let hs1=6.33; text=getit(hs5, hs1);}
-        else if (v==7) {let hs5=4.16; let hs1=5.92; text=getit(hs5, hs1);}
-        else if (v==8) {let hs5=4.04; let hs1=5.64; text=getit(hs5, hs1);}
-        else if (v==9) {let hs5=3.95; let hs1=5.43; text=getit(hs5, hs1);}
-        else if (v==10) {let hs5=3.88; let hs1=5.27; text=getit(hs5, hs1);}
-        else if (v==11) {let hs5=3.82; let hs1=5.15; text=getit(hs5, hs1);}
-        else if (v==12) {let hs5=3.77; let hs1=5.05; text=getit(hs5, hs1);}
-        else if (v==13) {let hs5=3.73; let hs1=4.96; text=getit(hs5, hs1);}
-        else if (v==14) {let hs5=3.70; let hs1=4.89; text=getit(hs5, hs1);}
-        else if (v==15) {let hs5=3.67; let hs1=4.84; text=getit(hs5, hs1);}
-        else if (v==16) {let hs5=3.65; let hs1=4.79; text=getit(hs5, hs1);}
-        else if (v==17) {let hs5=3.63; let hs1=4.74; text=getit(hs5, hs1);}
-        else if (v==18) {let hs5=3.61; let hs1=4.70; text=getit(hs5, hs1);}
-        else if (v==19) {let hs5=3.59; let hs1=4.67; text=getit(hs5, hs1);}
-        else if (v==20) {let hs5=3.58; let hs1=4.64; text=getit(hs5, hs1);}
-        else if (v>20&&v<30) {let hs5=3.53; let hs1=4.55; text=getit(hs5, hs1);}
-        else if (v>=30&&v<40) {let hs5=3.45; let hs1=4.41; text=getit(hs5, hs1);}
-        else if (v>=40&&v<60) {let hs5=3.42; let hs1=4.32; text=getit(hs5, hs1);}
-        else if (v>=60&&v<120) {let hs5=3.38; let hs1=4.24; text=getit(hs5, hs1);}
-        else if (v>=120) {let hs5=3.34; let hs1=4.16; text=getit(hs5, hs1);}
+function TukeyMe(q, k, df) {
+q = Math.abs(q);
+var vw = new Array(31);
+var qw = new Array(31);
+var pcutj = 0.00003;
+var pcutk = 0.0001;
+var step = 0.45;
+var vmax = 1000.0;
+var cv1 = 0.193064705;
+var cv2 = 0.293525326;
+var cvmax = 0.39894228;
+var cv = new Array(5);
+cv[0] = 0.0;
+cv[1] = 0.318309886;
+cv[2] = -0.00268132716;
+cv[3] = 0.00347222222;
+cv[4] = 0.0833333333;
+var jmin = 3; var jmax = 15; var kmin = 7; var kmax = 15;
+var retval; var g; var gmid; var r1; var c; var h; var hj; var v2;
+var gstep; var pk; var pk1; var pk2; var pj; var j; var jj;
+var kk; var gk; var w0; var pz; var x; var jump; var ehj;
+retval = 0.0;
+
+g = step * Math.pow(k, -0.2);
+gmid = 0.5 * Math.log(k);
+r1 = k - 1.0;
+c = Math.log(k * g * cvmax);
+if (c <= vmax) {
+    h = step * Math.pow(df, -0.5);
+    v2 = df * 0.5;
+    if (df == 1) {c = cv1;}
+    if (df == 2) {c = cv2;    }
+    if (!((df == 1) || (df == 2))) {
+        c = Math.sqrt(v2) * cv[1] / (1.0 + ((cv[2] / v2 + cv[3]) / v2 + cv[4]) / v2);
     }
-    else if (k==4) {
-        if (v==5) {let hs5=5.22; let hs1=7.80; text=getit(hs5, hs1);}
-        else if (v==6) {let hs5=4.90; let hs1=7.03; text=getit(hs5, hs1);}
-        else if (v==7) {let hs5=4.68; let hs1=6.54; text=getit(hs5, hs1);}
-        else if (v==8) {let hs5=4.53; let hs1=6.20; text=getit(hs5, hs1);}
-        else if (v==9) {let hs5=4.41; let hs1=5.96; text=getit(hs5, hs1);}
-        else if (v==10) {let hs5=4.33; let hs1=5.77; text=getit(hs5, hs1);}
-        else if (v==11) {let hs5=4.26; let hs1=5.62; text=getit(hs5, hs1);}
-        else if (v==12) {let hs5=4.20; let hs1=5.50; text=getit(hs5, hs1);}
-        else if (v==13) {let hs5=4.15; let hs1=5.40; text=getit(hs5, hs1);}
-        else if (v==14) {let hs5=4.11; let hs1=5.32; text=getit(hs5, hs1);}
-        else if (v==15) {let hs5=4.08; let hs1=5.25; text=getit(hs5, hs1);}
-        else if (v==16) {let hs5=4.05; let hs1=5.19; text=getit(hs5, hs1);}
-        else if (v==17) {let hs5=4.02; let hs1=5.14; text=getit(hs5, hs1);}
-        else if (v==18) {let hs5=4.00; let hs1=5.09; text=getit(hs5, hs1);}
-        else if (v==19) {let hs5=3.98; let hs1=5.05; text=getit(hs5, hs1);}
-        else if (v==20) {let hs5=3.96; let hs1=5.02; text=getit(hs5, hs1);}
-        else if (v>20&&v<30) {let hs5=3.90; let hs1=4.91; text=getit(hs5, hs1);}
-        else if (v>=30&&v<40) {let hs5=3.85; let hs1=4.80; text=getit(hs5, hs1);}
-        else if (v>=40&&v<60) {let hs5=3.79; let hs1=4.70; text=getit(hs5, hs1);}
-        else if (v>=60&&v<120) {let hs5=3.70; let hs1=4.54; text=getit(hs5, hs1);}
-        else if (v>=120) {let hs5=3.66; let hs1=4.45; text=getit(hs5, hs1);}
+    c = Math.log(c * k * g * h);
+}
+
+gstep = g;
+qw[1] = -1.0;
+qw[jmax + 1] = -1.0;
+pk1 = 1.0;
+pk2 = 1.0;
+for (kk = 1; kk <= kmax; kk++) {
+    gstep -= g;
+    do {
+        gstep = -gstep;
+        gk = gmid + gstep;
+        pk = 0.0;
+        if ((pk2 > pcutk) || (kk <= kmin)) {
+            w0 = c - gk * gk * 0.5;
+            pz = alnorm(gk, true);
+            x = alnorm(gk - q, true) - pz;
+            if (x > 0.0)
+                pk = Math.exp(w0 + r1 * Math.log(x));
+            if (df <= vmax) {
+                jump = -jmax;
+                do {
+                    jump += jmax;
+                    for (j = 1; j <= jmax; j++) {
+                        jj = j + jump;
+                        if (qw[jj] <= 0.0) {
+                            hj = h * j;
+                            if (j < jmax) {
+                                qw[jj + 1] = -1.0;
+                            }
+                            ehj = Math.exp(hj);
+                            qw[jj] = q * ehj;
+                            vw[jj] = df * (hj + 0.5 - ehj * ehj * 0.5);
+                        }
+                        pj = 0.0;
+                        x = alnorm(gk - qw[jj], true) - pz;
+                        if (x > 0.0) {
+                            pj = Math.exp(w0 + vw[jj] + r1 * Math.log(x));
+                        }
+                        pk += pj;
+                        if (pj <= pcutj) {
+                            if ((jj > jmin) || (kk > kmin)) {
+                                break;
+                            }
+                        }
+                        pj = pj;
+                    }
+                    h = -h;
+                } while (h < 0);
+            }
+        }
+        retval += pk;
+        if ((kk > kmin) && (pk <= pcutk) && (pk1 <= pcutk)) {
+            return 1 - retval;
+        }
+        pk2 = pk1;
+        pk1 = pk;
+    } while (gstep > 0.0);
+}
+
+return 1 - retval;
+}
+
+function alnorm(x, upper) {
+var ltone = 7.0;
+var utzero = 18.66;
+var con = 1.28;
+var a1 = 0.398942280444;
+var a2 = 0.399903438504;
+var a3 = 5.75885480458;
+var a4 = 29.8213557808;
+var a5 = 2.62433121679;
+var a6 = 48.6959930692;
+var a7 = 5.92885724438;
+var b1 = 0.398942280385;
+var b2 = 3.8052e-8;
+var b3 = 1.00000615302;
+var b4 = 3.98064794e-4;
+var b5 = 1.98615381364;
+var b6 = 0.151679116635;
+var b7 = 5.29330324926;
+var b8 = 4.8385912808;
+var b9 = 15.1508972451;
+var b10 = 0.742380924027;
+var b11 = 30.789933034;
+var b12 = 3.99019417011;
+var up;
+var y, z;
+var retval;
+
+up = upper;
+z = x;
+if (z < 0) {
+    if (up) {up = false;} 
+    else {up = true;}
+    z = -z;
+}
+if ((z <= ltone) || (up == true) && (z <= utzero)) {
+    y = 0.5 * z * z;
+    if (z > con) {
+        retval = b1 * Math.exp(-y) / (z - b2 + b3 / (z + b4 + b5 / (z - b6 + b7 / (z + b8 - b9 / (z + b10 + b11 / (z + b12))))));
+    } else {
+        retval = 0.5 - z * (a1 - a2 * y / (y + a3 - a4 / (y + a5 + a6 / (y + a7))));
     }
-    else if (k==5) {
-        if (v==5) {let hs5=5.67; let hs1=8.42; text=getit(hs5, hs1);}
-        else if (v==6) {let hs5=5.30; let hs1=7.56; text=getit(hs5, hs1);}
-        else if (v==7) {let hs5=5.06; let hs1=7.01; text=getit(hs5, hs1);}
-        else if (v==8) {let hs5=4.89; let hs1=6.62; text=getit(hs5, hs1);}
-        else if (v==9) {let hs5=4.76; let hs1=6.35; text=getit(hs5, hs1);}
-        else if (v==10) {let hs5=4.65; let hs1=6.14; text=getit(hs5, hs1);}
-        else if (v==11) {let hs5=4.57; let hs1=5.97; text=getit(hs5, hs1);}
-        else if (v==12) {let hs5=4.51; let hs1=5.84; text=getit(hs5, hs1);}
-        else if (v==13) {let hs5=4.45; let hs1=5.73; text=getit(hs5, hs1);}
-        else if (v==14) {let hs5=4.41; let hs1=5.63; text=getit(hs5, hs1);}
-        else if (v==15) {let hs5=4.37; let hs1=5.56; text=getit(hs5, hs1);}
-        else if (v==16) {let hs5=4.33; let hs1=5.49; text=getit(hs5, hs1);}
-        else if (v==17) {let hs5=4.30; let hs1=5.43; text=getit(hs5, hs1);}
-        else if (v==18) {let hs5=4.28; let hs1=5.38; text=getit(hs5, hs1);}
-        else if (v==19) {let hs5=4.25; let hs1=5.33; text=getit(hs5, hs1);}
-        else if (v==20) {let hs5=4.23; let hs1=5.29; text=getit(hs5, hs1);}
-        else if (v>20&&v<30) {let hs5=4.17; let hs1=5.17; text=getit(hs5, hs1);}
-        else if (v>=30&&v<40) {let hs5=4.07; let hs1=5.00; text=getit(hs5, hs1);}
-        else if (v>=40&&v<60) {let hs5=4.01; let hs1=4.86; text=getit(hs5, hs1);}
-        else if (v>=60&&v<120) {let hs5=3.95; let hs1=4.76; text=getit(hs5, hs1);}
-        else if (v>=120) {let hs5=3.89; let hs1=4.65; text=getit(hs5, hs1);}
-    }
-    else if (k==6) {
-        if (v==5) {let hs5=6.03; let hs1=8.91; text=getit(hs5, hs1);}
-        else if (v==6) {let hs5=5.63; let hs1=7.97; text=getit(hs5, hs1);}
-        else if (v==7) {let hs5=5.36; let hs1=7.37; text=getit(hs5, hs1);}
-        else if (v==8) {let hs5=5.17; let hs1=6.96; text=getit(hs5, hs1);}
-        else if (v==9) {let hs5=5.02; let hs1=6.66; text=getit(hs5, hs1);}
-        else if (v==10) {let hs5=4.91; let hs1=6.43; text=getit(hs5, hs1);}
-        else if (v==11) {let hs5=4.82; let hs1=6.25; text=getit(hs5, hs1);}
-        else if (v==12) {let hs5=4.75; let hs1=6.10; text=getit(hs5, hs1);}
-        else if (v==13) {let hs5=4.69; let hs1=5.98; text=getit(hs5, hs1);}
-        else if (v==14) {let hs5=4.64; let hs1=5.88; text=getit(hs5, hs1);}
-        else if (v==15) {let hs5=4.59; let hs1=5.80; text=getit(hs5, hs1);}
-        else if (v==16) {let hs5=4.56; let hs1=5.72; text=getit(hs5, hs1);}
-        else if (v==17) {let hs5=4.52; let hs1=5.66; text=getit(hs5, hs1);}
-        else if (v==18) {let hs5=4.49; let hs1=5.60; text=getit(hs5, hs1);}
-        else if (v==19) {let hs5=4.47; let hs1=5.55; text=getit(hs5, hs1);}
-        else if (v==20) {let hs5=4.45; let hs1=5.51; text=getit(hs5, hs1);}
-        else if (v>20&&v<30) {let hs5=4.37; let hs1=5.37; text=getit(hs5, hs1);}
-        else if (v>=30&&v<40) {let hs5=4.26; let hs1=5.18; text=getit(hs5, hs1);}
-        else if (v>=40&&v<60) {let hs5=4.19; let hs1=5.05; text=getit(hs5, hs1);}
-        else if (v>=60&&v<120) {let hs5=4.13; let hs1=4.93; text=getit(hs5, hs1);}
-        else if (v>=120) {let hs5=4.06; let hs1=4.82; text=getit(hs5, hs1);}
-    }
-    return text;
+} else {
+    retval = 0.0;
+}
+if (up == false) {
+    retval = 1.0 - retval;
+}
+return retval;
 }
 
 function PtoT(t,n) {
@@ -591,6 +635,26 @@ function sterror(d1, d2){
     return se;
 }
 
+function Sum(data) {
+    let sum = 0;
+    for (let i=0; i<data.length; i++){
+        sum += data[i]
+    }
+    return sum;
+}
+
+function Stdev (data) {
+    let N = data.length;
+    let m = Sum(data) / N;
+    let s_values = [];
+    for (let i=0; i<N; i++) {
+        let temp = (data[i] - m)**2;
+        s_values.push(temp);
+    }
+    let denom = Sum(s_values)
+    return (denom / (N-1))
+}
+
 function StANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
     var M1; var M2; var M3; var M4; var M5; var M6; var Mg;
     var SM1; var SM2; var SM3; var SM4; var SM5; var SM6;
@@ -624,15 +688,16 @@ function StANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
         MB3 = N3 * ((M3 - Mg) **2);
         dfs = k-1;
         SSB = SB1 + SB2 + SB3;
+        var MSB = MB1 + MB2 + MB3;
         MSSB = (MB1 + MB2 + MB3) / (dfs);
         F = MSSB / MSSW;
         dfw = GN - k;
-        q_1v2 = (M1 - M2) / (Math.sqrt(((MSSW/N1)+(MSSW/N2))/2));
-        q_1v3 = (M1 - M3) / (Math.sqrt(((MSSW/N1)+(MSSW/N3))/2));
-        q_2v3 = (M2 - M3) / (Math.sqrt(((MSSW/N2)+(MSSW/N3))/2));
-        var p1v2 = TukeyMe(q_1v2, k, dfw);
-        var p1v3 = TukeyMe(q_1v3, k, dfw);
-        var p2v3 = TukeyMe(q_2v3, k, dfw);
+        q_1v2 = (Math.abs(M1 - M2)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N1)+(1/N2))));
+        q_1v3 = (Math.abs(M1 - M3)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N1)+(1/N3))));
+        q_2v3 = (Math.abs(M2 - M3)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N2)+(1/N3))));
+        var p1v2 = TukeyMe(q_1v2, k, dfw); p1v2 = p1v2.toFixed(2);
+        var p1v3 = TukeyMe(q_1v3, k, dfw); p1v3 = p1v3.toFixed(2);
+        var p2v3 = TukeyMe(q_2v3, k, dfw); p2v3 = p2v3.toFixed(2);
     } else if (k==4) {
         M1 = CalcMean(data1);
         M2 = CalcMean(data2);
@@ -660,21 +725,22 @@ function StANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
         MB3 = N3 * ((M3 - Mg) **2);
         MB4 = N4 * ((M4 - Mg) **2);
         dfs = k-1;
+        var MSB = MB1 + MB2 + MB3 + MB4;
         MSSB = (MB1 + MB2 + MB3 + MB4) / (dfs);
         F = MSSB / MSSW;
         dfw = GN - k;
-        q_1v2 = (M1 - M2) / (Math.sqrt(((MSSW/N1)+(MSSW/N2))/2));
-        q_1v3 = (M1 - M3) / (Math.sqrt(((MSSW/N1)+(MSSW/N3))/2));
-        q_1v4 = (M1 - M4) / (Math.sqrt(((MSSW/N1)+(MSSW/N4))/2));
-        q_2v3 = (M2 - M3) / (Math.sqrt(((MSSW/N2)+(MSSW/N3))/2));
-        q_2v4 = (M2 - M4) / (Math.sqrt(((MSSW/N2)+(MSSW/N4))/2));
-        q_3v4 = (M3 - M4) / (Math.sqrt(((MSSW/N3)+(MSSW/N4))/2));
-        var p1v2 = TukeyMe(q_1v2, k, dfw);
-        var p1v3 = TukeyMe(q_1v3, k, dfw);
-        var p1v4 = TukeyMe(q_1v4, k, dfw);
-        var p2v3 = TukeyMe(q_2v3, k, dfw);
-        var p2v4 = TukeyMe(q_2v4, k, dfw);
-        var p3v4 = TukeyMe(q_3v4, k, dfw);
+        q_1v2 = (Math.abs(M1 - M2)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N1)+(1/N2))));
+        q_1v3 = (Math.abs(M1 - M3)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N1)+(1/N3))));
+        q_1v4 = (Math.abs(M1 - M4)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N1)+(1/N4))));
+        q_2v3 = (Math.abs(M2 - M3)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N2)+(1/N3))));
+        q_2v4 = (Math.abs(M2 - M4)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N2)+(1/N4))));
+        q_3v4 = (Math.abs(M3 - M4)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N3)+(1/N4))));
+        var p1v2 = TukeyMe(q_1v2, k, dfw); p1v2 = p1v2.toFixed(2);
+        var p1v3 = TukeyMe(q_1v3, k, dfw); p1v3 = p1v3.toFixed(2);
+        var p1v4 = TukeyMe(q_1v4, k, dfw); p1v4 = p1v4.toFixed(2);
+        var p2v3 = TukeyMe(q_2v3, k, dfw); p2v3 = p2v3.toFixed(2);
+        var p2v4 = TukeyMe(q_2v4, k, dfw); p2v4 = p2v4.toFixed(2);
+        var p3v4 = TukeyMe(q_3v4, k, dfw); p3v4 = p3v4.toFixed(2);
     } else if (k==5) {
         M1 = CalcMean(data1);
         M2 = CalcMean(data2);
@@ -706,30 +772,31 @@ function StANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
         MB3 = N3 * ((M3 - Mg) **2);
         MB4 = N4 * ((M4 - Mg) **2);
         MB5 = N5 * ((M5 - Mg) **2);
+        var MSB = MB1 + MB2 + MB3 + MB4 + MB5;
         dfs = k-1;
         MSSB = (MB1 + MB2 + MB3 + MB4 + MB5) / (dfs);
         F = MSSB / MSSW;
         dfw = GN - k;
-        q_1v2 = (M1 - M2) / (Math.sqrt(((MSSW/N1)+(MSSW/N2))/2));
-        q_1v3 = (M1 - M3) / (Math.sqrt(((MSSW/N1)+(MSSW/N3))/2));
-        q_1v4 = (M1 - M4) / (Math.sqrt(((MSSW/N1)+(MSSW/N4))/2));
-        q_1v5 = (M1 - M5) / (Math.sqrt(((MSSW/N1)+(MSSW/N5))/2));
-        q_2v3 = (M2 - M3) / (Math.sqrt(((MSSW/N2)+(MSSW/N3))/2));
-        q_2v4 = (M2 - M4) / (Math.sqrt(((MSSW/N2)+(MSSW/N4))/2));
-        q_2v5 = (M2 - M5) / (Math.sqrt(((MSSW/N2)+(MSSW/N5))/2));
-        q_3v4 = (M3 - M4) / (Math.sqrt(((MSSW/N3)+(MSSW/N4))/2));
-        q_3v5 = (M3 - M5) / (Math.sqrt(((MSSW/N3)+(MSSW/N5))/2));
-        q_4v5 = (M4 - M5) / (Math.sqrt(((MSSW/N4)+(MSSW/N5))/2));
-        var p1v2 = TukeyMe(q_1v2, k, dfw);
-        var p1v3 = TukeyMe(q_1v3, k, dfw);
-        var p1v4 = TukeyMe(q_1v4, k, dfw);
-        var p1v5 = TukeyMe(q_1v5, k, dfw);
-        var p2v3 = TukeyMe(q_2v3, k, dfw);
-        var p2v4 = TukeyMe(q_2v4, k, dfw);
-        var p2v5 = TukeyMe(q_2v5, k, dfw);
-        var p3v4 = TukeyMe(q_3v4, k, dfw);
-        var p3v5 = TukeyMe(q_3v5, k, dfw);
-        var p4v5 = TukeyMe(q_4v5, k, dfw);
+        q_1v2 = (Math.abs(M1 - M2)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N1)+(1/N2))));
+        q_1v3 = (Math.abs(M1 - M3)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N1)+(1/N3))));
+        q_1v4 = (Math.abs(M1 - M4)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N1)+(1/N4))));
+        q_1v5 = (Math.abs(M1 - M5)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N1)+(1/N5))));
+        q_2v3 = (Math.abs(M2 - M3)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N2)+(1/N3))));
+        q_2v4 = (Math.abs(M2 - M4)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N2)+(1/N4))));
+        q_2v5 = (Math.abs(M2 - M5)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N2)+(1/N5))));
+        q_3v4 = (Math.abs(M3 - M4)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N3)+(1/N4))));
+        q_3v5 = (Math.abs(M3 - M5)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N3)+(1/N5))));
+        q_4v5 = (Math.abs(M4 - M5)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N4)+(1/N5))));
+        var p1v2 = TukeyMe(q_1v2, k, dfw); p1v2 = p1v2.toFixed(2);
+        var p1v3 = TukeyMe(q_1v3, k, dfw); p1v3 = p1v3.toFixed(2);
+        var p1v4 = TukeyMe(q_1v4, k, dfw); p1v4 = p1v4.toFixed(2);
+        var p1v5 = TukeyMe(q_1v5, k, dfw); p1v5 = p1v5.toFixed(2);
+        var p2v3 = TukeyMe(q_2v3, k, dfw); p2v3 = p2v3.toFixed(2);
+        var p2v4 = TukeyMe(q_2v4, k, dfw); p2v4 = p2v4.toFixed(2);
+        var p2v5 = TukeyMe(q_2v5, k, dfw); p2v5 = p2v5.toFixed(2);
+        var p3v4 = TukeyMe(q_3v4, k, dfw); p3v4 = p3v4.toFixed(2);
+        var p3v5 = TukeyMe(q_3v5, k, dfw); p3v5 = p3v5.toFixed(2);
+        var p4v5 = TukeyMe(q_4v5, k, dfw); p4v5 = p4v5.toFixed(2);
     } else if (k==6) {
         M1 = CalcMean(data1);
         M2 = CalcMean(data2);
@@ -767,55 +834,56 @@ function StANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
         MB5 = N5 * ((M5 - Mg) **2);
         MB6 = N6 * ((M6 - Mg) **2);
         dfs = k-1;
-        SSB = 
+        var MSB = MB1 + MB2 + MB3 + MB4 + MB5 + MB6;
+        var pooled = SSB / (GN - k);
         MSSB = (MB1 + MB2 + MB3 + MB4 + MB5 + MB6) / (dfs);
         F = MSSB / MSSW;
         dfw = GN - k;
-        q_1v2 = (M1 - M2) / (Math.sqrt(((MSSW/N1)+(MSSW/N2))/2));
-        q_1v3 = (M1 - M3) / (Math.sqrt(((MSSW/N1)+(MSSW/N3))/2));
-        q_1v4 = (M1 - M4) / (Math.sqrt(((MSSW/N1)+(MSSW/N4))/2));
-        q_1v5 = (M1 - M5) / (Math.sqrt(((MSSW/N1)+(MSSW/N5))/2));
-        q_1v6 = (M1 - M6) / (Math.sqrt(((MSSW/N1)+(MSSW/N6))/2));
-        q_2v3 = (M2 - M3) / (Math.sqrt(((MSSW/N2)+(MSSW/N3))/2));
-        q_2v4 = (M2 - M4) / (Math.sqrt(((MSSW/N2)+(MSSW/N4))/2));
-        q_2v5 = (M2 - M5) / (Math.sqrt(((MSSW/N2)+(MSSW/N5))/2));
-        q_2v6 = (M2 - M6) / (Math.sqrt(((MSSW/N2)+(MSSW/N6))/2));
-        q_3v4 = (M3 - M4) / (Math.sqrt(((MSSW/N3)+(MSSW/N4))/2));
-        q_3v5 = (M3 - M5) / (Math.sqrt(((MSSW/N3)+(MSSW/N5))/2));
-        q_3v6 = (M3 - M6) / (Math.sqrt(((MSSW/N3)+(MSSW/N6))/2));
-        q_4v5 = (M4 - M5) / (Math.sqrt(((MSSW/N4)+(MSSW/N5))/2));
-        q_4v6 = (M4 - M6) / (Math.sqrt(((MSSW/N4)+(MSSW/N6))/2));
-        q_5v6 = (M5 - M6) / (Math.sqrt(((MSSW/N5)+(MSSW/N6))/2));
-        var p1v2 = TukeyMe(q_1v2, k, dfw);
-        var p1v3 = TukeyMe(q_1v3, k, dfw);
-        var p1v4 = TukeyMe(q_1v4, k, dfw);
-        var p1v5 = TukeyMe(q_1v5, k, dfw);
-        var p1v6 = TukeyMe(q_1v6, k, dfw);
-        var p2v3 = TukeyMe(q_2v3, k, dfw);
-        var p2v4 = TukeyMe(q_2v4, k, dfw);
-        var p2v5 = TukeyMe(q_2v5, k, dfw);
-        var p2v6 = TukeyMe(q_2v6, k, dfw);
-        var p3v4 = TukeyMe(q_3v4, k, dfw);
-        var p3v5 = TukeyMe(q_3v5, k, dfw);
-        var p3v6 = TukeyMe(q_3v6, k, dfw);
-        var p4v5 = TukeyMe(q_4v5, k, dfw);
-        var p4v6 = TukeyMe(q_4v6, k, dfw);
-        var p5v6 = TukeyMe(q_5v6, k, dfw);
+        q_1v2 = (Math.abs(M1 - M2)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N1)+(1/N2))));
+        q_1v3 = (Math.abs(M1 - M3)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N1)+(1/N3))));
+        q_1v4 = (Math.abs(M1 - M4)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N1)+(1/N4))));
+        q_1v5 = (Math.abs(M1 - M5)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N1)+(1/N5))));
+        q_1v6 = (Math.abs(M1 - M6)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N1)+(1/N6))));
+        q_2v3 = (Math.abs(M2 - M3)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N2)+(1/N3))));
+        q_2v4 = (Math.abs(M2 - M4)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N2)+(1/N4))));
+        q_2v5 = (Math.abs(M2 - M5)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N2)+(1/N5))));
+        q_2v6 = (Math.abs(M2 - M6)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N2)+(1/N6))));
+        q_3v4 = (Math.abs(M3 - M4)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N3)+(1/N4))));
+        q_3v5 = (Math.abs(M3 - M5)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N3)+(1/N5))));
+        q_3v6 = (Math.abs(M3 - M6)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N3)+(1/N6))));
+        q_4v5 = (Math.abs(M4 - M5)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N4)+(1/N5))));
+        q_4v6 = (Math.abs(M4 - M6)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N4)+(1/N6))));
+        q_5v6 = (Math.abs(M5 - M6)) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/N5)+(1/N6))));
+        var p1v2 = TukeyMe(q_1v2, k, dfw); p1v2 = p1v2.toFixed(2);
+        var p1v3 = TukeyMe(q_1v3, k, dfw); p1v3 = p1v3.toFixed(2);
+        var p1v4 = TukeyMe(q_1v4, k, dfw); p1v4 = p1v4.toFixed(2);
+        var p1v5 = TukeyMe(q_1v5, k, dfw); p1v5 = p1v5.toFixed(2);
+        var p1v6 = TukeyMe(q_1v6, k, dfw); p1v6 = p1v6.toFixed(2);
+        var p2v3 = TukeyMe(q_2v3, k, dfw); p2v3 = p2v3.toFixed(2);
+        var p2v4 = TukeyMe(q_2v4, k, dfw); p2v4 = p2v4.toFixed(2);
+        var p2v5 = TukeyMe(q_2v5, k, dfw); p2v5 = p2v5.toFixed(2);
+        var p2v6 = TukeyMe(q_2v6, k, dfw); p2v6 = p2v6.toFixed(2);
+        var p3v4 = TukeyMe(q_3v4, k, dfw); p3v4 = p3v4.toFixed(2);
+        var p3v5 = TukeyMe(q_3v5, k, dfw); p3v5 = p3v5.toFixed(2);
+        var p3v6 = TukeyMe(q_3v6, k, dfw); p3v6 = p3v6.toFixed(2);
+        var p4v5 = TukeyMe(q_4v5, k, dfw); p4v5 = p4v5.toFixed(2);
+        var p4v6 = TukeyMe(q_4v6, k, dfw); p4v6 = p4v6.toFixed(2);
+        var p5v6 = TukeyMe(q_5v6, k, dfw); p5v6 = p5v6.toFixed(2);
     }
 
     var p = FtoP(k, F, dfs, dfw);
     F = F.toFixed(2);
-    var W2 = (SSB - (dfs * MSSW)) / (MSSW + SSB + SSW)
+    var W2 = (MSB) / (MSB + SSW)
     W2 =W2.toFixed(2);
     var result1 = "";
     var result3 = "";
     var results4 = "";
-    if (W2<.06) {
-        results4 = "Furthermore, there was a small effect size; <i>W<sup>2</i></sup> = " + W2;
-    } else if (W2<0.138) {
-        results4 =  "Furthermore, there was a medium effect size; <i>W<sup>2</i></sup> = " + W2;
-    } else if (W2>=0.138) {
-        results4 =  "Furthermore, there was a large effect size; <i>W<sup>2</i></sup> = " + W2;
+    if (W2<.15) {
+        results4 = "Furthermore, there was a small effect size;  <i>η<sup>2</i></sup> = " + W2;
+    } else if (W2<0.35) {
+        results4 =  "Furthermore, there was a medium effect size;  <i>η<sup>2</i></sup> = " + W2;
+    } else {
+        results4 =  "Furthermore, there was a large effect size;  <i>η<sup>2</i></sup> = " + W2;
     }
     if (p > 0.05) {
         var result1 = "There was no significant difference amongst any of the groups; "
@@ -832,15 +900,15 @@ function StANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
             var result2 = "<i>F</i>[" + dfs + ", " + dfw + "] = " + F + ", <i>p</i> = " + p + ". ";
         }
         if (k==3) {
-            result3 = "The significant differences between specific groups, as tested by a Tukey's HSD post-hoc analysis, is shown below: <br>Group 1 x Group 2: " + p1v2 + "<br>Group 1 x Group 3: " + p1v3 + "<br>Group 2 x Group 3: " + p2v3;
+            result3 = "The significant differences between specific groups, as tested by a Tukey's HSD post-hoc analysis, is shown below: <br>Group 1 x Group 2: <i>p</i> = " + p1v2 + "<br>Group 1 x Group 3: <i>p</i> = " + p1v3 + "<br>Group 2 x Group 3: <i>p</i> = " + p2v3;
         } else if (k==4) {
-            result3 = "The significant differences between specific groups, as tested by a Tukey's HSD post-hoc analysis, is shown below: <br>Group 1 x Group 2: " + p1v2 + "<br>Group 1 x Group 3: " + p1v3 + "<br>Group 1 x Group 4: " + p1v4 + "<br>Group 2 x Group 3: " + p2v3 + "<br>Group 2 x Group 4: " + p2v4 + "<br>Group 3 x Group 4: " + p3v4;
+            result3 = "The significant differences between specific groups, as tested by a Tukey's HSD post-hoc analysis, is shown below: <br>Group 1 x Group 2: <i>p</i> = " + p1v2 + "<br>Group 1 x Group 3: <i>p</i> = " + p1v3 + "<br>Group 1 x Group 4: <i>p</i> = " + p1v4 + "<br>Group 2 x Group 3: <i>p</i> = " + p2v3 + "<br>Group 2 x Group 4: <i>p</i> = " + p2v4 + "<br>Group 3 x Group 4: <i>p</i> = " + p3v4;
         } else if (k==5) {
-            result3 = "The significant differences between specific groups, as tested by a Tukey's HSD post-hoc analysis, is shown below: <br>Group 1 x Group 2: " + p1v2 + "<br>Group 1 x Group 3: " + p1v3 +  "<br>Group 1 x Group 4: " + p1v4 + "<br>Group 1 x Group 5: " + p1v5 + "<br>Group 2 x Group 3: " + p2v3 + "<br>Group 2 x Group 4: " + p2v4 + "<br>Group 2 x Group 5: " + p2v5 + "<br>Group 3 x Group 4: " + p3v4 + "<br>Group 3 x Group 5: " + p3v5 + "<br>Group 4 x Group 5: " + p4v5;
+            result3 = "The significant differences between specific groups, as tested by a Tukey's HSD post-hoc analysis, is shown below: <br>Group 1 x Group 2: <i>p</i> = " + p1v2 + "<br>Group 1 x Group 3: <i>p</i> = " + p1v3 +  "<br>Group 1 x Group 4: <i>p</i> = " + p1v4 + "<br>Group 1 x Group 5: <i>p</i> = " + p1v5 + "<br>Group 2 x Group 3: <i>p</i> = " + p2v3 + "<br>Group 2 x Group 4: <i>p</i> = " + p2v4 + "<br>Group 2 x Group 5: <i>p</i> = " + p2v5 + "<br>Group 3 x Group 4: <i>p</i> = " + p3v4 + "<br>Group 3 x Group 5: <i>p</i> = " + p3v5 + "<br>Group 4 x Group 5: <i>p</i> = " + p4v5;
         } else if (k==6) {
-            result3 = "The significant differences between specific groups, as tested by a Tukey's HSD post-hoc analysis, is shown below: <br>Group 1 x Group 2: " + p1v2 + "<br>Group 1 x Group 3: " + p1v3 +  "<br>Group 1 x Group 4: " + p1v4 + "<br>Group 1 x Group 5: " + p1v5 + "<br>Group 1 x Group 6: " + p1v6 + "<br>Group 2 x Group 3: " + p2v3 + "<br>Group 2 x Group 4: " + p2v4 + "<br>Group 2 x Group 5: " + p2v5 + "<br>Group 2 x Group 6: " + p2v6 + "<br>Group 3 x Group 4: " + p3v4 + "<br>Group 3 x Group 5: " + p3v5 + "<br>Group 3 x Group 6: " + p3v6 + "<br>Group 4 x Group 5: " + p4v5 + "<br>Group 4 x Group 6: " + p4v6 + "<br>Group 5 x Group 6: " + p5v6;
+            result3 = "The significant differences between specific groups, as tested by a Tukey's HSD post-hoc analysis, is shown below: <br>Group 1 x Group 2: <i>p</i> = " + p1v2 + "<br>Group 1 x Group 3: <i>p</i> = " + p1v3 +  "<br>Group 1 x Group 4: <i>p</i> = " + p1v4 + "<br>Group 1 x Group 5: <i>p</i> = " + p1v5 + "<br>Group 1 x Group 6: <i>p</i> = " + p1v6 + "<br>Group 2 x Group 3: <i>p</i> = " + p2v3 + "<br>Group 2 x Group 4: <i>p</i> = " + p2v4 + "<br>Group 2 x Group 5: <i>p</i> = " + p2v5 + "<br>Group 2 x Group 6: <i>p</i> = " + p2v6 + "<br>Group 3 x Group 4: <i>p</i> = " + p3v4 + "<br>Group 3 x Group 5: <i>p</i> = " + p3v5 + "<br>Group 3 x Group 6: <i>p</i> = " + p3v6 + "<br>Group 4 x Group 5: <i>p</i> = " + p4v5 + "<br>Group 4 x Group 6: <i>p</i> = " + p4v6 + "<br>Group 5 x Group 6: <i>p</i> = " + p5v6;
         }
-        results_of_test = result1 + result2 + results4 + "<br>" + result3;
+        results_of_test = result1 + result2 + results4 + "<br>" + result3 + "<br><p style='font-size: 10'> Tukey's <i>p</i> values are rounded to 2 decimal places, so interpret <i>p</i> = 0 as <i>p</i> < 0.01 and <i>p</i> = 1 as <i>p</i> > 0.99</p>";
     }
     document.getElementById("explain_bun").innerHTML = deets;
     document.getElementById("results_bun").innerHTML = results_of_test;
@@ -860,6 +928,18 @@ function variance (data) {
         ss += ((data[i] - M) **2)
     }
     return (ss / (N-1)); 
+}
+
+function doHolms(holms) {
+    var sorted = [];
+    holms.forEach(function(number, index) {sorted.push(holms[index].p)});
+    var sorted2 = sorted.slice().sort((a, b) => b - a);
+    for (let i=0; i<sorted2.length; i++){
+        for (let j=0; j<holms.length; j++)
+        if (sorted2[i] == holms[j].p) {
+            holms[j].rank = (i+1);
+        }
+    }
 }
 
 function RepANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
@@ -916,13 +996,22 @@ function RepANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
         MSSB = SSB / dfb;
         MSSS = SSS / dfs;
         MSE = SSE / (dfb * dfs);
-        F = MSSB / MSE; 
-        q_1v2 = (M1 - M2) / (sterror(data1, data2));
-        q_1v3 = (M1 - M3) / (sterror(data1, data3));
-        q_2v3 = (M2 - M3) / (sterror(data2, data3));
-        var p1v2 = TukeyMe(q_1v2, k, (N1-1));
-        var p1v3 = TukeyMe(q_1v3, k, (N1-1));
-        var p2v3 = TukeyMe(q_2v3, k, (N1-1));
+        F = MSSB / MSE;
+        q_1v2 = (Math.abs(M1 - M2)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N1)+(1/N2))));
+        q_1v3 = (Math.abs(M1 - M3)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N1)+(1/N3))));
+        q_2v3 = (Math.abs(M2 - M3)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N2)+(1/N3))));
+        var holms = [];
+        var p1v2 = PtoT(q_1v2,N1); holms.push({"name": "p1v2", "p": p1v2, "rank":0});
+        var p1v3 = PtoT(q_1v3,N1); holms.push({"name": "p1v3", "p": p1v3, "rank":0});
+        var p2v3 = PtoT(q_2v3,N1); holms.push({"name": "p2v3", "p": p2v3, "rank":0});
+        doHolms(holms);
+        for (let i=0; i<holms.length; i++){
+            holms[i].p *= holms[i].rank;
+        }
+        p1v2 = holms[0].p; p1v2 = p1v2.toFixed(2);
+        p1v3 = holms[1].p; p1v3 = p1v3.toFixed(2);
+        p2v3 = holms[2].p; p2v3 = p2v3.toFixed(2);
+
     } else if (k==4) {
         M1 = CalcMean(data1);
         M2 = CalcMean(data2);
@@ -967,18 +1056,28 @@ function RepANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
         MSSS = SSS / dfs;
         MSE = SSE / (dfb * dfs);
         F = MSSB / MSE; 
-        q_1v2 = (M1 - M2) / (sterror(data1, data2));
-        q_1v3 = (M1 - M3) / (sterror(data1, data3));
-        q_1v4 = (M1 - M4) / (sterror(data1, data4));
-        q_2v3 = (M2 - M3) / (sterror(data2, data3));
-        q_2v4 = (M2 - M4) / (sterror(data2, data4));
-        q_3v4 = (M3 - M4) / (sterror(data3, data4));
-        var p1v2 = TukeyMe(q_1v2, k, (N1-1));
-        var p1v3 = TukeyMe(q_1v3, k, (N1-1));
-        var p1v4 = TukeyMe(q_1v4, k, (N1-1));
-        var p2v3 = TukeyMe(q_2v3, k, (N1-1));
-        var p2v4 = TukeyMe(q_2v4, k, (N1-1));
-        var p3v4 = TukeyMe(q_3v4, k, (N1-1));
+        q_1v2 = (Math.abs(M1 - M2)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N1)+(1/N2))));
+        q_1v3 = (Math.abs(M1 - M3)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N1)+(1/N3))));
+        q_1v4 = (Math.abs(M1 - M4)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N1)+(1/N4))));
+        q_2v3 = (Math.abs(M2 - M3)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N2)+(1/N3))));
+        q_2v4 = (Math.abs(M2 - M4)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N2)+(1/N4))));
+        var holms = [];
+        var p1v2 = PtoT(q_1v2,N1); holms.append({"name": "p1v2", "p": p1v2, "rank":0});
+        var p1v3 = PtoT(q_1v3,N1); holms.append({"name": "p1v3", "p": p1v3, "rank":0});
+        var p1v4 = PtoT(q_1v4,N1); holms.append({"name": "p1v4", "p": p1v4, "rank":0});
+        var p2v3 = PtoT(q_2v3,N1); holms.append({"name": "p2v3", "p": p2v3, "rank":0});
+        var p2v4 = PtoT(q_2v4,N1); holms.append({"name": "p2v4", "p": p2v4, "rank":0});
+        var p3v4 = PtoT(q_3v4,N1); holms.append({"name": "p3v4", "p": p3v4, "rank":0});
+        doHolms(holms);
+        for (let i=0; i<holms.length; i++){
+            holms[i].p *= holms[i].rank;
+        }
+        p1v2 = holms[0].p; p1v2 = p1v2.toFixed(2);
+        p1v3 = holms[1].p; p1v3 = p1v3.toFixed(2);
+        p1v4 = holms[2].p; p1v4 = p1v4.toFixed(2);
+        p2v3 = holms[3].p; p2v3 = p2v3.toFixed(2);
+        p2v4 = holms[4].p; p2v4 = p2v4.toFixed(2);
+        p3v4 = holms[5].p; p3v4 = p3v4.toFixed(2);
     } else if (k==5) {
         M1 = CalcMean(data1);
         M2 = CalcMean(data2);
@@ -1025,26 +1124,41 @@ function RepANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
         MSSS = SSS / dfs;
         MSE = SSE / (dfb * dfs);
         F = MSSB / MSE; 
-        q_1v2 = (M1 - M2) / (sterror(data1, data2));
-        q_1v3 = (M1 - M3) / (sterror(data1, data3));
-        q_1v4 = (M1 - M4) / (sterror(data1, data4));
-        q_1v5 = (M1 - M5) / (sterror(data1, data5));
-        q_2v3 = (M2 - M3) / (sterror(data2, data3));
-        q_2v4 = (M2 - M4) / (sterror(data2, data4));
-        q_2v5 = (M2 - M5) / (sterror(data2, data5));
-        q_3v4 = (M3 - M4) / (sterror(data3, data4));
-        q_3v5 = (M3 - M5) / (sterror(data3, data5));
-        q_4v5 = (M4 - M5) / (sterror(data4, data5));
-        var p1v2 = TukeyMe(q_1v2, k, (N1-1));
-        var p1v3 = TukeyMe(q_1v3, k, (N1-1));
-        var p1v4 = TukeyMe(q_1v4, k, (N1-1));
-        var p1v5 = TukeyMe(q_1v5, k, (N1-1));
-        var p2v3 = TukeyMe(q_2v3, k, (N1-1));
-        var p2v4 = TukeyMe(q_2v4, k, (N1-1));
-        var p2v5 = TukeyMe(q_2v5, k, (N1-1));
-        var p3v4 = TukeyMe(q_3v4, k, (N1-1));
-        var p3v5 = TukeyMe(q_3v5, k, (N1-1));
-        var p4v5 = TukeyMe(q_4v5, k, (N1-1));
+        q_1v2 = (Math.abs(M1 - M2)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N1)+(1/N2))));
+        q_1v3 = (Math.abs(M1 - M3)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N1)+(1/N3))));
+        q_1v4 = (Math.abs(M1 - M4)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N1)+(1/N4))));
+        q_1v5 = (Math.abs(M1 - M5)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N1)+(1/N5))));
+        q_2v3 = (Math.abs(M2 - M3)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N2)+(1/N3))));
+        q_2v4 = (Math.abs(M2 - M4)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N2)+(1/N4))));
+        q_2v5 = (Math.abs(M2 - M5)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N2)+(1/N5))));
+        q_3v4 = (Math.abs(M3 - M4)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N3)+(1/N4))));
+        q_3v5 = (Math.abs(M3 - M5)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N3)+(1/N5))));
+        q_4v5 = (Math.abs(M4 - M5)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N4)+(1/N5))));
+        var holms = [];
+        var p1v2 = PtoT(q_1v2,N1); holms.append({"name": "p1v2", "p": p1v2, "rank":0});
+        var p1v3 = PtoT(q_1v3,N1); holms.append({"name": "p1v3", "p": p1v3, "rank":0});
+        var p1v4 = PtoT(q_1v4,N1); holms.append({"name": "p1v4", "p": p1v4, "rank":0});
+        var p1v5 = PtoT(q_1v5,N1); holms.append({"name": "p1v5", "p": p1v5, "rank":0});
+        var p2v3 = PtoT(q_2v3,N1); holms.append({"name": "p2v3", "p": p2v3, "rank":0});
+        var p2v4 = PtoT(q_2v4,N1); holms.append({"name": "p2v4", "p": p2v4, "rank":0});
+        var p2v5 = PtoT(q_2v5,N1); holms.append({"name": "p2v5", "p": p2v5, "rank":0});
+        var p3v4 = PtoT(q_3v4,N1); holms.append({"name": "p3v4", "p": p3v4, "rank":0});
+        var p3v5 = PtoT(q_3v5,N1); holms.append({"name": "p3v5", "p": p3v5, "rank":0});
+        var p4v5 = PtoT(q_4v5,N1); holms.append({"name": "p4v5", "p": p4v5, "rank":0});
+        doHolms(holms);
+        for (let i=0; i<holms.length; i++){
+            holms[i].p *= holms[i].rank;
+        }
+        p1v2 = holms[0].p; p1v2 = p1v2.toFixed(2);
+        p1v3 = holms[1].p; p1v3 = p1v3.toFixed(2);
+        p1v4 = holms[2].p; p1v4 = p1v4.toFixed(2);
+        p1v5 = holms[3].p; p1v5 = p1v5.toFixed(2);
+        p2v3 = holms[4].p; p2v3 = p2v3.toFixed(2);
+        p2v4 = holms[5].p; p2v4 = p2v4.toFixed(2);
+        p2v5 = holms[6].p; p2v5 = p2v5.toFixed(2);
+        p3v4 = holms[7].p; p3v4 = p3v4.toFixed(2);
+        p3v5 = holms[8].p; p3v5 = p3v5.toFixed(2);
+        p4v5 = holms[9].p; p4v5 = p4v5.toFixed(2);
     } else if (k==6) {
         M1 = CalcMean(data1);
         M2 = CalcMean(data2);
@@ -1094,50 +1208,70 @@ function RepANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
         MSSS = SSS / dfs;
         MSE = SSE / (dfb * dfs);
         F = MSSB / MSE; 
-        q_1v2 = (M1 - M2) / (sterror(data1, data2));
-        q_1v3 = (M1 - M3) / (sterror(data1, data3));
-        q_1v4 = (M1 - M4) / (sterror(data1, data4));
-        q_1v5 = (M1 - M5) / (sterror(data1, data5));
-        q_1v6 = (M1 - M6) / (sterror(data1, data6));
-        q_2v3 = (M2 - M3) / (sterror(data2, data3));
-        q_2v4 = (M2 - M4) / (sterror(data2, data4));
-        q_2v5 = (M2 - M5) / (sterror(data2, data5));
-        q_2v6 = (M2 - M6) / (sterror(data2, data6));
-        q_3v4 = (M3 - M4) / (sterror(data3, data4));
-        q_3v5 = (M3 - M5) / (sterror(data3, data5));
-        q_3v6 = (M3 - M6) / (sterror(data3, data6));
-        q_4v5 = (M4 - M5) / (sterror(data4, data5));
-        q_4v6 = (M4 - M6) / (sterror(data4, data6));
-        q_5v6 = (M5 - M6) / (sterror(data5, data6));
-        var p1v2 = TukeyMe(q_1v2, k, (N1-1));
-        var p1v3 = TukeyMe(q_1v3, k, (N1-1));
-        var p1v4 = TukeyMe(q_1v4, k, (N1-1));
-        var p1v5 = TukeyMe(q_1v5, k, (N1-1));
-        var p1v6 = TukeyMe(q_1v6, k, (N1-1));
-        var p2v3 = TukeyMe(q_2v3, k, (N1-1));
-        var p2v4 = TukeyMe(q_2v4, k, (N1-1));
-        var p2v5 = TukeyMe(q_2v5, k, (N1-1));
-        var p2v6 = TukeyMe(q_2v6, k, (N1-1));
-        var p3v4 = TukeyMe(q_3v4, k, (N1-1));
-        var p3v5 = TukeyMe(q_3v5, k, (N1-1));
-        var p3v6 = TukeyMe(q_3v6, k, (N1-1));
-        var p4v5 = TukeyMe(q_4v5, k, (N1-1));
-        var p4v6 = TukeyMe(q_4v6, k, (N1-1));
-        var p5v6 = TukeyMe(q_5v6, k, (N1-1));
+        q_1v2 = (Math.abs(M1 - M2)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N1)+(1/N2))));
+        q_1v3 = (Math.abs(M1 - M3)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N1)+(1/N3))));
+        q_1v4 = (Math.abs(M1 - M4)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N1)+(1/N4))));
+        q_1v5 = (Math.abs(M1 - M5)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N1)+(1/N5))));
+        q_1v6 = (Math.abs(M1 - M6)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N1)+(1/N6))));
+        q_2v3 = (Math.abs(M2 - M3)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N2)+(1/N3))));
+        q_2v4 = (Math.abs(M2 - M4)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N2)+(1/N4))));
+        q_2v5 = (Math.abs(M2 - M5)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N2)+(1/N5))));
+        q_2v6 = (Math.abs(M2 - M6)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N2)+(1/N6))));
+        q_3v4 = (Math.abs(M3 - M4)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N3)+(1/N4))));
+        q_3v5 = (Math.abs(M3 - M5)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N3)+(1/N5))));
+        q_3v6 = (Math.abs(M3 - M6)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N3)+(1/N6))));
+        q_4v5 = (Math.abs(M4 - M5)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N4)+(1/N5))));
+        q_4v6 = (Math.abs(M4 - M6)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N4)+(1/N6))));
+        q_5v6 = (Math.abs(M5 - M6)) / ((Math.sqrt(MSE)) * (Math.sqrt((1/N5)+(1/N6))));
+        var holms = [];
+        var p1v2 = PtoT(q_1v2,N1); holms.append({"name": "p1v2", "p": p1v2, "rank":0});
+        var p1v3 = PtoT(q_1v3,N1); holms.append({"name": "p1v3", "p": p1v3, "rank":0});
+        var p1v4 = PtoT(q_1v4,N1); holms.append({"name": "p1v4", "p": p1v4, "rank":0});
+        var p1v5 = PtoT(q_1v5,N1); holms.append({"name": "p1v5", "p": p1v5, "rank":0});
+        var p1v6 = PtoT(q_1v6,N1); holms.append({"name": "p1v6", "p": p1v6, "rank":0});
+        var p2v3 = PtoT(q_2v3,N1); holms.append({"name": "p2v3", "p": p2v3, "rank":0});
+        var p2v4 = PtoT(q_2v4,N1); holms.append({"name": "p2v4", "p": p2v4, "rank":0});
+        var p2v5 = PtoT(q_2v5,N1); holms.append({"name": "p2v5", "p": p2v5, "rank":0});
+        var p2v6 = PtoT(q_2v6,N1); holms.append({"name": "p2v6", "p": p2v6, "rank":0});
+        var p3v4 = PtoT(q_3v4,N1); holms.append({"name": "p3v4", "p": p3v4, "rank":0});
+        var p3v5 = PtoT(q_3v5,N1); holms.append({"name": "p3v5", "p": p3v5, "rank":0});
+        var p3v6 = PtoT(q_3v6,N1); holms.append({"name": "p3v6", "p": p3v6, "rank":0});
+        var p4v5 = PtoT(q_4v5,N1); holms.append({"name": "p4v5", "p": p4v5, "rank":0});
+        var p4v6 = PtoT(q_4v6,N1); holms.append({"name": "p4v6", "p": p4v6, "rank":0});
+        var p5v6 = PtoT(q_5v6,N1); holms.append({"name": "p5v6", "p": p5v6, "rank":0});
+        doHolms(holms);
+        for (let i=0; i<holms.length; i++){
+            holms[i].p *= holms[i].rank;
+        }
+        p1v2 = holms[0].p; p1v2 = p1v2.toFixed(2);
+        p1v3 = holms[1].p; p1v3 = p1v3.toFixed(2);
+        p1v4 = holms[2].p; p1v4 = p1v4.toFixed(2);
+        p1v5 = holms[3].p; p1v5 = p1v5.toFixed(2);
+        p1v6 = holms[4].p; p1v6 = p1v6.toFixed(2);
+        p2v3 = holms[5].p; p2v3 = p2v3.toFixed(2);
+        p2v4 = holms[6].p; p2v4 = p2v4.toFixed(2);
+        p2v5 = holms[7].p; p2v5 = p2v5.toFixed(2);
+        p2v6 = holms[8].p; p2v6 = p2v6.toFixed(2);
+        p3v4 = holms[9].p; p3v4 = p3v4.toFixed(2);
+        p3v5 = holms[10].p; p3v5 = p3v5.toFixed(2);
+        p3v6 = holms[11].p; p3v6 = p3v6.toFixed(2);
+        p4v5 = holms[12].p; p4v5 = p4v5.toFixed(2);
+        p4v6 = holms[13].p; p4v6 = p4v6.toFixed(2);
+        p5v6 = holms[14].p; p5v6 = p5v6.toFixed(2);
     }
     var p = FtoP(k, F, dfs, dfb);
     F = F.toFixed(2);
-    var W2 = SSB / (SST - SSS);
+    var W2 = SSB / (SSB + SSE);
     W2 = W2.toFixed(2);
     var result1 = "";
     var result3 = "";
     var results4 = "";
-    if (W2<.06) {
-        results4 = "Furthermore, there was a small effect size; <i>W<sup>2</i></sup> = " + W2;
-    } else if (W2<0.138) {
-        results4 =  "Furthermore, there was a medium effect size; <i>W<sup>2</i></sup> = " + W2;
-    } else if (W2>=0.138) {
-        results4 =  "Furthermore, there was a large effect size; <i>W<sup>2</i></sup> = " + W2;
+    if (W2<.1) {
+        results4 = "Furthermore, there was a small effect size; <i>η<sup>2</i></sup> = " + W2;
+    } else if (W2<0.35) {
+        results4 =  "Furthermore, there was a medium effect size; <i>η<sup>2</i></sup> = " + W2;
+    } else {
+        results4 =  "Furthermore, there was a large effect size; <i>η<sup>2</i></sup> = " + W2;
     }
     if (p > 0.05) {
         var result1 = "There was no significant difference amongst any of the groups; "
@@ -1154,15 +1288,15 @@ function RepANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
             var result2 = "<i>F</i>[" + dfb + ", " + dfs + "] = " + F + ", <i>p</i> = " + p + ". ";
         }
         if (k==3) {
-            result3 = "The significant differences between specific groups, as tested by a Tukey's HSD post-hoc analysis, is shown below: <br>Group 1 x Group 2: " + p1v2 + "<br>Group 1 x Group 3: " + p1v3 + "<br>Group 2 x Group 3: " + p2v3;
+            result3 = "<br>The significant differences between specific groups, as tested by a Holm post-hoc analysis, is shown below: <br>Group 1 x Group 2: <i>p</i> = " + p1v2 + "<br>Group 1 x Group 3: <i>p</i> = " + p1v3 + "<br>Group 2 x Group 3: <i>p</i> = " + p2v3;
         } else if (k==4) {
-            result3 = "The significant differences between specific groups, as tested by a Tukey's HSD post-hoc analysis, is shown below: <br>Group 1 x Group 2: " + p1v2 + "<br>Group 1 x Group 3: " + p1v3 + "<br>Group 1 x Group 4: " + p1v4 + "<br>Group 2 x Group 3: " + p2v3 + "<br>Group 2 x Group 4: " + p2v4 + "<br>Group 3 x Group 4: " + p3v4;
+            result3 = "<br>The significant differences between specific groups, as tested by a Holm post-hoc analysis, is shown below: <br>Group 1 x Group 2: <i>p</i> = " + p1v2 + "<br>Group 1 x Group 3: <i>p</i> = " + p1v3 + "<br>Group 1 x Group 4: <i>p</i> = " + p1v4 + "<br>Group 2 x Group 3: <i>p</i> = " + p2v3 + "<br>Group 2 x Group 4: <i>p</i> = " + p2v4 + "<br>Group 3 x Group 4: <i>p</i> = " + p3v4;
         } else if (k==5) {
-            result3 = "The significant differences between specific groups, as tested by a Tukey's HSD post-hoc analysis, is shown below: <br>Group 1 x Group 2: " + p1v2 + "<br>Group 1 x Group 3: " + p1v3 +  "<br>Group 1 x Group 4: " + p1v4 + "<br>Group 1 x Group 5: " + p1v5 + "<br>Group 2 x Group 3: " + p2v3 + "<br>Group 2 x Group 4: " + p2v4 + "<br>Group 2 x Group 5: " + p2v5 + "<br>Group 3 x Group 4: " + p3v4 + "<br>Group 3 x Group 5: " + p3v5 + "<br>Group 4 x Group 5: " + p4v5;
+            result3 = "<br>The significant differences between specific groups, as tested by a Holm post-hoc analysis, is shown below: <br>Group 1 x Group 2: <i>p</i> = " + p1v2 + "<br>Group 1 x Group 3: <i>p</i> = " + p1v3 +  "<br>Group 1 x Group 4: <i>p</i> = " + p1v4 + "<br>Group 1 x Group 5: <i>p</i> = " + p1v5 + "<br>Group 2 x Group 3: <i>p</i> = " + p2v3 + "<br>Group 2 x Group 4: <i>p</i> = " + p2v4 + "<br>Group 2 x Group 5: <i>p</i> = " + p2v5 + "<br>Group 3 x Group 4: <i>p</i> = " + p3v4 + "<br>Group 3 x Group 5: <i>p</i> = " + p3v5 + "<br>Group 4 x Group 5: <i>p</i> = " + p4v5;
         } else if (k==6) {
-            result3 = "The significant differences between specific groups, as tested by a Tukey's HSD post-hoc analysis, is shown below: <br>Group 1 x Group 2: " + p1v2 + "<br>Group 1 x Group 3: " + p1v3 +  "<br>Group 1 x Group 4: " + p1v4 + "<br>Group 1 x Group 5: " + p1v5 + "<br>Group 1 x Group 6: " + p1v6 + "<br>Group 2 x Group 3: " + p2v3 + "<br>Group 2 x Group 4: " + p2v4 + "<br>Group 2 x Group 5: " + p2v5 + "<br>Group 2 x Group 6: " + p2v6 + "<br>Group 3 x Group 4: " + p3v4 + "<br>Group 3 x Group 5: " + p3v5 + "<br>Group 3 x Group 6: " + p3v6 + "<br>Group 4 x Group 5: " + p4v5 + "<br>Group 4 x Group 6: " + p4v6 + "<br>Group 5 x Group 6: " + p5v6;
+            result3 = "<br>The significant differences between specific groups, as tested by a Holm post-hoc analysis, is shown below: <br>Group 1 x Group 2: <i>p</i> = " + p1v2 + "<br>Group 1 x Group 3: <i>p</i> = " + p1v3 +  "<br>Group 1 x Group 4: <i>p</i> = " + p1v4 + "<br>Group 1 x Group 5: <i>p</i> = " + p1v5 + "<br>Group 1 x Group 6: <i>p</i> = " + p1v6 + "<br>Group 2 x Group 3: <i>p</i> = " + p2v3 + "<br>Group 2 x Group 4: <i>p</i> = " + p2v4 + "<br>Group 2 x Group 5: <i>p</i> = " + p2v5 + "<br>Group 2 x Group 6: <i>p</i> = " + p2v6 + "<br>Group 3 x Group 4: <i>p</i> = " + p3v4 + "<br>Group 3 x Group 5: <i>p</i> = " + p3v5 + "<br>Group 3 x Group 6: <i>p</i> = " + p3v6 + "<br>Group 4 x Group 5: <i>p</i> = " + p4v5 + "<br>Group 4 x Group 6: <i>p</i> = " + p4v6 + "<br>Group 5 x Group 6: <i>p</i> = " + p5v6;
         }
-        results_of_test = result1 + result2 + results4 + "<br>" + result3;
+        results_of_test = result1 + result2 + results4 + "<br>" + result3 + "<br><p style='font-size: 10'> Holm <i>p</i> values are rounded to 2 decimal places, so interpret <i>p</i> = 0 as <i>p</i> < 0.01 and <i>p</i> = 1 as <i>p</i> > 0.99</p>";
     }
     document.getElementById("explain_bun").innerHTML = deets;
     document.getElementById("results_bun").innerHTML = results_of_test;

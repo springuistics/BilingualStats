@@ -911,7 +911,7 @@ function StANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
         results_of_test = result1 + result2 + results4 + "<br>" + result3;
     }
     document.getElementById("explain_bun").innerHTML = deets;
-    document.getElementById("results_bun").innerHTML = results_of_test;
+    document.getElementById("results_bun").innerHTML = results_of_test + "<br><p style='font-size: 10'> Tukey's <i>p</i> 値は小数点2位まで計算されているため、<i>p</i> = 0 は <i>p</i> < 0.01、 <i>p</i> = 1 は <i>p</i> > 0.99　と見なしてください</p>";
     
 }
 
@@ -1296,7 +1296,7 @@ function RepANOVA(k, deets, data1, data2, data3, data4, data5, data6) {
         } else if (k==6) {
             result3 = "）ので、事後解析としてHolm法の検定でグループ間の差を計算しました。その結果： <br>Group 1 x Group 2: <i>p</i> = " + p1v2 + "<br>Group 1 x Group 3: <i>p</i> = " + p1v3 + "<br>Group 1 x Group 4: <i>p</i> = " + p1v4 + "<br>Group 1 x Group 5: <i>p</i> = " + p1v5 + "<br>Group 1 x Group 6: <i>p</i> = " + p1v6 + "<br>Group 2 x Group 3: <i>p</i> = " + p2v3 + "<br>Group 2 x Group 4: <i>p</i> = " + p2v4 + "<br>Group 2 x Group 5: <i>p</i> = " + p2v5 + "<br>Group 2 x Group 6: <i>p</i> = " + p2v6 + "<br>Group 3 x Group 4: <i>p</i> = " + p3v4 + "<br>Group 3 x Group 5: <i>p</i> = " + p3v5 + "<br>Group 3 x Group 6: <i>p</i> = " + p3v6 + "<br>Group 4 x Group 5: <i>p</i> = " + p4v5 + "<br>Group 4 x Group 6: <i>p</i> = " + p4v6 + "<br>Group 5 x Group 6: <i>p</i> = " + p5v6;
         }
-        results_of_test = result1 + result2 + results4 + "<br>" + result3;
+        results_of_test = result1 + result2 + results4 + "<br>" + result3 + "<br><p style='font-size: 10'> Holm <i>p</i> 値は小数点2位まで計算されているため、<i>p</i> = 0 は <i>p</i> < 0.01、 <i>p</i> = 1 は <i>p</i> > 0.99　と見なしてください</p>";
     }
     document.getElementById("explain_bun").innerHTML = deets;
     document.getElementById("results_bun").innerHTML = results_of_test;

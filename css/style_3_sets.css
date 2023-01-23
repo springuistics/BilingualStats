@@ -198,3 +198,27 @@ h1, h2, h3, p, a {
     text-align: center;
     width: 80%;
 }
+
+.data_table {
+    width: 80%;
+    border-collapse: collapse;
+    margin: auto;
+}
+.data_table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    background-color:rgb(102, 0, 0);
+    color: white;
+}
+.data_table td {
+    text-align: right;
+    background-color: rgb(233, 255, 205);
+}
+.data_table tr:hover {
+    background-color: #ddd !important;
+}
+.data_table th, td {
+    border: 2px solid black;
+    padding: 8px;
+}

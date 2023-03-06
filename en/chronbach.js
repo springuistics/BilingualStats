@@ -1027,7 +1027,7 @@ function Begin(k, data1, data2, data3, data4, data5, data6, data7, data8, data9,
         let v7_6 = document.createElement('td');
         v7_6.innerHTML = "<i>r</i> = " + r5v6.toFixed(3);
         let v7_7 = document.createElement('td');
-        v6_7.innerHTML = "/NA/";
+        v7_7.innerHTML = "/NA/";
         let v7_8 = document.createElement('td');
         v7_8.innerHTML = "--";
         row_7.appendChild(v7_1); row_7.appendChild(v7_2); row_7.appendChild(v7_3); row_7.appendChild(v7_4); row_7.appendChild(v7_5);
@@ -1204,7 +1204,7 @@ function Begin(k, data1, data2, data3, data4, data5, data6, data7, data8, data9,
         let v7_6 = document.createElement('td');
         v7_6.innerHTML = "<i>r</i> = " + r5v6.toFixed(3);
         let v7_7 = document.createElement('td');
-        v6_7.innerHTML = "/NA/";
+        v7_7.innerHTML = "/NA/";
         let v7_8 = document.createElement('td');
         v7_8.innerHTML = "--";
         let v7_9 = document.createElement('td');
@@ -1255,7 +1255,7 @@ function Begin(k, data1, data2, data3, data4, data5, data6, data7, data8, data9,
         v9_8.innerHTML = "<i>r</i> = " + r7v8.toFixed(3);
         let v9_9 = document.createElement('td');
         v9_9.innerHTML = "/NA/";
-        row_9.appendChild(v9_1); row_9.appendChild(v9_2); row_9.appendChild(v9_3); row_9.appendChild(v9_4); row_8.appendChild(v9_5);
+        row_9.appendChild(v9_1); row_9.appendChild(v9_2); row_9.appendChild(v9_3); row_9.appendChild(v9_4); row_9.appendChild(v9_5);
         row_9.appendChild(v9_6); row_9.appendChild(v9_7); row_9.appendChild(v9_8); row_9.appendChild(v9_9);
         thead.appendChild(row_9);
     } else if (k == 9){
@@ -1421,7 +1421,7 @@ function Begin(k, data1, data2, data3, data4, data5, data6, data7, data8, data9,
         let v7_6 = document.createElement('td');
         v7_6.innerHTML = "<i>r</i> = " + r5v6.toFixed(3);
         let v7_7 = document.createElement('td');
-        v6_7.innerHTML = "/NA/";
+        v7_7.innerHTML = "/NA/";
         let v7_8 = document.createElement('td');
         v7_8.innerHTML = "--";
         let v7_9 = document.createElement('td');
@@ -1478,7 +1478,7 @@ function Begin(k, data1, data2, data3, data4, data5, data6, data7, data8, data9,
         v9_9.innerHTML = "/NA/";
         let v9_10 = document.createElement('td');
         v9_10.innerHTML = "--";
-        row_9.appendChild(v9_1); row_9.appendChild(v9_2); row_9.appendChild(v9_3); row_9.appendChild(v9_4); row_8.appendChild(v9_5);
+        row_9.appendChild(v9_1); row_9.appendChild(v9_2); row_9.appendChild(v9_3); row_9.appendChild(v9_4); row_9.appendChild(v9_5);
         row_9.appendChild(v9_6); row_9.appendChild(v9_7); row_9.appendChild(v9_8); row_9.appendChild(v9_9); row_9.appendChild(v9_10);
         thead.appendChild(row_9);
         //ninth data row
@@ -1681,7 +1681,7 @@ function Begin(k, data1, data2, data3, data4, data5, data6, data7, data8, data9,
         let v7_6 = document.createElement('td');
         v7_6.innerHTML = "<i>r</i> = " + r5v6.toFixed(3);
         let v7_7 = document.createElement('td');
-        v6_7.innerHTML = "/NA/";
+        v7_7.innerHTML = "/NA/";
         let v7_8 = document.createElement('td');
         v7_8.innerHTML = "--";
         let v7_9 = document.createElement('td');
@@ -1744,7 +1744,7 @@ function Begin(k, data1, data2, data3, data4, data5, data6, data7, data8, data9,
         v9_10.innerHTML = "--";
         let v9_11 = document.createElement('td');
         v9_11.innerHTML = "--";
-        row_9.appendChild(v9_1); row_9.appendChild(v9_2); row_9.appendChild(v9_3); row_9.appendChild(v9_4); row_8.appendChild(v9_5);
+        row_9.appendChild(v9_1); row_9.appendChild(v9_2); row_9.appendChild(v9_3); row_9.appendChild(v9_4); row_9.appendChild(v9_5);
         row_9.appendChild(v9_6); row_9.appendChild(v9_7); row_9.appendChild(v9_8); row_9.appendChild(v9_9); row_9.appendChild(v9_10); row_9.appendChild(v9_11);
         thead.appendChild(row_9);
         //ninth data row

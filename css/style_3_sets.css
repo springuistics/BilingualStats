@@ -222,3 +222,7 @@ h1, h2, h3, p, a {
     border: 2px solid black;
     padding: 8px;
 }
+
+.picture:hover {
+    opacity: 0.5;
+}

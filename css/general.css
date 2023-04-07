@@ -185,3 +185,7 @@ h1, h2, h3, p, a {
 .adjustobox {
     width: 60%;
 }
+
+.picture:hover {
+    opacity: 0.5;
+}

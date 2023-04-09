@@ -26,6 +26,12 @@ function Calculate() {
     var temp2 = document.getElementById("data_set_2").value;
     var dataset1 = temp.split("\n");
     var dataset2 = temp2.split("\n");
+    let d1checker = temp.slice(-1);
+    let d2checker = temp.slice(-1);
+    if (d1checker == "" && d2checker == "") {
+        dataset1.pop();
+        dataset2.pop();
+    }
     if (dataset1.includes("") || dataset2.includes("") || dataset1.includes("NaN") || dataset2.includes("NaN")) {
         document.getElementById("error_text").innerHTML = "You have null values (lines with no values) or non-numbers in your data set. Please delete all null values, check to make sure there are no non-numbers in your data set, and then try again.";
         document.getElementById('error_text').style.display = "inline";

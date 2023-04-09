@@ -26,6 +26,12 @@ function Calculate() {
     var temp2 = document.getElementById("data_set_2").value;
     var dataset1 = temp.split("\n");
     var dataset2 = temp2.split("\n");
+    let d1checker = dataset1.slice(-1);
+    let d2checker = dataset2.slice(-1);
+    if (d1checker == "" && d2checker == "") {
+        dataset1.pop();
+        dataset2.pop();
+    }
     if (dataset1.includes("") || dataset2.includes("") || dataset1.includes("NaN") || dataset2.includes("NaN")) {
         document.getElementById("error_text").innerHTML = "データが数字ではない行、あるいはデータのない行があります。データのない行は全て削除し、全てのデータが半角数字になっていることを確認してください。";
         document.getElementById('error_text').style.display = "inline";

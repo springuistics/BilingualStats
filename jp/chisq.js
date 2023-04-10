@@ -44,8 +44,8 @@ function SetUp() {
                 let data = document.createElement("input");
                 data.type = "text";
                 data.id = "dataset_k" + j + "_g" + i;
-                data.classname = "dataset";
-                data.placeholder = "Group " + (i+1) + "のAnswer " + (j+1) + " の総数を入力";
+                data.classname = "dataset_class";
+                data.placeholder = "Group " + (i+1) + "のAnswer " + (j+1) + " の総数";
                 row.appendChild(data);
             }
             thead.appendChild(row);

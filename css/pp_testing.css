@@ -80,10 +80,15 @@ h1, h2, h3, p, a {
     text-align: center;
 }
 #error_text {
-    font-size: 20px;
+    font-size: large;
     font-weight: bold;
     color: rgb(199, 0, 0);
-    margin: auto;
+    border-left: 6px solid red;
+    margin: 2px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 2px;
+    background-color: rgb(235, 200, 200);
 }
 
 #rules {
@@ -133,16 +138,6 @@ td {
     text-align: center;
 }
 
-#activate #button {
-    width: 200px;
-    height: 35px;
-    font-size: 20px;
-    background-color: blue;
-    border: 3px;
-    border-style: outset;
-    color: white;
-}
-
 #results {
     margin: auto;
     width: 90%;
@@ -167,4 +162,30 @@ td {
     margin: auto;
     text-align: center;
     width: 80%;
+}
+
+.picture:hover {
+    opacity: 0.5;
+}
+
+.txtarea {
+    border: 4px solid rgb(0, 0, 154);
+    border-radius: 10px;
+}
+.txtarea:focus{
+    background-color: rgb(210, 229, 245);
+    outline: 2px solid aqua;
+}
+
+.final_button {
+    width: 200px;
+    height: 35px;
+    font-size: 20px;
+    background-color: blue;
+    border: 3px;
+    border-style: outset;
+    color: white;
+}
+.final_button:hover{
+    background-color: rgb(141, 141, 239);
 }

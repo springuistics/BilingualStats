@@ -15,15 +15,19 @@ function SetUp() {
     if (!pair_c1) {
         document.getElementById('error_text').innerHTML = "対応のあるデータかどうかを選んでください。説明が必要な場合はマウスポインターを質問の上に乗せてください。"
         document.getElementById('error_text').style.display = "inline";
+        document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
     } else if (!ord_c1) {
         document.getElementById("error_text").innerHTML = "データは全て連続データかどうかを選んでください。説明が必要な場合はマウスポインターを質問の上に乗せてください。"
         document.getElementById('error_text').style.display = "inline";
+        document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
     } else if (k < 3) {
         document.getElementById("error_text").innerHTML = "３～６の数字を入力してください。"
         document.getElementById('error_text').style.display = "inline";
+        document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
     } else if (k > 6) {
         document.getElementById("error_text").innerHTML = "本アプリは6組までしか対応できません。"
         document.getElementById('error_text').style.display = "inline";
+        document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
     } else {
         document.getElementById('button').style.display = "inline";
         document.getElementById('datasets').style.display = "inline";
@@ -85,9 +89,14 @@ function Calculate() {
         let name = "dataset_"+n;
         let temp = document.getElementById(name).value;
         let prerealdata = temp.split("\n");
+        let d1checker = prerealdata.slice(-1);
+        if (d1checker == "") {
+          prerealdata.pop();
+          }
         if (prerealdata.includes("") || prerealdata.includes("NaN")) {
             document.getElementById("error_text").innerHTML = (n+1) + "組にはデータが数字ではない行、あるいはデータのない行があります。データのない行は全て削除し、全てのデータが半角数字になっていることを確認してください。";
             document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
         } else {
             function numberify(set_o_data) {
                 temp_arry = [];
@@ -101,6 +110,7 @@ function Calculate() {
             if (realdata.length < 6) {
             document.getElementById("error_text").innerHTML = "適切な結果を得るには、それぞれの組に少なくとも6つのデータが必要です。" + (n+1) + "組のデータ量が足りません。データを確認し、必要に応じてより多くのデータを集めてください。";
             document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
         } else {return realdata;}
     }}
     if (k==3) {
@@ -108,8 +118,9 @@ function Calculate() {
         if (pair_check == "yes"){
             if (data_set1.length !== data_set2.length) {
             document.getElementById("error_text").innerHTML = "組に異なる数のデータが入力されています（対応のあるデータは、全組に同じ数のデータを含みます）。それぞれの組に同数のデータが入っているかを確認し、もう一度試してみてください。";
-            document.getElementById('error_text').style.display = "inline";}
-            else {Begin(k, data_set1, data_set2, data_set3)}
+            document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
+          } else {Begin(k, data_set1, data_set2, data_set3)}
         }else {
             Begin(k, data_set1, data_set2, data_set3);
         }
@@ -119,8 +130,9 @@ function Calculate() {
         if (pair_check == "yes"){
             if (data_set1.length !== data_set2.length || data_set1.length !== data_set3.length || data_set1.length !== data_set4.length) {
             document.getElementById("error_text").innerHTML = "組に異なる数のデータが入力されています（対応のあるデータは、全組に同じ数のデータを含みます）。それぞれの組に同数のデータが入っているかを確認し、もう一度試してみてください。";
-            document.getElementById('error_text').style.display = "inline";}
-            else {Begin(k, data_set1, data_set2, data_set3, data_set4)}
+            document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
+          } else {Begin(k, data_set1, data_set2, data_set3, data_set4)}
         } else {
             Begin(k, data_set1, data_set2, data_set3, data_set4);
         }
@@ -130,8 +142,9 @@ function Calculate() {
         if (pair_check == "yes") {
             if(data_set1.length !== data_set2.length || data_set1.length !== data_set3.length || data_set1.length !== data_set4.length || data_set1.length !== data_set5.length) {
             document.getElementById("error_text").innerHTML = "組に異なる数のデータが入力されています（対応のあるデータは、全組に同じ数のデータを含みます）。それぞれの組に同数のデータが入っているかを確認し、もう一度試してみてください。";
-            document.getElementById('error_text').style.display = "inline";}
-            else {Begin(k, data_set1, data_set2, data_set3, data_set4, data_set5)}
+            document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
+          } else {Begin(k, data_set1, data_set2, data_set3, data_set4, data_set5)}
         } else {
             Begin(k, data_set1, data_set2, data_set3, data_set4, data_set5);
         }
@@ -141,8 +154,9 @@ function Calculate() {
         if (pair_check == "yes") {
             if (data_set1.length !== data_set2.length || data_set1.length !== data_set3.length || data_set1.length !== data_set4.length || data_set1.length !== data_set5.length || data_set1.length !== data_set6.length) {
             document.getElementById("error_text").innerHTML = "組に異なる数のデータが入力されています（対応のあるデータは、全組に同じ数のデータを含みます）。それぞれの組に同数のデータが入っているかを確認し、もう一度試してみてください。";
-            document.getElementById('error_text').style.display = "inline";}
-            else {Begin(k, data_set1, data_set2, data_set3, data_set4, data_set5, data_set6)}
+            document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
+          } else {Begin(k, data_set1, data_set2, data_set3, data_set4, data_set5, data_set6)}
         } else {
             Begin(k, data_set1, data_set2, data_set3, data_set4, data_set5, data_set6);
         }

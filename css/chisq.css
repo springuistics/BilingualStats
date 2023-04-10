@@ -2,6 +2,8 @@ h1, h2, h3, p, a {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
+
+
 #Title {
     margin:auto;
     padding: 20px;
@@ -111,7 +113,6 @@ h1, h2, h3, p, a {
     margin-top: 60px;
 }
 
-
 #datasets #d_container {
     width: 90%;
     margin-top: 10px;
@@ -126,6 +127,16 @@ h1, h2, h3, p, a {
     padding: 5px;
     text-align: center;
 }
+#datasets input{
+    width: 180px;
+    text-align: right;
+    margin-top: 8px;
+    padding-top: 8px;
+}
+#datasets input:focus{
+    background-color: rgb(210, 229, 245);
+    outline: 2px solid rgb(75, 254, 81);
+}
 .data_table th {
     padding-top: 12px;
     padding-bottom: 12px;
@@ -136,12 +147,6 @@ h1, h2, h3, p, a {
     padding: 8px;
     vertical-align: middle;
     margin : auto;
-}
-.dataset {
-    width: 30px;
-    text-align: right;
-    margin-top: 8px;
-    padding-top: 8px;
 }
 
 #k_no {
@@ -156,15 +161,6 @@ h1, h2, h3, p, a {
     text-align: center;
 }
 
-.button {
-    width: 200px;
-    height: 35px;
-    font-size: 20px;
-    background-color: blue;
-    border: 3px;
-    border-style: outset;
-    color: white;
-}
 #SetUp {
     margin-bottom: 20px;
 }
@@ -179,12 +175,20 @@ h1, h2, h3, p, a {
 #reset {
     text-align: center;
     margin: auto;
+    width: 200px;
+    height: 35px;
+    font-size: 20px;
     background-color: rgb(139, 0, 0); 
+    border: 3px;
+    border-style: outset;
+    color: white;
+}
+#reset:hover{
+    background-color: rgb(209, 119, 119); 
 }
 
 #explain_bun {
     margin: auto;
-
     padding-top: 10px;
     font-weight: bold; font-size: 16px; 
     color: rgb(217, 255, 253);
@@ -205,4 +209,17 @@ h1, h2, h3, p, a {
 
 .picture:hover {
     opacity: 0.5;
+}
+
+.final_button {
+    width: 200px;
+    height: 35px;
+    font-size: 20px;
+    background-color: blue;
+    border: 3px;
+    border-style: outset;
+    color: white;
+}
+.final_button:hover{
+    background-color: rgb(141, 141, 239);
 }

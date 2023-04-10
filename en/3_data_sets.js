@@ -15,15 +15,19 @@ function SetUp() {
     if (!pair_c1) {
         document.getElementById('error_text').innerHTML = "Please select whether or not the data is paired. For an explanation, mouse over the question."
         document.getElementById('error_text').style.display = "inline";
+        document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
     } else if (!ord_c1) {
         document.getElementById("error_text").innerHTML = "Please select whether or not the data is continuous. For an explanation, mouse over the question."
         document.getElementById('error_text').style.display = "inline";
+        document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
     } else if (k < 3) {
         document.getElementById("error_text").innerHTML = "You must select a number between 3 and 6."
         document.getElementById('error_text').style.display = "inline";
+        document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
     } else if (k > 6) {
         document.getElementById("error_text").innerHTML = "Sorry, this program only allows up to six data sets."
         document.getElementById('error_text').style.display = "inline";
+        document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
     } else {
         document.getElementById('button').style.display = "inline";
         document.getElementById('datasets').style.display = "inline";
@@ -85,9 +89,14 @@ function Calculate() {
         let name = "dataset_"+n;
         let temp = document.getElementById(name).value;
         let prerealdata = temp.split("\n");
+        let d1checker = prerealdata.slice(-1);
+        if (d1checker == "") {
+          prerealdata.pop();
+          }
         if (prerealdata.includes("") || prerealdata.includes("NaN")) {
             document.getElementById("error_text").innerHTML = "You have null values (lines with no values) or non-numbers in data set " + (n+1) + ". Please delete all null values, check to make sure there are no non-numbers in your data set, and then try again.";
             document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
         } else {
             function numberify(set_o_data) {
                 temp_arry = [];
@@ -101,6 +110,7 @@ function Calculate() {
             if (realdata.length < 6) {
                 document.getElementById("error_text").innerHTML = "You need at least 6 data points in each data set in order for any proper conclusion to be drawn about your data. Data set " + (n+1) + " does not have enough data points. Please check your data sets or collect more data if necessary.";
                 document.getElementById('error_text').style.display = "inline";
+                document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
             } else {return realdata;}
     }}
     if (k==3) {
@@ -108,8 +118,9 @@ function Calculate() {
         if (pair_check == "yes"){
             if (data_set1.length != data_set2.length || data_set1.length != data_set3.length || data_set2.length != data_set3.length) {
             document.getElementById("error_text").innerHTML = "Paired data sets should contain the same number of values (i.e., participants, instances, etc.). You have selected paired data, but your data sets have different numbers of values. Please check, amend as necessary and retry.";
-            document.getElementById('error_text').style.display = "inline";}
-            else {Begin(k, data_set1, data_set2, data_set3)}
+            document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
+          } else {Begin(k, data_set1, data_set2, data_set3)}
         } else {
             Begin(k, data_set1, data_set2, data_set3);
         }
@@ -119,9 +130,10 @@ function Calculate() {
         if (pair_check == "yes") {
             if (data_set1.length !== data_set2.length || data_set1.length !== data_set3.length || data_set1.length !== data_set4.length || data_set2.length !== data_set3.length || data_set2.length !== data_set4.length || data_set3.length !== data_set4.length){
                 document.getElementById("error_text").innerHTML = "Paired data sets should contain the same number of values (i.e., participants, instances, etc.). You have selected paired data, but your data sets have different numbers of values. Please check, amend as necessary and retry.";
-                document.getElementById('error_text').style.display = "inline";}
-                else {Begin(k, data_set1, data_set2, data_set3, data_set4)}
-            } else {
+                document.getElementById('error_text').style.display = "inline";
+                document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
+            } else {Begin(k, data_set1, data_set2, data_set3, data_set4)}
+        } else {
             Begin(k, data_set1, data_set2, data_set3, data_set4);
         }
     }
@@ -130,8 +142,9 @@ function Calculate() {
         if (pair_check == "yes"){
             if (data_set1.length !== data_set2.length || data_set1.length !== data_set3.length || data_set1.length !== data_set4.length || data_set1.length !== data_set5.length) {
             document.getElementById("error_text").innerHTML = "Paired data sets should contain the same number of values (i.e., participants, instances, etc.). You have selected paired data, but your data sets have different numbers of values. Please check, amend as necessary and retry.";
-            document.getElementById('error_text').style.display = "inline";}
-            else {Begin(k, data_set1, data_set2, data_set3, data_set4, data_set5)}
+            document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
+          } else {Begin(k, data_set1, data_set2, data_set3, data_set4, data_set5)}
         } else {
             Begin(k, data_set1, data_set2, data_set3, data_set4, data_set5);
         }
@@ -141,8 +154,9 @@ function Calculate() {
         if (pair_check == "yes") {
             if (data_set1.length !== data_set2.length && data_set1.length !== data_set3.length && data_set1.length !== data_set4.length && data_set1.length !== data_set5.length && data_set1.length !== data_set6.length) {
             document.getElementById("error_text").innerHTML = "Paired data sets should contain the same number of values (i.e., participants, instances, etc.). You have selected paired data, but your data sets have different numbers of values. Please check, amend as necessary and retry.";
-            document.getElementById('error_text').style.display = "inline";}
-            else {Begin(k, data_set1, data_set2, data_set3, data_set4, data_set5, data_set6)}
+            document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
+          } else {Begin(k, data_set1, data_set2, data_set3, data_set4, data_set5, data_set6)}
         } else {
             Begin(k, data_set1, data_set2, data_set3, data_set4, data_set5, data_set6);
         }

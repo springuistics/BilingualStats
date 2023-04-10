@@ -21,9 +21,14 @@ function Calculate() {
         else if (n==4) {foruser = "対照群の事後データ"}
         let temp = document.getElementById(name).value;
         let prerealdata = temp.split("\n");
+        let d1checker = prerealdata.slice(-1);
+        if (d1checker == "") {
+        prerealdata.pop();
+        }
         if (prerealdata.includes("") || prerealdata.includes("NaN")) {
             document.getElementById("error_text").innerHTML = foruser + "には数字ではない行、あるいはデータのない行があります。データのない行は全て削除し、全てのデータが半角数字になっていることを確認してください。";
             document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
         } else {
             function numberify(set_o_data) {
                 temp_arry = [];
@@ -37,15 +42,18 @@ function Calculate() {
             if (realdata.length < 6) {
             document.getElementById("error_text").innerHTML = "適切な結果を得るには、それぞれの組に少なくとも6つのデータが必要です。" + n + "組のデータ量が足りません。データを確認し、必要に応じてより多くのデータを集めてください。";
             document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
         } else {return realdata;}
     }}
     g1pre = SetDataSet(1); g1post = SetDataSet(2); g2pre = SetDataSet(3); g2post = SetDataSet(4); 
     if (g1pre.length != g1post.length) {
         document.getElementById("error_text").innerHTML = "実験群の事前・事後データに異なる数のデータ（行）が入力されています。事前・事後データに同数のデータが入っているかを確認し、もう一度試してみてください。";
         document.getElementById('error_text').style.display = "inline";
+        document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
     } else if (g2pre.length != g2post.length) {
         document.getElementById("error_text").innerHTML = "対象群（コントロール・グループ）の事前・事後データに異なる数のデータ（行）が入力されています。事前・事後データに同数のデータが入っているかを確認し、もう一度試してみてください。";
         document.getElementById('error_text').style.display = "inline";
+        document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
     } else {
     g1pre.forEach(element => {
         all.push(element);

@@ -7,7 +7,7 @@
 <body>
     <script src="chisq.js"></script>
     <div id="langauge_bar">
-        <div style="text-align:left; margin-top: 2px; margin-left: 10px; position:absolute"><a href="../index_jp.html"><img src="../css/back.png" alt="index"></a></div>
+        <div style="text-align:left; margin-top: 2px; margin-left: 10px; position:absolute"><a href="../index_jp.html"><img class="picture" src="../css/back.png" alt="index"></a></div>
         <p id="lang_bun">言語設定:</p>
         <select id="lang_s" onchange="L_Change()">
             <option value="jp">日本語</option>
@@ -38,10 +38,10 @@
             </div>
         </div>
     </div>
-    <p id="error_text" style="display: none">Error will appear here.</p>
+    <div id="error_text" style="display: none"><p>Error will appear here.</p></div>
     <p id="small_text">*マウスポインターを質問の上に乗せると、説明が表示されます</p>
     <br>
-    <button id="SetUp" class="button" onclick="SetUp()">データ入力開始</button>
+    <button id="SetUp" class="final_button" onclick="SetUp()">データ入力開始</button>
     <br>
     </div>
     <div id="datasets" style="display: none">
@@ -50,7 +50,7 @@
         <p>*本検定では、「0」を入力してはいけない</p>
         <div id="jesus"></div>
         <div id="activate">
-            <button id="button" class="button" style="display: none" onclick="Calculate()">計算</button>
+            <button id="button" class="final_button" style="display: none" onclick="Calculate()">計算</button>
         </div>
         <br>
         </div>
@@ -58,7 +58,7 @@
     <div id="results">
         <p id="explain_bun">利用された検定の詳細はここに書かれます</p>
         <p id="results_bun">結果はここに書かれます</p>
-        <button id="reset" class="button" style="display: none" onclick="Reset()">Reset!</button>
+        <button id="reset" style="display: none" onclick="Reset()">Reset!</button>
         <br>
     </div>
     <div id="Citation">

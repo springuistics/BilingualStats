@@ -21,9 +21,14 @@ function Calculate() {
         else if (n==4) {foruser = "group 2 'post' data set"}
         let temp = document.getElementById(name).value;
         let prerealdata = temp.split("\n");
+        let d1checker = prerealdata.slice(-1);
+        if (d1checker == "") {
+        prerealdata.pop();
+        }
         if (prerealdata.includes("") || prerealdata.includes("NaN")) {
             document.getElementById("error_text").innerHTML = "You have null values (lines with no values) or non-numbers in the " + foruser + ". Please delete all null values, check to make sure there are no non-numbers in your data set, and then try again.";
             document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "An error has occurred. Please see the error message above.";
         } else {
             function numberify(set_o_data) {
                 temp_arry = [];
@@ -37,15 +42,18 @@ function Calculate() {
             if (realdata.length < 6) {
             document.getElementById("error_text").innerHTML = "You need at least 6 data points in each data set in order for any proper conclusion to be drawn about your data. Data set " + n + " does not have enough data points. Please check your data sets or collect more data if necessary.";
             document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "An error has occurred. Please see the error message above.";
             } else {return realdata;}}
     }
     g1pre = SetDataSet(1); g1post = SetDataSet(2); g2pre = SetDataSet(3); g2post = SetDataSet(4); 
     if (g1pre.length != g1post.length) {
         document.getElementById("error_text").innerHTML = "Groups need to have the same number of data points in the pre- and post-test data sets. Currently, the experimental group has a different number of data points in the pre- and post-test data fields.";
         document.getElementById('error_text').style.display = "inline";
+        document.getElementById('explain_bun').innerHTML = "An error has occurred. Please see the error message above.";
     } else if (g2pre.length != g2post.length) {
         document.getElementById("error_text").innerHTML = "Groups need to have the same number of data points in the pre- and post-test data sets. Currently, the control/comparison group has a different number of data points in the pre- and post-test data fields.";
         document.getElementById('error_text').style.display = "inline";
+        document.getElementById('explain_bun').innerHTML = "An error has occurred. Please see the error message above.";
     } else {
     g1pre.forEach(element => {
         all.push(element);

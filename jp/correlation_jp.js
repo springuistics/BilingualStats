@@ -13,14 +13,22 @@ function Calculate() {
     if (!ord_c1) {
         document.getElementById('error_text').innerHTML = "データは全て連続データかどうかを選んでください。説明が必要な場合はマウスポインターを質問の上に乗せてください。"
         document.getElementById('error_text').style.display = "inline";
+        document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
     } else {
     var temp = document.getElementById("data_set_1").value;
     var temp2 = document.getElementById("data_set_2").value;
-    var predata_set1 = temp.split("\n")
-    var predata_set2 = temp2.split("\n")
-    if (predata_set1.includes("") || predata_set2.includes("") || predata_set1.includes("NaN") || predata_set2.includes("NaN")) {
+    var predata_set1 = temp.split("\n");
+    var predata_set2 = temp2.split("\n");
+    let d1checker = predata_set1.slice(-1);
+    let d2checker = predata_set2.slice(-1);
+    if (d1checker == "" && d2checker == "") {
+        dataset1.pop();
+        dataset2.pop();
+    }
+    if (predata_set1.includes("") || predata_set2.includes("")) {
         document.getElementById("error_text").innerHTML = "データが数字ではない行、あるいはデータのない行があります。データのない行は全て削除し、全てのデータが半角数字になっていることを確認してください。";
         document.getElementById('error_text').style.display = "inline";
+        document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
     } else {
         function numberify(set_o_data) {
             temp_arry = [];
@@ -32,12 +40,19 @@ function Calculate() {
         }
         let data_set1 = numberify(predata_set1);
         let data_set2 = numberify(predata_set2);
+        if (data_set1.includes("NaN") || data_set2.includes("NaN")) {
+            document.getElementById("error_text").innerHTML = "データが数字ではない行、あるいはデータのない行があります。データのない行は全て削除し、全てのデータが半角数字になっていることを確認してください。";
+            document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
+        }
         if (data_set1.length < 6 || data_set2.length < 6) {
-        document.getElementById("error_text").innerHTML = "適切な結果を得るには、それぞれの組に少なくとも6つのデータが必要ですので、データ量が足りません。データを確認し、必要に応じてより多くのデータを集めてください。"
-        document.getElementById('error_text').style.display = "inline";
-    } else if (data_set1.length !== data_set2.length) {
+            document.getElementById("error_text").innerHTML = "適切な結果を得るには、それぞれの組に少なくとも6つのデータが必要ですので、データ量が足りません。データを確認し、必要に応じてより多くのデータを集めてください。"
+            document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
+        } else if (data_set1.length !== data_set2.length) {
             document.getElementById("error_text").innerHTML = "関連性を分析する際、両方の変数には同じデータの数が必要ですが、入力したデータに相違があります。データの数を確認した上で、もう一度、計算ボタンを押してみてください。";
             document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
         } else {
             Begin(data_set1, data_set2);
         }

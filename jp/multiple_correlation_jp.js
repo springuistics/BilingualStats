@@ -41,7 +41,7 @@ function SetUpP2(k) {
         let helper = dumb_div.id;
         let data = document.createElement("textarea");
         data.id = "dataset_" + i;
-        data.className = "dataset";
+        data.className = "txtarea";
         let label = document.createElement("h3");
         let n = i+1;
         let text = "説明変数" + n + "のデータを以下にペーストしてください";
@@ -95,41 +95,67 @@ function Calculate() {
     var y_data_set = []; var data_set1 = []; var data_set2 = []; var data_set3 = []; var data_set4 = []; var data_set5 = [];
     let temp2 = document.getElementById("y_data").value;
     let prey_data_set = temp2.split("\n");
-    if (prey_data_set.includes("") || prey_data_set.includes("NaN")) {
+    let ychecker = prey_data_set.slice(-1);
+    if (ychecker == ""){
+        prey_data_set.pop();
+    }
+    if (prey_data_set.includes("")) {
         document.getElementById("error_text").innerHTML = "予測変数データに数字ではない行、あるいはデータのない行があります。データのない行は全て削除し、全てのデータが半角数字になっていることを確認してください。";
         document.getElementById('error_text').style.display = "inline";
+        document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
     } else {
         y_data_set = numberify(prey_data_set);
+        if (y_data_set.includes("NaN")){
+            document.getElementById("error_text").innerHTML = "予測変数データに数字ではない行、あるいはデータのない行があります。データのない行は全て削除し、全てのデータが半角数字になっていることを確認してください。";
+            document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
+        }
         if (y_data_set.length < 6) {
         document.getElementById("error_text").innerHTML = "適切な結果を得るには、それぞれの組に少なくとも6つのデータが必要です。予測変数データの量が足りません。データを確認し、必要に応じてより多くのデータを集めてください。";
         document.getElementById('error_text').style.display = "inline";
-    }} 
+        document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
+        }
+    } 
     function SetDataSet(n) {
         let name = "dataset_"+n;
         let temp = document.getElementById(name).value;
         let prerealdata = temp.split("\n");
-        if (prerealdata.includes("") || prerealdata.includes("NaN")) {
+        let xchecker = prerealdata.slice(-1);
+        if (xchecker == ""){
+            prerealdata.pop();
+        }
+        if (prerealdata.includes("")) {
             document.getElementById("error_text").innerHTML = "予測変数データ" + (n+1) + "に数字ではない行、あるいはデータのない行があります。データのない行は全て削除し、全てのデータが半角数字になっていることを確認してください。";
             document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
         } else {
             let realdata = numberify(prerealdata);
+            if (realdata.includes("NaN")) {
+                document.getElementById("error_text").innerHTML = "予測変数データ" + (n+1) + "に数字ではない行、あるいはデータのない行があります。データのない行は全て削除し、全てのデータが半角数字になっていることを確認してください。";
+                document.getElementById('error_text').style.display = "inline";
+                document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
+            }
             if (realdata.length < 6) {
-            document.getElementById("error_text").innerHTML = "適切な結果を得るには、それぞれの組に少なくとも6つのデータが必要です。予測変数データ" + (n+1) + "の量が足りません。データを確認し、必要に応じてより多くのデータを集めてください。";
-            document.getElementById('error_text').style.display = "inline";
-        } else {return realdata;}
-    }}
+                document.getElementById("error_text").innerHTML = "適切な結果を得るには、それぞれの組に少なくとも6つのデータが必要です。予測変数データ" + (n+1) + "の量が足りません。データを確認し、必要に応じてより多くのデータを集めてください。";
+                document.getElementById('error_text').style.display = "inline";
+                document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
+            } else {return realdata;}
+        }
+    }
     
     if (k==2) {
         data_set1 = SetDataSet(0); data_set2 = SetDataSet(1);
         if (data_set1.length !== y_data_set.length || data_set2.length !== y_data_set.length){
             document.getElementById("error_text").innerHTML = "関連性を分析する際、全ての変数には同じデータの数が必要ですが、入力したデータに相違があります。データの数を確認した上で、もう一度、計算ボタンを押してみてください。";
             document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
         } else {Begin(k, y_data_set, data_set1, data_set2);}
     } else if (k==3) {
         data_set1 = SetDataSet(0); data_set2 = SetDataSet(1); data_set3 = SetDataSet(2);
         if (data_set1.length !== y_data_set.length || data_set2.length !== y_data_set.length || data_set3.length !== y_data_set.length){
             document.getElementById("error_text").innerHTML = "関連性を分析する際、全ての変数には同じデータの数が必要ですが、入力したデータに相違があります。データの数を確認した上で、もう一度、計算ボタンを押してみてください。";
             document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
         } else {Begin(k, y_data_set, data_set1, data_set2, data_set3);}
     } 
 }

@@ -41,7 +41,7 @@ function SetUpP2(k) {
         let helper = dumb_div.id;
         let data = document.createElement("textarea");
         data.id = "dataset_" + i;
-        data.className = "dataset";
+        data.className = "txtarea";
         let label = document.createElement("h3");
         let n = i+1;
         let text = "Copy and paste variable data set " + n + " below:";
@@ -95,41 +95,67 @@ function Calculate() {
     var y_data_set = []; var data_set1 = []; var data_set2 = []; var data_set3 = []; var data_set4 = []; var data_set5 = [];
     let temp2 = document.getElementById("y_data").value;
     let prey_data_set = temp2.split("\n");
-    if (prey_data_set.includes("") || prey_data_set.includes("NaN")) {
+    let ychecker = prey_data_set.slice(-1);
+    if (ychecker == ""){
+        prey_data_set.pop();
+    }
+    if (prey_data_set.includes("")) {
         document.getElementById("error_text").innerHTML = "You have null values (lines with no values) or non-numbers in your dependent variable data. Please delete all null values, check to make sure there are no non-numbers in your data set, and then try again.";
         document.getElementById('error_text').style.display = "inline";
+        document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
     } else {
         y_data_set = numberify(prey_data_set);
+        if (y_data_set.includes("NaN")){
+            document.getElementById("error_text").innerHTML = "You have null values (lines with no values) or non-numbers in your dependent variable data. Please delete all null values, check to make sure there are no non-numbers in your data set, and then try again.";
+            document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
+        }
         if (y_data_set.length < 6) {
-        document.getElementById("error_text").innerHTML = "You need at least 6 data points in each data set in order for any proper conclusion to be drawn about your data. Your dependent variable data does not have enough data points. Please check your data sets or collect more data if necessary.";
-        document.getElementById('error_text').style.display = "inline";
-    }} 
+            document.getElementById("error_text").innerHTML = "You need at least 6 data points in each data set in order for any proper conclusion to be drawn about your data. Your dependent variable data does not have enough data points. Please check your data sets or collect more data if necessary.";
+            document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
+            }
+        } 
     function SetDataSet(n) {
         let name = "dataset_"+n;
         let temp = document.getElementById(name).value;
         let prerealdata = temp.split("\n");
-        if (prerealdata.includes("") || prerealdata.includes("NaN")) {
+        let xchecker = prerealdata.slice(-1);
+        if (xchecker == ""){
+            prerealdata.pop();
+        }
+        if (prerealdata.includes("")) {
             document.getElementById("error_text").innerHTML = "You have null values (lines with no values) or non-numbers in data set " + (n+1) + ". Please delete all null values, check to make sure there are no non-numbers in your data set, and then try again.";
             document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
         } else {
             let realdata = numberify(prerealdata);
+            if (realdata.includes("NaN")){
+                document.getElementById("error_text").innerHTML = "You have null values (lines with no values) or non-numbers in data set " + (n+1) + ". Please delete all null values, check to make sure there are no non-numbers in your data set, and then try again.";
+                document.getElementById('error_text').style.display = "inline";
+                document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
+            }
             if (realdata.length < 6) {
-            document.getElementById("error_text").innerHTML = "You need at least 6 data points in each data set in order for any proper conclusion to be drawn about your data. Data set " + n + " does not have enough data points. Please check your data sets or collect more data if necessary.";
-            document.getElementById('error_text').style.display = "inline";
-        } else {return realdata;}
-    }}
+                document.getElementById("error_text").innerHTML = "You need at least 6 data points in each data set in order for any proper conclusion to be drawn about your data. Data set " + n + " does not have enough data points. Please check your data sets or collect more data if necessary.";
+                document.getElementById('error_text').style.display = "inline";
+                document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
+            } else {return realdata;}
+        }
+    }
     
     if (k==2) {
         data_set1 = SetDataSet(0); data_set2 = SetDataSet(1);
         if (data_set1.length !== y_data_set.length || data_set2.length !== y_data_set.length){
             document.getElementById("error_text").innerHTML = "Correlation analysis presumes measurements of the same data points (i.e., participants, instances, etc.) and therefore your data sets should have the same numbers of values, but yours do not. Please check, amend as necessary and retry.";
             document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
         } else {Begin(k, y_data_set, data_set1, data_set2);}
     } else if (k==3) {
         data_set1 = SetDataSet(0); data_set2 = SetDataSet(1); data_set3 = SetDataSet(2);
         if (data_set1.length !== y_data_set.length || data_set2.length !== y_data_set.length || data_set3.length !== y_data_set.length){
             document.getElementById("error_text").innerHTML = "Correlation analysis presumes measurements of the same data points (i.e., participants, instances, etc.) and therefore your data sets should have the same numbers of values, but yours do not. Please check, amend as necessary and retry.";
             document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
         } else {Begin(k, y_data_set, data_set1, data_set2, data_set3);}
     } 
 }

@@ -1,0 +1,70 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link href="../css/chisq.css" rel="stylesheet" type="text/css">
+    <title>Comparing Counts of Non-numerial Data</title>
+</head>
+<body>
+    <script src="chisq.js"></script>
+    <div id="langauge_bar">
+        <div style="text-align:left; margin-top: 2px; margin-left: 10px; position:absolute"><a href="../index.html"><img src="../css/back.png" alt="index"></a></div>
+        <p id="lang_bun">Select Language:</p>
+        <select id="lang_s" onchange="L_Change()">
+            <option value="en">English</option>
+            <option value="jp">Japanese</option>
+        </select>
+    </div>
+    <div id="bigger">
+        <h1  id="Title" style="color:aliceblue">Comparing Counts of Non-numerical Data with a Chi-Square Test</h1>
+        <br>
+        <h2 id="Subtitle" style="color:aliceblue">Answer the following questions about your data sets:</h2>
+        <div id="questions">
+            <div id="ps">
+                <p class="question" id="qq1">How many groups do you have?*</p>
+                <div id="hover1" class="hovery">Insert the number of groups you want to compare. For example, if you are comparing males and females, you should insert "2". If you are comparing 3 langauge learner groups suchas "high", "middle", and "low", insert "3".</div>
+                <br>
+                <p class="question" id="qq2">How many possible answers/options are there?*</p>
+                <div id="hover2" class="hovery">Insert the number of possible answers or options. For example, if you are comparing answers to a yes/no question, insert "2". If you are counting different types of responses and there are only three possible types, insert "3". If you are inserting possible survey answers and there are four options, insert "4", etc.</div>
+                <br>
+            </div>
+            <div id="as">
+                <div id="firsty">
+                <input type="text" id="g_no" placeholder="Input number of groups">
+                <br>
+                <br>
+                <br>
+                <input type="text" id="k_no" placeholder="Input number of possibilities">
+                <br>
+                </div>
+            </div>
+        </div>
+        <p id="error_text" style="display: none">Error will appear here.</p>
+        <p id="small_text">*Mouse over questions for explanation</p>
+        <br>
+        <button id="SetUp" class="button" onclick="SetUp()">Set Up the Test</button>
+        <br>
+    </div>
+    <div id="datasets" style="display: none">
+        <div id="d_container">
+        <h2>Insert your counts for each group and option below*:</h2>
+        <p>*You cannot enter values of 0</p>
+        <div id="jesus"></div>
+        <div id="activate">
+            <button id="button" class="button" style="display: none" onclick="Calculate()">Calculate!</button>
+        </div>
+        <br>
+        </div>
+    </div>
+    <div id="results">
+        <p id="explain_bun">The description of your test will be printed here:</p>
+        <p id="results_bun">Your results will be printed here:</p>
+        <button id="reset" class="button" style="display: none" onclick="Reset()">Reset!</button>
+        <br>
+    </div>
+    <div id="Citation">
+        <p>Please cite the following paper if you use this program or any of the statistics herein. The justifications are included in the paper, linked below for your reference.</p>
+        <p> Spring, R. (2022). Online Bilingual Statistics Calculations for Langauge Education and Linguistics. Coming soon.</p>
+    </div>
+
+</body>
+</html>

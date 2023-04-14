@@ -18,9 +18,16 @@ function Calculate() {
     var temp2 = document.getElementById("data_set_2").value;
     var predata_set1 = temp.split("\n");
     var predata_set2 = temp2.split("\n");
-    if (predata_set1.includes("") || predata_set2.includes("") || predata_set1.includes("NaN") || predata_set2.includes("NaN")) {
+    let d1checker = predata_set1.slice(-1);
+    let d2checker = predata_set2.slice(-1);
+    if (d1checker == "" && d2checker == "") {
+        dataset1.pop();
+        dataset2.pop();
+    }
+    if (predata_set1.includes("") || predata_set2.includes("")) {
         document.getElementById("error_text").innerHTML = "You have null values (lines with no values) or non-numbers in your data set. Please delete all null values, check to make sure there are no non-numbers in your data set, and then try again.";
         document.getElementById('error_text').style.display = "inline";
+        document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
     } else {
         function numberify(set_o_data) {
             temp_arry = [];
@@ -32,12 +39,19 @@ function Calculate() {
         }
         let data_set1 = numberify(predata_set1);
         let data_set2 = numberify(predata_set2);
+        if (data_set1.includes("NaN") || data_set2.includes("NaN")) {
+            document.getElementById("error_text").innerHTML = "You have null values (lines with no values) or non-numbers in your data set. Please delete all null values, check to make sure there are no non-numbers in your data set, and then try again.";
+            document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
+        }
         if (data_set1.length < 6 || data_set2.length < 6) {
         document.getElementById("error_text").innerHTML = "You need at least 6 data points in each data set in order for any proper conclusion to be drawn about your data. Please check your data sets or collect more data if necessary."
         document.getElementById('error_text').style.display = "inline";
+        document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
         } else if (data_set1.length !== data_set2.length) {
             document.getElementById("error_text").innerHTML = "Correlation analysis presumes two measurements on the same data points (i.e., participants, instances, etc.) and therefore your data sets should have the same numbers of values, but yours do not. Please check, amend as necessary and retry.";
             document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
         } else {
             Begin(data_set1, data_set2);
         }

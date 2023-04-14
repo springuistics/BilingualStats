@@ -186,6 +186,9 @@ h1, h2, h3, p, a {
     background-color: rgb(139, 0, 0); 
     margin-bottom: 10px;
 }
+#reset:hover{
+    background-color: rgb(250, 150, 150); 
+}
 
 #results {
     margin: auto;

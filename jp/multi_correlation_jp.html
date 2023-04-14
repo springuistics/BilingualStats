@@ -7,7 +7,7 @@
 <body>
     <script src="multiple_correlation_jp.js"></script>
     <div id="langauge_bar">
-        <div style="text-align:left; margin-top: 2px; margin-left: 10px; position:absolute"><a href="../index_jp.html"><img src="../css/back.png" alt="index"></a></div>
+        <div style="text-align:left; margin-top: 2px; margin-left: 10px; position:absolute"><a href="../index_jp.html"><img class="picture" src="../css/back.png" alt="index"></a></div>
         <p id="lang_bun">言語設定:</p>
         <select id="lang_s" onchange="L_Change()">
             <option value="jp">日本語</option>
@@ -45,7 +45,7 @@
     <p id="error_text" style="display: none">Error will appear here.</p>
     <p id="small_text">*マウスポインターを質問の上に乗せると、説明が表示されます</p>
     <br>
-    <button id="SetUp" class="button" onclick="SetUp()">データ入力開始</button>
+    <button id="SetUp" class="final_button" onclick="SetUp()">データ入力開始</button>
     <br>
     </div>
     <div id="datasets" style="display: none">
@@ -59,7 +59,7 @@
             </div>
         <div id="d_container"></div>
         <div id="activate">
-            <button id="button" class="button" style="display: none" onclick="Calculate()">計算</button>
+            <button id="button" class="final_button" style="display: none" onclick="Calculate()">計算</button>
         </div>
     </div>
     <div id="results">
@@ -67,7 +67,7 @@
         <p id="results_bun">結果はここに書かれます</p>
         <div id="table_holder"></div>
         <br>
-        <button id="reset" class="button" onclick="Reset()">Reset!</button>
+        <button id="reset" class="reset_button" onclick="Reset()">Reset!</button>
     </div>
     <div id="Citation">
         <p>本プログラムや関連する説明文などを研究で使用する場合、下記の論文を引用してください。</p>

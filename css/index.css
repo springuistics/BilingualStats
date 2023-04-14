@@ -177,6 +177,10 @@ h1, h2, h3, p, a {
     display: block;
 }
 
+a:hover{
+    color: rgb(153, 0, 0);
+    text-shadow: 0 0 6px whitesmoke;
+}
 
 #tests #advanced {
     margin: auto;

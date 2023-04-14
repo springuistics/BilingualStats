@@ -1,0 +1,59 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link href="../css/general.css" rel="stylesheet" type="text/css">
+    <title>Cohen's D Calculator</title>
+</head>
+<body>
+    <script src="cohens_d.js"></script>
+    <div id="langauge_bar">
+        <div style="text-align:left; margin-top: 2px; margin-left: 10px; position:absolute"><a href="../index.html"><img src="../css/back.png" alt="index"></a></div>
+        <p id="lang_bun">Select Language:</p>
+        <select id="lang_s" onchange="L_Change()">
+            <option value="en">English</option>
+            <option value="jp">Japanese</option>
+        </select>
+    </div>
+    <div id="setup">
+        <h1  id="title_bun">Cohen's D Calculator</h1>
+        <br>
+        <div id="ZtoP">
+            <h2 class="subheader">Calculate Cohen's D from Means, SDs, and Numbers</h2>
+            <br>
+            <table id="Cohen_table">
+                <tr>
+                    <td class="tblwords">M 1:</td>
+                    <td class="tblbox"><input id="M1" type="text" class="adjustobox"></td>
+                    <td class="tblwords">M 2:</td>
+                    <td class="tblbox"><input id="M2" type="text" class="adjustobox"></td>
+                </tr>
+                <tr>
+                    <td class="tblwords">SD 1:</td>
+                    <td class="tblbox"><input id="S1" type="text" class="adjustobox"></td>
+                    <td class="tblwords">SD 2:</td>
+                    <td class="tblbox"><input id="S2" type="text" class="adjustobox"></td>
+                </tr>
+                <tr>
+                    <td class="tblwords"><i>N</i> 1:</td>
+                    <td class="tblbox"><input id="N1" type="text" class="adjustobox"></td>
+                    <td class="tblwords"><i>N</i> 2:</td>
+                    <td class="tblbox"><input id="N2" type="text" class="adjustobox"></td>
+                </tr>
+            </table>
+            <br>
+            <p id="results_bun" class="results">Results go here</p>
+            <br>
+            <div class="bcon">
+                <button id="zbtn" class="button" onclick="GetResults()">Calculate <i>d</i></button>
+                <br>
+            </div>
+        </div>
+    </div>
+    <div id="citation">
+        <p>Please cite the following paper if you use this program or any of the statistics herein. The justifications are included in the paper, linked below for your reference.</p>
+        <br>
+        <p id="paper"> Spring, R. (2022). Online Bilingual Statistics Calculations for Langauge Education and Linguistics. Coming soon.</p>
+        <br>
+        <div id="personal_hp"><p >Visit the <a style="color: darkblue; text-decoration: underline;" href="https://sites.google.com/view/ryanspring/home">research page</a> of the creator, Ryan Spring, for examples of these tests used in practical research.</p>
+    </div>
+</body>

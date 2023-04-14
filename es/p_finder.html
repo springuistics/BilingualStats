@@ -7,7 +7,7 @@
 <body>
     <script src="p_finder.js"></script>
     <div id="langauge_bar">
-        <div style="text-align:left; margin-top: 2px; margin-left: 10px; position:absolute"><a href="../index.html"><img class="picture" src="../css/back.png" alt="index"></a></div>
+        <div style="text-align:left; margin-top: 2px; margin-left: 10px; position:absolute"><a href="../index.html"><img src="../css/back.png" alt="index"></a></div>
         <p id="lang_bun">Select Language:</p>
         <select id="lang_s" onchange="L_Change()">
             <option value="en">English</option>
@@ -19,12 +19,10 @@
         <br>
         <p id="data_q" class="data_q">What value do you want to calculate <i>p</i> from?</p>
         <br>
-            <input type="radio" id="q1_a" class="radio_btn" name="q1" value="Z_value">
-            <label for="q1_a" class="answer">a <i>Z</i> value</label>
-            <input type="radio" id="q1_b" class="radio_btn" name="q1" value="t_value">
-            <label for="q1_b" class="answer">a <i>t</i> value</label>
-            <input type="radio" id="q1_b" class="radio_btn" name="q1" value="x_value">
-            <label for="q1_b" class="answer">a <i>Χ<sup>2</sup></i> value</label>
+        <input type="radio" id="q1_a" class="radio_btn" name="q1" value="Z_value">
+                <label for="q1_a" class="answer">a <i>Z</i> value</label>
+                <input type="radio" id="q1_b" class="radio_btn" name="q1" value="t_value">
+                <label for="q1_b" class="answer">a <i>t</i> value</label>
         <br>
         <br>
         <button id="setting_btn" class="button" onclick="SetUp()">Set Up the Calculator</button>
@@ -65,28 +63,10 @@
         <br>
         </div>
     </div>
-    <div id="XtoP" class="hidden">
-        <h2 class="subheader"><i>Χ<sup>2</sup></i> value to <i>p</i> Value Calculator</h2>
-        <br>
-        <table id="Cohen_table">
-            <tr>
-                <td class="tblwords"><i>Χ<sup>2</sup></i> value:</td>
-                <td class="tblbox"><input id="xv" type="text" class="adjustobox"></td>
-                <td class="tblwords">degrees of freedom:</td>
-                <td class="tblbox"><input id="dfxv" type="text" class="adjustobox"></td>
-            </tr>
-        </table>
-        <br>
-        <p id="x_result" class="results">Results go here</p>
-        <br>
-        <div class="bcon"><button id="zbtn" class="button" onclick="GetX()">Calculate <i>p</i></button>
-        <br>
-        </div>
-    </div>
     <div id="citation">
         <p>Please cite the following paper if you use this program or any of the statistics herein. The justifications are included in the paper, linked below for your reference.</p>
         <br>
-        <p>Spring, R. (2022) Free, Online, Multilingual Statistics for Linguistics and Language Education Researchers. <i>Center for Culture and Language Education, Tohoku University 2021 Nenpo, 8</i>, 32-38.<a href="https://doi.org/10.13140/RG.2.2.12037.63202"> https://doi.org/10.13140/RG.2.2.12037.63202</a></p>
+        <p id="paper"> Spring, R. (2022). Online Bilingual Statistics Calculations for Langauge Education and Linguistics. Coming soon.</p>
         <br>
         <div id="personal_hp"><p >Visit the <a style="color: darkblue; text-decoration: underline;" href="https://sites.google.com/view/ryanspring/home">research page</a> of the creator, Ryan Spring, for examples of these tests used in practical research.</p>
     </div>

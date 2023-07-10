@@ -24,10 +24,10 @@ function SetUp() {
         document.getElementById('button').style.display = "inline";
         document.getElementById('datasets').style.display = "inline";
         document.getElementById('reset').style.display = "inline";
-        if (k ==2 || k ==3){
+        if (k ==2 || k ==3 || k ==4){
             SetUpP2(k);
         } else {
-            document.getElementById("error_text").innerHTML = "Currently, multiple regression of continuous variables only accepts two or three independent variables. Sorry for any inconvenience."
+            document.getElementById("error_text").innerHTML = "Currently, multiple regression of continuous variables only accepts up to four independent variables. Sorry for any inconvenience."
             document.getElementById('error_text').style.display = "inline";
         }        
     }
@@ -157,7 +157,14 @@ function Calculate() {
             document.getElementById('error_text').style.display = "inline";
             document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
         } else {Begin(k, y_data_set, data_set1, data_set2, data_set3);}
-    } 
+    } else if (k==4) {
+        data_set1 = SetDataSet(0); data_set2 = SetDataSet(1); data_set3 = SetDataSet(2); data_set4 = SetDataSet(3);
+        if (data_set1.length !== y_data_set.length || data_set2.length !== y_data_set.length || data_set3.length !== y_data_set.length || data_set4.length !== y_data_set.length){
+            document.getElementById("error_text").innerHTML = "Correlation analysis presumes measurements of the same data points (i.e., participants, instances, etc.) and therefore your data sets should have the same numbers of values, but yours do not. Please check, amend as necessary and retry.";
+            document.getElementById('error_text').style.display = "inline";
+            document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
+        } else {Begin(k, y_data_set, data_set1, data_set2, data_set3, data_set4);}
+    }
 }
 
 function FtoP(k, f, n1, n2) {
@@ -252,6 +259,28 @@ function fourway_matrix(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p){
     return (first-second+third-fourth);
 }
 
+function simple_threematrix(a,b,c,d,e,f,g,h,i){
+    return ((a*((e*i)-(f*h))) - (b*((d*i)-(f*g))) + (c*((d*h)-(e*g))));
+}
+
+function simple_fourmatrix(a11,a12,a13,a14,a21,a22,a23,a24,a31,a32,a33,a34,a41,a42,a43,a44){
+    let first = a11 * (simple_threematrix(a22,a23,a24,a32,a33,a34,a42,a43,a44));
+    let second = a21 * (simple_threematrix(a12,a13,a14,a32,a33,a34,a42,a43,a44));
+    let third = a31 * (simple_threematrix(a12,a13,a14,a22,a23,a24,a42,a43,a44));
+    let fourth = a41 * (simple_threematrix(a12,a13,a14,a22,a23,a24,a32,a33,a34));
+    return (first - second + third - fourth);
+}
+
+function fiveway_matrix(a11,a12,a13,a14,a15,a21,a22,a23,a24,a25,a31,a32,a33,a34,a35,a41,a42,a43,a44,a45,a51,a52,a53,a54,a55){
+    let first = a11*(simple_fourmatrix(a22,a23,a24,a25,a32,a33,a34,a35,a42,a43,a44,a45,a52,a53,a54,a55));
+    let second = a21*(simple_fourmatrix(a12,a13,a14,a15,a32,a33,a34,a35,a42,a43,a44,a45,a52,a53,a54,a55));
+    let third = a31*(simple_fourmatrix(a12,a13,a14,a15,a22,a23,a24,a25,a42,a43,a44,a45,a52,a53,a54,a55));
+    let fourth = a41*(simple_fourmatrix(a12,a13,a14,a15,a22,a23,a24,a25,a32,a33,a34,a35,a52,a53,a54,a55));
+    let fifth = a51*(simple_fourmatrix(a12,a13,a14,a15,a22,a23,a24,a25,a32,a33,a34,a35,a42,a43,a44,a45));
+    return (first-second+third-fourth+fifth);
+    }
+    
+
 function fkyou3iv(fd1, fd2, fd3) {
     let N0 = fd1.length;
     var fd2s; var fd3s;
@@ -296,15 +325,51 @@ function fkyou3iv(fd1, fd2, fd3) {
     return (temp_R2);
 }
 
-function Begin(k, datay, x1, x2, x3) {
+function fkyou4iv(fivd1, fivd2, fivd3, fivd4){
+    let fivd1bar = []; let residuals_fivd = []; let fivd_vars = [];
+    let fivN = fivd1.length;
+    let fivdetA = fourway_matrix(fivN, Sum(fivd2), Sum(fivd3), Sum(fivd4), Sum(fivd2), SumSquare(fivd2), TwoDataSum(fivd2,fivd3), TwoDataSum(fivd2,fivd4), Sum(fivd3), TwoDataSum(fivd2, fivd3), SumSquare(fivd3), TwoDataSum(fivd3,fivd4), Sum(fivd4), TwoDataSum(fivd2,fivd4), TwoDataSum(fivd3,fivd4), SumSquare(fivd4));
+    let fivdetA1 = fourway_matrix(Sum(fivd1), Sum(fivd2), Sum(fivd3), Sum(fivd4), TwoDataSum(fivd2,fivd1), SumSquare(fivd2), TwoDataSum(fivd2,fivd3), TwoDataSum(fivd2,fivd4), TwoDataSum(fivd3,fivd1), TwoDataSum(fivd2, fivd3), SumSquare(fivd3), TwoDataSum(fivd3,fivd4), TwoDataSum(fivd4,fivd1), TwoDataSum(fivd2,fivd4), TwoDataSum(fivd3,fivd4), SumSquare(fivd4));
+    let fivdetA2 = fourway_matrix(fivN, Sum(fivd1), Sum(fivd3), Sum(fivd4), Sum(fivd2), TwoDataSum(fivd2,fivd1), TwoDataSum(fivd2,fivd3), TwoDataSum(fivd2,fivd4), Sum(fivd3), TwoDataSum(fivd3, fivd1), SumSquare(fivd3), TwoDataSum(fivd3,fivd4), Sum(fivd4), TwoDataSum(fivd4,fivd1), TwoDataSum(fivd3,fivd4), SumSquare(fivd4));
+    let fivdetA3 = fourway_matrix(fivN, Sum(fivd2), Sum(fivd1), Sum(fivd4), Sum(fivd2), SumSquare(fivd2), TwoDataSum(fivd2,fivd1), TwoDataSum(fivd2,fivd4), Sum(fivd3), TwoDataSum(fivd2, fivd3), TwoDataSum(fivd3,fivd1), TwoDataSum(fivd3,fivd4), Sum(fivd4), TwoDataSum(fivd2,fivd4), TwoDataSum(fivd4,fivd1), SumSquare(fivd4));
+    let fivdetA4 = fourway_matrix(fivN, Sum(fivd2), Sum(fivd3), Sum(fivd1), Sum(fivd2), SumSquare(fivd2), TwoDataSum(fivd2,fivd3), TwoDataSum(fivd2,fivd1), Sum(fivd3), TwoDataSum(fivd2, fivd3), SumSquare(fivd3), TwoDataSum(fivd3,fivd1), Sum(fivd4), TwoDataSum(fivd2,fivd4), TwoDataSum(fivd3,fivd4), TwoDataSum(fivd4,fivd1));
+    let fivb0 = fivdetA1 / fivdetA;
+    let fivb1 = fivdetA2 / fivdetA;
+    let fivb2 = fivdetA3 / fivdetA;
+    let fivb3 = fivdetA4 / fivdetA;
+    let fivavgy = Sum(fivd1) / fivN;
+        for (let i=0; i<fivN; i++) {
+            let temp = fivb0 + (fivb1 * fivd2[i]) + (fivb2 * fivd3[i]) + (fivb3 * fivd4[i]);
+            fivd1bar.push(temp);
+        }
+        for (let i=0; i<fivN; i++) {
+            let temp = fivd1[i] - fivd1bar[i];
+            residuals_fivd.push(temp);
+        }
+        for (let i=0; i<fivN; i++) {
+            let temp = fivd1bar[i] - fivavgy;
+            fivd_vars.push(temp);
+        }
+    var fivtotals = [];
+        for (let i=0; i<fivN; i++) {
+            let temp = fivd1[i] - fivavgy;
+            fivtotals.push(temp);
+        }
+    let fivSSM = SumSquare(fivd_vars);
+    let fivSST = SumSquare(fivtotals);
+    return (fivSSM / fivSST);
+}
+
+function Begin(k, datay, x1, x2, x3, x4) {
     var N = datay.length;
-    var x1s; var x2s; var x3s; 
-    var x1y; var x2y; var x3y;
-    var x1x2; var x1x3; var x2x3; 
-    var b0; var b1; var b2; var b3; 
+    var x1s; var x2s; var x3s; var x4s;
+    var x1y; var x2y; var x3y; var x4y;
+    var x1x2; var x1x3; var x2x3; var x1x4; var x2x4; var x3x4;
+    var b0; var b1; var b2; var b3; var b4;
     var ryx1; var ryx2; var ryx3; var rx1x2; var rx1x3; var rx2x3; 
+    var detA; var detA1; var detA2; var detA3; var detA4; var detA5;
     var ybar = []; var avgy; var residuals = []; var yvars = [];
-    var avgx1; var avgx2; var avgx3; 
+    var avgx1; var avgx2; var avgx3; var avgx4;
     if (k==2) {
         x1s = SumSquare(x1) - ((Sum(x1)**2) / N);
         x2s = SumSquare(x2) - ((Sum(x2)**2) / N);
@@ -360,11 +425,11 @@ function Begin(k, datay, x1, x2, x3) {
         var p = FtoP((k+1), F, k, (N-3));
     } 
     else if (k==3) {
-        var detA = fourway_matrix(N, Sum(x1), Sum(x2), Sum(x3), Sum(x1), SumSquare(x1), TwoDataSum(x1,x2), TwoDataSum(x1,x3), Sum(x2), TwoDataSum(x1, x2), SumSquare(x2), TwoDataSum(x2,x3), Sum(x3), TwoDataSum(x1,x3), TwoDataSum(x2,x3), SumSquare(x3));
-        var detA1 = fourway_matrix(Sum(datay), Sum(x1), Sum(x2), Sum(x3), TwoDataSum(x1,datay), SumSquare(x1), TwoDataSum(x1,x2), TwoDataSum(x1,x3), TwoDataSum(x2,datay), TwoDataSum(x1, x2), SumSquare(x2), TwoDataSum(x2,x3), TwoDataSum(x3,datay), TwoDataSum(x1,x3), TwoDataSum(x2,x3), SumSquare(x3));
-        var detA2 = fourway_matrix(N, Sum(datay), Sum(x2), Sum(x3), Sum(x1), TwoDataSum(x1,datay), TwoDataSum(x1,x2), TwoDataSum(x1,x3), Sum(x2), TwoDataSum(x2, datay), SumSquare(x2), TwoDataSum(x2,x3), Sum(x3), TwoDataSum(x3,datay), TwoDataSum(x2,x3), SumSquare(x3));
-        var detA3 = fourway_matrix(N, Sum(x1), Sum(datay), Sum(x3), Sum(x1), SumSquare(x1), TwoDataSum(x1,datay), TwoDataSum(x1,x3), Sum(x2), TwoDataSum(x1, x2), TwoDataSum(x2,datay), TwoDataSum(x2,x3), Sum(x3), TwoDataSum(x1,x3), TwoDataSum(x3,datay), SumSquare(x3));
-        var detA4 = fourway_matrix(N, Sum(x1), Sum(x2), Sum(datay), Sum(x1), SumSquare(x1), TwoDataSum(x1,x2), TwoDataSum(x1,datay), Sum(x2), TwoDataSum(x1, x2), SumSquare(x2), TwoDataSum(x2,datay), Sum(x3), TwoDataSum(x1,x3), TwoDataSum(x2,x3), TwoDataSum(x3,datay));
+        detA = fourway_matrix(N, Sum(x1), Sum(x2), Sum(x3), Sum(x1), SumSquare(x1), TwoDataSum(x1,x2), TwoDataSum(x1,x3), Sum(x2), TwoDataSum(x1, x2), SumSquare(x2), TwoDataSum(x2,x3), Sum(x3), TwoDataSum(x1,x3), TwoDataSum(x2,x3), SumSquare(x3));
+        detA1 = fourway_matrix(Sum(datay), Sum(x1), Sum(x2), Sum(x3), TwoDataSum(x1,datay), SumSquare(x1), TwoDataSum(x1,x2), TwoDataSum(x1,x3), TwoDataSum(x2,datay), TwoDataSum(x1, x2), SumSquare(x2), TwoDataSum(x2,x3), TwoDataSum(x3,datay), TwoDataSum(x1,x3), TwoDataSum(x2,x3), SumSquare(x3));
+        detA2 = fourway_matrix(N, Sum(datay), Sum(x2), Sum(x3), Sum(x1), TwoDataSum(x1,datay), TwoDataSum(x1,x2), TwoDataSum(x1,x3), Sum(x2), TwoDataSum(x2, datay), SumSquare(x2), TwoDataSum(x2,x3), Sum(x3), TwoDataSum(x3,datay), TwoDataSum(x2,x3), SumSquare(x3));
+        detA3 = fourway_matrix(N, Sum(x1), Sum(datay), Sum(x3), Sum(x1), SumSquare(x1), TwoDataSum(x1,datay), TwoDataSum(x1,x3), Sum(x2), TwoDataSum(x1, x2), TwoDataSum(x2,datay), TwoDataSum(x2,x3), Sum(x3), TwoDataSum(x1,x3), TwoDataSum(x3,datay), SumSquare(x3));
+        detA4 = fourway_matrix(N, Sum(x1), Sum(x2), Sum(datay), Sum(x1), SumSquare(x1), TwoDataSum(x1,x2), TwoDataSum(x1,datay), Sum(x2), TwoDataSum(x1, x2), SumSquare(x2), TwoDataSum(x2,datay), Sum(x3), TwoDataSum(x1,x3), TwoDataSum(x2,x3), TwoDataSum(x3,datay));
         b0 = detA1 / detA;
         b1 = detA2 / detA;
         b2 = detA3 / detA;
@@ -394,7 +459,7 @@ function Begin(k, datay, x1, x2, x3) {
         var MSM = SSM / (k);
         var MSE = SSE / (N-4);
         var F = MSM / MSE;
-        var helper_sex1 = fkyou3iv(x1, x2, x3);
+        var helper_sex1 = fkyou3iv(x1, x2, x3, x4);
         var helper_sex2 = fkyou3iv(x2, x1, x3);
         var helper_sex3 = fkyou3iv(x3, x1, x2);
         var ryx1x2 = fkyou3iv(datay, x1, x2);
@@ -435,7 +500,121 @@ function Begin(k, datay, x1, x2, x3) {
         var rel2x3 = rel1x3 / R2;
 
         var p = FtoP((k+1), F, k, (N-4));
-    } 
+
+    } else if (k=4){
+        detA = fiveway_matrix(N, Sum(x1), Sum(x2), Sum(x3), Sum(x4), Sum(x1), SumSquare(x1), TwoDataSum(x1,x2), TwoDataSum(x1,x3), TwoDataSum(x1,x4), Sum(x2), TwoDataSum(x1,x2), SumSquare(x2), TwoDataSum(x2,x3), TwoDataSum(x2,x4), Sum(x3), TwoDataSum(x1,x3), TwoDataSum(x2,x3), SumSquare(x3), TwoDataSum(x3,x4), Sum(x4),TwoDataSum(x1,x4),TwoDataSum(x2,x4),TwoDataSum(x3,x4),SumSquare(x4));
+        detA1 = fiveway_matrix(Sum(datay), Sum(x1),Sum(x2),Sum(x3),Sum(x4),TwoDataSum(x1,datay),SumSquare(x1),TwoDataSum(x1,x2),TwoDataSum(x1,x3),TwoDataSum(x1,x4),TwoDataSum(x2,datay),TwoDataSum(x1,x2),SumSquare(x2),TwoDataSum(x2,x3),TwoDataSum(x2,x4),TwoDataSum(x3,datay),TwoDataSum(x1,x3),TwoDataSum(x2,x3),SumSquare(x3),TwoDataSum(x3,x4),TwoDataSum(x4,datay),TwoDataSum(x1,x4),TwoDataSum(x2,x4),TwoDataSum(x3,x4),SumSquare(x4));
+        detA2 = fiveway_matrix(N, Sum(datay),Sum(x2),Sum(x3),Sum(x4),Sum(x1),TwoDataSum(x1,datay),TwoDataSum(x1,x2),TwoDataSum(x1,x3),TwoDataSum(x1,x4),Sum(x2),TwoDataSum(x2,datay),SumSquare(x2),TwoDataSum(x2,x3),TwoDataSum(x2,x4),Sum(x3),TwoDataSum(x3,datay),TwoDataSum(x2,x3),SumSquare(x3),TwoDataSum(x3,x4),Sum(x4),TwoDataSum(x4,datay),TwoDataSum(x2,x4),TwoDataSum(x3,x4),SumSquare(x4));
+        detA3 = fiveway_matrix(N, Sum(x1), Sum(datay), Sum(x3), Sum(x4), Sum(x1), SumSquare(x1),TwoDataSum(x1,datay), TwoDataSum(x1,x3), TwoDataSum(x1,x4),Sum(x2),TwoDataSum(x1,x2),TwoDataSum(x2,datay),TwoDataSum(x2,x3),TwoDataSum(x2,x4),Sum(x3),TwoDataSum(x1,x3),TwoDataSum(x3,datay),SumSquare(x3),TwoDataSum(x3,x4),Sum(x4),TwoDataSum(x1,x4),TwoDataSum(x4,datay),TwoDataSum(x3,x4),SumSquare(x4));
+        detA4 = fiveway_matrix(N, Sum(x1),Sum(x2),Sum(datay),Sum(x4),Sum(x1), SumSquare(x1),TwoDataSum(x1,x2),TwoDataSum(x1,datay),TwoDataSum(x1,x4),Sum(x2),TwoDataSum(x1,x2),SumSquare(x2),TwoDataSum(x2,datay),TwoDataSum(x2,x4),Sum(x3),TwoDataSum(x1,x3),TwoDataSum(x2,x3),TwoDataSum(x3,datay),TwoDataSum(x3,x4),Sum(x4),TwoDataSum(x1,x4),TwoDataSum(x2,x4),TwoDataSum(x4,datay),SumSquare(x4));
+        detA5 = fiveway_matrix(N, Sum(x1),Sum(x2),Sum(x3),Sum(datay),Sum(x1),SumSquare(x1),TwoDataSum(x1,x2),TwoDataSum(x1,x3),TwoDataSum(x1,datay),Sum(x2),TwoDataSum(x1,x2),SumSquare(x2),TwoDataSum(x2,x3),TwoDataSum(x2,datay),Sum(x3),TwoDataSum(x1,x3),TwoDataSum(x2,x3),SumSquare(x3),TwoDataSum(x3,datay),Sum(x4),TwoDataSum(x1,x4),TwoDataSum(x2,x4),TwoDataSum(x3,x4),TwoDataSum(x4,datay));
+        b0 = detA1 / detA;
+        b1 = detA2 / detA;
+        b2 = detA3 / detA;
+        b3 = detA4 / detA;
+        b4 = detA5 / detA;
+        avgy = Sum(datay) / N;
+        for (let i=0; i<N; i++) {
+            let temp = b0 + (b1 * x1[i]) + (b2 * x2[i]) + (b3 * x3[i]) + (b4 * x4[i]);
+            ybar.push(temp);
+        }
+        for (let i=0; i<N; i++) {
+            let temp = datay[i] - ybar[i];
+            residuals.push(temp);
+        }
+        for (let i=0; i<N; i++) {
+            let temp = ybar[i] - avgy;
+            yvars.push(temp);
+        }
+        var ytotals = [];
+        for (let i=0; i<N; i++) {
+            let temp = datay[i] - avgy;
+            ytotals.push(temp);
+        }
+        var MSE = SumSquare(residuals) / (N-5);
+        var SSM = SumSquare(yvars);
+        var SSE = SumSquare(residuals);
+        var SST = SumSquare(ytotals);
+        var MSM = SSM / (k);
+        var MSE = SSE / (N-5);
+        var F = MSM / MSE;
+        
+        var R2 = SSM / SST;
+
+        var helper_sex1 = fkyou4iv(x1, x2, x3, x4);
+        var helper_sex2 = fkyou4iv(x2, x1, x3, x4);
+        var helper_sex3 = fkyou4iv(x3, x1, x2, x4);
+        var helper_sex4 = fkyou4iv(x4, x1, x2, x3);
+        var ryx1x2x3 = fkyou4iv(datay, x1, x2, x3);
+        var ryx1x2x4 = fkyou4iv(datay, x1, x2, x4);
+        var ryx1x3x4 = fkyou4iv(datay, x1, x3, x4);
+        var ryx2x3x4 = fkyou4iv(datay, x2, x3, x4);
+        var ryx1x2 = fkyou3iv(datay, x1, x2);
+        var ryx1x3 = fkyou3iv(datay, x1, x3);
+        var ryx1x4 = fkyou3iv(datay, x1, x4);
+        var ryx2x3 = fkyou3iv(datay, x2, x3);
+        var ryx2x4 = fkyou3iv(datay, x2, x4);
+        var ryx3x4 = fkyou3iv(datay, x3, x4);
+        ryx1 = Pearson(datay, x1);
+        ryx2 = Pearson(datay, x2);
+        ryx3 = Pearson(datay, x3);
+        ryx4 = Pearson(datay, x4);
+        rx1x2 = Pearson(x1, x2);
+        rx1x3 = Pearson(x1, x3);
+        var rx1x4 = Pearson(x1, x4);
+        rx2x3 = Pearson(x2, x3);
+        var rx2x4 = Pearson(x2,x4);
+        var rx3x4 = Pearson(x3,x4);
+
+        
+        var sex1 = Math.sqrt((1-R2)/((1-(helper_sex1))*(N-5))) * ((Math.sqrt(variance(datay))) / (Math.sqrt(variance(x1))));
+        var tx1 = b1 / sex1;
+        var px1 = StudT(tx1, (N-5));
+        var betax1 = b1 * ((Math.sqrt(variance(x1))) / (Math.sqrt(variance(datay))));
+        //relative weights
+        var relx1_k3 = R2-ryx2x3x4;
+        var relx1_k2 = ((ryx1x2x3 - ryx2x3) + (ryx1x2x4 - ryx2x4) + (ryx1x3x4 - ryx3x4))/3;
+        var relx1_k1 = ((ryx1x2-(ryx2**2)) + (ryx1x3-(ryx3**2)) + (ryx1x4-(ryx4**2)) ) / 3;
+        var rel1x1 = ((ryx1**2) + relx1_k1 + relx1_k2 + relx1_k3) / 4;
+        var rel2x1 = rel1x1 / R2;
+
+        var sex2 = Math.sqrt((1-R2)/((1-(helper_sex2))*(N-5))) * (Math.sqrt(variance(datay)) / Math.sqrt(variance(x2)));
+        var tx2 = b2 / sex2;
+        var px2 = StudT(tx2, (N-5));
+        var betax2 = b2 * ((Math.sqrt(variance(x2))) / (Math.sqrt(variance(datay))));
+        //relative weights
+        var relx2_k3 = R2-ryx1x3x4;
+        var relx2_k2 = ((ryx1x2x3 - ryx1x3) + (ryx1x2x4 - ryx1x4) + (ryx2x3x4 - ryx3x4))/3;
+        var relx2_k1 = ((ryx1x2-(ryx1**2)) + (ryx2x3-(ryx3**2)) + (ryx2x4-(ryx4**2)) ) / 3;
+        var rel1x2 = ((ryx2**2) + relx2_k1 + relx2_k2 + relx2_k3) / 4;
+        var rel2x2 = rel1x2 / R2;
+
+        var sex3 = Math.sqrt((1-R2)/((1-(helper_sex3))*(N-5))) * (Math.sqrt(variance(datay)) / Math.sqrt(variance(x3)));
+        var tx3 = b3 / sex3;
+        var px3 = StudT(tx3, (N-5));
+        var betax3 = b3 * ((Math.sqrt(variance(x3))) / (Math.sqrt(variance(datay))));
+        //relative weights
+        var relx3_k3 = R2-ryx1x2x4;
+        var relx3_k2 = ((ryx1x2x3 - ryx1x2) + (ryx1x3x4 - ryx1x4) + (ryx2x3x4 - ryx2x4))/3;
+        var relx3_k1 = ((ryx1x3-(ryx1**2)) + (ryx2x3-(ryx2**2)) + (ryx3x4-(ryx4**2)) ) / 3;
+        var rel1x3 = ((ryx3**2) + relx3_k1 + relx3_k2 + relx3_k3) / 4;
+        var rel2x3 = rel1x3 / R2;
+
+        var sex4 = Math.sqrt((1-R2)/((1-(helper_sex4))*(N-5))) * ((Math.sqrt(variance(datay))) / (Math.sqrt(variance(x4))));
+        var tx4 = b4 / sex4;
+        var px4 = StudT(tx4, (N-5));
+        var betax4 = b4 * ((Math.sqrt(variance(x4))) / (Math.sqrt(variance(datay))));
+        //relative weights
+        var relx4_k3 = R2-ryx1x2x3;
+        var relx4_k2 = ((ryx1x2x4 - ryx1x2) + (ryx1x3x4 - ryx1x3) + (ryx2x3x4 - ryx2x3))/3;
+        var relx4_k1 = ((ryx1x4-(ryx1**2)) + (ryx2x4-(ryx2**2)) + (ryx3x4-(ryx3**2)) ) / 3;
+        var rel1x4 = ((ryx4**2) + relx4_k1 + relx4_k2 + relx4_k3) / 4;
+        var rel2x4 = rel1x4 / R2;
+
+        var p = FtoP((k+1), F, k, (N-5));
+
+    }   
+    
     
     R2 = R2.toFixed(3);
     F = F.toFixed(3);
@@ -528,7 +707,7 @@ function Begin(k, datay, x1, x2, x3) {
     row_3.appendChild(v2_6);
     thead.appendChild(row_3);
 
-    if (k==3) {
+    if (k>2) {
         let row_4 = document.createElement('tr');
         let v3_1 = document.createElement('td');
         v3_1.innerHTML = "3";
@@ -551,6 +730,30 @@ function Begin(k, datay, x1, x2, x3) {
         row_4.appendChild(v3_5);
         row_4.appendChild(v3_6);
         thead.appendChild(row_4);
+        }
+        if (k>3){
+        let row_5 = document.createElement('tr');
+        let v4_1 = document.createElement('td');
+        v4_1.innerHTML = "4";
+        let v4_2 = document.createElement('td');
+        v4_2.innerHTML = b4.toFixed(3);
+        let v4_3 = document.createElement('td');
+        v4_3.innerHTML = betax4.toFixed(3);
+        let v4_4 = document.createElement('td');
+        v4_4.innerHTML = tx4.toFixed(3);
+        let v4_5 = document.createElement('td');
+        v4_5.innerHTML = px4.toFixed(3);
+        let v4_6 = document.createElement('td');
+        rel2x4 = rel2x4 * 100;
+        v4_6.innerHTML = rel1x4.toFixed(3) + " (" + rel2x4.toFixed(2) + "%)"
+
+        row_5.appendChild(v4_1);
+        row_5.appendChild(v4_2);
+        row_5.appendChild(v4_3);
+        row_5.appendChild(v4_4);
+        row_5.appendChild(v4_5);
+        row_5.appendChild(v4_6);
+        thead.appendChild(row_5);
         }
 
 }

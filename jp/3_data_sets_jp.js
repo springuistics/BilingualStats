@@ -1767,7 +1767,7 @@ function Friedman(k, deets, data1, data2, data3, data4, data5, data6) {
         data2.forEach(function(number){superdata.push({"Group":2, "No": number, "Rank": number});});
         data3.forEach(function(number){superdata.push({"Group":3, "No": number, "Rank": number});});
         FriedmanSuperDataHandling(k, N, superdata);
-        var se = Dunn_SE(superdata);
+        var se = Math.sqrt((N*k*(k+1))/12);
         var data1_ranks = [];
         var data2_ranks = [];
         var data3_ranks = [];
@@ -1786,9 +1786,9 @@ function Friedman(k, deets, data1, data2, data3, data4, data5, data6) {
         var second = (sum1 **2) + (sum2 **2) + (sum3 **2)
         var third = 3 * (N * (k+1));
         var KH = (first * second) - third;
-        var dunn1v2 = CalcDunn(se, data1_ranks, data2_ranks); 
-        var dunn1v3 = CalcDunn(se, data1_ranks, data3_ranks); 
-        var dunn2v3 = CalcDunn(se, data2_ranks, data3_ranks); 
+        var dunn1v2 = TukeyMe((Math.abs(sum1-sum2)/se), k, (N*k));
+        var dunn1v3 = TukeyMe((Math.abs(sum1-sum3)/se), k, (N*k));
+        var dunn2v3 = TukeyMe((Math.abs(sum2-sum3)/se), k, (N*k));
     } else if (k==4) {
         var N = data1.length;
         var superdata = [];
@@ -1797,7 +1797,7 @@ function Friedman(k, deets, data1, data2, data3, data4, data5, data6) {
         data3.forEach(function(number){superdata.push({"Group":3, "No": number, "Rank": number});});
         data4.forEach(function(number){superdata.push({"Group":4, "No": number, "Rank": number});});
         FriedmanSuperDataHandling(k, N, superdata);
-        var se = Dunn_SE(superdata);
+        var se = Math.sqrt((N*k*(k+1))/12);
         var data1_ranks = [];
         var data2_ranks = [];
         var data3_ranks = [];
@@ -1820,12 +1820,12 @@ function Friedman(k, deets, data1, data2, data3, data4, data5, data6) {
         var second = (sum1 **2) + (sum2 **2) + (sum3 **2) + (sum4 **2);
         var third = 3 * (N * (k+1));
         var KH = (first * second) - third;
-        var dunn1v2 = CalcDunn(se, data1_ranks, data2_ranks); 
-        var dunn1v3 = CalcDunn(se, data1_ranks, data3_ranks); 
-        var dunn1v4 = CalcDunn(se, data1_ranks, data4_ranks); 
-        var dunn2v3 = CalcDunn(se, data2_ranks, data3_ranks); 
-        var dunn2v4 = CalcDunn(se, data2_ranks, data4_ranks); 
-        var dunn3v4 = CalcDunn(se, data3_ranks, data4_ranks); 
+        var dunn1v2 = TukeyMe((Math.abs(sum1-sum2)/se), k, (N*k));
+        var dunn1v3 = TukeyMe((Math.abs(sum1-sum3)/se), k, (N*k));
+        var dunn1v4 = TukeyMe((Math.abs(sum1-sum4)/se), k, (N*k));
+        var dunn2v3 = TukeyMe((Math.abs(sum2-sum3)/se), k, (N*k));
+        var dunn2v4 = TukeyMe((Math.abs(sum2-sum4)/se), k, (N*k));
+        var dunn3v4 = TukeyMe((Math.abs(sum3-sum4)/se), k, (N*k));
     } else if (k==5) {
         var N = data1.length;
         var superdata = [];
@@ -1835,7 +1835,7 @@ function Friedman(k, deets, data1, data2, data3, data4, data5, data6) {
         data4.forEach(function(number){superdata.push({"Group":4, "No": number, "Rank": number});});
         data5.forEach(function(number){superdata.push({"Group":5, "No": number, "Rank": number});});
         FriedmanSuperDataHandling(k, N, superdata);
-        var se = Dunn_SE(superdata);
+        var se = Math.sqrt((N*k*(k+1))/12);
         var data1_ranks = [];
         var data2_ranks = [];
         var data3_ranks = [];
@@ -1862,16 +1862,16 @@ function Friedman(k, deets, data1, data2, data3, data4, data5, data6) {
         var second = (sum1 **2) + (sum2 **2) + (sum3 **2) + (sum4 **2) + (sum5 **2);
         var third = 3 * (N * (k+1));
         var KH = (first * second) - third;
-        var dunn1v2 = CalcDunn(se, data1_ranks, data2_ranks);
-        var dunn1v3 = CalcDunn(se, data1_ranks, data3_ranks);
-        var dunn1v4 = CalcDunn(se, data1_ranks, data4_ranks);
-        var dunn1v5 = CalcDunn(se, data1_ranks, data5_ranks);
-        var dunn2v3 = CalcDunn(se, data2_ranks, data3_ranks);
-        var dunn2v4 = CalcDunn(se, data2_ranks, data4_ranks);
-        var dunn2v5 = CalcDunn(se, data2_ranks, data5_ranks);
-        var dunn3v4 = CalcDunn(se, data3_ranks, data4_ranks);
-        var dunn3v5 = CalcDunn(se, data3_ranks, data5_ranks);
-        var dunn4v5 = CalcDunn(se, data4_ranks, data5_ranks);
+        var dunn1v2 = TukeyMe((Math.abs(sum1-sum2)/se), k, (N*k));
+        var dunn1v3 = TukeyMe((Math.abs(sum1-sum3)/se), k, (N*k));
+        var dunn1v4 = TukeyMe((Math.abs(sum1-sum4)/se), k, (N*k));
+        var dunn1v5 = TukeyMe((Math.abs(sum1-sum5)/se), k, (N*k));
+        var dunn2v3 = TukeyMe((Math.abs(sum2-sum3)/se), k, (N*k));
+        var dunn2v4 = TukeyMe((Math.abs(sum2-sum4)/se), k, (N*k));
+        var dunn2v5 = TukeyMe((Math.abs(sum2-sum5)/se), k, (N*k));
+        var dunn3v4 = TukeyMe((Math.abs(sum3-sum4)/se), k, (N*k));
+        var dunn3v5 = TukeyMe((Math.abs(sum3-sum5)/se), k, (N*k));
+        var dunn4v5 = TukeyMe((Math.abs(sum4-sum5)/se), k, (N*k));
     } else if (k==6) {
         var N = data1.length;
         var superdata = [];
@@ -1882,7 +1882,7 @@ function Friedman(k, deets, data1, data2, data3, data4, data5, data6) {
         data5.forEach(function(number){superdata.push({"Group":5, "No": number, "Rank": number});});
         data6.forEach(function(number){superdata.push({"Group":6, "No": number, "Rank": number});});
         FriedmanSuperDataHandling(k, N, superdata);
-        var se = Dunn_SE(superdata);
+        var se = Math.sqrt((N*k*(k+1))/12);
         var data1_ranks = [];
         var data2_ranks = [];
         var data3_ranks = [];
@@ -1913,21 +1913,21 @@ function Friedman(k, deets, data1, data2, data3, data4, data5, data6) {
         var second = (sum1 **2) + (sum2 **2) + (sum3 **2) + (sum4 **2) + (sum5 **2) + (sum6 **2);
         var third = 3 * (N * (k+1));
         var KH = (first * second) - third;
-        var dunn1v2 = CalcDunn(se, data1_ranks, data2_ranks);
-        var dunn1v3 = CalcDunn(se, data1_ranks, data3_ranks);
-        var dunn1v4 = CalcDunn(se, data1_ranks, data4_ranks);
-        var dunn1v5 = CalcDunn(se, data1_ranks, data5_ranks);
-        var dunn1v6 = CalcDunn(se, data1_ranks, data6_ranks);
-        var dunn2v3 = CalcDunn(se, data2_ranks, data3_ranks);
-        var dunn2v4 = CalcDunn(se, data2_ranks, data4_ranks);
-        var dunn2v5 = CalcDunn(se, data2_ranks, data5_ranks);
-        var dunn2v6 = CalcDunn(se, data2_ranks, data6_ranks);
-        var dunn3v4 = CalcDunn(se, data3_ranks, data4_ranks);
-        var dunn3v5 = CalcDunn(se, data3_ranks, data5_ranks);
-        var dunn3v6 = CalcDunn(se, data3_ranks, data6_ranks);
-        var dunn4v5 = CalcDunn(se, data4_ranks, data5_ranks);
-        var dunn4v6 = CalcDunn(se, data4_ranks, data6_ranks);
-        var dunn5v6 = CalcDunn(se, data5_ranks, data6_ranks);
+        var dunn1v2 = TukeyMe((Math.abs(sum1-sum2)/se), k, (N*k));
+        var dunn1v3 = TukeyMe((Math.abs(sum1-sum3)/se), k, (N*k));
+        var dunn1v4 = TukeyMe((Math.abs(sum1-sum4)/se), k, (N*k));
+        var dunn1v5 = TukeyMe((Math.abs(sum1-sum5)/se), k, (N*k));
+        var dunn2v3 = TukeyMe((Math.abs(sum2-sum3)/se), k, (N*k));
+        var dunn2v4 = TukeyMe((Math.abs(sum2-sum4)/se), k, (N*k));
+        var dunn2v5 = TukeyMe((Math.abs(sum2-sum5)/se), k, (N*k));
+        var dunn3v4 = TukeyMe((Math.abs(sum3-sum4)/se), k, (N*k));
+        var dunn3v5 = TukeyMe((Math.abs(sum3-sum5)/se), k, (N*k));
+        var dunn4v5 = TukeyMe((Math.abs(sum4-sum5)/se), k, (N*k));
+        var dunn1v6 = TukeyMe((Math.abs(sum1-sum6)/se), k, (N*k));
+        var dunn2v6 = TukeyMe((Math.abs(sum2-sum6)/se), k, (N*k));
+        var dunn3v6 = TukeyMe((Math.abs(sum3-sum6)/se), k, (N*k));
+        var dunn4v6 = TukeyMe((Math.abs(sum4-sum6)/se), k, (N*k));
+        var dunn5v6 = TukeyMe((Math.abs(sum5-sum6)/se), k, (N*k));
     }
     var p = ChiSq(KH, df);
     var W = (KH) / (N * (k-1));
@@ -1958,13 +1958,13 @@ function Friedman(k, deets, data1, data2, data3, data4, data5, data6) {
             var result2 = "<i>Q</i> = " + KH + ", <i>p</i> = " + p + ". ";
         }
         if (k==3) {
-            result3 = "）ので、事後解析としてダン検定でグループ間の差を計算しました。その結果： <br>Group 1 x Group 2: " + dunn1v2 + "<br>Group 1 x Group 3: " + dunn1v3 + "<br>Group 2 x Group 3: " + dunn2v3;
+            result3 = "）ので、事後解析としてネメニー検定でグループ間の差を計算しました。その結果： <br>Group 1 x Group 2: <i>p</i> = " + dunn1v2 + "<br>Group 1 x Group 3: <i>p</i> = " + dunn1v3 + "<br>Group 2 x Group 3: <i>p</i> = " + dunn2v3;
         } else if (k==4) {
-            result3 = "）ので、事後解析としてダン検定でグループ間の差を計算しました。その結果： <br>Group 1 x Group 2: " + dunn1v2 + "<br>Group 1 x Group 3: " + dunn1v3 + "<br>Group 1 x Group 4: " + dunn1v4 + "<br>Group 2 x Group 3: " + dunn2v3 + "<br>Group 2 x Group 4: " + dunn2v4 + "<br>Group 3 x Group 4: " + dunn3v4;
+            result3 = "）ので、事後解析としてネメニー検定でグループ間の差を計算しました。その結果： <br>Group 1 x Group 2: <i>p</i> = " + dunn1v2 + "<br>Group 1 x Group 3: <i>p</i> = " + dunn1v3 + "<br>Group 1 x Group 4: <i>p</i> = " + dunn1v4 + "<br>Group 2 x Group 3: <i>p</i> = " + dunn2v3 + "<br>Group 2 x Group 4: <i>p</i> = " + dunn2v4 + "<br>Group 3 x Group 4: <i>p</i> = " + dunn3v4;
         } else if (k==5) {
-            result3 = "）ので、事後解析としてダン検定でグループ間の差を計算しました。その結果： <br>Group 1 x Group 2: " + dunn1v2 + "<br>Group 1 x Group 3: " + dunn1v3 + "<br>Group 1 x Group 4: " + dunn1v4 + "<br>Group 1 x Group 5: " + dunn1v5 + "<br>Group 2 x Group 3: " + dunn2v3 + "<br>Group 2 x Group 4: " + dunn2v4 + "<br>Group 2 x Group 5: " + dunn2v5 + "<br>Group 3 x Group 4: " + dunn3v4 + "<br>Group 3 x Group 5: " + dunn3v5 + "<br>Group 4 x Group 5: " + dunn4v5;
+            result3 = "）ので、事後解析としてネメニー検定でグループ間の差を計算しました。その結果： <br>Group 1 x Group 2: <i>p</i> = " + dunn1v2 + "<br>Group 1 x Group 3: <i>p</i> = " + dunn1v3 + "<br>Group 1 x Group 4: <i>p</i> = " + dunn1v4 + "<br>Group 1 x Group 5: <i>p</i> = " + dunn1v5 + "<br>Group 2 x Group 3: <i>p</i> = " + dunn2v3 + "<br>Group 2 x Group 4: <i>p</i> = " + dunn2v4 + "<br>Group 2 x Group 5: <i>p</i> = " + dunn2v5 + "<br>Group 3 x Group 4: <i>p</i> = " + dunn3v4 + "<br>Group 3 x Group 5: <i>p</i> = " + dunn3v5 + "<br>Group 4 x Group 5: <i>p</i> = " + dunn4v5;
         } else if (k==6) {
-            result3 = "）ので、事後解析としてダン検定でグループ間の差を計算しました。その結果： <br>Group 1 x Group 2: " + dunn1v2 + "<br>Group 1 x Group 3: " + dunn1v3 + "<br>Group 1 x Group 4: " + dunn1v4 + "<br>Group 1 x Group 5: " + dunn1v5 + "<br>Group 1 x Group 6: " + dunn1v6 + "<br>Group 2 x Group 3: " + dunn2v3 + "<br>Group 2 x Group 4: " + dunn2v4 + "<br>Group 2 x Group 5: " + dunn2v5 + "<br>Group 2 x Group 6: " + dunn2v6 + "<br>Group 3 x Group 4: " + dunn3v4 + "<br>Group 3 x Group 5: " + dunn3v5 + "<br>Group 3 x Group 6: " + dunn3v6 + "<br>Group 4 x Group 5: " + dunn4v5 + "<br>Group 4 x Group 6: " + dunn4v6 + "<br>Group 5 x Group 6: " + dunn5v6;
+            result3 = "）ので、事後解析としてネメニー検定でグループ間の差を計算しました。その結果： <br>Group 1 x Group 2: <i>p</i> = " + dunn1v2 + "<br>Group 1 x Group 3: <i>p</i> = " + dunn1v3 + "<br>Group 1 x Group 4: <i>p</i> = " + dunn1v4 + "<br>Group 1 x Group 5: <i>p</i> = " + dunn1v5 + "<br>Group 1 x Group 6: <i>p</i> = " + dunn1v6 + "<br>Group 2 x Group 3: <i>p</i> = " + dunn2v3 + "<br>Group 2 x Group 4: <i>p</i> = " + dunn2v4 + "<br>Group 2 x Group 5: <i>p</i> = " + dunn2v5 + "<br>Group 2 x Group 6: <i>p</i> = " + dunn2v6 + "<br>Group 3 x Group 4: <i>p</i> = " + dunn3v4 + "<br>Group 3 x Group 5: <i>p</i> = " + dunn3v5 + "<br>Group 3 x Group 6: <i>p</i> = " + dunn3v6 + "<br>Group 4 x Group 5: <i>p</i> = " + dunn4v5 + "<br>Group 4 x Group 6: <i>p</i> = " + dunn4v6 + "<br>Group 5 x Group 6: <i>p</i> = " + dunn5v6;
         }
         results_of_test = result1 + result2 + results4 + "<br>" + result3;
     }

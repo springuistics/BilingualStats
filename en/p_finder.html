@@ -23,8 +23,10 @@
             <label for="q1_a" class="answer">a <i>Z</i> value</label>
             <input type="radio" id="q1_b" class="radio_btn" name="q1" value="t_value">
             <label for="q1_b" class="answer">a <i>t</i> value</label>
-            <input type="radio" id="q1_b" class="radio_btn" name="q1" value="x_value">
-            <label for="q1_b" class="answer">a <i>Χ<sup>2</sup></i> value</label>
+            <input type="radio" id="q1_c" class="radio_btn" name="q1" value="x_value">
+            <label for="q1_c" class="answer">a <i>Χ<sup>2</sup></i> value</label>
+            <input type="radio" id="q1_d" class="radio_btn" name="q1" value="q_value">
+            <label for="q1_d" class="answer">a <i>q</i> value</label>
         <br>
         <br>
         <button id="setting_btn" class="button" onclick="SetUp()">Set Up the Calculator</button>
@@ -80,6 +82,26 @@
         <p id="x_result" class="results">Results go here</p>
         <br>
         <div class="bcon"><button id="zbtn" class="button" onclick="GetX()">Calculate <i>p</i></button>
+        <br>
+        </div>
+    </div>
+    <div id="QtoP" class="hidden">
+        <h2 class="subheader"><i>q</i> value to <i>p</i> Value Calculator</h2>
+        <br>
+        <table id="Cohen_table">
+            <tr>
+                <td class="tblwords"><i>q</i> value:</td>
+                <td class="tblbox"><input id="xq" type="text" class="adjustobox"></td>
+                <td class="tblwords"><i>k</i> value:</td>
+                <td class="tblbox"><input id="kq" type="text" class="adjustobox"></td>
+                <td class="tblwords">degrees of freedom:</td>
+                <td class="tblbox"><input id="dfq" type="text" class="adjustobox"></td>
+            </tr>
+        </table>
+        <br>
+        <p id="q_result" class="results">Results go here</p>
+        <br>
+        <div class="bcon"><button id="qbtn" class="button" onclick="GetQ()">Calculate <i>p</i></button>
         <br>
         </div>
     </div>

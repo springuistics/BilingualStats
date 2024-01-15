@@ -6,6 +6,7 @@ function L_Change() {
 }
 
 var results_of_test = "";
+var details_of_test = "";
 
 function Calculate() {
     document.getElementById("error_text").innerHTML = "";
@@ -55,73 +56,169 @@ function Calculate() {
         document.getElementById('error_text').style.display = "inline";
         document.getElementById('explain_bun').innerHTML = "An error has occurred. Please see the error message above.";
     } else {
-    g1pre.forEach(element => {
-        all.push(element);
-        allg1.push(element);
-        allpre.push(element);
-    });
-    g1post.forEach(element => {
-        all.push(element);
-        allg1.push(element);
-        allpost.push(element);
-    });
-    g2pre.forEach(element => {
-        all.push(element);
-        allpre.push(element);
-        allg2.push(element);
-    });
-    g2post.forEach(element => {
-        all.push(element);
-        allg2.push(element);
-        allpost.push(element);
-    });
-    var dfa = all.length - 1;
-    var SST = SumSq(all);
-    var MST = SST / dfa;
-    var Mg = CalcMean(all);
+        function CopyArray (array) {
+            return array.slice(0);
+        }
+        var dummyPre1 = CopyArray(g1pre);
+        var dummyPost1 = CopyArray(g1post);
+        var dummyPre2 = CopyArray(g2pre);
+        var dummyPost2 = CopyArray(g2post);
+        var checkPre1 = Shapiro_Wilk(dummyPre1);
+        var checkPost1 = Shapiro_Wilk(dummyPost1);
+        var checkPre2 = Shapiro_Wilk(dummyPre2);
+        var checkPost2 = Shapiro_Wilk(dummyPost2);
+        var isNormal;
+        if (checkPre1 == false || checkPost1 == false || checkPre2 == false || checkPost2 == false){
+            isNormal = false;
+            details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed the Shapiro-Wilk Test of normalcy, and therefore the data was treated as ordinal. Since the data was paired, a Scheirer-Ray-Hare Test was used was used to check for a significant interaction between treatment type (i.e., the difference between the experiment and control/comparison group) and treatment (i.e., the difference before and after the treatment).";
+            var superdata = [];
+            g1pre.forEach(function(number){superdata.push({"Group":1, "No": number, "Rank": number});});
+            g1post.forEach(function(number){superdata.push({"Group":2, "No": number, "Rank": number});});
+            g2pre.forEach(function(number){superdata.push({"Group":3, "No": number, "Rank": number});});
+            g2post.forEach(function(number){superdata.push({"Group":4, "No": number, "Rank": number});});
+            var se = Dunn_SE(superdata);
+            var superdata2 = SuperDataHandling(superdata);
+            var g1pre_ranks = [];
+            var g1post_ranks = [];
+            var g2pre_ranks = [];
+            var g2post_ranks = [];
+            superdata2.forEach(function(number, index) {
+            if (superdata2[index].Group === 1) {g1pre_ranks.push(superdata2[index].Rank);}
+            if (superdata2[index].Group === 2) {g1post_ranks.push(superdata2[index].Rank);}
+            if (superdata2[index].Group === 3) {g2pre_ranks.push(superdata2[index].Rank);}
+            if (superdata2[index].Group === 4) {g2post_ranks.push(superdata2[index].Rank);}
+            });
+                g1pre_ranks.forEach(element => {
+                    all.push(element);
+                    allg1.push(element);
+                    allpre.push(element);
+                });
+                g1post_ranks.forEach(element => {
+                    all.push(element);
+                    allg1.push(element);
+                    allpost.push(element);
+                });
+                g2pre_ranks.forEach(element => {
+                    all.push(element);
+                    allpre.push(element);
+                    allg2.push(element);
+                });
+                g2post_ranks.forEach(element => {
+                    all.push(element);
+                    allg2.push(element);
+                    allpost.push(element);
+                });
+                var dfa = all.length - 1;
+                var SST = SumSq(all);
+                var MST = SST / dfa;
+                var Mg = CalcMean(all);
 
-    var Mpr = CalcMean(allpre);
-    var Mpo = CalcMean(allpost);
-    var SS_B = (allpre.length * ((Mpr - Mg) **2)) + (allpost.length * ((Mpo - Mg) **2));
-    var MSS_B = SS_B
-    
-    var Mg1 = CalcMean(allg1);
-    var Mg2 = CalcMean(allg2);
-    var SS_A = (allg1.length * ((Mg1 - Mg) **2)) + (allg2.length * ((Mg2 - Mg) **2));
-    var MSS_A = SS_A;
-    
-    var submeans = [];
-    for (let i=0; i<allpre.length; i++){
-        let temp = (allpre[i] + allpost[i]) / 2;
-        submeans.push(temp);
-    }
-    var SS_bsub = (SumSq(submeans)) * 2;
-    var SS_wsub = SST - SS_bsub;
-    var SS_wivarA = SS_bsub - SS_A;
-    var SS_betAxB = (g1pre.length * (((CalcMean(g1pre))) - Mg) **2) + (g1post.length * (((CalcMean(g1post))) - Mg) **2) + (g2pre.length * (((CalcMean(g2pre))) - Mg) **2) + (g2post.length * (((CalcMean(g2post))) - Mg) **2) ; 
-    var SS_AxB = SS_betAxB - SS_A - SS_B;
+                var Mpr = CalcMean(allpre);
+                var Mpo = CalcMean(allpost);
+                var SS_B = (allpre.length * ((Mpr - Mg) **2)) + (allpost.length * ((Mpo - Mg) **2));
+                var MSS_B = SS_B
+                
+                var Mg1 = CalcMean(allg1);
+                var Mg2 = CalcMean(allg2);
+                var SS_A = (allg1.length * ((Mg1 - Mg) **2)) + (allg2.length * ((Mg2 - Mg) **2));
+                var MSS_A = SS_A;
+                
+                var submeans = [];
+                for (let i=0; i<allpre.length; i++){
+                    let temp = (allpre[i] + allpost[i]) / 2;
+                    submeans.push(temp);
+                }
+                var SS_bsub = (SumSq(submeans)) * 2;
+                var SS_wsub = SST - SS_bsub;
+                var SS_wivarA = SS_bsub - SS_A;
+                var SS_betAxB = (g1pre.length * (((CalcMean(g1pre_ranks))) - Mg) **2) + (g1post.length * (((CalcMean(g1post_ranks))) - Mg) **2) + (g2pre.length * (((CalcMean(g2pre_ranks))) - Mg) **2) + (g2post.length * (((CalcMean(g2post_ranks))) - Mg) **2) ; 
+                var SS_AxB = SS_betAxB - SS_A - SS_B;
 
-    var SSE = SS_wsub - SS_B - SS_AxB;
-    var MSE = SSE / (allpre.length - 2);
+                var SSE = SS_wsub - SS_B - SS_AxB;
+                var MSE = SSE / (allpre.length - 2);
+            
+        } else {
+            isNormal = true;
+            details_of_test = "A two-way mixed ANOVA test was used to check for a significant interaction between treatment type (i.e., the difference between the experiment and control/comparison group) and treatment (i.e., the difference before and after the treatment).";
+                g1pre.forEach(element => {
+                    all.push(element);
+                    allg1.push(element);
+                    allpre.push(element);
+                });
+                g1post.forEach(element => {
+                    all.push(element);
+                    allg1.push(element);
+                    allpost.push(element);
+                });
+                g2pre.forEach(element => {
+                    all.push(element);
+                    allpre.push(element);
+                    allg2.push(element);
+                });
+                g2post.forEach(element => {
+                    all.push(element);
+                    allg2.push(element);
+                    allpost.push(element);
+                });
+                var dfa = all.length - 1;
+                var SST = SumSq(all);
+                var MST = SST / dfa;
+                var Mg = CalcMean(all);
 
-    var FofA = MSS_A / (SS_wivarA / (allpre.length - 2));
-    var FofB = MSS_B / MSE;
-    var FofInt = SS_AxB / MSE;
-    var pofA = FtoP(2, FofA, 1, (allpre.length -2));
-    var pofB = FtoP(2, FofB, 1, (allpre.length -2));
-    var pofInt = FtoP(4, FofInt, 1, (allpre.length -2));
-    FofA = FofA.toFixed(2);
-    FofB = FofB.toFixed(2);
-    FofInt = FofInt.toFixed(2);
-    pofA = pofA.toFixed(2);
-    pofB = pofB.toFixed(2);
-    pofInt = pofInt.toFixed(2);
-    var eta_A = SS_A / (SST - SS_B - SS_AxB);
-    var eta_B = SS_B / (SST - SS_A - SS_AxB);
-    var eta_int = SS_AxB / (SST-SS_A-SS_B);
-    eta_A = eta_A.toFixed(2);
-    eta_B = eta_B.toFixed(2);
-    eta_int = eta_int.toFixed(2);
+                var Mpr = CalcMean(allpre);
+                var Mpo = CalcMean(allpost);
+                var SS_B = (allpre.length * ((Mpr - Mg) **2)) + (allpost.length * ((Mpo - Mg) **2));
+                var MSS_B = SS_B
+                
+                var Mg1 = CalcMean(allg1);
+                var Mg2 = CalcMean(allg2);
+                var SS_A = (allg1.length * ((Mg1 - Mg) **2)) + (allg2.length * ((Mg2 - Mg) **2));
+                var MSS_A = SS_A;
+                
+                var submeans = [];
+                for (let i=0; i<allpre.length; i++){
+                    let temp = (allpre[i] + allpost[i]) / 2;
+                    submeans.push(temp);
+                }
+                var SS_bsub = (SumSq(submeans)) * 2;
+                var SS_wsub = SST - SS_bsub;
+                var SS_wivarA = SS_bsub - SS_A;
+                var SS_betAxB = (g1pre.length * (((CalcMean(g1pre))) - Mg) **2) + (g1post.length * (((CalcMean(g1post))) - Mg) **2) + (g2pre.length * (((CalcMean(g2pre))) - Mg) **2) + (g2post.length * (((CalcMean(g2post))) - Mg) **2) ; 
+                var SS_AxB = SS_betAxB - SS_A - SS_B;
+
+                var SSE = SS_wsub - SS_B - SS_AxB;
+                var MSE = SSE / (allpre.length - 2);
+        }
+                
+
+            if (isNormal==true){
+                var FofA = MSS_A / (SS_wivarA / (allpre.length - 2));
+                var FofB = MSS_B / MSE;
+                var FofInt = SS_AxB / MSE;
+                var pofA = FtoP(2, FofA, 1, (allpre.length -2));
+                var pofB = FtoP(2, FofB, 1, (allpre.length -2));
+                var pofInt = FtoP(4, FofInt, 1, (allpre.length -2));
+                FofA = FofA.toFixed(2);
+                FofB = FofB.toFixed(2);
+                FofInt = FofInt.toFixed(2);
+                pofA = pofA.toFixed(2);
+                pofB = pofB.toFixed(2);
+                pofInt = pofInt.toFixed(2);
+            } else if (isNormal==false){
+                var HofA = (SS_A/MSE).toFixed(2);
+                var HofB = (SS_B/MSE).toFixed(2);
+                var HofInter = (SS_AxB / MSE).toFixed(2);
+                var pofA = GimmietheP(HofA, 1).toFixed(2);
+                var pofB = GimmietheP(HofB, 1).toFixed(2);
+                var pofInt = GimmietheP(HofInter, 1).toFixed(2);
+            }
+
+            var eta_A = SS_A / (SST - SS_B - SS_AxB);
+            var eta_B = SS_B / (SST - SS_A - SS_AxB);
+            var eta_int = SS_AxB / (SST-SS_A-SS_B);
+            eta_A = eta_A.toFixed(2);
+            eta_B = eta_B.toFixed(2);
+            eta_int = eta_int.toFixed(2);
 
     var result1 = "";
     var result2 = "";
@@ -131,11 +228,23 @@ function Calculate() {
     var result6 = "";
 
     if (pofInt < .01) {
-        result1 = "There was a significant interaction between treatment and group type; <i>F</i> [3, " + (all.length -1) + "] = " + FofInt + ", <i>p</i> < .01";
+        if (isNormal==true){
+            result1 = "There was a significant interaction between treatment and group type; <i>F</i> [3, " + (all.length -1) + "] = " + FofInt + ", <i>p</i> < .01";
+        } else if (isNormal==false){
+            result1 = "There was a significant interaction between treatment and group type; <i>H</i> [3, " + (all.length -1) + "] = " + HofInter + ", <i>p</i> < .01";
+        }
     } else if (pofInt < .05) {
-        result1 = "There was a significant interaction between treatment and group type; <i>F</i> [3, " + (all.length -1) + "] = " + FofInt + ", <i>p</i> = " + pofInt;
+        if (isNormal==true){
+            result1 = "There was a significant interaction between treatment and group type; <i>F</i> [3, " + (all.length -1) + "] = " + FofInt + ", <i>p</i> = " + pofInt;
+        } else if (isNormal==false){
+            result1 = "There was a significant interaction between treatment and group type; <i>H</i> [3, " + (all.length -1) + "] = " + HofInter + ", <i>p</i> = " + pofInt;
+        }
     } else {
-        result1 = "There was no significant interaction between treatment and group type; <i>F</i> [3, " + (all.length -1) + "] = " + FofInt + ", <i>p</i> = " + pofInt;
+        if (isNormal==true){
+            result1 = "There was no significant interaction between treatment and group type; <i>F</i> [3, " + (all.length -1) + "] = " + FofInt + ", <i>p</i> = " + pofInt;
+        } else if (isNormal==false){
+            result1 = "There was no significant interaction between treatment and group type; <i>H</i> [3, " + (all.length -1) + "] = " + HofInter + ", <i>p</i> = " + pofInt;
+        }
     }
 
     if (eta_int<.06) {
@@ -147,11 +256,23 @@ function Calculate() {
     }
 
     if (pofA < .01) {
-        result2 = "<br><br>Furthermore, there was a significant difference between pre- and post-test scores overall; <i>F</i> [1, " + (allpre.length -1) + "] = " + FofA + ", <i>p</i> < .01";
+        if (isNormal==true){
+                result2 = "<br><br>Furthermore, there was a significant difference between pre- and post-test scores overall; <i>F</i> [1, " + (allpre.length -1) + "] = " + FofA + ", <i>p</i> < .01";
+        } else if (isNormal==false){
+            result2 = "<br><br>Furthermore, there was a significant difference between pre- and post-test scores overall; <i>H</i> [1, " + (allpre.length -1) + "] = " + HofA + ", <i>p</i> < .01";
+        }
     } else if (pofA < .05) {
-        result2 = "<br><br>Furthermore, there was a significant difference between pre- and post-test scores overall; <i>F</i> [1, " + (allpre.length -1) + "] = " + FofA + ", <i>p</i> = " + pofA;
+        if (isNormal==true){
+            result2 = "<br><br>Furthermore, there was a significant difference between pre- and post-test scores overall; <i>F</i> [1, " + (allpre.length -1) + "] = " + FofA + ", <i>p</i> = " + pofA;
+        } else if (isNormal==false){
+            result2 = "<br><br>Furthermore, there was a significant difference between pre- and post-test scores overall; <i>H</i> [1, " + (allpre.length -1) + "] = " + HofA + ", <i>p</i> = " + pofA;
+        }
     } else {
-        result2 = "<br><br>Furthermore was no significant difference between pre- and post-test scores overall; <i>F</i> [1, " + (allpre.length -1) + "] = " + FofA + ", <i>p</i> = " + pofA;
+        if (isNormal==true){
+            result2 = "<br><br>Furthermore was no significant difference between pre- and post-test scores overall; <i>F</i> [1, " + (allpre.length -1) + "] = " + FofA + ", <i>p</i> = " + pofA;
+        } else if (isNormal==false){
+            result2 = "<br><br>Furthermore was no significant difference between pre- and post-test scores overall; <i>H</i> [1, " + (allpre.length -1) + "] = " + HofA + ", <i>p</i> = " + pofA;
+        }
     }
 
     if (eta_A<.06) {
@@ -163,11 +284,23 @@ function Calculate() {
     }
 
     if (pofB < .01) {
-        result5 = "there was a significant difference between the experimental and control/comparison groups overall; <i>F</i> [1, " + (allpre.length -1) + "] = " + FofB + ", <i>p</i> < .01";
+        if (isNormal==true){
+            result5 = "there was a significant difference between the experimental and control/comparison groups overall; <i>F</i> [1, " + (allpre.length -1) + "] = " + FofB + ", <i>p</i> < .01";
+        } else if (isNormal==false){
+            result5 = "there was a significant difference between the experimental and control/comparison groups overall; <i>H</i> [1, " + (allpre.length -1) + "] = " + HofB + ", <i>p</i> < .01";
+        }
     } else if (pofB < .05) {
-        result5 = "there was a significant difference between the experimental and control/comparison groups overall; <i>F</i> [1, " + (allpre.length -1) + "] = " + FofB + ", <i>p</i> = " + pofB;
+        if (isNormal==true){
+            result5 = "there was a significant difference between the experimental and control/comparison groups overall; <i>F</i> [1, " + (allpre.length -1) + "] = " + FofB + ", <i>p</i> = " + pofB;
+        } else if (isNormal==false){
+            result5 = "there was a significant difference between the experimental and control/comparison groups overall; <i>H</i> [1, " + (allpre.length -1) + "] = " + HofB + ", <i>p</i> = " + pofB;
+        }
     } else {
-        result5 = "there was no significant difference between the experimental and control/comparison groups overall; <i>F</i> [1, " + (allpre.length -1) + "] = " + FofB + ", <i>p</i> = " + pofB;
+        if (isNormal==true){
+            result5 = "there was no significant difference between the experimental and control/comparison groups overall; <i>F</i> [1, " + (allpre.length -1) + "] = " + FofB + ", <i>p</i> = " + pofB;
+        } else if (isNormal==false){
+            result5 = "there was no significant difference between the experimental and control/comparison groups overall; <i>H</i> [1, " + (allpre.length -1) + "] = " + HofB + ", <i>p</i> = " + pofB;
+        }
     }
 
     if (eta_B<.06) {
@@ -180,7 +313,7 @@ function Calculate() {
 
     results_of_test = result1 + results4 + result2 + result3 + result5 + result6;
     document.getElementById('results_bun').innerHTML = results_of_test;
-    document.getElementById('explain_bun').innerHTML = "A two-way mixed ANOVA test was used to check for a significant interaction between treatment type (i.e., the difference between the experiment and control/comparison group) and treatment (i.e., the difference before and after the treatment).";
+    document.getElementById('explain_bun').innerHTML = details_of_test;
 }
 }
 
@@ -240,108 +373,103 @@ function FtoP(k, f, n1, n2) {
     return 1-a+c
 }
 
-function TukeyMe(q, k, v) {
+function TukeyMe(q, k, df) {
     q = Math.abs(q);
-    let text = "";
-    function getit(hs5, hs1) {
-        if (q<hs5) {return "<i>n.s.</i>"} else if (q>hs1) {return "p < .01"} else {
-        let s=(hs1-hs5)/4; 
-        let p1=hs5+s; let p2=p1+s; let p3=p2+s; let p2d=p1+(s/2); let p3d=p2+(s/2);
-        if (q<p1) {return "p = .05"} else if (q>p1 && q<p2d) {return "p = .04"} else if (q>p2d && q<p2) {return "p = .03"} else if (q>p2 && q<p3d) {return "p = .02"} else if (q>p3d && q<p3) {text = "p = .01"} else {return "p < .01"}
-    }}
-    if (k==3) {
-        if (v==5) {let hs5=4.60; let hs1=6.98; text=getit(hs5, hs1);}
-        else if (v==6) {let hs5=4.34; let hs1=6.33; text=getit(hs5, hs1);}
-        else if (v==7) {let hs5=4.16; let hs1=5.92; text=getit(hs5, hs1);}
-        else if (v==8) {let hs5=4.04; let hs1=5.64; text=getit(hs5, hs1);}
-        else if (v==9) {let hs5=3.95; let hs1=5.43; text=getit(hs5, hs1);}
-        else if (v==10) {let hs5=3.88; let hs1=5.27; text=getit(hs5, hs1);}
-        else if (v==11) {let hs5=3.82; let hs1=5.15; text=getit(hs5, hs1);}
-        else if (v==12) {let hs5=3.77; let hs1=5.05; text=getit(hs5, hs1);}
-        else if (v==13) {let hs5=3.73; let hs1=4.96; text=getit(hs5, hs1);}
-        else if (v==14) {let hs5=3.70; let hs1=4.89; text=getit(hs5, hs1);}
-        else if (v==15) {let hs5=3.67; let hs1=4.84; text=getit(hs5, hs1);}
-        else if (v==16) {let hs5=3.65; let hs1=4.79; text=getit(hs5, hs1);}
-        else if (v==17) {let hs5=3.63; let hs1=4.74; text=getit(hs5, hs1);}
-        else if (v==18) {let hs5=3.61; let hs1=4.70; text=getit(hs5, hs1);}
-        else if (v==19) {let hs5=3.59; let hs1=4.67; text=getit(hs5, hs1);}
-        else if (v==20) {let hs5=3.58; let hs1=4.64; text=getit(hs5, hs1);}
-        else if (v>20&&v<30) {let hs5=3.53; let hs1=4.55; text=getit(hs5, hs1);}
-        else if (v>=30&&v<40) {let hs5=3.45; let hs1=4.41; text=getit(hs5, hs1);}
-        else if (v>=40&&v<60) {let hs5=3.42; let hs1=4.32; text=getit(hs5, hs1);}
-        else if (v>=60&&v<120) {let hs5=3.38; let hs1=4.24; text=getit(hs5, hs1);}
-        else if (v>=120) {let hs5=3.34; let hs1=4.16; text=getit(hs5, hs1);}
+    var vw = new Array(31);
+    var qw = new Array(31);
+    var pcutj = 0.00003;
+    var pcutk = 0.0001;
+    var step = 0.45;
+    var vmax = 1000.0;
+    var cv1 = 0.193064705;
+    var cv2 = 0.293525326;
+    var cvmax = 0.39894228;
+    var cv = new Array(5);
+    cv[0] = 0.0;
+    cv[1] = 0.318309886;
+    cv[2] = -0.00268132716;
+    cv[3] = 0.00347222222;
+    cv[4] = 0.0833333333;
+    var jmin = 3; var jmax = 15; var kmin = 7; var kmax = 15;
+    var retval; var g; var gmid; var r1; var c; var h; var hj; var v2;
+    var gstep; var pk; var pk1; var pk2; var pj; var j; var jj;
+    var kk; var gk; var w0; var pz; var x; var jump; var ehj;
+    retval = 0.0;
+    
+    g = step * Math.pow(k, -0.2);
+    gmid = 0.5 * Math.log(k);
+    r1 = k - 1.0;
+    c = Math.log(k * g * cvmax);
+    if (c <= vmax) {
+        h = step * Math.pow(df, -0.5);
+        v2 = df * 0.5;
+        if (df == 1) {c = cv1;}
+        if (df == 2) {c = cv2;    }
+        if (!((df == 1) || (df == 2))) {
+            c = Math.sqrt(v2) * cv[1] / (1.0 + ((cv[2] / v2 + cv[3]) / v2 + cv[4]) / v2);
+        }
+        c = Math.log(c * k * g * h);
     }
-    else if (k==4) {
-        if (v==5) {let hs5=5.22; let hs1=7.80; text=getit(hs5, hs1);}
-        else if (v==6) {let hs5=4.90; let hs1=7.03; text=getit(hs5, hs1);}
-        else if (v==7) {let hs5=4.68; let hs1=6.54; text=getit(hs5, hs1);}
-        else if (v==8) {let hs5=4.53; let hs1=6.20; text=getit(hs5, hs1);}
-        else if (v==9) {let hs5=4.41; let hs1=5.96; text=getit(hs5, hs1);}
-        else if (v==10) {let hs5=4.33; let hs1=5.77; text=getit(hs5, hs1);}
-        else if (v==11) {let hs5=4.26; let hs1=5.62; text=getit(hs5, hs1);}
-        else if (v==12) {let hs5=4.20; let hs1=5.50; text=getit(hs5, hs1);}
-        else if (v==13) {let hs5=4.15; let hs1=5.40; text=getit(hs5, hs1);}
-        else if (v==14) {let hs5=4.11; let hs1=5.32; text=getit(hs5, hs1);}
-        else if (v==15) {let hs5=4.08; let hs1=5.25; text=getit(hs5, hs1);}
-        else if (v==16) {let hs5=4.05; let hs1=5.19; text=getit(hs5, hs1);}
-        else if (v==17) {let hs5=4.02; let hs1=5.14; text=getit(hs5, hs1);}
-        else if (v==18) {let hs5=4.00; let hs1=5.09; text=getit(hs5, hs1);}
-        else if (v==19) {let hs5=3.98; let hs1=5.05; text=getit(hs5, hs1);}
-        else if (v==20) {let hs5=3.96; let hs1=5.02; text=getit(hs5, hs1);}
-        else if (v>20&&v<30) {let hs5=3.90; let hs1=4.91; text=getit(hs5, hs1);}
-        else if (v>=30&&v<40) {let hs5=3.85; let hs1=4.80; text=getit(hs5, hs1);}
-        else if (v>=40&&v<60) {let hs5=3.79; let hs1=4.70; text=getit(hs5, hs1);}
-        else if (v>=60&&v<120) {let hs5=3.70; let hs1=4.54; text=getit(hs5, hs1);}
-        else if (v>=120) {let hs5=3.66; let hs1=4.45; text=getit(hs5, hs1);}
+    
+    gstep = g;
+    qw[1] = -1.0;
+    qw[jmax + 1] = -1.0;
+    pk1 = 1.0;
+    pk2 = 1.0;
+    for (kk = 1; kk <= kmax; kk++) {
+        gstep -= g;
+        do {
+            gstep = -gstep;
+            gk = gmid + gstep;
+            pk = 0.0;
+            if ((pk2 > pcutk) || (kk <= kmin)) {
+                w0 = c - gk * gk * 0.5;
+                pz = alnorm(gk, true);
+                x = alnorm(gk - q, true) - pz;
+                if (x > 0.0)
+                    pk = Math.exp(w0 + r1 * Math.log(x));
+                if (df <= vmax) {
+                    jump = -jmax;
+                    do {
+                        jump += jmax;
+                        for (j = 1; j <= jmax; j++) {
+                            jj = j + jump;
+                            if (qw[jj] <= 0.0) {
+                                hj = h * j;
+                                if (j < jmax) {
+                                    qw[jj + 1] = -1.0;
+                                }
+                                ehj = Math.exp(hj);
+                                qw[jj] = q * ehj;
+                                vw[jj] = df * (hj + 0.5 - ehj * ehj * 0.5);
+                            }
+                            pj = 0.0;
+                            x = alnorm(gk - qw[jj], true) - pz;
+                            if (x > 0.0) {
+                                pj = Math.exp(w0 + vw[jj] + r1 * Math.log(x));
+                            }
+                            pk += pj;
+                            if (pj <= pcutj) {
+                                if ((jj > jmin) || (kk > kmin)) {
+                                    break;
+                                }
+                            }
+                            pj = pj;
+                        }
+                        h = -h;
+                    } while (h < 0);
+                }
+            }
+            retval += pk;
+            if ((kk > kmin) && (pk <= pcutk) && (pk1 <= pcutk)) {
+                return 1 - retval;
+            }
+            pk2 = pk1;
+            pk1 = pk;
+        } while (gstep > 0.0);
     }
-    else if (k==5) {
-        if (v==5) {let hs5=5.67; let hs1=8.42; text=getit(hs5, hs1);}
-        else if (v==6) {let hs5=5.30; let hs1=7.56; text=getit(hs5, hs1);}
-        else if (v==7) {let hs5=5.06; let hs1=7.01; text=getit(hs5, hs1);}
-        else if (v==8) {let hs5=4.89; let hs1=6.62; text=getit(hs5, hs1);}
-        else if (v==9) {let hs5=4.76; let hs1=6.35; text=getit(hs5, hs1);}
-        else if (v==10) {let hs5=4.65; let hs1=6.14; text=getit(hs5, hs1);}
-        else if (v==11) {let hs5=4.57; let hs1=5.97; text=getit(hs5, hs1);}
-        else if (v==12) {let hs5=4.51; let hs1=5.84; text=getit(hs5, hs1);}
-        else if (v==13) {let hs5=4.45; let hs1=5.73; text=getit(hs5, hs1);}
-        else if (v==14) {let hs5=4.41; let hs1=5.63; text=getit(hs5, hs1);}
-        else if (v==15) {let hs5=4.37; let hs1=5.56; text=getit(hs5, hs1);}
-        else if (v==16) {let hs5=4.33; let hs1=5.49; text=getit(hs5, hs1);}
-        else if (v==17) {let hs5=4.30; let hs1=5.43; text=getit(hs5, hs1);}
-        else if (v==18) {let hs5=4.28; let hs1=5.38; text=getit(hs5, hs1);}
-        else if (v==19) {let hs5=4.25; let hs1=5.33; text=getit(hs5, hs1);}
-        else if (v==20) {let hs5=4.23; let hs1=5.29; text=getit(hs5, hs1);}
-        else if (v>20&&v<30) {let hs5=4.17; let hs1=5.17; text=getit(hs5, hs1);}
-        else if (v>=30&&v<40) {let hs5=4.07; let hs1=5.00; text=getit(hs5, hs1);}
-        else if (v>=40&&v<60) {let hs5=4.01; let hs1=4.86; text=getit(hs5, hs1);}
-        else if (v>=60&&v<120) {let hs5=3.95; let hs1=4.76; text=getit(hs5, hs1);}
-        else if (v>=120) {let hs5=3.89; let hs1=4.65; text=getit(hs5, hs1);}
-    }
-    else if (k==6) {
-        if (v==5) {let hs5=6.03; let hs1=8.91; text=getit(hs5, hs1);}
-        else if (v==6) {let hs5=5.63; let hs1=7.97; text=getit(hs5, hs1);}
-        else if (v==7) {let hs5=5.36; let hs1=7.37; text=getit(hs5, hs1);}
-        else if (v==8) {let hs5=5.17; let hs1=6.96; text=getit(hs5, hs1);}
-        else if (v==9) {let hs5=5.02; let hs1=6.66; text=getit(hs5, hs1);}
-        else if (v==10) {let hs5=4.91; let hs1=6.43; text=getit(hs5, hs1);}
-        else if (v==11) {let hs5=4.82; let hs1=6.25; text=getit(hs5, hs1);}
-        else if (v==12) {let hs5=4.75; let hs1=6.10; text=getit(hs5, hs1);}
-        else if (v==13) {let hs5=4.69; let hs1=5.98; text=getit(hs5, hs1);}
-        else if (v==14) {let hs5=4.64; let hs1=5.88; text=getit(hs5, hs1);}
-        else if (v==15) {let hs5=4.59; let hs1=5.80; text=getit(hs5, hs1);}
-        else if (v==16) {let hs5=4.56; let hs1=5.72; text=getit(hs5, hs1);}
-        else if (v==17) {let hs5=4.52; let hs1=5.66; text=getit(hs5, hs1);}
-        else if (v==18) {let hs5=4.49; let hs1=5.60; text=getit(hs5, hs1);}
-        else if (v==19) {let hs5=4.47; let hs1=5.55; text=getit(hs5, hs1);}
-        else if (v==20) {let hs5=4.45; let hs1=5.51; text=getit(hs5, hs1);}
-        else if (v>20&&v<30) {let hs5=4.37; let hs1=5.37; text=getit(hs5, hs1);}
-        else if (v>=30&&v<40) {let hs5=4.26; let hs1=5.18; text=getit(hs5, hs1);}
-        else if (v>=40&&v<60) {let hs5=4.19; let hs1=5.05; text=getit(hs5, hs1);}
-        else if (v>=60&&v<120) {let hs5=4.13; let hs1=4.93; text=getit(hs5, hs1);}
-        else if (v>=120) {let hs5=4.06; let hs1=4.82; text=getit(hs5, hs1);}
-    }
-    return text;
+    
+    return 1 - retval;
 }
 
 function PtoT(t,n) {
@@ -358,3 +486,271 @@ function PtoT(t,n) {
     } else
         { return 1-sth*StatCom(cth*cth,1,n-3,-1) }
 }
+
+function Shapiro_Wilk (data) {
+    function poly(cc, nord, x){
+        var p;
+        var ret_val;
+        ret_val = cc[0];
+        if (nord > 1) {
+    	    p = x * cc[nord-1];
+    	    for (j = nord - 2; j > 0; j--)
+    	        p = (p + cc[j]) * x;
+    	    ret_val += p;
+        }
+        return ret_val;
+    }
+    
+    var x = data.sort(function (a, b) {return a - b});
+    var N = data.length;
+    var Nn2 = Math.floor(N/2);
+    var a = new Array(Math.floor(Nn2) + 1);
+    var c1 = [ 0, 0.221157, -0.147981, -2.07119, 4.434685, -2.706056 ];
+    var c2 = [ 0, 0.042981, -0.293762, -1.752461, 5.682633, -3.582633 ];
+    var i, j, i1;
+    var ssassx, summ2, ssumm2, range;
+    var a1, a2, an, sa, xi, sx, xx, w1;
+    var fac, asa, an25, ssa, sax, rsn, ssx, xsx;
+    an = N;
+    an25 = an + 0.25;
+    summ2 = 0.0;
+    for (i=1; i <= Nn2; i++) {
+        a[i] = normalQuantile((i - 0.375) / an25, 0, 1);
+        var r__1 = a[i];
+        summ2 += r__1 * r__1;
+    }
+    summ2 *= 2;
+    ssumm2 = Math.sqrt(an);
+    rsn = 1 / Math.sqrt(an);
+    a1 = poly(c1, 6, rsn) - a[1] / ssumm2;
+    i1 = 3;
+    a2 = -a[2] / ssumm2 + poly(c2, 6, rsn);
+    fac = Math.sqrt((summ2 - 2 * (a[1]*a[1]) - 2 * (a[2] * a[2])) / (1 - 2 * (a1 * a1) - 2 * (a2 * a2)));
+    a[2] = a2;
+    a[1] = a1;
+    for (i = i1; i <= Nn2; i++) {
+        a[i] /= - fac;
+    }
+    range = x[N - 1] - x[0];
+    if (range < 0.0000000000001) {
+        return false;
+    }
+    xx = x[0] / range;
+    sx = xx;
+    sa = -a[1];
+    for (i = 1, j = (N-1); i < N; j--) {
+        xi = x[i] / range;
+            if ((xx - xi) > 0.000000000000001) {
+                return false;
+            }
+        sx += xi;
+        i++;
+        if (i != j) {
+            sa += sign(i - j) * a[Math.min(i, j)];
+        }
+        xx = xi;
+    }
+    sa /= N;
+    sx /= N;
+    ssa = ssx = sax = 0.;
+    for (i = 0, j = (N-1); i < N; i++, j--) {
+        if (i != j)
+            asa = sign(i - j) * a[1 + Math.min(i, j)] - sa;
+        else
+            asa = -sa;
+        xsx = x[i] / range - sx;
+        ssa += asa * asa;
+        ssx += xsx * xsx;
+        sax += asa * xsx;
+    }
+    ssassx = Math.sqrt(ssa * ssx);
+    w1 = (ssassx - sax) * (ssassx + sax) / (ssa * ssx);
+    var w = 1 - w1;
+    var winterpret = [.788, .803, .818, .829, .842, .850, .859, .866, .874, .881, .887, .892, .897, .892, .897, .901, .905, .908, 911, .914, .916, .918, .920, .923, .924, .926, .927, .929, .930, .933, .934];
+    if (N < 36) {
+        var lookup = N - 6;
+        if (w > winterpret[lookup]) {
+            return true;
+        } else {return false;}
+    } else {
+        if (w > .80) {
+            return true;
+        } else {return false;}
+    }
+}
+
+function SuperDataHandling(superdata) {
+    var sorted = superdata.slice().sort((a, b) => a.No - b.No);
+        for (let i = 0; i < sorted.length; i++) {sorted[i].Rank = i + 1;}
+        var just_numbers = [];
+        for (let i = 0; i < superdata.length; i++) {just_numbers.push(superdata[i].No);}
+        Array.prototype.contains = function(v) {
+        for (var i = 0; i < this.length; i++) {if (this[i] === v) return true;}
+        return false;};
+        Array.prototype.unique = function() {
+        var arr = [];
+        for (var i = 0; i < this.length; i++) {
+          if (!arr.contains(this[i])) {
+            arr.push(this[i]);}}
+        return arr;}
+        var uniques = just_numbers.unique();
+        var ties = [];
+        for (let i = 0; i < uniques.length; i++) {
+            var temp_a = 0;
+            for (let j = 0; j < just_numbers.length; j++){
+                if (uniques[i] == just_numbers[j]){
+                temp_a += 1;}
+            }
+            if (temp_a > 1) {ties.push(uniques[i]);}
+        }
+        var ties2 = [];
+        for (let i = 0; i < ties.length; i++) {
+            for (let j = 0; j < just_numbers.length; j++){    
+                if (ties[i] == just_numbers[j]) {
+                ties2.push(just_numbers[j]);}
+            }
+        }
+        var counter = ties.length;
+        var ha = [];
+        if (counter > 0) {
+            for (let i = 0; i < ties.length; i++){
+                var temp_d = 0;
+                for (let j = 0; j < ties2.length; j++){
+                    if (ties[i] == ties2[j]){
+                        temp_d += 1;}
+                }
+                ha.push({"ties": ties[i], "no": temp_d})
+            };
+            var newnum = [];
+            for (let i = 0; i < ha.length; i ++) {
+                let temp_val = 0;
+                for (j = 0; j < superdata.length; j++) {
+                    if (superdata[j].No === ha[i].ties){
+                    temp_val += superdata[j].Rank;}
+                }
+                if (temp_val > 1) {
+                    let me = temp_val / ha[i].no;
+                    let you = ha[i].ties;
+                    newnum.push({"tie":you, "val":me});
+                }
+            };
+            for (let i = 0; i < superdata.length; i ++) {
+                for (let j = 0; j < newnum.length; j++) {
+                if (superdata[i].No == newnum[j].tie) {
+                    superdata[i].Rank = newnum[j].val;} 
+            };
+            }
+        }
+    return superdata;
+}
+
+
+function Dunn_SE(superdata) {
+    var N = superdata.length;
+    var just_numbers = [];
+        for (let i = 0; i < superdata.length; i++) {just_numbers.push(superdata[i].No);}
+        Array.prototype.contains = function(v) {
+        for (var i = 0; i < this.length; i++) {if (this[i] === v) return true;}
+        return false;};
+        Array.prototype.unique = function() {
+        var arr = [];
+        for (var i = 0; i < this.length; i++) {
+          if (!arr.contains(this[i])) {
+            arr.push(this[i]);}}
+        return arr;}
+        var uniques = just_numbers.unique();
+        var ties = [];
+        for (let i = 0; i < uniques.length; i++) {
+            var temp_a = 0;
+            for (let j = 0; j < just_numbers.length; j++){
+                if (uniques[i] == just_numbers[j]){
+                temp_a += 1;}
+            }
+            if (temp_a > 1) {ties.push(uniques[i]);}
+        }
+        var ties2 = [];
+        for (let i = 0; i < ties.length; i++) {
+            for (let j = 0; j < just_numbers.length; j++){    
+                if (ties[i] == just_numbers[j]) {
+                ties2.push(just_numbers[j]);}
+            }
+        }
+        var ha = [];
+            for (let i = 0; i < ties.length; i++){
+                var temp_d = 0;
+                for (let j = 0; j < ties2.length; j++){
+                    if (ties[i] == ties2[j]){
+                        temp_d += 1;}
+                }
+                ha.push({"ties": ties[i], "no": temp_d})
+            };
+        var Ahelper = 0;
+        for (let i =0; i < ha.length; i++) {
+            temp = ha[i].no;
+            temp2 = (temp **3) - temp;
+            Ahelper += temp2;
+        }
+    var final = (N * (N+1) / 12) - (Ahelper / (12 * (N-1)))
+    return final    
+}
+
+function normalQuantile(p, mu, sigma){
+    var p, q, r, val;
+    if (sigma < 0)
+        return -1;
+    if (sigma == 0)
+        return mu;
+    q = p - 0.5;
+    if (0.075 <= p && p <= 0.925) {
+        r = 0.180625 - q * q;
+        val = q * (((((((r * 2509.0809287301226727 + 33430.575583588128105) * r + 67265.770927008700853) * r
+            + 45921.953931549871457) * r + 13731.693765509461125) * r + 1971.5909503065514427) * r + 133.14166789178437745) * r
+            + 3.387132872796366608) / (((((((r * 5226.495278852854561 + 28729.085735721942674) * r + 39307.89580009271061) * r
+            + 21213.794301586595867) * r + 5394.1960214247511077) * r + 687.1870074920579083) * r + 42.313330701600911252) * r + 1);
+    } else { 
+	    if (q > 0)
+            r = 1 - p;
+	    else
+            r = p;
+        r = Math.sqrt(-Math.log(r)); 
+        if (r <= 5.) { 
+            r += -1.6;
+            val = (((((((r * 7.7454501427834140764e-4 + 0.0227238449892691845833) * r + .24178072517745061177) * r
+                + 1.27045825245236838258) * r + 3.64784832476320460504) * r + 5.7694972214606914055) * r
+                + 4.6303378461565452959) * r + 1.42343711074968357734) / (((((((r * 1.05075007164441684324e-9 + 5.475938084995344946e-4) * r
+                + .0151986665636164571966) * r + 0.14810397642748007459) * r + 0.68976733498510000455) * r + 1.6763848301838038494) * r
+                + 2.05319162663775882187) * r + 1);
+        } else { 
+            r += -5.;
+            val = (((((((r * 2.01033439929228813265e-7 + 2.71155556874348757815e-5) * r + 0.0012426609473880784386) * r
+                + 0.026532189526576123093) * r + .29656057182850489123) * r + 1.7848265399172913358) * r + 5.4637849111641143699) * r
+                + 6.6579046435011037772) / (((((((r * 2.04426310338993978564e-15 + 1.4215117583164458887e-7)* r
+                + 1.8463183175100546818e-5) * r + 7.868691311456132591e-4) * r + .0148753612908506148525) * r
+                + .13692988092273580531) * r + .59983220655588793769) * r + 1.);
+        }
+        if (q < 0.0)
+            val = -val;
+    }
+    return mu + sigma * val;
+}
+
+function sign (x) {
+    if (x == 0) 
+        return 0;
+    return x > 0 ? 1: -1;
+}
+
+
+
+function GimmietheP(x,n) { 
+    var Pi=Math.PI;
+    if(n==1 & x>1000) {return 0} 
+    if(x>1000 | n>1000) { 
+        var q=GimmietheP((x-n)*(x-n)/(2*n),1)/2 
+        if(x>n) {return q} {return 1-q} 
+        } 
+    var p=Math.exp(-0.5*x); if((n%2)==1) { p=p*Math.sqrt(2*x/Pi) } 
+    var k=n; while(k>=2) { p=p*x/k; k=k-2 } 
+    var t=p; var a=n; while(t>0.0000000001*p) { a=a+2; t=t*x/a; p=p+t } 
+    return 1-p 
+} 

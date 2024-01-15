@@ -1,7 +1,7 @@
 function L_Change() {
     var language = document.getElementById('lang_s').value;
-    if (language = "jp") {
-        location.href = "../jp/pp_testing.html"
+    if (language = "en") {
+        location.href = "../en/pp_testing.html"
     }
 }
 

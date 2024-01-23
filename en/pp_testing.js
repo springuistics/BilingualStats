@@ -205,12 +205,15 @@ function Calculate() {
                 pofB = pofB.toFixed(2);
                 pofInt = pofInt.toFixed(2);
             } else if (isNormal==false){
-                var HofA = (SS_A/MSE).toFixed(2);
-                var HofB = (SS_B/MSE).toFixed(2);
-                var HofInter = (SS_AxB / MSE).toFixed(2);
+                var HofA = (SS_A/MSE)
+                var HofB = (SS_B/MSE)
+                var HofInter = (SS_AxB / MSE)
                 var pofA = newChitoPval(HofA, 1).toFixed(2);
                 var pofB = newChitoPval(HofB, 1).toFixed(2);
                 var pofInt = newChitoPval(HofInter, 1).toFixed(2);
+                HofA = HofA.toFixed(2);
+                HofB = HofB.toFixed(2);
+                HofInter = HofInter.toFixed(2);
             }
 
             var eta_A = SS_A / (SST - SS_B - SS_AxB);

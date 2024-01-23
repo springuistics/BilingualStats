@@ -208,9 +208,9 @@ function Calculate() {
                 var HofA = (SS_A/MSE).toFixed(2);
                 var HofB = (SS_B/MSE).toFixed(2);
                 var HofInter = (SS_AxB / MSE).toFixed(2);
-                var pofA = GimmietheP(HofA, 1).toFixed(2);
-                var pofB = GimmietheP(HofB, 1).toFixed(2);
-                var pofInt = GimmietheP(HofInter, 1).toFixed(2);
+                var pofA = newChitoPval(HofA, 1).toFixed(2);
+                var pofB = newChitoPval(HofB, 1).toFixed(2);
+                var pofInt = newChitoPval(HofInter, 1).toFixed(2);
             }
 
             var eta_A = SS_A / (SST - SS_B - SS_AxB);
@@ -741,16 +741,31 @@ function sign (x) {
 }
 
 
+function newChitoPval(chi, df){
+    function gammaFunction(x) {
+        if (x === 1) {
+          return 1;
+        } else {
+          return (x - 1) * gammaFunction(x - 1);
+        }
+      }
+      
+    function incompleteGammaFunction(s, x) {
+        const tolerance = 1e-15;
+        let sum = 1;
+        let term = 1;
+        let k = 1;
+      
+        while (Math.abs(term) > tolerance) {
+          term = (Math.pow(x, k) / gammaFunction(s + k));
+          sum += term;
+          k++;
+        }
+        return Math.exp(-x + (s - 0.5) * Math.log(x) - Math.log(sum));
+    }
 
-function GimmietheP(x,n) { 
-    var Pi=Math.PI;
-    if(n==1 & x>1000) {return 0} 
-    if(x>1000 | n>1000) { 
-        var q=GimmietheP((x-n)*(x-n)/(2*n),1)/2 
-        if(x>n) {return q} {return 1-q} 
-        } 
-    var p=Math.exp(-0.5*x); if((n%2)==1) { p=p*Math.sqrt(2*x/Pi) } 
-    var k=n; while(k>=2) { p=p*x/k; k=k-2 } 
-    var t=p; var a=n; while(t>0.0000000001*p) { a=a+2; t=t*x/a; p=p+t } 
-    return 1-p 
-} 
+    let theP = incompleteGammaFunction(df, chi);
+
+    return theP;
+
+}

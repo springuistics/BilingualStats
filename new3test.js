@@ -245,3 +245,232 @@ function StANOVA(k, theData) {
     document.getElementById("explain_bun").innerHTML = details_of_test;
     document.getElementById("results_bun").innerHTML = results_of_test;
 }
+
+function doHolms(holms) {
+    var sorted = [];
+    holms.forEach(function(number, index) {sorted.push(holms[index].p)});
+    var sorted2 = sorted.slice().sort((a, b) => b - a);
+    for (let i=0; i<sorted2.length; i++){
+        for (let j=0; j<holms.length; j++)
+        if (sorted2[i] == holms[j].p) {
+            holms[j].rank = (i+1);
+        }
+    }
+}
+
+function RepANOVA(k,theData) {
+    let means = [];
+    let ns = [];
+    let SBsumsqMeans = [];
+    let mgHelp = [];
+    for (let i=0; i<k; i++){
+        means.push(average(theData[i]));
+        ns.push(theData[i].length);
+        for (let j=0; j<theData[i].length; j++){
+            mgHelp.push(theData[i][j]);
+        }
+    }
+    let Mg = average(mgHelp);
+    let GN = sum(ns);
+    let singleN = ns[0];
+    let fulls = variance(mgHelp);
+    let SST = fulls*(GN-1);
+    let MBs = [];
+    for (let i=0; i<k; i++){
+        MBs.push(ns[i] * ((means[i] - Mg) **2))
+    }
+    let GT = sum(mgHelp);
+    var SShelper = [];
+    var sumhelper = [];
+    for (let i=0; i<singleN; i++) {
+        let tempHelp = 0;
+        for (let j=0; j<k; j++){
+            tempHelp += theData[j][i];
+        }
+        sumhelper.push(tempHelp);
+        tempHelp = tempHelp **2;
+        SShelper.push(tempHelp);
+    }
+
+    //Calculations for the actual ANOVA now
+    let SSB = sum(MBs);
+    let SSS = (sum(SShelper) / k) - ((sum(sumhelper)**2) / (singleN * k));
+    let SSE = SST - SSB - SSS;
+    let dfb = k-1;
+    let dfs = singleN-1;
+    let dfe = dfb * dfs;
+    let MSSB = SSB / dfb;
+    let MSSS = SSS / dfs;
+    let MSE = SSE / (dfb * dfs);
+    let = SSE / (dfb * dfs);
+    let F = MSSB / MSE;
+
+    //Ad hoc testing using Holmes' method
+    let combos = 0;
+    let adHocs = [];
+    let Groups = [];
+    for (let i=(k-1); i>0; i--){
+        combos += i;
+        console.log(combos);
+    }
+    for (let i=0; i<combos; i++){
+        for (let j=(i+1); j<combos; j++){
+            let tempComp = (Math.abs(means[i] - means[j])) / ((Math.sqrt(MSE)) * (Math.sqrt((1/ns[i])+(1/ns[j]))));
+            let tempP = getPfromT(tempComp, singleN);
+            let name = "g"+i+"_g"+j;
+            adHocs.push({"name": name, "p":tempP, "rank":0})
+            Groups.push({"group1":i, "group2":j});
+        }
+    }
+    doHolms(adHocs);
+    for (let i=0; i<adHocs.length; i++){
+        adHocs[i].p *= adHocs[i].rank;
+        adHocs[i].p = adHocs[i].p.toFixed(2);
+    }
+
+    //Fine tuning and effect size
+    let p = getPfromF(k, F, dfs, dfb);
+    F = F.toFixed(2);
+    let W2 = SSB / (SSB + SSE);
+    W2 = W2.toFixed(2);
+
+    //Wrap up the results
+    let result1 = "";
+    let results2 = "";
+    let result3 = "";
+    let results4 = "";
+    if (W2<.1) {
+        results4 = "Furthermore, there was a small effect size; <i>η<sup>2</i></sup> = " + W2;
+    } else if (W2<0.35) {
+        results4 =  "Furthermore, there was a medium effect size; <i>η<sup>2</i></sup> = " + W2;
+    } else {
+        results4 =  "Furthermore, there was a large effect size; <i>η<sup>2</i></sup> = " + W2;
+    }
+    if (p > 0.05) {
+        result1 = "There was no significant difference amongst any of the groups; "
+        p = p.toFixed(2);
+        result2 = "<i>F</i>[" + dfb + ", " + dfs + "] = " + F + ", <i>p</i> = " + p + ". ";
+        result3 = "Therefore, no pair-wise analysis will be conducted."
+    } else {
+         result1 = "There was a significant difference between at least two of the groups; "
+        if (p < 0.01) {
+            result2 = "<i>F</i>[" + dfb + ", " + dfs + "] = " + F + ", <i>p</i> < 0.01. ";
+        } else {
+            p = p.toFixed(2);
+            result2 = "<i>F</i>[" + dfb + ", " + dfs + "] = " + F + ", <i>p</i> = " + p + ". ";
+        }
+
+        result3 += "The significant differences between specific groups, as tested by a Holm post-hoc analysis, is shown below: <br>";
+        for (let i=0; i<k; i++){
+            result3 += "Group "+(Groups[i].group1+1)+" x Group "+(Groups[i].group2+1)+": <i>p</i> = " + adHocs[i].p + "<br>";
+        }
+        result3 += "<br><p style='font-size: 10'> Holm <i>p</i> values are rounded to 2 decimal places, so interpret <i>p</i> = 0 as <i>p</i> < 0.01 and <i>p</i> = 1 as <i>p</i> > 0.99</p>";
+    }
+    results_of_test = result1 + result2 + result3 + results4;
+    document.getElementById("explain_bun").innerHTML = details_of_test;
+    document.getElementById("results_bun").innerHTML = results_of_test;
+}
+
+function KWChiSq(x,n) {
+    if(n==1 & x>1000) {return 0}
+    if(x>1000 | n>1000) {
+        var q=ChiSq((x-n)*(x-n)/(2*n),1)/2
+        if(x>n) {return q} {return 1-q}
+        }
+    var Pi=Math.PI;
+    var p=Math.exp(-0.5*x); if((n%2)==1) { p=p*Math.sqrt(2*x/Pi) }
+    var k=n; while(k>=2) { p=p*x/k; k=k-2 }
+    var t=p; var a=n; while(t>0.0000000001*p) { a=a+2; t=t*x/a; p=p+t }
+    return 1-p
+}
+
+function KW(k, theData) {
+    let df = k-1;
+    let ns = [];
+    let superdata = [];
+    for (let i=0; i<k; i++){
+        ns.push(theData[i].length);
+        theData[i].forEach(function(number){superdata.push({"Group":i, "No": number, "Rank": number});});
+    }
+    let GN = sum(ns);
+    let SE = DunnSE(superdata);
+    let superdata2 = createCombinedRanks(superdata);
+    console.log(superdata2);
+    let sumRanks = [];
+    for (let i=0; i<k; i++){
+        let tempSum = 0;
+        for (let j=0; j<superdata2.length; j++){
+            if (superdata[j].Group == i){
+                tempSum += superdata2[j].Rank;
+            }
+        }
+        sumRanks.push(tempSum);
+    }
+    console.log(sumRanks);
+    let KH_left = 12 / (GN * (GN +1));
+    let KH_right = 0;
+    for (let i=0; i<k; i++){
+        KH_right += (sumRanks[i]**2)/ns[i]
+    }
+    let KH = KH_left * KH_right - (3*(GN+1));
+    console.log(KH_left+"  "+KH_right+"  "+KH);
+    //Ad hoc testing using Dunn
+    let combos = 0;
+    let adHocs = [];
+    let Groups = [];
+    for (let i=(k-1); i>0; i--){
+        combos += i;
+    }
+    for (let i=0; i<combos; i++){
+        for (let j=(i+1); j<combos; j++){
+            let diff = Math.abs((sumRanks[i]/ns[i]) - (sumRanks[j]/ns[j]));
+            let true_se = Math.sqrt(SE * ((1/ns[i]) + (1/ns[j])));
+            let z = diff/true_se;
+            let thisP = 2 * (1-cdf(z));
+            adHocs.push(thisP.toFixed(2));
+            Groups.push({"group1":i, "group2":j});
+        }
+    }
+
+    //Tidy up and effect size
+    let p = KWChiSq(KH, df);
+    let eta = (KH - k + 1) / (GN - k);
+    KH = KH.toFixed(2);
+    let result1 = "";
+    let result3 = "";
+    let result2 = "";
+    let results4 = "";
+    if (eta<.06) {
+        eta = eta.toFixed(2);
+        results4 = "Furthermore, there was a small effect size; <i>η<sup>2</i></sup> = " + eta;
+    } else if (eta<0.138) {
+        eta = eta.toFixed(2);
+        results4 = "Furthermore, there was a medium effect size; <i>η<sup>2</i></sup> = " + eta;
+    } else if (eta>=0.138) {
+        eta = eta.toFixed(2);
+        results4 = "Furthermore, there was a large effect size; <i>η<sup>2</i></sup> = " + eta;
+    }
+    if (p > 0.05) {
+        result1 = "There was no significant difference amongst any of the groups; ";
+        p = p.toFixed(2);
+        result2 = "<i>H</i> = " + KH + ", <i>p</i> = " + p + ". ";
+        result3 = "Therefore, no pair-wise analysis will be conducted.";
+    } else {
+        result1 = "There was a significant difference between at least two of the groups; "
+        if (p < 0.01) {
+            result2 = "<i>H</i> = " + KH + ", <i>p</i> < 0.01. ";
+        } else {
+            p = p.toFixed(2);
+            result2 = "<i>H</i> = " + KH + ", <i>p</i> = " + p + ". ";
+        }
+
+        result3 += "The significant differences between specific groups, as tested by a Dunn's post-hoc analysis, is shown below: <br>";
+        for (let i=0; i<k; i++){
+            result3 += "Group "+(Groups[i].group1+1)+" x Group "+(Groups[i].group2+1)+": <i>p</i> = " + adHocs[i] + "<br>";
+        }
+        results_of_test = result1 + result2 + results4 + "<br>" + result3;
+    }
+    results_of_test = result1 + result2 + result3 + results4;
+    document.getElementById("explain_bun").innerHTML = details_of_test;
+    document.getElementById("results_bun").innerHTML = results_of_test;
+}

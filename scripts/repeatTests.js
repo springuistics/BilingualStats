@@ -526,6 +526,7 @@ function CalcDunn(SE, data1, data2) {
     var p = 2 * (1-cdf(z));
     return (p.toFixed(2));
 }
+
 //Calculates standard error for Dunn's test
 function DunnSE(superdata) {
     let N = superdata.length;

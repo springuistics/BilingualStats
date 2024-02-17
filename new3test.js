@@ -160,36 +160,48 @@ function StANOVA(k, theData) {
     let means = [];
     let ns = [];
     let SBsumsqMeans = [];
-    let Mg = average(theData);
+    let mgHelp = [];
     for (let i=0; i<k; i++){
         means.push(average(theData[i]));
         ns.push(theData[i].length);
+        for (let j=0; j<theData[i].length; j++){
+            mgHelp.push(theData[i][j]);
+        }
+    }
+    let Mg = average(mgHelp);
+    let GN = sum(ns);
+    for (let i=0; i<k; i++){
         SBsumsqMeans.push(sumSquareOuterMean(Mg, theData[i]));
     }
-    let GN = sum(ns);
     let SMsumqMeans = [];
     let MBs = [];
     for (let i=0; i<k; i++){
         SMsumqMeans.push(sumSquareOuterMean(means[i], theData[i]));
-        MBs.push(ns[i] * ((means[i] - Mg) **2));
+        MBs.push(ns[i] * ((means[i] - Mg) **2))
     }
+    console.log(means);
+    console.log(Mg);
+    console.log(ns);
+    console.log(MBs);
     let dfs = k-1;
     let SSW = sum(SMsumqMeans);
     let MSSW = SSW / (GN - k);
     let SSB = sum(SBsumsqMeans);
     let MSB = sum(MBs);
     let MSSB = MSB / (dfs);
+    console.log("MSSW = "+MSSW+" MSSB = "+MSSB);
     let F = MSSB / MSSW;
     let dfw = GN - k;
     let p = getPfromF(k, F, dfs, dfw);
     F = F.toFixed(2);
     let W2 = (MSB) / (MSB + SSW)
     W2 =W2.toFixed(2);
-    let combos = 1;
+    let combos = 0;
     let HSDs = [];
     let Groups = [];
     for (let i=(k-1); i>0; i--){
-        combos *= i;
+        combos += i;
+        console.log(combos);
     }
     for (let i=0; i<combos; i++){
         for (let j=(i+1); j<combos; j++){

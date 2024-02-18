@@ -1,6 +1,7 @@
 //Preps all datasets and pushes them into an array of arrays
 //Requieres a k value and that all data sets have id of "data_set_i"
 function gatherDatafromForm(k){
+    var language = document.getElementById('lang_s').value;
     var isThereAnError = false;
     var allTheData = [];
     for (let i=0; i<k; i++){
@@ -11,9 +12,14 @@ function gatherDatafromForm(k){
         if (blankChecker == "") {dataHelp1.pop();}
         if (dataHelp1.includes("") || dataHelp1.includes("NaN")) {
             isThereAnError = true;
-            document.getElementById("error_text").innerHTML = "You have null values (lines with no values) or non-numbers in data set "+(i+1)+". Please delete all null values, check to make sure there are no non-numbers in your data set, and then try again.";
+            if (language == "en"){
+                document.getElementById("error_text").innerHTML = "You have null values (lines with no values) or non-numbers in data set "+(i+1)+". Please delete all null values, check to make sure there are no non-numbers in your data set, and then try again.";
+                document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
+            } else if (language == "jp"){
+                document.getElementById("error_text").innerHTML = (i+1) + "組にはデータが数字ではない行、あるいはデータのない行があります。データのない行は全て削除し、全てのデータが半角数字になっていることを確認してください。";
+                document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
+            }
             document.getElementById('error_text').style.display = "inline";
-            document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
         } else {
             function numberify(set_o_data) {
                 temp_arry = [];
@@ -26,9 +32,14 @@ function gatherDatafromForm(k){
             let dataHelp2 = numberify(dataHelp1);
             if (dataHelp2.length < 6) {
                 isThereAnError = true;
-                document.getElementById("error_text").innerHTML = "You need at least 6 data points in each data set in order for any proper conclusion to be drawn about your data. Data set "+(i+1)+" does not contain enough data points. Please check your data sets or collect more data if necessary."
+                if (language == "en"){
+                    document.getElementById("error_text").innerHTML = "You need at least 6 data points in each data set in order for any proper conclusion to be drawn about your data. Data set "+(i+1)+" does not contain enough data points. Please check your data sets or collect more data if necessary."
+                    document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
+                } else if (language == "jp"){
+                    document.getElementById("error_text").innerHTML = "適切な結果を得るには、それぞれの組に少なくとも6つのデータが必要です。" + (i+1) + "組のデータ量が足りません。データを確認し、必要に応じてより多くのデータを集めてください。";
+                    document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
+                }
                 document.getElementById('error_text').style.display = "inline";
-                document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
             } else {
                 allTheData.push(dataHelp2);
             }
@@ -814,6 +825,7 @@ function performDescriptives(dataset){
 
 //Sets up descriptives table. Requires a div called "descriptives" and one called "extra_fun" for downloading
 function runDescriptives(k, thisData){
+    var language = document.getElementById('lang_s').value;
     let dicArr = performDescriptives(thisData);
     //Prep buttons
     let buttonHolder = document.createElement('div');
@@ -828,8 +840,16 @@ function runDescriptives(k, thisData){
     button2.className = "desBTN";
     button1.id="desBTN_show";
     button2.id="desBTN_csv";
-    button1.innerHTML = "Show More Stats";
-    button2.innerHTML = "Download Table";
+    if (language == "en"){
+        button1.innerHTML = "Show More Stats";
+    } else if (language == "jp"){
+        button1.innerHTML = "詳細統計表示";
+    }
+    if (language == "en"){
+        button2.innerHTML = "Download Table";
+    } else if (language == "jp"){
+        button2.innerHTML = "表をダウンロード";
+    }
     button1.addEventListener('click', showHideDesc);
     button2.addEventListener('click', dlCsvFunc);
 
@@ -846,9 +866,18 @@ function runDescriptives(k, thisData){
     //Prep Headers
     let row_1 = document.createElement('tr');
     let heading_1 = document.createElement('th');
-    heading_1.innerHTML = "Group";
+        if (language == "en"){
+            heading_1.innerHTML = "Group";
+        } else if (language == "jp"){
+            heading_1.innerHTML = "組";
+        }
+    
     let heading_2 = document.createElement('th');
-    heading_2.innerHTML = "range";
+        if (language == "en"){
+            heading_2.innerHTML = "range";
+        } else if (language == "jp"){
+            heading_2.innerHTML = "範囲";
+        }
     let heading_3 = document.createElement('th');
     heading_3.innerHTML = "<i>M</i>";
     let heading_4 = document.createElement('th');
@@ -858,11 +887,19 @@ function runDescriptives(k, thisData){
     heading_5.className = "hiddenDES";
     heading_5.style.display = "none";
     let heading_6 = document.createElement('th');
-    heading_6.innerHTML = "Skewness";
+        if (language == "en"){
+            heading_6.innerHTML = "Skewness";
+        } else if (language == "jp"){
+            heading_6.innerHTML = "歪度";
+        }
     heading_6.className = "hiddenDES";
     heading_6.style.display = "none";
     let heading_7 = document.createElement('th');
-    heading_7.innerHTML = "Kurtosis";
+    if (language == "en"){
+            heading_7.innerHTML = "Kurtosis";
+        } else if (language == "jp"){
+            heading_7.innerHTML = "尖度";
+        }
     heading_7.className = "hiddenDES";
     heading_7.style.display = "none";
 
@@ -916,12 +953,20 @@ function showHideDesc(){
             for (var i = 0; i < hiddens.length; i++ ) {
                 hiddens[i].style.display = "table-cell";
             }
-            document.getElementById('desBTN_show').innerHTML = "Show Fewer Stats";
+            if (language == "en"){
+                document.getElementById('desBTN_show').innerHTML = "Show Fewer Stats";
+            } else if (language == "jp"){
+                button1.innerHTML = "詳細統計表示しない";
+            }            
         } else {
             for (var i = 0; i < hiddens.length; i++ ) {
                 hiddens[i].style.display = "none";
             }
-            document.getElementById('desBTN_show').innerHTML = "Show More Stats";
+            if (language == "en"){
+                document.getElementById('desBTN_show').innerHTML = "Show More Stats";
+            } else if (language == "jp"){
+                button1.innerHTML = "詳細統計表示";
+            }
         }
 
     }
@@ -955,6 +1000,6 @@ function dlCsvFunc(){
         link.click();
         helper.parentNode.removeChild(helper);
     } else {
-        alert("There are no results! Please select which student data to download first.")
+        alert("There are no results! 表は実在しない")
     }
 }

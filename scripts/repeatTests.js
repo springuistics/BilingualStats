@@ -41,16 +41,6 @@ function gatherDatafromForm(k){
     }
 }
 
-//Takes an array of arrays. Returns an array of dictionaries with values
-function performDescriptives(dataset){
-    let finalResult = [];
-    for (let i=0; i<dataset.length; i++){
-        finalResult.push({'m': average(dataset[i]), 'sd' : stdev(dataset[i]), 'min': Math.min(dataset[i]), 'max': Math.max(dataset[i]), 'CIup':confidenceInt95upper(dataset[i]), 'CIlow': confidenceInt95ower(dataset[i]), 'skew':skewness(dataset[i]), 'kurt':kurtosis(dataset[i])});        
-    }
-    return finalResult
-}
-
-
 //returns normal Quantile from p, mu, and sigma
 function normalQuantile(p, mu, sigma){
     var p, q, r, val;
@@ -613,103 +603,103 @@ function getPfromT(t,n) {
 
 //Returns p value from q, k, df for Tukey's HSD for post-hoc testing
 function tukeyMe(q, k, df) {
-    q = Math.abs(q);
-    var vw = new Array(31);
-    var qw = new Array(31);
-    var pcutj = 0.00003;
-    var pcutk = 0.0001;
-    var step = 0.45;
-    var vmax = 1000.0;
-    var cv1 = 0.193064705;
-    var cv2 = 0.293525326;
-    var cvmax = 0.39894228;
-    var cv = new Array(5);
-    cv[0] = 0.0;
-    cv[1] = 0.318309886;
-    cv[2] = -0.00268132716;
-    cv[3] = 0.00347222222;
-    cv[4] = 0.0833333333;
-    var jmin = 3; var jmax = 15; var kmin = 7; var kmax = 15;
-    var retval; var g; var gmid; var r1; var c; var h; var hj; var v2;
-    var gstep; var pk; var pk1; var pk2; var pj; var j; var jj;
-    var kk; var gk; var w0; var pz; var x; var jump; var ehj;
-    retval = 0.0;
-    
-    g = step * Math.pow(k, -0.2);
-    gmid = 0.5 * Math.log(k);
-    r1 = k - 1.0;
-    c = Math.log(k * g * cvmax);
-    if (c <= vmax) {
-        h = step * Math.pow(df, -0.5);
-        v2 = df * 0.5;
-        if (df == 1) {c = cv1;}
-        if (df == 2) {c = cv2;    }
-        if (!((df == 1) || (df == 2))) {
-            c = Math.sqrt(v2) * cv[1] / (1.0 + ((cv[2] / v2 + cv[3]) / v2 + cv[4]) / v2);
-        }
-        c = Math.log(c * k * g * h);
+q = Math.abs(q);
+var vw = new Array(31);
+var qw = new Array(31);
+var pcutj = 0.00003;
+var pcutk = 0.0001;
+var step = 0.45;
+var vmax = 1000.0;
+var cv1 = 0.193064705;
+var cv2 = 0.293525326;
+var cvmax = 0.39894228;
+var cv = new Array(5);
+cv[0] = 0.0;
+cv[1] = 0.318309886;
+cv[2] = -0.00268132716;
+cv[3] = 0.00347222222;
+cv[4] = 0.0833333333;
+var jmin = 3; var jmax = 15; var kmin = 7; var kmax = 15;
+var retval; var g; var gmid; var r1; var c; var h; var hj; var v2;
+var gstep; var pk; var pk1; var pk2; var pj; var j; var jj;
+var kk; var gk; var w0; var pz; var x; var jump; var ehj;
+retval = 0.0;
+
+g = step * Math.pow(k, -0.2);
+gmid = 0.5 * Math.log(k);
+r1 = k - 1.0;
+c = Math.log(k * g * cvmax);
+if (c <= vmax) {
+    h = step * Math.pow(df, -0.5);
+    v2 = df * 0.5;
+    if (df == 1) {c = cv1;}
+    if (df == 2) {c = cv2;    }
+    if (!((df == 1) || (df == 2))) {
+        c = Math.sqrt(v2) * cv[1] / (1.0 + ((cv[2] / v2 + cv[3]) / v2 + cv[4]) / v2);
     }
-    
-    gstep = g;
-    qw[1] = -1.0;
-    qw[jmax + 1] = -1.0;
-    pk1 = 1.0;
-    pk2 = 1.0;
-    for (kk = 1; kk <= kmax; kk++) {
-        gstep -= g;
-        do {
-            gstep = -gstep;
-            gk = gmid + gstep;
-            pk = 0.0;
-            if ((pk2 > pcutk) || (kk <= kmin)) {
-                w0 = c - gk * gk * 0.5;
-                pz = alnorm(gk, true);
-                x = alnorm(gk - q, true) - pz;
-                if (x > 0.0)
-                    pk = Math.exp(w0 + r1 * Math.log(x));
-                if (df <= vmax) {
-                    jump = -jmax;
-                    do {
-                        jump += jmax;
-                        for (j = 1; j <= jmax; j++) {
-                            jj = j + jump;
-                            if (qw[jj] <= 0.0) {
-                                hj = h * j;
-                                if (j < jmax) {
-                                    qw[jj + 1] = -1.0;
-                                }
-                                ehj = Math.exp(hj);
-                                qw[jj] = q * ehj;
-                                vw[jj] = df * (hj + 0.5 - ehj * ehj * 0.5);
+    c = Math.log(c * k * g * h);
+}
+
+gstep = g;
+qw[1] = -1.0;
+qw[jmax + 1] = -1.0;
+pk1 = 1.0;
+pk2 = 1.0;
+for (kk = 1; kk <= kmax; kk++) {
+    gstep -= g;
+    do {
+        gstep = -gstep;
+        gk = gmid + gstep;
+        pk = 0.0;
+        if ((pk2 > pcutk) || (kk <= kmin)) {
+            w0 = c - gk * gk * 0.5;
+            pz = alnorm(gk, true);
+            x = alnorm(gk - q, true) - pz;
+            if (x > 0.0)
+                pk = Math.exp(w0 + r1 * Math.log(x));
+            if (df <= vmax) {
+                jump = -jmax;
+                do {
+                    jump += jmax;
+                    for (j = 1; j <= jmax; j++) {
+                        jj = j + jump;
+                        if (qw[jj] <= 0.0) {
+                            hj = h * j;
+                            if (j < jmax) {
+                                qw[jj + 1] = -1.0;
                             }
-                            pj = 0.0;
-                            x = alnorm(gk - qw[jj], true) - pz;
-                            if (x > 0.0) {
-                                pj = Math.exp(w0 + vw[jj] + r1 * Math.log(x));
-                            }
-                            pk += pj;
-                            if (pj <= pcutj) {
-                                if ((jj > jmin) || (kk > kmin)) {
-                                    break;
-                                }
-                            }
-                            pj = pj;
+                            ehj = Math.exp(hj);
+                            qw[jj] = q * ehj;
+                            vw[jj] = df * (hj + 0.5 - ehj * ehj * 0.5);
                         }
-                        h = -h;
-                    } while (h < 0);
-                }
+                        pj = 0.0;
+                        x = alnorm(gk - qw[jj], true) - pz;
+                        if (x > 0.0) {
+                            pj = Math.exp(w0 + vw[jj] + r1 * Math.log(x));
+                        }
+                        pk += pj;
+                        if (pj <= pcutj) {
+                            if ((jj > jmin) || (kk > kmin)) {
+                                break;
+                            }
+                        }
+                        pj = pj;
+                    }
+                    h = -h;
+                } while (h < 0);
             }
-            retval += pk;
-            if ((kk > kmin) && (pk <= pcutk) && (pk1 <= pcutk)) {
-                return 1 - retval;
-            }
-            pk2 = pk1;
-            pk1 = pk;
-        } while (gstep > 0.0);
-    }
-    
-    return 1 - retval;
-    }
+        }
+        retval += pk;
+        if ((kk > kmin) && (pk <= pcutk) && (pk1 <= pcutk)) {
+            return 1 - retval;
+        }
+        pk2 = pk1;
+        pk1 = pk;
+    } while (gstep > 0.0);
+}
+
+return 1 - retval;
+}
 
     function alnorm(x, upper) {
         var ltone = 7.0;
@@ -803,4 +793,168 @@ function getPfromF(k, f, n1, n2) {
     if(n2==1) { return 1-a+c/2 }
     while(k<=(n2-1)/2) {c=c*k/(k-.5); k=k+1 }
     return 1-a+c
+}
+
+
+//Takes an array of arrays. Returns an array of dictionaries with values
+function performDescriptives(dataset){
+    let finalResult = [];
+    for (let i=0; i<dataset.length; i++){
+        let copy = [];
+        for (let j=0; j<dataset[i].length; j++){
+            copy.push(dataset[i][j])
+        }
+        let tempMin = copy.reduce((a, b) => Math.min(a, b));
+        let tempMax = copy.reduce((a, b) => Math.max(a, b));
+        finalResult.push({'m': average(dataset[i]).toFixed(3), 'sd' : stdev(dataset[i]).toFixed(4), 'mini': tempMin, 'maxi': tempMax, 'CIup':confidenceInt95upper(dataset[i]).toFixed(3), 'CIlow': confidenceInt95ower(dataset[i]).toFixed(3), 'skew':skewness(dataset[i]).toFixed(3), 'kurt':kurtosis(dataset[i]).toFixed(3)});        
+    }
+    return finalResult
+}
+
+
+//Sets up descriptives table. Requires a div called "descriptives" and one called "extra_fun" for downloading
+function runDescriptives(k, thisData){
+    let dicArr = performDescriptives(thisData);
+    //Prep buttons
+    let buttonHolder = document.createElement('div');
+    document.getElementById('descriptives').appendChild(buttonHolder);
+    buttonHolder.className = "desBTNholder";
+    buttonHolder.id = "desBTNholder";
+    let button1 = document.createElement('button');
+    let button2 = document.createElement('button');
+    document.getElementById('desBTNholder').appendChild(button1);
+    document.getElementById('desBTNholder').appendChild(button2);
+    button1.className = "desBTN";
+    button2.className = "desBTN";
+    button1.id="desBTN_show";
+    button2.id="desBTN_csv";
+    button1.innerHTML = "Show More Stats";
+    button2.innerHTML = "Download Table";
+    button1.addEventListener('click', showHideDesc);
+    button2.addEventListener('click', dlCsvFunc);
+
+    //Prep descriptives table
+    let table = document.createElement('table');
+    let thead = document.createElement('thead');
+    let tbody = document.createElement('tbody');
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    document.getElementById('descriptives').appendChild(table);
+    table.className = "descriptives_table";
+    table.id = "descriptives_table";
+
+    //Prep Headers
+    let row_1 = document.createElement('tr');
+    let heading_1 = document.createElement('th');
+    heading_1.innerHTML = "Group";
+    let heading_2 = document.createElement('th');
+    heading_2.innerHTML = "range";
+    let heading_3 = document.createElement('th');
+    heading_3.innerHTML = "<i>M</i>";
+    let heading_4 = document.createElement('th');
+    heading_4.innerHTML = "<i>SD</i>";
+    let heading_5 = document.createElement('th');
+    heading_5.innerHTML = "95% C.I.";
+    heading_5.className = "hiddenDES";
+    heading_5.style.display = "none";
+    let heading_6 = document.createElement('th');
+    heading_6.innerHTML = "Skewness";
+    heading_6.className = "hiddenDES";
+    heading_6.style.display = "none";
+    let heading_7 = document.createElement('th');
+    heading_7.innerHTML = "Kurtosis";
+    heading_7.className = "hiddenDES";
+    heading_7.style.display = "none";
+
+    //Append headers
+    row_1.appendChild(heading_1);
+    row_1.appendChild(heading_2);
+    row_1.appendChild(heading_3);
+    row_1.appendChild(heading_4);
+    row_1.appendChild(heading_5);
+    row_1.appendChild(heading_6);
+    row_1.appendChild(heading_7);
+    thead.appendChild(row_1);
+
+    //Fill out the table
+    for (let i=0; i<k; i++){
+        let row = document.createElement('tr');
+        for (let j=0; j<7; j++){
+            let item = document.createElement('td');
+            if (j==0){
+                item.innerHTML = "Group "+(i+1);
+            } else if (j==1) {
+                item.innerHTML = dicArr[i].mini + " ~ " + dicArr[i].maxi;
+            } else if (j==2) {
+                item.innerHTML =  dicArr[i].m;
+            } else if (j==3) {
+                item.innerHTML =  dicArr[i].sd;
+            } else if (j==4) {
+                item.innerHTML = dicArr[i].CIlow + " ~ " + dicArr[i].CIup;
+                item.className = "hiddenDES";
+                item.style.display = "none";
+            } else if (j==5) {
+                item.innerHTML = dicArr[i].skew;
+                item.className = "hiddenDES";
+                item.style.display = "none";
+            }
+            else if (j==6) {
+                item.innerHTML = dicArr[i].kurt;
+                item.className = "hiddenDES";
+                item.style.display = "none";
+            }
+            row.appendChild(item);
+        }
+        tbody.appendChild(row);
+    }
+}
+
+function showHideDesc(){
+    if (document.getElementById('descriptives_table')){
+        var hiddens = document.getElementsByClassName('hiddenDES');
+        if (hiddens[0].style.display == "none"){
+            for (var i = 0; i < hiddens.length; i++ ) {
+                hiddens[i].style.display = "table-cell";
+            }
+            document.getElementById('desBTN_show').innerHTML = "Show Fewer Stats";
+        } else {
+            for (var i = 0; i < hiddens.length; i++ ) {
+                hiddens[i].style.display = "none";
+            }
+            document.getElementById('desBTN_show').innerHTML = "Show More Stats";
+        }
+
+    }
+}
+
+function dlCsvFunc(){
+    if (document.getElementById('descriptives_table')){
+        var rows = document.querySelectorAll('table#descriptives_table tr');
+        var csv = [];
+        for (var i=0; i<rows.length; i++) {
+            var row = [];
+            var cols = rows[i].querySelectorAll('td, th');
+                for (var j=0; j <cols.length; j++) {
+                    var data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s\s)/gm, ' ');
+                    data = data.replace(/"/g, '""');
+                    row.push('"' + data + '"');
+                }
+            csv.push(row.join(','));
+        }
+        var csv_string = csv.join('\n');
+        let filename = 'desriptiveData_'+new Date().toLocaleDateString() + '.csv';
+        var link = document.createElement('a');
+        link.id = "temp_link"; 
+        //link.style.display = 'none';
+        link.setAttribute('target', '_blank');
+        link.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv_string));
+        link.setAttribute('download', filename);
+        document.getElementById('extra_fun').appendChild(link);
+        let helper = document.getElementById('temp_link');
+        helper.innerHTML = "Click here to download file";
+        link.click();
+        helper.parentNode.removeChild(helper);
+    } else {
+        alert("There are no results! Please select which student data to download first.")
+    }
 }

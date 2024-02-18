@@ -10,6 +10,7 @@ var pair_c1; var ord_c1;
 
 function SetUp() {
     document.getElementById('error_text').style.display = "none";
+    document.getElementById('descriptives').innerHTML = "";
     var k = document.getElementById('k_value').value;
     pair_c1 = document.querySelector("[name=q1]:checked");
     ord_c1 = document.querySelector("[name=q2]:checked");
@@ -74,14 +75,17 @@ function Reset() {
     document.getElementById('reset').style.display = "none";
     document.getElementById('explain_bun').innerHTML = "The description of your test will be printed here:";
     document.getElementById('results_bun').innerHTML = "Your results will be printed here:";
+    document.getElementById('descriptives').innerHTML = "";
 }
 
 function Calculate() {
+    document.getElementById('descriptives').innerHTML = "";
     document.getElementById("error_text").innerHTML = "";
     document.getElementById('error_text').style.display = "none";
     document.getElementById('explain_bun').innerHTML = "The description of your test will be printed here:";
     document.getElementById('results_bun').innerHTML = "Your results will be printed here:";
     var k = document.getElementById('k_value').value;
+    k = parseInt(k);
     var pair_check = document.querySelector('input[name="q1"]:checked').value;
     var ordinal_check = document.querySelector('input[name="q2"]:checked').value;
     let helperK = 'data_set_'+(k-1);
@@ -103,10 +107,12 @@ function Calculate() {
                     document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
                 } else {
                     details_of_test = "Due to the ordinal nature of the data and the fact that the data was paired, a Friedman's Test was used.";
+                    runDescriptives(k, theBigData);
                     Friedman(k, theBigData);
                 }
             } else if (pair_check == "no") {
                 details_of_test = "Due to the ordinal nature of the data and the fact that the data was not paired, a Kruskal-Wallis Test was used.";
+                runDescriptives(k, theBigData);
                 KW(k, theBigData);
             }
         } else {
@@ -127,10 +133,12 @@ function Calculate() {
                         document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
                     } else {
                         details_of_test = "Due to the ordinal nature of the data and the fact that the data was paired, a Friedman's Test was used.";
+                        runDescriptives(k, theBigData);
                         Friedman(k, theBigData);
                     }
                 } else if (pair_check == "no") {
                     details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed the Shapiro-Wilk Test of normalcy, and therefore the data was treated as ordinal. Since the data was not paired, a a Kruskal-Wallis Test was used.";
+                    runDescriptives(k, theBigData);
                     KW(k, theBigData);
                 }
             } else {
@@ -141,10 +149,12 @@ function Calculate() {
                         document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
                     } else {
                         details_of_test = "Due to the continuous and normal nature of the data as checked by a Shapiro-Wilk Test, and the fact that the data was paired, a one-way repeated measures ANOVA was used.";
+                        runDescriptives(k, theBigData);
                         RepANOVA(k, theBigData);
                     }
                 } else if (pair_check == "no") {
                     details_of_test = "Due to the continuous and normal nature of the data as checked by a Shapiro-Wilk Test, and the fact that the data was not paired, an ANOVA (non-repeated measures) was used.";
+                    runDescriptives(k, theBigData);
                     StANOVA(k, theBigData);
                 }
             }
@@ -241,7 +251,7 @@ function StANOVA(k, theData) {
         }
 
     }
-    results_of_test = result1 + result2 + result3 + results4;
+    results_of_test = result1 + result2 + result3 + "<br>" + results4;
     document.getElementById("explain_bun").innerHTML = details_of_test;
     document.getElementById("results_bun").innerHTML = results_of_test;
 }
@@ -336,7 +346,7 @@ function RepANOVA(k,theData) {
 
     //Wrap up the results
     let result1 = "";
-    let results2 = "";
+    let result2 = "";
     let result3 = "";
     let results4 = "";
     if (W2<.1) {
@@ -366,7 +376,7 @@ function RepANOVA(k,theData) {
         }
         result3 += "<br><p style='font-size: 10'> Holm <i>p</i> values are rounded to 2 decimal places, so interpret <i>p</i> = 0 as <i>p</i> < 0.01 and <i>p</i> = 1 as <i>p</i> > 0.99</p>";
     }
-    results_of_test = result1 + result2 + result3 + results4;
+    results_of_test = result1 + result2 + result3 + "<br>" + results4;
     document.getElementById("explain_bun").innerHTML = details_of_test;
     document.getElementById("results_bun").innerHTML = results_of_test;
 }
@@ -395,7 +405,6 @@ function KW(k, theData) {
     let GN = sum(ns);
     let SE = DunnSE(superdata);
     let superdata2 = createCombinedRanks(superdata);
-    console.log(superdata2);
     let sumRanks = [];
     for (let i=0; i<k; i++){
         let tempSum = 0;
@@ -406,14 +415,13 @@ function KW(k, theData) {
         }
         sumRanks.push(tempSum);
     }
-    console.log(sumRanks);
     let KH_left = 12 / (GN * (GN +1));
     let KH_right = 0;
     for (let i=0; i<k; i++){
         KH_right += (sumRanks[i]**2)/ns[i]
     }
     let KH = KH_left * KH_right - (3*(GN+1));
-    console.log(KH_left+"  "+KH_right+"  "+KH);
+
     //Ad hoc testing using Dunn
     let combos = 0;
     let adHocs = [];
@@ -471,6 +479,98 @@ function KW(k, theData) {
         results_of_test = result1 + result2 + results4 + "<br>" + result3;
     }
     results_of_test = result1 + result2 + result3 + results4;
+    document.getElementById("explain_bun").innerHTML = details_of_test;
+    document.getElementById("results_bun").innerHTML = results_of_test;
+}
+
+function Friedman(k, theData) {
+    k = parseInt(k);
+    let df = k-1;
+    let ns = [];
+    let superdata = [];
+    for (let i=0; i<k; i++){
+        ns.push(theData[i].length);
+        theData[i].forEach(function(number){superdata.push({"Group":i, "No": number, "Rank": number});});
+    }
+    let GN = sum(ns);
+    let sN = ns[0];
+    let SE = Math.sqrt((sN*k*(k+1))/12);
+    let superdata2 = FriedmanSuperDataHandling(k, sN, superdata);
+    let sumRanks = [];
+    for (let i=0; i<k; i++){
+        let tempSum = 0;
+        for (let j=0; j<superdata2.length; j++){
+            if (superdata[j].Group == i){
+                tempSum += superdata2[j].Rank;
+            }
+        }
+        sumRanks.push(tempSum);
+    }
+    let KH_first = 12 / (sN * k * (k +1));
+    let KH_second = 0;
+    for (let i=0; i<k; i++){
+        KH_second += (sumRanks[i]**2)
+    }
+    let KH_third = 3 * (sN * (k+1));
+    let KH = (KH_first * KH_second) - KH_third;
+
+    //Handle postHoc
+    let dfw = sN*k;
+    let combos = 0;
+    let HSDs = [];
+    let Groups = [];
+    for (let i=(k-1); i>0; i--){
+        combos += i;
+    }
+    for (let i=0; i<combos; i++){
+        for (let j=(i+1); j<combos; j++){
+            let tempComp = Math.abs(sumRanks[i]-sumRanks[j]) / SE;
+            let tempP = tukeyMe(tempComp, k, dfw); 
+            tempP = tempP.toFixed(2);
+            HSDs.push(tempP);
+            Groups.push({"group1":i, "group2":j});
+        }
+    }
+
+    //Clean up and calculate effect size
+    let p = KWChiSq(KH, df);
+    let W = (KH) / (sN * (k-1));
+    W = W.toFixed(2);
+    KH = KH.toFixed(2);
+    let result1 = "";
+    let result2 = "";
+    let result3 = "";
+    let results4 = "";
+    if (W<0.3) {
+        results4 = " Furthermore, there was a small effect size; <i>W<sup>2</i></sup> = " + W;
+    } else if (W<0.5) {
+        results4 =  " Furthermore, there was a medium effect size; <i>W<sup>2</i></sup> = " + W;
+    } else if (W>=0.5) {
+        results4 =  " Furthermore, there was a large effect size; <i>W<sup>2</i></sup> = " + W;
+    }
+    if (p > 0.05) {
+        result1 = "There was no significant difference amongst any of the groups; "
+        p = p.toFixed(2);
+        result2 = "<i>Q</i> = " + KH + ", <i>p</i> = " + p + ". ";
+        result3 = "Therefore, no pair-wise analysis will be conducted."
+        results_of_test = result1 + result2 + result3 + results4;
+    } else {
+        result1 = "There was a significant difference between at least two of the groups; "
+        if (p < 0.01) {
+            result2 = "<i>Q</i> = " + KH + ", <i>p</i> < 0.01. ";
+        } else {
+            p = p.toFixed(2);
+            result2 = "<i>Q</i> = " + KH + ", <i>p</i> = " + p + ". ";
+        }
+
+        result3 += "The significant differences between specific groups, as tested by a Nemenyi post-hoc analysis, is shown below: <br>";
+        for (let i=0; i<k; i++){
+            result3 += "Group "+(Groups[i].group1+1)+" x Group "+(Groups[i].group2+1)+": <i>p</i> = " + HSDs[i] + "<br>";
+        }
+        result3 += "<br><p style='font-size: 10'> Nemenyi <i>p</i> values are rounded to 2 decimal places, so interpret <i>p</i> = 0 as <i>p</i> < 0.01 and <i>p</i> = 1 as <i>p</i> > 0.99</p>";
+        
+    }
+    results_of_test = result1 + result2 + results4 + "<br>" + result3;
     document.getElementById("explain_bun").innerHTML = details_of_test;
     document.getElementById("results_bun").innerHTML = results_of_test;
 }

@@ -1,5 +1,5 @@
 function L_Change() {
-    var language = document.getElementById('lang_s').value;
+    language = document.getElementById('lang_s').value;
     if (language = "jp") {
         location.href = "../jp/3_data_sets_jp.html"
     } else if (language = "en"){
@@ -9,9 +9,10 @@ function L_Change() {
 var details_of_test = "";
 var results_of_test = "";
 var pair_c1; var ord_c1;
-var language = document.getElementById('lang_s').value;
+var language;
 
 function SetUp() {
+    language = document.getElementById('lang_s').value;
     document.getElementById('error_text').style.display = "none";
     document.getElementById('descriptives').innerHTML = "";
     var k = document.getElementById('k_value').value;
@@ -53,6 +54,7 @@ function SetUp() {
 }
 
 function SetUpP2(k) {
+    language = document.getElementById('lang_s').value;
     if (!document.getElementById('data_set_0')){
     for (let i=0; i < k; i++ ) {
         let dumb_div = document.createElement("div");
@@ -64,7 +66,12 @@ function SetUpP2(k) {
         data.className = "dataset";
         let label = document.createElement("h3");
         let n = i+1;
-        let text = "Copy and paste data set " + n + " below:";
+        let text = "";
+        if (language == "en"){
+            text = "Copy and paste data set " + n + " below:";
+        } else if (language == "jp"){
+            text = "データ"+n+"をコピーして、以下にペーストしてください";
+        }
         label.innerHTML = text;
         label.className = "data_label";
         label.id = "label_" + i;
@@ -102,6 +109,7 @@ function Reset() {
 }
 
 function Calculate() {
+    language = document.getElementById('lang_s').value;
     document.getElementById('descriptives').innerHTML = "";
     document.getElementById("error_text").innerHTML = "";
     document.getElementById('error_text').style.display = "none";
@@ -280,10 +288,9 @@ function StANOVA(k, theData) {
     let Groups = [];
     for (let i=(k-1); i>0; i--){
         combos += i;
-        console.log(combos);
     }
-    for (let i=0; i<combos; i++){
-        for (let j=(i+1); j<combos; j++){
+    for (let i=0; i<k; i++){
+        for (let j=(i+1); j<k; j++){
             let tempComp = (Math.abs(means[i] - means[j])) / ((Math.sqrt(MSSW)) * (Math.sqrt((1/ns[i])+(1/ns[j]))));
             let tempP = tukeyMe(tempComp, k, dfw); tempP = tempP.toFixed(2);
             HSDs.push(tempP);
@@ -316,7 +323,7 @@ function StANOVA(k, theData) {
                 result2 = "<i>F</i>[" + dfs + ", " + dfw + "] = " + F + ", <i>p</i> = " + p + ". ";
             }
             result3 += "The significant differences between specific groups, as tested by a Tukey's HSD post-hoc analysis, is shown below: <br>";
-            for (let i=0; i<k; i++){
+            for (let i=0; i<HSDs.length; i++){
                 result3 += "Group "+(Groups[i].group1+1)+" x Group "+(Groups[i].group2+1)+": <i>p</i> = " + HSDs[i] + "<br>";
             }
         }
@@ -342,7 +349,7 @@ function StANOVA(k, theData) {
                 result2 = "<i>F</i>[" + dfs + ", " + dfw + "] = " + F + ", <i>p</i> = " + p + "）。";
             }
             result3 += "）ので、事後解析としてTukeyのHSD検定でグループ間の差を計算しました。その結果：";
-            for (let i=0; i<k; i++){
+            for (let i=0; i<HSDs.length; i++){
                 result3 += "Group "+(Groups[i].group1+1)+" x Group "+(Groups[i].group2+1)+": <i>p</i> = " + HSDs[i] + "<br>";
             }
         }
@@ -419,8 +426,8 @@ function RepANOVA(k,theData) {
         combos += i;
         console.log(combos);
     }
-    for (let i=0; i<combos; i++){
-        for (let j=(i+1); j<combos; j++){
+    for (let i=0; i<k; i++){
+        for (let j=(i+1); j<k; j++){
             let tempComp = (Math.abs(means[i] - means[j])) / ((Math.sqrt(MSE)) * (Math.sqrt((1/ns[i])+(1/ns[j]))));
             let tempP = getPfromT(tempComp, singleN);
             let name = "g"+i+"_g"+j;
@@ -468,7 +475,7 @@ function RepANOVA(k,theData) {
             }
     
             result3 += "The significant differences between specific groups, as tested by a Holm post-hoc analysis, is shown below: <br>";
-            for (let i=0; i<k; i++){
+            for (let i=0; i<adHocs.length; i++){
                 result3 += "Group "+(Groups[i].group1+1)+" x Group "+(Groups[i].group2+1)+": <i>p</i> = " + adHocs[i].p + "<br>";
             }
             result3 += "<br><p style='font-size: 10'> Holm <i>p</i> values are rounded to 2 decimal places, so interpret <i>p</i> = 0 as <i>p</i> < 0.01 and <i>p</i> = 1 as <i>p</i> > 0.99</p>";
@@ -496,7 +503,7 @@ function RepANOVA(k,theData) {
                 result2 = "<i>F</i>[" + dfb + ", " + dfs + "] = " + F + ", <i>p</i> = " + p;
             }
             result3 += "）ので、事後解析としてHolm法の検定でグループ間の差を計算しました。その結果： <br>";
-            for (let i=0; i<k; i++){
+            for (let i=0; i<adHocs.length; i++){
                 result3 += "Group "+(Groups[i].group1+1)+" x Group "+(Groups[i].group2+1)+": <i>p</i> = " + adHocs[i].p + "<br>";
             }
             result3 += "<br><p style='font-size: 10'> Holm <i>p</i> 値は小数点2位まで計算されているため、<i>p</i> = 0 は <i>p</i> < 0.01、 <i>p</i> = 1 は <i>p</i> > 0.99　と見なしてください</p>";
@@ -556,8 +563,8 @@ function KW(k, theData) {
     for (let i=(k-1); i>0; i--){
         combos += i;
     }
-    for (let i=0; i<combos; i++){
-        for (let j=(i+1); j<combos; j++){
+    for (let i=0; i<k; i++){
+        for (let j=(i+1); j<k; j++){
             let diff = Math.abs((sumRanks[i]/ns[i]) - (sumRanks[j]/ns[j]));
             let true_se = Math.sqrt(SE * ((1/ns[i]) + (1/ns[j])));
             let z = diff/true_se;
@@ -566,7 +573,8 @@ function KW(k, theData) {
             Groups.push({"group1":i, "group2":j});
         }
     }
-
+    console.log(combos);
+    console.log(adHocs);
     //Tidy up and effect size
     let p = KWChiSq(KH, df);
     let eta = (KH - k + 1) / (GN - k);
@@ -601,7 +609,7 @@ function KW(k, theData) {
             }
     
             result3 += "The significant differences between specific groups, as tested by a Dunn's post-hoc analysis, is shown below: <br>";
-            for (let i=0; i<k; i++){
+            for (let i=0; i<adHocs.length; i++){
                 result3 += "Group "+(Groups[i].group1+1)+" x Group "+(Groups[i].group2+1)+": <i>p</i> = " + adHocs[i] + "<br>";
             }
         } 
@@ -631,7 +639,7 @@ function KW(k, theData) {
                 result2 = "<i>H</i> = " + KH + ", <i>p</i> = " + p + ". ";
             }
             result3 += "）ので、事後解析としてダン検定でグループ間の差を計算しました。その結果： <br>";
-            for (let i=0; i<k; i++){
+            for (let i=0; i<adHocs.length; i++){
                 result3 += "Group "+(Groups[i].group1+1)+" x Group "+(Groups[i].group2+1)+": <i>p</i> = " + adHocs[i] + "<br>";
             }
         }
@@ -680,8 +688,8 @@ function Friedman(k, theData) {
     for (let i=(k-1); i>0; i--){
         combos += i;
     }
-    for (let i=0; i<combos; i++){
-        for (let j=(i+1); j<combos; j++){
+    for (let i=0; i<k; i++){
+        for (let j=(i+1); j<k; j++){
             let tempComp = Math.abs(sumRanks[i]-sumRanks[j]) / SE;
             let tempP = tukeyMe(tempComp, k, dfw); 
             tempP = tempP.toFixed(2);
@@ -723,7 +731,7 @@ function Friedman(k, theData) {
             }
     
             result3 += "The significant differences between specific groups, as tested by a Nemenyi post-hoc analysis, is shown below: <br>";
-            for (let i=0; i<k; i++){
+            for (let i=0; i<HSDs.length; i++){
                 result3 += "Group "+(Groups[i].group1+1)+" x Group "+(Groups[i].group2+1)+": <i>p</i> = " + HSDs[i] + "<br>";
             }
             result3 += "<br><p style='font-size: 10'> Nemenyi <i>p</i> values are rounded to 2 decimal places, so interpret <i>p</i> = 0 as <i>p</i> < 0.01 and <i>p</i> = 1 as <i>p</i> > 0.99</p>";   
@@ -750,7 +758,7 @@ function Friedman(k, theData) {
                 result2 = "<i>Q</i> = " + KH + ", <i>p</i> = " + p + ". ";
             }
             result3 += "）ので、事後解析としてネメニー検定でグループ間の差を計算しました。その結果： <br>";
-            for (let i=0; i<k; i++){
+            for (let i=0; i<HSDs.length; i++){
                 result3 += "Group "+(Groups[i].group1+1)+" x Group "+(Groups[i].group2+1)+": <i>p</i> = " + HSDs[i] + "<br>";
             }
             result3 += "<br><p style='font-size: 10'> Nemenyi <i>p</i> values are rounded to 2 decimal places, so interpret <i>p</i> = 0 as <i>p</i> < 0.01 and <i>p</i> = 1 as <i>p</i> > 0.99</p>";   

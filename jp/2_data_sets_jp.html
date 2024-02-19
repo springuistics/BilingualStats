@@ -5,7 +5,8 @@
     <title>Comparing 2 Data Sets</title>
 </head>
 <body>
-    <script src="2datasets_jp.js"></script>
+    <script src="../scripts/repeatTests.js"></script>
+    <script src="../scripts/2_data_sets.js"></script>
     <div id="langauge_bar">
         <div style="text-align:left; margin-top: 2px; margin-left: 10px; position:absolute"><a href="../index_jp.html"><img class="picture" src="../css/back.png" alt="index"></a></div>
         <p id="lang_bun">言語設定:</p>
@@ -52,13 +53,13 @@
             <div id="data1">
                 <h3>データ①をコピーして、以下にペーストしてください*</h3>
                 <br>
-                <textarea id="data_set_1" class="txtarea" rows="30" columns="40" text-overflow="visible" placeholder="データをここに貼付：&#10;1&#10;2&#10;3&#10;など"></textarea>
+                <textarea id="data_set_0" class="txtarea" rows="30" columns="40" text-overflow="visible" placeholder="データをここに貼付：&#10;1&#10;2&#10;3&#10;など"></textarea>
                 <br>
             </div>
             <div id="data2">
                 <h3>データ②をコピーして、以下にペーストしてください*</h3>
                 <br>
-                <textarea id="data_set_2" class="txtarea" rows="30" columns="40" text-overflow="visible" placeholder="データをここに貼付：&#10;1&#10;2&#10;3&#10;など"></textarea>
+                <textarea id="data_set_1" class="txtarea" rows="30" columns="40" text-overflow="visible" placeholder="データをここに貼付：&#10;1&#10;2&#10;3&#10;など"></textarea>
                 <br>
             </div>    
         </div>
@@ -68,6 +69,9 @@
         </div>
     </div>
     <div id="results">
+        <div id="descriptives">
+
+        </div>
         <p id="explain_bun">利用された検定の詳細はここに書かれます</p>
         <p id="results_bun">結果はここに書かれます</p>
     </div>

@@ -11,10 +11,7 @@ function SetUp() {
     document.getElementById('error_text').style.display = "none";
     var k = document.getElementById('k_no').value;
     var g = document.getElementById('g_no').value;
-    if (k>10 || g>10) {
-        document.getElementById("error_text").innerHTML = "本プログラムの可能比較テーブルは最大で１０ｘ１０です。２～１０の数字を入力してください。"
-        document.getElementById('error_text').style.display = "inline";
-    } else if (k<2 || g<2) {
+    if (k<2 || g<2) {
         document.getElementById("error_text").innerHTML = "グループ・カテゴリーの両方において、少なくとも２項が必要です。２～１０の数字を入力してください。"
         document.getElementById('error_text').style.display = "inline";
     } else if (!document.getElementById('dataset_k0_g0')){
@@ -62,77 +59,86 @@ function Calculate() {
     } else {
         var k = document.getElementById('k_no').value;
         var g = document.getElementById('g_no').value;
+        var bigerror = false;
         var data = [];
         for (let i=0; i<k; i++) {
             for (let j=0; j<g; j++) {
                 let temp = 'dataset_k'+(i)+'_g'+(j);
                 let temp2 = document.getElementById(temp).value;
+                if (temp2 == ""){
+                    bigerror = true;
+                }
                 let temp3 = parseFloat(temp2);
                 data.push(temp3);
             }
         }
-        var cols = [];
-        for (let i=0; i<k; i++) {
-            let temp = 0;
-            for (let j=0; j<g; j++) {
-                temp += data[(i*g)+(j)];
-            }
-            cols.push(temp);
-        }
-        var rows = [];
-        for (let i=0; i<g; i++) {
-            let temp = 0;
-            for (let j=0; j<k; + j++) {
-                temp += data[(i)+((j)*g)]
-            }
-            rows.push(temp);
-        }
-        var bigN = 0;
-        for (let i=0; i<cols.length; i++) {
-            bigN += cols[i]; 
-        }
-        var expected = [];
-        for (let i=0; i<cols.length; i++) {
-            for (let j=0; j<rows.length; j++) {
-                let temp = cols[i] * rows[j] / bigN;
-                expected.push(temp);
-            }
-        }
-        var Chi = 0;
-        for (let i=0; i<data.length; i++) {
-            Chi += ((data[i] - expected[i])**2)/expected[i];
-        }
-        var df = (k-1)*(g-1);
-        var p = GimmietheP(Chi,df);
-        Chi = Chi.toFixed(2);
-        p = p.toFixed(2);
-        if (p<.01) {
-            var result2 = " <i>Χ<sup>2</sup></i> (" + df + ", <i>N</i> = " + bigN + ")= " + Chi + ",  <i>p</i> < .01";
+        if (bigerror == true){
+            document.getElementById("error_text").innerHTML = "You must input data for every box."
+            document.getElementById('error_text').style.display = "inline";
         } else {
-            var result2 = " <i>Χ<sup>2</sup></i> (" + df + ", <i>N</i> = " + bigN + ")= " + Chi + ",  <i>p</i> = " + p;
+            var cols = [];
+            for (let i=0; i<k; i++) {
+                let temp = 0;
+                for (let j=0; j<g; j++) {
+                    temp += data[(i*g)+(j)];
+                }
+                cols.push(temp);
+            }
+            var rows = [];
+            for (let i=0; i<g; i++) {
+                let temp = 0;
+                for (let j=0; j<k; + j++) {
+                    temp += data[(i)+((j)*g)]
+                }
+                rows.push(temp);
+            }
+            var bigN = 0;
+            for (let i=0; i<cols.length; i++) {
+                bigN += cols[i]; 
+            }
+            var expected = [];
+            for (let i=0; i<cols.length; i++) {
+                for (let j=0; j<rows.length; j++) {
+                    let temp = cols[i] * rows[j] / bigN;
+                    expected.push(temp);
+                }
+            }
+            var Chi = 0;
+            for (let i=0; i<data.length; i++) {
+                Chi += ((data[i] - expected[i])**2)/expected[i];
+            }
+            var df = (k-1)*(g-1);
+            var p = GimmietheP(Chi,df);
+            Chi = Chi.toFixed(2);
+            p = p.toFixed(2);
+            if (p<.01) {
+                var result2 = " <i>Χ<sup>2</sup></i> (" + df + ", <i>N</i> = " + bigN + ")= " + Chi + ",  <i>p</i> < .01";
+            } else {
+                var result2 = " <i>Χ<sup>2</sup></i> (" + df + ", <i>N</i> = " + bigN + ")= " + Chi + ",  <i>p</i> = " + p;
+            }
+            var result1 = "";
+            if (p>.05) {
+                result1 = "総合的な有意差はありませんでした（"
+            } else {
+                result1 = "総合的な有意差はありました（"
+            }
+            var w = Math.sqrt(Chi / (bigN*df));
+            w = w.toFixed(2);
+            var effect_size = "";
+            if (w<.20) {
+                effect_size = "）。また、 小さい効果が観察されました： <i>V</i> = " + w;
+            } else if (w<0.40) {
+                effect_size =  "）。また、中くらいの効果が観察されました： <i>V</i> = " + w;
+            } else if (w>=0.4) {
+                effect_size =  "）。また、大きい効果が観察されました： <i>V</i> = " + w;
+            }
+            results_of_test = result1 + result2 + effect_size;
+            document.getElementById("explain_bun").innerHTML = deets;
+            document.getElementById("explain_bun").style.display="block";
+            document.getElementById("results_bun").innerHTML = results_of_test;
+            document.getElementById("results_bun").style.display="block";
+            document.getElementById("reset").style.display="block";
         }
-        var result1 = "";
-        if (p>.05) {
-            result1 = "総合的な有意差はありませんでした（"
-        } else {
-            result1 = "総合的な有意差はありました（"
-        }
-        var w = Math.sqrt(Chi / (bigN*df));
-        w = w.toFixed(2);
-        var effect_size = "";
-        if (w<.20) {
-            effect_size = "）。また、 小さい効果が観察されました： <i>V</i> = " + w;
-        } else if (w<0.40) {
-            effect_size =  "）。また、中くらいの効果が観察されました： <i>V</i> = " + w;
-        } else if (w>=0.4) {
-            effect_size =  "）。また、大きい効果が観察されました： <i>V</i> = " + w;
-        }
-        results_of_test = result1 + result2 + effect_size;
-        document.getElementById("explain_bun").innerHTML = deets;
-        document.getElementById("explain_bun").style.display="block";
-        document.getElementById("results_bun").innerHTML = results_of_test;
-        document.getElementById("results_bun").style.display="block";
-        document.getElementById("reset").style.display="block";
     }
 }
 

@@ -1,9 +1,9 @@
 function L_Change() {
     language = document.getElementById('lang_s').value;
     if (language = "jp") {
-        location.href = "../jp/3_data_sets_jp.html"
-    } else if (language = "en"){
-        location.href = "../jp/3_data_sets.html"
+        location.href == "../jp/3_data_sets_jp.html"
+    } else if (language == "en"){
+        location.href = "../en/3_data_sets.html"
     }
 }
 var details_of_test = "";
@@ -113,8 +113,13 @@ function Calculate() {
     document.getElementById('descriptives').innerHTML = "";
     document.getElementById("error_text").innerHTML = "";
     document.getElementById('error_text').style.display = "none";
-    document.getElementById('explain_bun').innerHTML = "The description of your test will be printed here:";
-    document.getElementById('results_bun').innerHTML = "Your results will be printed here:";
+    if (language == "en"){
+        document.getElementById('explain_bun').innerHTML = "The description of your test will be printed here:";
+        document.getElementById('results_bun').innerHTML = "Your results will be printed here:";
+    } else if (language == "jp"){
+        document.getElementById('explain_bun').innerHTML = "利用された検定の詳細はここに書かれます";
+        document.getElementById('results_bun').innerHTML = "結果はここに書かれます";
+    }
     var k = document.getElementById('k_value').value;
     k = parseInt(k);
     var pair_check = document.querySelector('input[name="q1"]:checked').value;

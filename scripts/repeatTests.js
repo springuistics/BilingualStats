@@ -920,6 +920,7 @@ function runDescriptives(k, thisData){
             let item = document.createElement('td');
             if (j==0){
                 item.innerHTML = "Group "+(i+1);
+                item.style.textAlign = "left";
             } else if (j==1) {
                 item.innerHTML = dicArr[i].mini + " ~ " + dicArr[i].maxi;
             } else if (j==2) {
@@ -1001,5 +1002,136 @@ function dlCsvFunc(){
         helper.parentNode.removeChild(helper);
     } else {
         alert("There are no results! 表は実在しない")
+    }
+}
+
+function specialDescriptivesForPP(thisData){
+    var language = document.getElementById('lang_s').value;
+    let dicArr = performDescriptives(thisData);
+    //Prep buttons
+    let buttonHolder = document.createElement('div');
+    document.getElementById('descriptives').appendChild(buttonHolder);
+    buttonHolder.className = "desBTNholder";
+    buttonHolder.id = "desBTNholder";
+    let button1 = document.createElement('button');
+    let button2 = document.createElement('button');
+    document.getElementById('desBTNholder').appendChild(button1);
+    document.getElementById('desBTNholder').appendChild(button2);
+    button1.className = "desBTN";
+    button2.className = "desBTN";
+    button1.id="desBTN_show";
+    button2.id="desBTN_csv";
+    if (language == "en"){
+        button1.innerHTML = "Show More Stats";
+    } else if (language == "jp"){
+        button1.innerHTML = "詳細統計表示";
+    }
+    if (language == "en"){
+        button2.innerHTML = "Download Table";
+    } else if (language == "jp"){
+        button2.innerHTML = "表をダウンロード";
+    }
+    button1.addEventListener('click', showHideDesc);
+    button2.addEventListener('click', dlCsvFunc);
+
+    //Prep descriptives table
+    let table = document.createElement('table');
+    let thead = document.createElement('thead');
+    let tbody = document.createElement('tbody');
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    document.getElementById('descriptives').appendChild(table);
+    table.className = "descriptives_table";
+    table.id = "descriptives_table";
+
+    //Prep Headers
+    let row_1 = document.createElement('tr');
+    let heading_1 = document.createElement('th');
+        if (language == "en"){
+            heading_1.innerHTML = "Group";
+        } else if (language == "jp"){
+            heading_1.innerHTML = "組";
+        }
+    
+    let heading_2 = document.createElement('th');
+        if (language == "en"){
+            heading_2.innerHTML = "range";
+        } else if (language == "jp"){
+            heading_2.innerHTML = "範囲";
+        }
+    let heading_3 = document.createElement('th');
+    heading_3.innerHTML = "<i>M</i>";
+    let heading_4 = document.createElement('th');
+    heading_4.innerHTML = "<i>SD</i>";
+    let heading_5 = document.createElement('th');
+    heading_5.innerHTML = "95% C.I.";
+    heading_5.className = "hiddenDES";
+    heading_5.style.display = "none";
+    let heading_6 = document.createElement('th');
+        if (language == "en"){
+            heading_6.innerHTML = "Skewness";
+        } else if (language == "jp"){
+            heading_6.innerHTML = "歪度";
+        }
+    heading_6.className = "hiddenDES";
+    heading_6.style.display = "none";
+    let heading_7 = document.createElement('th');
+    if (language == "en"){
+            heading_7.innerHTML = "Kurtosis";
+        } else if (language == "jp"){
+            heading_7.innerHTML = "尖度";
+        }
+    heading_7.className = "hiddenDES";
+    heading_7.style.display = "none";
+
+    //Append headers
+    row_1.appendChild(heading_1);
+    row_1.appendChild(heading_2);
+    row_1.appendChild(heading_3);
+    row_1.appendChild(heading_4);
+    row_1.appendChild(heading_5);
+    row_1.appendChild(heading_6);
+    row_1.appendChild(heading_7);
+    thead.appendChild(row_1);
+
+    //Fill out the table
+    for (let i=0; i<4; i++){
+        let row = document.createElement('tr');
+        for (let j=0; j<7; j++){
+            let item = document.createElement('td');
+            if (j==0){
+                if (i==0){
+                    item.innerHTML = "Group 1 (pre-test)";
+                } else if (i==1){
+                    item.innerHTML = "Group 1 (post-test)";
+                } else if (i==2){
+                    item.innerHTML = "Group 2 (pre-test)";
+                } else if (i==3){
+                    item.innerHTML = "Group 2 (post-test)";
+                }
+                item.style.textAlign = "left";
+            } else if (j==1) {
+                item.innerHTML = dicArr[i].mini + " ~ " + dicArr[i].maxi;
+            } else if (j==2) {
+                item.innerHTML =  dicArr[i].m;
+            } else if (j==3) {
+                item.innerHTML =  dicArr[i].sd;
+            } else if (j==4) {
+                item.innerHTML = dicArr[i].CIlow + " ~ " + dicArr[i].CIup;
+                item.className = "hiddenDES";
+                item.style.display = "none";
+            } else if (j==5) {
+                item.innerHTML = dicArr[i].skew;
+                item.className = "hiddenDES";
+                item.style.display = "none";
+            }
+            else if (j==6) {
+                item.innerHTML = dicArr[i].kurt;
+                item.className = "hiddenDES";
+                item.style.display = "none";
+            }
+            row.appendChild(item);
+        }
+        tbody.appendChild(row);
     }
 }

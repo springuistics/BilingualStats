@@ -207,3 +207,52 @@ h1, h2, h3, p, a {
     background-color: rgb(210, 229, 245);
     outline: 2px solid aqua;
 }
+
+
+.desBTNholder{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    text-align: center;
+}
+.desBTN{
+    width: auto;
+    height: 35px;
+    font-size: 16px;
+    border: 3px;
+    border-style: outset;
+    color: white;
+}
+.desBTN:hover{
+    background-color: darkslategrey !important;
+    cursor: pointer !important;
+}
+#desBTN_show{
+    background-color: darkblue;
+}
+#desBTN_csv{
+    background-color: black;
+}
+.descriptives_table{
+    width: 80%;
+    border-collapse: collapse;
+    margin: auto;
+}
+
+.descriptives_table th {
+    text-align: center;
+    background-color:rgb(22, 0, 102);
+    color: white;
+    border: 2px solid black;
+}
+.descriptives_table td {
+    text-align: right;
+    background-color: rgb(233, 255, 205);
+}
+.descriptives_table tr:hover {
+    background-color: #ddd !important;
+}
+.descriptives_table th, td {
+    padding: 8px;
+}

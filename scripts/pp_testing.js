@@ -109,7 +109,7 @@ function Calculate() {
             g2pre.forEach(function(number){superdata.push({"Group":3, "No": number, "Rank": number});});
             g2post.forEach(function(number){superdata.push({"Group":4, "No": number, "Rank": number});});
             var se = DunnSE(superdata);
-            var superdata2 = SuperDataHandling(superdata);
+            var superdata2 = createCombinedRanks(superdata);
             var g1pre_ranks = [];
             var g1post_ranks = [];
             var g2pre_ranks = [];

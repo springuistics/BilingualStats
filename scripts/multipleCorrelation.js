@@ -140,8 +140,12 @@ function calculateForReal(data){
     let eachX1 = [];
     let eachXy = [];
     let eachXx = [];
+    let sumSqs = [];
+    let sums = [];
     for (let i=0; data.length; i++){
         averages.push(average(data[i]));
+        sums.push(sum(data[i]))
+        sumSqs.push(sumSquare(data[i]))
     }
     for (let i=1; data.length; i++){
         eachX1.push(sumSquare(data[i]) - ((sum(data[i])**2)/N0) )
@@ -154,9 +158,324 @@ function calculateForReal(data){
             eachXx.push(TwoDataSum(data[i], data[j]) - ((sum(data[i])*sum(data[j])) / N0))
         }
     }
+    let MatrixFuel = [];
+    for (let i=0; i<data.length; i++){
+        if (i==0){
 
+        } else {
+            for (let j=0; j<data.length; j++){
+                if (i==0){
+                    MatrixFuel.push(sum(data[i]))
+                } else {
+    
+                }
+            }
+        }
+        
+    }
     let determinants = [];
+
+    let bigA = [];
+    for (let i=0; i<data.length; i++){
+        let thisrow = [];
+        if (i==0){
+            for (let j=0; j<data.length; j++){
+                if (j==0){
+                    thisrow.push(N0)
+                } else {
+                    thisrow.push(sums[j])
+                }
+            }
+        } else {
+            for (let j=0; j<data.length; j++){
+                if (j==0){
+                    thisrow.push(sums[i])
+                } else if (j==i) {
+                    thisrow.push(sumSqs[i])
+                } else {
+                    thisrow.push(TwoDataSum(data[i],data[j]))
+                }
+            }
+        }
+        bigA.push(thisrow)
+    }
+    let denom = solveMatrix(bigA);
+    for (let i=0; i<data.length; i++){
+        let thisMat = [];
+        if (i==0){
+            for (let k=0; k<data.length; k++){
+                let thisRow = [];
+                for (let j=0; j<data.length; j++){
+                    if (k==0){
+                        thisRow.push(sums[j])
+                    } else {
+                        thisRow.push(TwoDataSum(data[j], data[k]))
+                    }
+                }
+                thisMat.push(thisRow)
+            }
+        } else {
+            for (let k=0; k<data.length; k++){
+                let thisRow = [];
+                if (k==0){
+                    for (let j=0; j<data.length; j++){
+                        if (j==0){
+                            thisRow.push(N0)
+                        } else {
+                            if (j==i){
+                                thisRow.push(sums[0])
+                            } else {
+                                thisRow.push(sums[j])
+                            }
+                        }
+                    }
+                } else {
+                    for (let j=0; j<data.length; j++){
+                        if (j==0){
+                            thisRow.push(sums[k])
+                        } else {
+                            if (j==i){
+                                thisRow.push(TwoDataSum(data[j], data[0]))
+                            } else {
+                                thisRow.push(TwoDataSum(data[j], data[k]))
+                            }
+                        }
+                    }
+                }
+                thisMat.push(thisRow)
+            }
+        }
+        determinants.push(solveMatrix(thisMat))
+
+    }
+
+    let Bs = [];
+    for (let i=0; i<determinants.length; i++){
+        Bs.push(safeDivision(determinants[i],denom))
+    }
+    let ybar = [];
+    let residuals = [];
+    let yvars = [];
+    let ytotals = [];
+
+    for (let i=0; i<N0; i++) {
+        let temp = 0;
+        for (let j=0; j<Bs.length; j++){
+            if (j==0){
+                temp += Bs[0]
+            } else {
+                temp += Bs[j] * data[j+1][i]
+            }
+        }
+        ybar.push(temp);
+    }
+    for (let i=0; i<N0; i++) {
+        let temp = data[0][i] - ybar[i];
+        residuals.push(temp);
+    }
+    for (let i=0; i<N0; i++) {
+        let temp = ybar[i] - averages[0];
+        yvars.push(temp);
+    }
+    for (let i=0; i<N0; i++) {
+        let temp = data[0][i] - averages[0];
+        ytotals.push(temp);
+    }
+    let SSM = SumSquare(yvars);
+    let SSE = SumSquare(residuals);
+    let SST = SumSquare(ytotals);
+    let MSM = SSM / (data.length-1);
+    let MSE = SSE / (N0-4);
+    let F = MSM / MSE;
+    let R2 =  SSM / SST;
+    let bigP = getPfromF(data.length, F, (data.length-1), (N0-data.length));
+
+    //deal with error and shit
+    let helper_SeXs = [];
+    for (let i=1; i<data.length; i++){
+        let tempArray = [data[i]];
+        for (let j=1; j<data.length; j++){
+            if(j != i){
+                tempArray.push(data[j])
+            }
+        }
+        helper_SeXs.push(repeatGetter(tempArray))
+    }
+
+    let SEs = [];
+    for (let i=0; i<helper_SeXs.length; i++){
+        SEs.push(Math.sqrt((1-R2)/((1-(helper_SeXs[0]))*(N0-data.length))) * ((Math.sqrt(variance(data[0]))) / (Math.sqrt(variance(data[i+1])))))
+    }
+
+    let tVals = [];
+    let pVals = [];
+    let betas = [];
+    for (let i=0; i<SEs.length; i++){
+        tVals.push(Bs[i+1]/SEs[0])
+    }
+    for (let i=0; i<tVals.length; i++){
+        pVals.push(getPfromT(tVals[0], (N0-data.length)))
+    }
+    for (let i=0; i<SEs.length; i++){
+        betas.push(Bs[i]* ((Math.sqrt(variance(data[i+1]))) / (Math.sqrt(variance(data[0])))))
+    }
+    
+    //Find Relative Weights
+
     
 
+}
 
+
+function repeatGetter(data){
+    let N0 = data[0].length;
+    let averages = [];
+    let eachX1 = [];
+    let eachXy = [];
+    let eachXx = [];
+    let sumSqs = [];
+    let sums = [];
+    for (let i=0; data.length; i++){
+        averages.push(average(data[i]));
+        sums.push(sum(data[i]))
+        sumSqs.push(sumSquare(data[i]))
+    }
+    for (let i=1; data.length; i++){
+        eachX1.push(sumSquare(data[i]) - ((sum(data[i])**2)/N0) )
+    }
+    for (let i=1; data.length; i++){
+        eachXy.push(TwoDataSum(data[0], data[i]) - ((sum(data[0])*sum(data[i])) / N0))
+    }
+    for (let i=1; data.length; i++){
+        for (let j=(i+1); data.length; j++){
+            eachXx.push(TwoDataSum(data[i], data[j]) - ((sum(data[i])*sum(data[j])) / N0))
+        }
+    }
+    let MatrixFuel = [];
+    for (let i=0; i<data.length; i++){
+        if (i==0){
+
+        } else {
+            for (let j=0; j<data.length; j++){
+                if (i==0){
+                    MatrixFuel.push(sum(data[i]))
+                } else {
+    
+                }
+            }
+        }
+        
+    }
+    let determinants = [];
+
+    let bigA = [];
+    for (let i=0; i<data.length; i++){
+        let thisrow = [];
+        if (i==0){
+            for (let j=0; j<data.length; j++){
+                if (j==0){
+                    thisrow.push(N0)
+                } else {
+                    thisrow.push(sums[j])
+                }
+            }
+        } else {
+            for (let j=0; j<data.length; j++){
+                if (j==0){
+                    thisrow.push(sums[i])
+                } else if (j==i) {
+                    thisrow.push(sumSqs[i])
+                } else {
+                    thisrow.push(TwoDataSum(data[i],data[j]))
+                }
+            }
+        }
+        bigA.push(thisrow)
+    }
+    let denom = solveMatrix(bigA);
+    for (let i=0; i<data.length; i++){
+        let thisMat = [];
+        if (i==0){
+            for (let k=0; k<data.length; k++){
+                let thisRow = [];
+                for (let j=0; j<data.length; j++){
+                    if (k==0){
+                        thisRow.push(sums[j])
+                    } else {
+                        thisRow.push(TwoDataSum(data[j], data[k]))
+                    }
+                }
+                thisMat.push(thisRow)
+            }
+        } else {
+            for (let k=0; k<data.length; k++){
+                let thisRow = [];
+                if (k==0){
+                    for (let j=0; j<data.length; j++){
+                        if (j==0){
+                            thisRow.push(N0)
+                        } else {
+                            if (j==i){
+                                thisRow.push(sums[0])
+                            } else {
+                                thisRow.push(sums[j])
+                            }
+                        }
+                    }
+                } else {
+                    for (let j=0; j<data.length; j++){
+                        if (j==0){
+                            thisRow.push(sums[k])
+                        } else {
+                            if (j==i){
+                                thisRow.push(TwoDataSum(data[j], data[0]))
+                            } else {
+                                thisRow.push(TwoDataSum(data[j], data[k]))
+                            }
+                        }
+                    }
+                }
+                thisMat.push(thisRow)
+            }
+        }
+        determinants.push(solveMatrix(thisMat))
+
+    }
+
+    let Bs = [];
+    for (let i=0; i<determinants.length; i++){
+        Bs.push(safeDivision(determinants[i],denom))
+    }
+    let ybar = [];
+    let residuals = [];
+    let yvars = [];
+    let ytotals = [];
+
+    for (let i=0; i<N0; i++) {
+        let temp = 0;
+        for (let j=0; j<Bs.length; j++){
+            if (j==0){
+                temp += Bs[0]
+            } else {
+                temp += Bs[j] * data[j+1][i]
+            }
+        }
+        ybar.push(temp);
+    }
+    for (let i=0; i<N0; i++) {
+        let temp = data[0][i] - ybar[i];
+        residuals.push(temp);
+    }
+    for (let i=0; i<N0; i++) {
+        let temp = ybar[i] - averages[0];
+        yvars.push(temp);
+    }
+    for (let i=0; i<N0; i++) {
+        let temp = data[0][i] - averages[0];
+        ytotals.push(temp);
+    }
+    let SSM = SumSquare(yvars);
+    let SSE = SumSquare(residuals);
+    let SST = SumSquare(ytotals);
+    return (SSM / SST)
 }

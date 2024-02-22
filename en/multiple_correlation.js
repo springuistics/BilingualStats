@@ -459,7 +459,7 @@ function Begin(k, datay, x1, x2, x3, x4) {
         var MSM = SSM / (k);
         var MSE = SSE / (N-4);
         var F = MSM / MSE;
-        var helper_sex1 = fkyou3iv(x1, x2, x3, x4);
+        var helper_sex1 = fkyou3iv(x1, x2, x3);
         var helper_sex2 = fkyou3iv(x2, x1, x3);
         var helper_sex3 = fkyou3iv(x3, x1, x2);
         var ryx1x2 = fkyou3iv(datay, x1, x2);

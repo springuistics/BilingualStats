@@ -19,26 +19,14 @@
         <h2 id="Subtitle">データについて、以下の質問を答えてください。</h2>
     <div id="questions">
         <div id="ps">
-            <p class="question" id="qq1">全べてのデータは連続データですか？*</p>
-            <div id="hover1" class="hovery">全べてのデータに関しては、多数の数字が可能であり、平均より１つ大きいデータが平均より1つ小さいデータと同等に平均値から離れているという二つの条件を満たしている場合、「はい」と答えてください。時間、割合、回数、正解率などは多くの場合、「連続的データ」と見なされます。リッカート尺度のアンケート質問は継続的データと見なさらないため、いずれのデータ組はこのようなデータである場合は「いいえ」と答えてください。もしどちらになるか分からない場合は「はい」と答えても構いません。</div>
-            <br>
             <p id="qq2" class="question">説明変数はいくつありますか？*</p>
             <div id ="hover2" class="hovery">予測しようとしている変数（データ）ではない、同じ参加者から取った他のデータを意味にします。例えば、テストの点数が複数のクイズの点数とどのように関連しているかを分析したい場合、テストの点数は予測変数となり、それぞれのクイズの点数が説明変数になります。残念ながら、現時点では、本プログラムは2つの説明変数しか計算できないんです。</div>
             <br>
         </div>
         <div id="as">
-            <div id="firsty">
-            <input type="radio" id="q1_a" class="radio_btn" name="q1" value="yes">
-            <label for="q1_a" class="answer">はい</label>
-            <input type="radio" id="q1_b" class="radio_btn" name="q1" value="no">
-            <label for="q1_b" class="answer">いいえ</label>
-            <br>
-            <br>
-            <br>
-            </div>
             <div id="secondy">
-            <input type="text" id="k_value" placeholder="説明変数の数を入力してください">
-            <br>
+                <input type="text" id="k_value" placeholder="説明変数の数を入力してください">
+                <br>
             </div>
         </div>
     </div>
@@ -52,9 +40,11 @@
         <div id="jesus">
             <div id="data1" class="dumb_div" style="background:rgb(144, 240, 247)">
                 <h3 id="qq3">予測変数データ*を以下にペーストしてください</h3>
+                <h5>予測変数データ名 (省略可能)</h5>
                 <div id ="hover3" class="hovery">予測したい変数のこと。例えば、テストの点数が複数のクイズの点数とどのように関連しているかを分析したい場合、テストの点数は予測変数となり、それぞれのクイズの点数が説明変数になります。</div>
-                <br>
-                <textarea id="y_data" rows="30" columns="40" text-overflow="visible" placeholder="データをここに貼付：&#10;1&#10;2&#10;3&#10;など"></textarea>
+                <input type="text" class="groupInput" id="group_name_0" value="PredictMe">
+                <h5>データを以下にペーストしてください*</h5>
+                <textarea id="data_set_0" rows="30" columns="40" text-overflow="visible" placeholder="データをここに貼付：&#10;1&#10;2&#10;3&#10;など"></textarea>
                 <br>
             </div>
         <div id="d_container"></div>
@@ -63,6 +53,9 @@
         </div>
     </div>
     <div id="results">
+        <div id="descriptives">
+
+        </div>
         <p id="explain_bun">利用された検定の詳細はここに書かれます</p>
         <p id="results_bun">結果はここに書かれます</p>
         <div id="table_holder"></div>

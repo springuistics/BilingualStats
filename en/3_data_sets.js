@@ -46,17 +46,24 @@ function SetUpP2(k) {
         let data = document.createElement("textarea");
         data.id = "dataset_" + i;
         data.className = "dataset";
-        let label = document.createElement("h3");
-        let n = i+1;
-        let text = "Copy and paste data set " + n + " below:";
-        label.innerHTML = text;
+        let nameBox = document.createElement("input");
+        nameBox.type = "text";
+        nameBox.classname = "groupInput";
+        nameBox.value = "Group "+(i+1);
+        nameBox.id = "group_name_"+i;
+        let label = document.createElement("h5");
+        let label2 = document.createElement("h5");
+        label.innerHTML = "Group name (optional)";
         label.className = "data_label";
-        label.id = "label_" + i;
+        label2.innerHTML = "Paste data below:";
+        label2.className = "data_label";
         document.getElementById('d_container').appendChild(dumb_div);
         document.getElementById(helper).appendChild(label);
+        document.getElementById(helper).appendChild(nameBox);
+        document.getElementById(helper).appendChild(label2);
         document.getElementById(helper).appendChild(data);
-        document.getElementById(data.id).rows = "30";
-        document.getElementById(data.id).columns = "40";
+        document.getElementById(data.id).rows = "20";
+        document.getElementById(data.id).columns = "30";
         document.getElementById(data.id).placeholder="1\n 2\n 3\n 4\n etc.";
     }
     }

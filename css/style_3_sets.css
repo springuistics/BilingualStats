@@ -294,3 +294,12 @@ h1, h2, h3, p, a {
 .descriptives_table th, td {
     padding: 8px;
 }
+
+.groupInput{
+    border: 4px solid rgb(0, 0, 154);
+    border-radius: 10px;
+}
+.groupInput:focus{
+    background-color: rgb(210, 229, 245);
+    outline: 2px solid aqua;
+}

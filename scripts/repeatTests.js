@@ -300,6 +300,14 @@ function sumSquare(data) {
     return sum;
 }
 
+function TwoDataSum(data1, data2) {
+    let sum = 0;
+    for (let i=0; i<data1.length; i++){
+        sum += (data1[i] * data2[i])
+    }
+    return sum;
+}
+
 function sumSquareOuterMean(mean,  data){
     let temp = [];
     for (let i = 0; i < data.length; i++) {
@@ -806,6 +814,190 @@ function getPfromF(k, f, n1, n2) {
     return 1-a+c
 }
 
+//A bunch of functions to handle matrix math - each takes an ARRAY of ARRAYs (constituting the x / y in the matrix)
+function det2(mini){
+    let a = mini[0][0]; 
+    let b = mini[0][1]; 
+    let c = mini[1][0]; 
+    let d = mini[1][1];
+    return ((a*d)-(b*c))
+}
+
+function det3(mini){
+    let det = 0;
+    for (let i=0; i<mini.length; i++){
+        if (i%2 == 0){
+            det += mini[0][i]*det2(findSub(i, mini))
+        } else if (i%2 ==1){
+            det -= mini[0][i]*det2(findSub(i, mini))
+        }
+    }
+    return det;
+}
+
+function det4(mini){
+    let det = 0;
+    for (let i=0; i<mini.length; i++){
+        if (i%2 == 0){
+            det += mini[0][i]*det3(findSub(i, mini))
+        } else if (i%2 ==1){
+            det -= mini[0][i]*det3(findSub(i, mini))
+        }
+    }
+    return det;
+}
+
+function det5(mini){
+    let det = 0;
+    for (let i=0; i<mini.length; i++){
+        if (i%2 == 0){
+            det += mini[0][i]*det4(findSub(i, mini))
+        } else if (i%2 ==1){
+            det -= mini[0][i]*det4(findSub(i, mini))
+        }
+    }
+    return det;
+}
+
+function det6(mini){
+    let det = 0;
+    for (let i=0; i<mini.length; i++){
+        if (i%2 == 0){
+            det += mini[0][i]*det5(findSub(i, mini))
+        } else if (i%2 ==1){
+            det -= mini[0][i]*det5(findSub(i, mini))
+        }
+    }
+    return det;
+}
+
+function det7(mini){
+    let det = 0;
+    for (let i=0; i<mini.length; i++){
+        if (i%2 == 0){
+            det += mini[0][i]*det6(findSub(i, mini))
+        } else if (i%2 ==1){
+            det -= mini[0][i]*det6(findSub(i, mini))
+        }
+    }
+    return det;
+}
+
+function det8(mini){
+    let det = 0;
+    for (let i=0; i<mini.length; i++){
+        if (i%2 == 0){
+            det += mini[0][i]*det7(findSub(i, mini))
+        } else if (i%2 ==1){
+            det -= mini[0][i]*det7(findSub(i, mini))
+        }
+    }
+    return det;
+}
+
+function det9(mini){
+    let det = 0;
+    for (let i=0; i<mini.length; i++){
+        if (i%2 == 0){
+            det += mini[0][i]*det8(findSub(i, mini))
+        } else if (i%2 ==1){
+            det -= mini[0][i]*det8(findSub(i, mini))
+        }
+    }
+    return det;
+}
+
+function det10(mini){
+    let det = 0;
+    for (let i=0; i<mini.length; i++){
+        if (i%2 == 0){
+            det += mini[0][i]*det9(findSub(i, mini))
+        } else if (i%2 ==1){
+            det -= mini[0][i]*det9(findSub(i, mini))
+        }
+    }
+    return det;
+}
+
+function det11(mini){
+    let det = 0;
+    for (let i=0; i<mini.length; i++){
+        if (i%2 == 0){
+            det += mini[0][i]*det10(findSub(i, mini))
+        } else if (i%2 ==1){
+            det -= mini[0][i]*det10(findSub(i, mini))
+        }
+    }
+    return det;
+}
+
+function det12(mini){
+    let det = 0;
+    for (let i=0; i<mini.length; i++){
+        if (i%2 == 0){
+            det += mini[0][i]*det11(findSub(i, mini))
+        } else if (i%2 ==1){
+            det -= mini[0][i]*det11(findSub(i, mini))
+        }
+    }
+    return det;
+}
+//Main support for solveDeterminant
+function findSub(a, mini){
+    submat = [];
+    for (let k=1; k<mini.length; k++) {
+        let subSub = [];
+        for (let j=0; j<mini.length; j++) {
+            if(j!=a){
+                subSub.push(mini[k][j])
+            }
+        }
+        submat.push(subSub);
+    }
+return (submat);
+}
+
+//This is the main one to call!
+function solveDeterminant(matrix){
+    let size = matrix.length;
+    switch (size) {
+        case 2:
+            return det2(matrix); 
+            break;
+        case 3:
+            return det3(matrix); 
+            break;
+        case 4:
+            return det4(matrix); 
+            break;
+        case 5:
+            return det5(matrix); 
+            break;
+        case 6:
+            return det6(matrix); 
+            break;    
+        case 7:
+            return det7(matrix); 
+            break;
+        case 8:
+            return det8(matrix); 
+            break;
+        case 9:
+            return det9(matrix); 
+            break;
+        case 10:
+            return det10(matrix); 
+            break;
+        case 11:
+            return det11(matrix); 
+            break;
+        case 12:
+            return det12(matrix); 
+            break;    
+        }
+}
+
+
 
 //Takes an array of arrays. Returns an array of dictionaries with values
 function performDescriptives(dataset){
@@ -825,6 +1017,14 @@ function performDescriptives(dataset){
 
 //Sets up descriptives table. Requires a div called "descriptives" and one called "extra_fun" for downloading
 function runDescriptives(k, thisData){
+    let allTheNames = [];
+    for (let i=0; i<k; i++){
+        let name = document.getElementById('group_name_'+i).value;
+        if (name == "" || name == null){
+            name = "Group "+(i+1);
+        }
+        allTheNames.push(name);
+    }
     var language = document.getElementById('lang_s').value;
     let dicArr = performDescriptives(thisData);
     //Prep buttons
@@ -919,7 +1119,7 @@ function runDescriptives(k, thisData){
         for (let j=0; j<7; j++){
             let item = document.createElement('td');
             if (j==0){
-                item.innerHTML = "Group "+(i+1);
+                item.innerHTML = allTheNames[i];
                 item.style.textAlign = "left";
             } else if (j==1) {
                 item.innerHTML = dicArr[i].mini + " ~ " + dicArr[i].maxi;
@@ -1134,4 +1334,17 @@ function specialDescriptivesForPP(thisData){
         }
         tbody.appendChild(row);
     }
+}
+
+//Assumes there are as many groups as k values and that they are items with id 'group_name_i'. Returns array of group names
+function getGroupNames(k){
+    var allTheData = [];
+    for (let i=0; i<k; i++){
+        let name = document.getElementById('group_name_'+i).value;
+        if (name == "" || name == null){
+            name = "Group "+(i+1);
+        }
+        allTheData.push(name);
+    }
+    return allTheData;
 }

@@ -10,6 +10,7 @@ var details_of_test = "";
 var results_of_test = "";
 var pair_c1; var ord_c1;
 var language;
+var GroupNames = [];
 
 function Calculate() {
     language = document.getElementById('lang_s').value;
@@ -17,6 +18,7 @@ function Calculate() {
     document.getElementById('descriptives').innerHTML = "";
     pair_c1 = document.querySelector("[name=q1]:checked");
     ord_c1 = document.querySelector("[name=q2]:checked");
+    GroupNames = getGroupNames(2);
     if (!pair_c1) {
         if (language == "en"){
             document.getElementById('error_text').innerHTML = "Please select whether or not the data is paired. For an explanation, mouse over the question.";

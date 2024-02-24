@@ -307,23 +307,23 @@ function calculateForReal(data){
         }
         helper_SeXs.push(repeatGetter(tempArray))
     }
-
+    console.log(helper_SeXs)
     let SEs = [];
     for (let i=0; i<helper_SeXs.length; i++){
-        SEs.push(Math.sqrt((1-R2)/((1-(helper_SeXs[0]))*(N0-data.length))) * ((Math.sqrt(variance(data[0]))) / (Math.sqrt(variance(data[i+1])))))
+        SEs.push(Math.sqrt((1-R2)/((1-(helper_SeXs[i]))*(N0-data.length))) * ((Math.sqrt(variance(data[0]))) / (Math.sqrt(variance(data[i+1])))))
     }
-
+    console.log(SEs)
     let tVals = [];
     let pVals = [];
     let betas = [];
     for (let i=0; i<SEs.length; i++){
-        tVals.push(Bs[i+1]/SEs[0])
+        tVals.push(Bs[i+1]/SEs[i])
     }
     for (let i=0; i<tVals.length; i++){
-        pVals.push(getPfromT(tVals[0], (N0-data.length)))
+        pVals.push(getPfromT(tVals[i], (N0-data.length)))
     }
     for (let i=0; i<SEs.length; i++){
-        betas.push(Bs[i]* ((Math.sqrt(variance(data[i+1]))) / (Math.sqrt(variance(data[0])))))
+        betas.push(Bs[i+1]* ((Math.sqrt(variance(data[i+1]))) / (Math.sqrt(variance(data[0])))))
     }
     
     //Find Relative Weights
@@ -465,7 +465,7 @@ function calculateForReal(data){
                 item.innerHTML = GroupNames[i];
                 item.style.textAlign = "left";
             } else if (j==1) {
-                item.innerHTML = Bs[i-1].toFixed(3);
+                item.innerHTML = Bs[i].toFixed(3);
             } else if (j==2) {
                 item.innerHTML = betas[i-1].toFixed(3);
             } else if (j==3) {
@@ -492,6 +492,7 @@ function repeatGetter(data){
     let eachXx = [];
     let sumSqs = [];
     let sums = [];
+    
     for (let i=0; i<data.length; i++){
         averages.push(average(data[i]));
         sums.push(sum(data[i]))
@@ -550,6 +551,7 @@ function repeatGetter(data){
         bigA.push(thisrow)
     }
     let denom = solveMatrix(bigA);
+    
     for (let i=0; i<data.length; i++){
         let thisMat = [];
         if (i==0){
@@ -564,6 +566,7 @@ function repeatGetter(data){
                 }
                 thisMat.push(thisRow)
             }
+            determinants.push(solveMatrix(thisMat))
         } else {
             for (let k=0; k<data.length; k++){
                 let thisRow = [];
@@ -595,14 +598,14 @@ function repeatGetter(data){
                 }
                 thisMat.push(thisRow)
             }
+            determinants.push(solveMatrix(thisMat))
         }
-        determinants.push(solveMatrix(thisMat))
+        
 
     }
-
     let Bs = [];
     for (let i=0; i<determinants.length; i++){
-        Bs.push(safeDivision(determinants[i],denom))
+        Bs.push(determinants[i]/denom)
     }
     let ybar = [];
     let residuals = [];

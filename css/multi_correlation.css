@@ -286,6 +286,9 @@ h1, h2, h3, p, a {
 #desBTN_csv{
     background-color: black;
 }
+#resBTN_csv{
+    background-color: black;
+}
 .descriptives_table{
     width: 80%;
     border-collapse: collapse;

@@ -258,7 +258,6 @@ function calculateForReal(data){
     for (let i=0; i<determinants.length; i++){
         Bs.push(determinants[i]/denom)
     }
-    console.log(Bs)
     let ybar = [];
     let residuals = [];
     let yvars = [];
@@ -307,12 +306,10 @@ function calculateForReal(data){
         }
         helper_SeXs.push(repeatGetter(tempArray))
     }
-    console.log(helper_SeXs)
     let SEs = [];
     for (let i=0; i<helper_SeXs.length; i++){
         SEs.push(Math.sqrt((1-R2)/((1-(helper_SeXs[i]))*(N0-data.length))) * ((Math.sqrt(variance(data[0]))) / (Math.sqrt(variance(data[i+1])))))
     }
-    console.log(SEs)
     let tVals = [];
     let pVals = [];
     let betas = [];
@@ -333,66 +330,43 @@ function calculateForReal(data){
         let ryx1 = pearson(data[0], data[1]);
         let ryx2 = pearson(data[0], data[2]);
         let rel1x1 = ((ryx1**2) + (R2-(ryx2**2))) / 2;
-        RWs.push( rel1x1 / R2);
+        RWs.push(rel1x1 / R2);
         let rel1x2 = ((ryx2**2) + (R2-(ryx1**2))) / 2;
         RWs.push(rel1x2 / R2);
     } else {
         for (let x=1; x<data.length; x++){
             //holds all RWs for current x
             let RwsForthisX = [];
-            for (let i=0; i<rwk; i++){
-                if (i==0){
+            for (let k=0; k<(data.length-1); k++){
+                if (k==0){
+                    RwsForthisX.push(pearson(data[0], data[x])**2)
+                    console.log('x: '+x+', k0: '+pearson(data[0], data[x])**2)
+                } else if (k==rwk) {
                     let tempArr = [];
                     for (let j=0; j<data.length; j++){
                         if (j != x){
                             tempArr.push(data[j])
                         }
                     }
-                    RwsForthisX.push(R2 - (repeatGetter(tempArr)))                
+                    RwsForthisX.push(R2 - (repeatGetter(tempArr)))  
+                    console.log('x: '+x+', kf: '+repeatGetter(tempArr)) 
                 } else {
-                    let thisLevel = [];
-                    for (let j=data.length; j>1; j--){
-                        if (j==2){
-                            let thisPushMat = [];
-                            for (let k=1; k<data.length; k++){
-                                if (k != x) {
-                                    thisPushMat.push(data[0])
-                                    thisPushMat.push(data[x])
-                                    thisPushMat.push(data[k])
-                                } 
-                            }
-                            addAThing = [];
-                            for (let k=1; k <data.length; k++){
-                                if (k != x) {
-                                    addAThing.push(pearson(data[0],data[k])**2)
-                                }
-                            }
-                            for (let i=0; i<thisPushMat.length; i++){
-                                thisLevel.push(thisPushMat[i]-addAThing[i])
-                            }
-                        } else {
-                            //setup matrix to solve to push
-                            let thePushMat = [];
-                            let theMinusPush = [];
-                            for (let k=0; k<data.length; k++){
-
-                                    if (k==x){
-                                        thePushMat.push(data[k])
-                                    } else {
-                                        //console.log("x: "+x+"k: "+k+"j: "+j)
-                                        thePushMat.push(data[k])
-                                        theMinusPush.push(data[k])
-                                    }
-                                
-                            }
-                            thisLevel.push(repeatGetter(thePushMat) - repeatGetter(theMinusPush))
+                    let thingsforthisK = [];
+                    for (let i=1; i<data.length; i++){
+                        if (i != x){
+                            let tempArr = [];
+                            tempArr.push(data[0])
+                            tempArr.push(data[x])
+                            tempArr.push(data[i])
+                            thingsforthisK.push(repeatGetter(tempArr)-((pearson(data[0],data[i]))**2)) 
                         }
+                        
                     }
-                    RwsForthisX.push(average(thisLevel))
+                    console.log("x: "+x+", k: "+k+', array: '+thingsforthisK)
+                    RwsForthisX.push(average(thingsforthisK))
                 }
-                
             }
-            RwsForthisX.push((pearson(data[0],data[x])**2))
+            console.log("x: "+x+"allRWs"+RwsForthisX)
             RWs.push(average(RwsForthisX));
         }
     }
@@ -425,7 +399,26 @@ function calculateForReal(data){
             result1 = "重回帰モデルは目的変数を有意差に予測できません。 <i>F</i> = " + F + ", <i>p</i> = " + p + ", <i>R<sup>2</sup></i> = " + R2 + "<br>";
         }
     }
-    document.getElementById("results_bun").innerHTML = result1 + result2;    
+    document.getElementById("results_bun").innerHTML = result1 + result2;
+
+    //Add button to download
+    let buttonHolder = document.createElement('div');
+    document.getElementById('results_bun').appendChild(buttonHolder);
+    buttonHolder.className = "desBTNholder";
+    buttonHolder.id = "resBTNholder"
+    let button1 = document.createElement('button');
+    document.getElementById('resBTNholder').appendChild(button1);
+    button1.className = "desBTN";
+    button1.id="resBTN_csv";
+    if (language == "en"){
+        button1.innerHTML = "Download Table";
+    } else if (language == "jp"){
+        button1.innerHTML = "表をダウンロード";
+    }
+    button1.addEventListener('click', dlCsvofMC);
+
+    //Add mc results table
+
     let table = document.createElement('table');
     let thead = document.createElement('thead');
     let tbody = document.createElement('tbody');
@@ -639,4 +632,37 @@ function repeatGetter(data){
     let SSE = sumSquare(residuals);
     let SST = sumSquare(ytotals);
     return (SSM / SST)
+}
+
+
+function dlCsvofMC(){
+    if (document.getElementById('data_table')){
+        var rows = document.querySelectorAll('table#data_table tr');
+        var csv = [];
+        for (var i=0; i<rows.length; i++) {
+            var row = [];
+            var cols = rows[i].querySelectorAll('td, th');
+                for (var j=0; j <cols.length; j++) {
+                    var data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s\s)/gm, ' ');
+                    data = data.replace(/"/g, '""');
+                    row.push('"' + data + '"');
+                }
+            csv.push(row.join(','));
+        }
+        var csv_string = csv.join('\n');
+        let filename = 'multiCorrel_data_'+new Date().toLocaleDateString() + '.csv';
+        var link = document.createElement('a');
+        link.id = "temp_link"; 
+        //link.style.display = 'none';
+        link.setAttribute('target', '_blank');
+        link.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv_string));
+        link.setAttribute('download', filename);
+        document.getElementById('extra_fun').appendChild(link);
+        let helper = document.getElementById('temp_link');
+        helper.innerHTML = "Click here to download file";
+        link.click();
+        helper.parentNode.removeChild(helper);
+    } else {
+        alert("There are no results! 表は実在しない")
+    }
 }

@@ -958,7 +958,7 @@ return (submat);
 }
 
 //This is the main one to call!
-function solveDeterminant(matrix){
+function solveMatrix(matrix){
     let size = matrix.length;
     switch (size) {
         case 2:

@@ -110,7 +110,7 @@ function Calculate() {
     GroupNames = getGroupNames(realK);
     let helperK = 'data_set_'+(k-1);
     if (document.getElementById(helperK)){
-        var theBigData = gatherDatafromForm(k);
+        var theBigData = gatherDatafromForm(realK);
         function checkPairs(losData){
             let lengthChecker = [];
             for (let i=0; i<losData.length; i++){
@@ -129,6 +129,7 @@ function Calculate() {
             }
             document.getElementById('error_text').style.display = "inline";
         } else {
+            runDescriptives((k+1), theBigData);
             calculateForReal(theBigData);
         }
     }
@@ -142,19 +143,20 @@ function calculateForReal(data){
     let eachXx = [];
     let sumSqs = [];
     let sums = [];
-    for (let i=0; data.length; i++){
+    
+    for (let i=0; i<data.length; i++){
         averages.push(average(data[i]));
         sums.push(sum(data[i]))
         sumSqs.push(sumSquare(data[i]))
     }
-    for (let i=1; data.length; i++){
+    for (let i=1; i<data.length; i++){
         eachX1.push(sumSquare(data[i]) - ((sum(data[i])**2)/N0) )
     }
-    for (let i=1; data.length; i++){
+    for (let i=1; i<data.length; i++){
         eachXy.push(TwoDataSum(data[0], data[i]) - ((sum(data[0])*sum(data[i])) / N0))
     }
-    for (let i=1; data.length; i++){
-        for (let j=(i+1); data.length; j++){
+    for (let i=1; i<data.length; i++){
+        for (let j=(i+1); j<data.length; j++){
             eachXx.push(TwoDataSum(data[i], data[j]) - ((sum(data[i])*sum(data[j])) / N0))
         }
     }
@@ -200,6 +202,7 @@ function calculateForReal(data){
         bigA.push(thisrow)
     }
     let denom = solveMatrix(bigA);
+    
     for (let i=0; i<data.length; i++){
         let thisMat = [];
         if (i==0){
@@ -214,6 +217,7 @@ function calculateForReal(data){
                 }
                 thisMat.push(thisRow)
             }
+            determinants.push(solveMatrix(thisMat))
         } else {
             for (let k=0; k<data.length; k++){
                 let thisRow = [];
@@ -234,8 +238,9 @@ function calculateForReal(data){
                         if (j==0){
                             thisRow.push(sums[k])
                         } else {
+                            //This should only fire when k = i
                             if (j==i){
-                                thisRow.push(TwoDataSum(data[j], data[0]))
+                                thisRow.push(TwoDataSum(data[k], data[0]))    
                             } else {
                                 thisRow.push(TwoDataSum(data[j], data[k]))
                             }
@@ -244,15 +249,16 @@ function calculateForReal(data){
                 }
                 thisMat.push(thisRow)
             }
+            determinants.push(solveMatrix(thisMat))
         }
-        determinants.push(solveMatrix(thisMat))
+        
 
     }
-
     let Bs = [];
     for (let i=0; i<determinants.length; i++){
-        Bs.push(safeDivision(determinants[i],denom))
+        Bs.push(determinants[i]/denom)
     }
+    console.log(Bs)
     let ybar = [];
     let residuals = [];
     let yvars = [];
@@ -264,7 +270,7 @@ function calculateForReal(data){
             if (j==0){
                 temp += Bs[0]
             } else {
-                temp += Bs[j] * data[j+1][i]
+                temp += Bs[j] * data[j][i]
             }
         }
         ybar.push(temp);
@@ -281,14 +287,14 @@ function calculateForReal(data){
         let temp = data[0][i] - averages[0];
         ytotals.push(temp);
     }
-    let SSM = SumSquare(yvars);
-    let SSE = SumSquare(residuals);
-    let SST = SumSquare(ytotals);
+    let SSM = sumSquare(yvars);
+    let SSE = sumSquare(residuals);
+    let SST = sumSquare(ytotals);
     let MSM = SSM / (data.length-1);
     let MSE = SSE / (N0-4);
     let F = MSM / MSE;
     let R2 =  SSM / SST;
-    let bigP = getPfromF(data.length, F, (data.length-1), (N0-data.length));
+    let p = getPfromF(data.length, F, (data.length-1), (N0-data.length));
 
     //deal with error and shit
     let helper_SeXs = [];
@@ -321,8 +327,159 @@ function calculateForReal(data){
     }
     
     //Find Relative Weights
+    let RWs = [];
+    let rwk = data.length-2;
+    if (rwk==1){
+        let ryx1 = pearson(data[0], data[1]);
+        let ryx2 = pearson(data[0], data[2]);
+        let rel1x1 = ((ryx1**2) + (R2-(ryx2**2))) / 2;
+        RWs.push( rel1x1 / R2);
+        let rel1x2 = ((ryx2**2) + (R2-(ryx1**2))) / 2;
+        RWs.push(rel1x2 / R2);
+    } else {
+        for (let x=1; x<data.length; x++){
+            //holds all RWs for current x
+            let RwsForthisX = [];
+            for (let i=0; i<rwk; i++){
+                if (i==0){
+                    let tempArr = [];
+                    for (let j=0; j<data.length; j++){
+                        if (j != x){
+                            tempArr.push(data[j])
+                        }
+                    }
+                    RwsForthisX.push(R2 - (repeatGetter(tempArr)))                
+                } else {
+                    let thisLevel = [];
+                    for (let j=data.length; j>1; j--){
+                        if (j==2){
+                            let thisPushMat = [];
+                            for (let k=1; k<data.length; k++){
+                                if (k != x) {
+                                    thisPushMat.push(data[0])
+                                    thisPushMat.push(data[x])
+                                    thisPushMat.push(data[k])
+                                } 
+                            }
+                            addAThing = [];
+                            for (let k=1; k <data.length; k++){
+                                if (k != x) {
+                                    addAThing.push(pearson(data[0],data[k])**2)
+                                }
+                            }
+                            for (let i=0; i<thisPushMat.length; i++){
+                                thisLevel.push(thisPushMat[i]-addAThing[i])
+                            }
+                        } else {
+                            //setup matrix to solve to push
+                            let thePushMat = [];
+                            let theMinusPush = [];
+                            for (let k=0; k<data.length; k++){
 
+                                    if (k==x){
+                                        thePushMat.push(data[k])
+                                    } else {
+                                        //console.log("x: "+x+"k: "+k+"j: "+j)
+                                        thePushMat.push(data[k])
+                                        theMinusPush.push(data[k])
+                                    }
+                                
+                            }
+                            thisLevel.push(repeatGetter(thePushMat) - repeatGetter(theMinusPush))
+                        }
+                    }
+                    RwsForthisX.push(average(thisLevel))
+                }
+                
+            }
+            RwsForthisX.push((pearson(data[0],data[x])**2))
+            RWs.push(average(RwsForthisX));
+        }
+    }
+
+    R2 = R2.toFixed(3);
+    F = F.toFixed(3);
+    p = p.toFixed(3);
+    var result1 = "";
+    var result2 = "";
+    if (language == "en"){
+        result2 = ". The following variables with <i>p</i> values lower than 0.05 are significant predictors, and the relative weights suggest how much each contributes to the predictive power of the model.";
+        if (p <= .05) {
+            if (p <= 0) {
+            result1 = "The comibnation of these variables significantly predict the main variable: <i>F</i> = " + F + ", <i>p</i> < .001, <i>R<sup>2</sup></i> = " + R2 + "<br>";
+            } else {
+            result1 = "The comibnation of these variables significantly predict the main variable: <i>F</i> = " + F + ", <i>p</i> = " + p + ", <i>R<sup>2</sup></i> = " + R2 + "<br>";
+            }
+        } else {
+            result1 = "The comibnation of these variables do not significantly predict the main variable: <i>F</i> = " + F + ", <i>p</i> = " + p + ", <i>R<sup>2</sup></i> = " + R2 + "<br>";
+        }
+    } else if (language == "jp"){
+        result2 = "。0.5以下の<i>p</i>値のある説明変数は有意義にモデルに貢献している。Relative Weightは説明変数の予測力を表しています。";
+        if (p <= .05) {
+            if (p <= 0) {
+            result1 = "重回帰モデルは目的変数を有意差に予測できます。 <i>F</i> = " + F + ", <i>p</i> < .001, <i>R<sup>2</sup></i> = " + R2 + "<br>";
+            } else {
+            result1 = "重回帰モデルは目的変数を有意差に予測できます。 <i>F</i> = " + F + ", <i>p</i> = " + p + ", <i>R<sup>2</sup></i> = " + R2 + "<br>";
+            }
+        } else {
+            result1 = "重回帰モデルは目的変数を有意差に予測できません。 <i>F</i> = " + F + ", <i>p</i> = " + p + ", <i>R<sup>2</sup></i> = " + R2 + "<br>";
+        }
+    }
+    document.getElementById("results_bun").innerHTML = result1 + result2;    
+    let table = document.createElement('table');
+    let thead = document.createElement('thead');
+    let tbody = document.createElement('tbody');
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    document.getElementById('table_holder').appendChild(table);
+    table.className = "data_table";
+    table.id = "data_table";
+    let row_1 = document.createElement('tr');
+    let heading_1 = document.createElement('th');
+    heading_1.innerHTML = "Variable";
+    let heading_2 = document.createElement('th');
+    heading_2.innerHTML = "b value";
+    let heading_3 = document.createElement('th');
+    heading_3.innerHTML = "<i>Beta</i>";
+    let heading_4 = document.createElement('th');
+    heading_4.innerHTML = "<i>t</i> value";
+    let heading_5 = document.createElement('th');
+    heading_5.innerHTML = "<i>p</i> value";
+    let heading_6 = document.createElement('th');
+    heading_6.innerHTML = "Relative Weight";
+
+    row_1.appendChild(heading_1);
+    row_1.appendChild(heading_2);
+    row_1.appendChild(heading_3);
+    row_1.appendChild(heading_4);
+    row_1.appendChild(heading_5);
+    row_1.appendChild(heading_6);
+    thead.appendChild(row_1);
     
+    //Fill out the table
+    for (let i=1; i<data.length; i++){
+        let row = document.createElement('tr');
+        for (let j=0; j<6; j++){
+            let item = document.createElement('td');
+            if (j==0){
+                item.innerHTML = GroupNames[i];
+                item.style.textAlign = "left";
+            } else if (j==1) {
+                item.innerHTML = Bs[i-1].toFixed(3);
+            } else if (j==2) {
+                item.innerHTML = betas[i-1].toFixed(3);
+            } else if (j==3) {
+                item.innerHTML = tVals[i-1].toFixed(3);
+            } else if (j==4) {
+                item.innerHTML = pVals[i-1].toFixed(3);
+            } else if (j==5) {
+                let per = (RWs[i-1] / R2)*100;
+                item.innerHTML = RWs[i-1].toFixed(3) + " (" + per.toFixed(2) + "%)"
+            }
+            row.appendChild(item);
+        }
+        tbody.appendChild(row);
+    }
 
 }
 
@@ -335,19 +492,19 @@ function repeatGetter(data){
     let eachXx = [];
     let sumSqs = [];
     let sums = [];
-    for (let i=0; data.length; i++){
+    for (let i=0; i<data.length; i++){
         averages.push(average(data[i]));
         sums.push(sum(data[i]))
         sumSqs.push(sumSquare(data[i]))
     }
-    for (let i=1; data.length; i++){
+    for (let i=1; i<data.length; i++){
         eachX1.push(sumSquare(data[i]) - ((sum(data[i])**2)/N0) )
     }
-    for (let i=1; data.length; i++){
+    for (let i=1; i<data.length; i++){
         eachXy.push(TwoDataSum(data[0], data[i]) - ((sum(data[0])*sum(data[i])) / N0))
     }
-    for (let i=1; data.length; i++){
-        for (let j=(i+1); data.length; j++){
+    for (let i=1; i<data.length; i++){
+        for (let j=(i+1); j<data.length; j++){
             eachXx.push(TwoDataSum(data[i], data[j]) - ((sum(data[i])*sum(data[j])) / N0))
         }
     }
@@ -427,8 +584,9 @@ function repeatGetter(data){
                         if (j==0){
                             thisRow.push(sums[k])
                         } else {
+                            //This should only fire when k = i
                             if (j==i){
-                                thisRow.push(TwoDataSum(data[j], data[0]))
+                                thisRow.push(TwoDataSum(data[k], data[0]))    
                             } else {
                                 thisRow.push(TwoDataSum(data[j], data[k]))
                             }
@@ -457,7 +615,7 @@ function repeatGetter(data){
             if (j==0){
                 temp += Bs[0]
             } else {
-                temp += Bs[j] * data[j+1][i]
+                temp += Bs[j] * data[j][i]
             }
         }
         ybar.push(temp);
@@ -474,8 +632,8 @@ function repeatGetter(data){
         let temp = data[0][i] - averages[0];
         ytotals.push(temp);
     }
-    let SSM = SumSquare(yvars);
-    let SSE = SumSquare(residuals);
-    let SST = SumSquare(ytotals);
+    let SSM = sumSquare(yvars);
+    let SSE = sumSquare(residuals);
+    let SST = sumSquare(ytotals);
     return (SSM / SST)
 }

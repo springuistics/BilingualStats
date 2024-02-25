@@ -1,9 +1,9 @@
 function L_Change() {
     language = document.getElementById('lang_s').value;
     if (language = "jp") {
-        location.href == "../jp/3_data_sets_jp.html"
+        location.href == "../jp/multi_correlation_jp.html"
     } else if (language == "en"){
-        location.href = "../en/3_data_sets.html"
+        location.href = "../en/multi_correlation.html"
     }
 }
 var details_of_test = "";
@@ -90,6 +90,8 @@ function Reset() {
         document.getElementById('results_bun').innerHTML = "結果はここに書かれます";
     }
     document.getElementById('descriptives').innerHTML = "";
+    let thisTbl = document.getElementById('data_table');
+    thisTbl.parentNode.removeChild(thisTbl);   
 }
 
 function Calculate() {
@@ -349,7 +351,7 @@ function calculateForReal(data){
                         }
                     }
                     RwsForthisX.push(R2 - (repeatGetter(tempArr)))  
-                    console.log('x: '+x+', kf: '+repeatGetter(tempArr)) 
+                    console.log('x: '+x+', kf: '+(R2-repeatGetter(tempArr)))
                 } else {
                     let thingsforthisK = [];
                     for (let i=1; i<data.length; i++){
@@ -357,8 +359,27 @@ function calculateForReal(data){
                             let tempArr = [];
                             tempArr.push(data[0])
                             tempArr.push(data[x])
-                            tempArr.push(data[i])
-                            thingsforthisK.push(repeatGetter(tempArr)-((pearson(data[0],data[i]))**2)) 
+                            if (k==1){
+                                tempArr.push(data[i])
+                            } else {
+                                for (let w=1; w<data.length; w++){
+                                    if (w !=x && w!=i ){
+                                        tempArr.push(data[w])
+                                    }
+                                }
+                            }
+                            
+                            if (tempArr.length==3){
+                                thingsforthisK.push(repeatGetter(tempArr)-((pearson(data[0],data[i]))**2)) 
+                            } else {
+                                let tempArr2 = [];
+                                tempArr2.push(data[0])
+                                for (let w = 1; w<data.length; w++){
+                                    if (w != x && w!=i ) 
+                                    tempArr2.push(data[w])
+                                }
+                                thingsforthisK.push(repeatGetter(tempArr) - repeatGetter(tempArr2))
+                            }
                         }
                         
                     }
@@ -366,7 +387,7 @@ function calculateForReal(data){
                     RwsForthisX.push(average(thingsforthisK))
                 }
             }
-            console.log("x: "+x+"allRWs"+RwsForthisX)
+            console.log("x: "+x+" allRWs: "+RwsForthisX)
             RWs.push(average(RwsForthisX));
         }
     }

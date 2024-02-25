@@ -330,9 +330,9 @@ function calculateForReal(data){
         let ryx1 = pearson(data[0], data[1]);
         let ryx2 = pearson(data[0], data[2]);
         let rel1x1 = ((ryx1**2) + (R2-(ryx2**2))) / 2;
-        RWs.push(rel1x1 / R2);
+        RWs.push(rel1x1);
         let rel1x2 = ((ryx2**2) + (R2-(ryx1**2))) / 2;
-        RWs.push(rel1x2 / R2);
+        RWs.push(rel1x2);
     } else {
         for (let x=1; x<data.length; x++){
             //holds all RWs for current x

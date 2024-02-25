@@ -325,7 +325,7 @@ function thirdMom(data){
     for (let i=0; i<data.length; i++) {
         ss += ((data[i] - M) **3)
     }
-    return (ss / (data.length-1)); 
+    return (ss); 
 }
 
 function fourthMom(data){
@@ -334,15 +334,18 @@ function fourthMom(data){
     for (let i=0; i<data.length; i++) {
         ss += ((data[i] - M) **4)
     }
-    return (ss / (data.length-1)); 
+    return (ss); 
 }
 
 function kurtosis(data){
-    return (safeDivision(fourthMom(data),(variance(data))**2))
+    let N = data.length;
+    let left = (N*(N+1)*fourthMom(data))/((N-1)*(N-2)*(N-3)*(stdev(data)**4));
+    let right = (3*((N-1)**2))/((N-2)*(N-3))
+    return (left-right)
 }
 
 function skewness(data){
-    return(safeDivision(thirdMom(data),((data.length-1)*(stdev(data)**3))))
+    return(thirdMom(data)/((data.length-1)*(stdev(data)**3)))
 }
 
 function confidenceInt95upper(data){

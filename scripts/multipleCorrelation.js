@@ -357,29 +357,47 @@ function calculateForReal(data){
                     for (let i=1; i<data.length; i++){
                         if (i != x){
                             let tempArr = [];
+                            let tempArr2 = [];
                             tempArr.push(data[0])
+                            tempArr2.push(data[0])
                             tempArr.push(data[x])
                             if (k==1){
                                 tempArr.push(data[i])
-                            } else {
+                                thingsforthisK.push(repeatGetter(tempArr)-((pearson(data[0],data[i]))**2)) 
+                            } else if (k==(rwk-1)){
                                 for (let w=1; w<data.length; w++){
                                     if (w !=x && w!=i ){
                                         tempArr.push(data[w])
+                                        tempArr2.push(data[w])
+                                    }   
+                                }
+                                thingsforthisK.push(repeatGetter(tempArr) - repeatGetter(tempArr2))
+                            } else {
+                                let otherX = [];
+                                for (let w=1; w<data.length; w++){
+                                    if (w !=x && w !=i){
+                                        otherX.push(w)
                                     }
+                                }
+                                let helper = getCombos(k, otherX);
+                                console.log(helper)
+                                for (let w=0; w<helper.length; w++){
+                                    let superTemp = [];
+                                    superTemp.push(data[0])
+                                    superTemp.push(data[x])
+                                    let superTemp2 = [];
+                                    superTemp2.push(data[0])
+                                    for (let l=0; l<helper[w].length; l++){
+                                        let number = helper[w][l]
+                                        console.log("x"+x+"k"+k+"_helper:"+number)
+                                        superTemp.push(data[helper[w][l]])
+                                        superTemp2.push(data[helper[w][l]])
+                                    }
+                                    console.log(superTemp.length)
+                                    thingsforthisK.push(repeatGetter(superTemp) - repeatGetter(superTemp2))
                                 }
                             }
                             
-                            if (tempArr.length==3){
-                                thingsforthisK.push(repeatGetter(tempArr)-((pearson(data[0],data[i]))**2)) 
-                            } else {
-                                let tempArr2 = [];
-                                tempArr2.push(data[0])
-                                for (let w = 1; w<data.length; w++){
-                                    if (w != x && w!=i ) 
-                                    tempArr2.push(data[w])
-                                }
-                                thingsforthisK.push(repeatGetter(tempArr) - repeatGetter(tempArr2))
-                            }
                         }
                         
                     }
@@ -686,4 +704,71 @@ function dlCsvofMC(){
     } else {
         alert("There are no results! 表は実在しない")
     }
+}
+
+function getCombos(k, array){
+    var results = [];
+    if (k==2){
+        for (let a=0; a<array.length; a++){
+            for (let b=0; b<array.length; b++){
+                if (a != b){
+                    results.push([array[a], array[b]])
+                }
+            }
+        }
+    } else if (k==3){
+        for (let a=0; a<array.length; a++){
+            for (let b=0; b<array.length; b++){
+                for (let c=0; c<k; c++){
+                    if (a != b && a != b && b != c){
+                        results.push([array[a], array[b], array[c]])
+                    }
+                }
+            }
+        }
+    } else if (k==4){
+        for (let a=0; a<array.length; a++){
+            for (let b=0; b<array.length; b++){
+                for (let c=0; c<k; c++){
+                    for (let d=0; d<k; d++){
+                        if (a != b && a != b && b != c && a != d && b != d && c != d){
+                            results.push([array[a], array[b], array[c], array[d]])
+                        }
+                    }
+                }
+            }
+        }
+    } else if (k==5){
+        for (let a=0; a<array.length; a++){
+            for (let b=0; b<array.length; b++){
+                for (let c=0; c<array.length; c++){
+                    for (let d=0; d<k; d++){
+                            for (let e=0; e<array.length; e++){
+                                if (a != b && a != b && b != c && a != d && b != d && c != d && a != e && b != e && c != e && d != e){
+                            results.push([array[a], array[b], array[c], array[d], array[e]])
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    } else if (k==6){
+        for (let a=0; a<array.length; a++){
+            for (let b=0; b<array.length; b++){
+                for (let c=0; c<array.length; c++){
+                    for (let d=0; d<array.length; d++){
+                            for (let e=0; e<array.length; e++){
+                                for (let f=0; f<array.length; f++){
+                                if (a != b && a != b && b != c && a != d && b != d && c != d && a != e && b != e && c != e && d != e && a != f && b != f && c != f && d != f && e != f){
+                                    results.push([array[a], array[b], array[c], array[d], array[e], array[f]])
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return results
+    
 }

@@ -720,7 +720,7 @@ function getCombos(k, array){
         for (let a=0; a<array.length; a++){
             for (let b=0; b<array.length; b++){
                 for (let c=0; c<k; c++){
-                    if (a != b && a != b && b != c){
+                    if (a != b && a != c && b != c){
                         results.push([array[a], array[b], array[c]])
                     }
                 }
@@ -731,7 +731,7 @@ function getCombos(k, array){
             for (let b=0; b<array.length; b++){
                 for (let c=0; c<k; c++){
                     for (let d=0; d<k; d++){
-                        if (a != b && a != b && b != c && a != d && b != d && c != d){
+                        if (a != b && a != c && b != c && a != d && b != d && c != d){
                             results.push([array[a], array[b], array[c], array[d]])
                         }
                     }
@@ -744,7 +744,7 @@ function getCombos(k, array){
                 for (let c=0; c<array.length; c++){
                     for (let d=0; d<k; d++){
                             for (let e=0; e<array.length; e++){
-                                if (a != b && a != b && b != c && a != d && b != d && c != d && a != e && b != e && c != e && d != e){
+                                if (a != b && a != c && b != c && a != d && b != d && c != d && a != e && b != e && c != e && d != e){
                             results.push([array[a], array[b], array[c], array[d], array[e]])
                             }
                         }
@@ -759,7 +759,7 @@ function getCombos(k, array){
                     for (let d=0; d<array.length; d++){
                             for (let e=0; e<array.length; e++){
                                 for (let f=0; f<array.length; f++){
-                                if (a != b && a != b && b != c && a != d && b != d && c != d && a != e && b != e && c != e && d != e && a != f && b != f && c != f && d != f && e != f){
+                                if (a != b && a != c && b != c && a != d && b != d && c != d && a != e && b != e && c != e && d != e && a != f && b != f && c != f && d != f && e != f){
                                     results.push([array[a], array[b], array[c], array[d], array[e], array[f]])
                                 }
                             }

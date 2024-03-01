@@ -1,7 +1,7 @@
 function L_Change() {
     language = document.getElementById('lang_s').value;
-    if (language = "jp") {
-        location.href == "../jp/multi_correlation_jp.html"
+    if (language == "jp") {
+        location.href = "../jp/multi_correlation_jp.html"
     } else if (language == "en"){
         location.href = "../en/multi_correlation.html"
     }
@@ -18,6 +18,13 @@ function SetUp() {
     document.getElementById('descriptives').innerHTML = "";
     var k = document.getElementById('k_value').value;
     k = parseInt(k);
+    if (document.getElementById("dumb_div_1")){
+        for (let i=0; i < k; i++ ) {
+            var get_area = "dumb_div_"+(i+1);
+            var act_area = document.getElementById(get_area);
+            act_area.parentNode.removeChild(act_area);
+        }
+    }
     document.getElementById('button').style.display = "inline";
     document.getElementById('datasets').style.display = "inline";
     document.getElementById('reset').style.display = "inline";
@@ -95,6 +102,10 @@ function Reset() {
 }
 
 function Calculate() {
+    if(document.getElementById('data_table')){
+        let thisTbl = document.getElementById('data_table');
+        thisTbl.parentNode.removeChild(thisTbl); 
+    }
     language = document.getElementById('lang_s').value;
     document.getElementById('descriptives').innerHTML = "";
     document.getElementById("error_text").innerHTML = "";
@@ -114,12 +125,15 @@ function Calculate() {
     if (document.getElementById(helperK)){
         var theBigData = gatherDatafromForm(realK);
         function checkPairs(losData){
-            let lengthChecker = [];
-            for (let i=0; i<losData.length; i++){
-                lengthChecker.push(losData[i].length);
+            if(!losData.length) {return false}
+            else {
+                let lengthChecker = [];
+                for (let i=0; i<losData.length; i++){
+                    lengthChecker.push(losData[i].length);
+                }
+                var allEqual = arr => arr.every( v => v === arr[0] );
+                return allEqual(lengthChecker);
             }
-            var allEqual = lengthChecker => lengthChecker.every( v => v === lengthChecker[0] );
-            return allEqual;
         }
         if (checkPairs(theBigData) == false){
             if (language == "en"){

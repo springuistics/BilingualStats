@@ -9,20 +9,20 @@
     <script src="../scripts/krippendorf.js"></script>
     <div id="langauge_bar">
         <div style="text-align:left; margin-top: 2px; margin-left: 10px; position:absolute"><a href="../index.html"><img class="picture" src="../css/back.png" alt="index"></a></div>
-        <p id="lang_bun">Select Language:</p>
+        <p id="lang_bun">言語設定:</p>
         <select id="lang_s" onchange="L_Change()">
-            <option value="en">English</option>
-            <option value="jp">Japanese</option>
+            <option value="jp">日本語</option>
+            <option value="en">英語</option>
         </select>
     </div>
     <div id="bigger">
-        <h1  id="Title">Statistical Check of Inter-rater Reliability: Krippendorff's Alpha</h1>
+        <h1  id="Title">Krippendorffのアルファ係数を用いた合意測定</h1>
         <div id="questions">
             <div id="ps">
                 <br>
                 <br>
-                <p id="qq3" class="question">How many data sets do you have?*</p>
-                <div id ="hover3" class="hovery">This should be the number of questions, raters, or other items that you want to check reliability for. For example, if you are checking inter-rater reliability amongst esasy raters and there are 5 raters, please insert "5". If you want to check the reliability of 5 human raters, please enter "5", etc.</div>
+                <p id="qq3" class="question">データセットは何組ありますか？*</p>
+                <div id ="hover3" class="hovery">レーター、リッカート尺度質問の数、アイテムなどの数です。例えば、人間レーターの英作文の評価の内的整合性を確認したい場合、「５」を入力してください。</div>
                 <br>
             </div>
             <div id="as">
@@ -30,31 +30,31 @@
                 <br>
             </div>
             <div id="ps">
-                <p class="question" id="qq2">What type of data do you have?*</p>
-                <div id="hover2" class="hovery">Select "categorical" if raters answered a category (i.e., "yes/no", "green/blue/red"), select "ordinal" if raters answered a Likert-scale question or rated on a subjective scale, select "continuous" if the measurements were made on a true scale (e.g., time, etc.) </div>
+                <p class="question" id="qq2">データは種類を選択してください*</p>
+                <div id="hover2" class="hovery">各回答はカテゴリー（例："yes/no", "green/blue/red"）である場合、「カテゴリー」を選択してください。リッカート尺度の回答や主観的な評価の場合は「順序」を選択してください。様々な数字が可能である測定法を利用した場合（例：時間、割合）、「連続」を選択してください。 </div>
                 <br>
             </div>
             <div id="firsty" style="text-align: left;">
                 <br>
                 <input type="radio" id="q1a" class="radio_btn" name="q1" value="cat">
-                <label for="q1" class="answer" style="color: white">Categorical</label>
+                <label for="q1" class="answer" style="color: white">カテゴリー</label>
                 <input type="radio" id="q1b" class="radio_btn" name="q1" value="ord">
-                <label for="q1" class="answer" style="color: white">Ordinal</label>
+                <label for="q1" class="answer" style="color: white">順序</label>
                 <input type="radio" id="q1c" class="radio_btn" name="q1" value="con">
-                <label for="q1" class="answer" style="color: white">continuous</label>
+                <label for="q1" class="answer" style="color: white">連続</label>
             </div>
         </div>
         <p id="error_text" style="display: none">Error will appear here.</p>
         <p id="small_text">*Mouse over questions for explanation</p>
         <br>
-        <button id="SetUp" class="button" onclick="SetUp()">Set Up the Test</button>
+        <button id="SetUp" class="button" onclick="SetUp()">データ入力開始</button>
         <br>
     </div>
     <div id="datasets" style="display: none">
         <div id="jesus">
             <div id="d_container"></div>
             <div id="activate">
-                <button id="button" class="button" style="display: none" onclick="Calculate()">Calculate!</button>
+                <button id="button" class="button" style="display: none" onclick="Calculate()">計算</button>
             </div>
         </div>
     </div>
@@ -68,7 +68,7 @@
         <br>
     </div>
     <div id="Citation">
-        <p>Please cite the following paper if you use this program or any of the statistics herein. The justifications are included in the paper, linked below for your reference.</p>
+        <p>本プログラムや関連する説明文などを研究で使用する場合、下記の論文を引用してください。</p>
         <p>Spring, R. (2022) Free, Online, Multilingual Statistics for Linguistics and Language Education Researchers. <i>Center for Culture and Language Education, Tohoku University 2021 Nenpo, 8</i>, 32-38.<a href="https://doi.org/10.13140/RG.2.2.12037.63202"> https://doi.org/10.13140/RG.2.2.12037.63202</a></p>
     </div>
 

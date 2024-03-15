@@ -275,16 +275,17 @@ function Begin(k, data1, data2, data3, data4, data5, data6, data7, data8, data9,
             weights.push(tempArray);
         }
     } else if (typeYo == 'con'){
+        rPos.sort();
         for (let i=0; i<rPos.length; i++){
             let tempArray = [];
             for (let j=0; j<rPos.length; j++){
                 if(i==j){
                     tempArray.push(1);
                 } else {
-                    if ((rPos[i]-1)==0){
+                    if ((rPos.length-1)==0){
                         tempArray.push(0);
                     } else {
-                    tempArray.push(1-((rPos[i]-rPos[j])**2/(rPos[i]-1)**2));
+                    tempArray.push(1-((rPos[i]-rPos[j])**2/(rPos.length-1)**2));
                     }
                 }
             }

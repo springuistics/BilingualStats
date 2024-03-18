@@ -23,32 +23,36 @@
             <h2 style="font:bold; font-size: 24px; color: white">Get Help Choosing A Test:</h3>
             <h3 style="font:bold; font-size: 20px; text-shadow: 2px 2px 6px rgb(255, 255, 255)">What do you want to check?</h3>
             <div id="t_container">
-                <div id="differences" class="subheading">
-                    <p id="diff_text">Is there a difference between groups?</p>
-                    <div id="chisq_cont">
+                <div id="differences" class="subcontainer">
+                    <p id="diff_text" class="subheading">Is there a difference between groups?</p>
+                    <div id="chisq_cont" class="testContainer">
                         <a href="en/chisquare.html" class="linky" id="cmi">Counts or Percentages</a>
                         <div id="chi_hover" class="hover_text">For use with data that is based on counting non-numerical answers or observations. Provides <i>p</i> value and effect size to check if there is a statistically significant difference and how strong any measurable effect is. Examples include: comparing the number of males and females that answered either "yes" or "no" to a survey question, comparing whether or not speakers of one langauge used / didn't use a linguistc feature more than speakers of another langauge, etc.</div>
                     </div>
-                    <div id="twocomps">
+                    <div id="twocomps" class="testContainer">
                         <a href="en/2_data_sets.html" class="linky" id="tc1">2 Numerical Data Sets</a>
                         <div id="two_comps_hover" class="hover_text">For use with two sets of numbers. Provides <i>p</i> values and effect sizes to check if there is a statistically significant difference and how strong any measurable effect is. Also helps you to choose the proper test and report it correctly in an academic paper. Examples include: pre/post test comparison, comparing two different groups' average scores, comparing differences in two Likert-scale style survey questions, etc.</div>
                     </div>
-                    <div id="multi_comps">
+                    <div id="multi_comps" class="testContainer">
                         <a href="en/3_data_sets.html" class="linky" id="mc1">3+ Numerical Data Sets</a>
                         <div id="multi_comps_hover" class="hover_text">Provides <i>p</i> values and effect sizes to check if there are any statistically significant differences and how strong any measurable effects are. Also helps you to choose the proper test and report it correctly in an academic paper. Examples include: comparing three or more different groups, comparing progress of students at multiple points in time, comparing differences in multiple survey questions, etc.</div>
                     </div>
-                    <div id="pre_post">
+                    <div id="pre_post" class="testContainer">
                         <a href="en/pp_testing.html" class="linky"  id="pp2">Pre/Post Tests of Experimental and Control Groups</a>
                         <div id="pre_post_hover" class="hover_text">Provides <i>p</i> value and effect size to check if there is a statistically significant relationship between changes in pre- and posttests and the differences in an experiment and control group. You should choose this if you have two different groups who received different treatment, but both took the same pre- and posttest.</div>
                     </div>
                 </div>
-                <div id="correls">
+                <div id="correls" class="subcontainer">
                     <p id="correl_text" class="subheading">Is there a correlation between data sets?</p>
-                    <div id="twocorrs">
+                    <div class="testContainer">
                         <a href="en/correlation.html" class="linky" id="tc2">For 2 Data Sets</a>
                         <div id="two_corrs_hover" class="hover_text">Provides correlation value and <i>p</i> value to check if there is a statistically significant correlation or not and if so, how strong it is. Also helps you to choose the proper test and report it correctly in an academic paper. Requires two measurements from the same population sample (i.e. from the same participants). Examples include: checking for relationship between survey question and learning outcome, checking for relationship between two learning outcomes, checking for relationship between two features of the participants, etc.</div>
                     </div>
-                    <div id="multi_corrs">
+                    <div id="cor_matrix" class="testContainer">
+                        <a href="en/correlation_matrix.html" class="linky" id="corrM">Correlation Matrix</a>
+                        <div id="cor_matrix_hover" class="hover_text">Provides an easy to look at chart that compares the amount of corrleation amongst variables in a downloadable chart. For example, it can help you know where there is more or less association between several Likert-scale questions. Correlations are based on Pearson's <i>r</i></div>
+                    </div>
+                    <div id="multi_corrs" class="testContainer">
                         <a href="en/multi_correlation.html" class="linky" id="mc2">For 3+ Data Sets</a>
                         <div id="multi_corrs_hover" class="hover_text">Provides correlation value and <i>p</i> value to check if there is a statistically significant correlation between a single variable and multiple other variables or not and if so, how strong it is, and also shows correlation for each variable when others are nullified. Also helps you to choose the proper test and report it correctly in an academic paper. Requires several measurements from the same population sample (i.e. from the same participants). Examples include: checking for relationship between multiple survey questions and a single learning outcome, checking for relationship between several measurements on a single learning outcomes, etc.</div>
                     </div>
@@ -59,25 +63,28 @@
         <div id="advanced">
             <h3 style="font:bold; font-size: 20px; text-shadow: 2px 2px 6px grey">Other Calculators:</h3>
             <div id="t_container">
-                <div class="subheading">
-                    <p id="diff_text">Inter-rater Reliabiliity</p>
-                    <div>
-                        <a href="en/chronbach.html" class="linky">Chronbach's Alpha & Correlation Matrix</a><br><br>
+                <div id="advLeft" class="subcontainer">
+                    <p id="diff_text" class="subheading">Inter-rater Reliabiliity</p>
+                    <div id="chronbach" class="testContainer">
+                        <a href="en/chronbach.html" class="linky" id="chbch">Chronbach's Alpha</a>
+                        <div id="chronbach_hover" class="hover_text">Provides a measure of internal consistency (i.e., how similar scores for each dataset are). The ratings should all be on the same scale. This is often used with continuous or ordinal data that should be normalized. This is good, for example, to check how close the scores of three human raters are who are checking the same essay.</div>
                     </div>
-                    <div>
-                        <a href="en/krippendorf.html" class="linky">Krippendorf's Alpha</a><br><br>
+                    <div id="krippy" class="testContainer">
+                        <a href="en/krippendorf.html" class="linky" id="krp">Krippendorf's Alpha</a>
+                        <div id="krippy_hover" class="hover_text">Provides a measure of inter-rater agreement (i.e., how often scores are the same). This test is similar to Chronbach's alpha but has the added advantage that it can be used with categorical, ordinal, or continuous data. It is good, for example, to check how often four raters agree on the categorization of a linguistic element or how often they rate essays with the same score.</div>
                     </div>
                 </div>
-                <div id="others">
+                <div id="others" class="subcontainer">
                     <p class="subheading">Individual P or Effect Sizes</p>
-                    <div>
-                        <a href="en/effect_calc.html" class="linky">Effect Size Calculator (<i>r</i> from <i>Z</i> and <i>N</i>)</a><br><br>
+                    <div class="testContainer">
+                        <a href="en/effect_calc.html" class="linky">Effect Size Calculator (<i>r</i> from <i>Z</i> and <i>N</i>)</a>
                     </div>
-                    <div>
-                        <a href="en/cohens_d.html" class="linky">Calculate Cohen's D</a><br><br>
+                    <div id="cohens" class="testContainer">
+                        <a href="en/cohens_d.html" class="linky" id="cohbase">Calculate Cohen's D</a>
+                        <div id="cohens_hover" class="hover_text">Warning! Only for two different groups, NOT for paired samples</div>
                     </div>
-                    <div>
-                        <a href="en/p_finder.html" class="linky">Calculate <i>p</i> from <i>Z</i>, <i>t</i>, <i>Χ<sup>2</sup></i>, or <i>q</i> values</a><br><br>
+                    <div class="testContainer">
+                        <a href="en/p_finder.html" class="linky">Calculate <i>p</i> from <i>Z</i>, <i>t</i>, <i>Χ<sup>2</sup></i>, or <i>q</i> values</a>
                     </div>
                 </div>
             </div>           

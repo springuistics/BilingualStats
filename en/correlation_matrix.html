@@ -1,12 +1,12 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link href="../css/style_3_sets.css" rel="stylesheet" type="text/css">
-    <title>Data Reliability Check</title>
+    <link href="../css/multi_correlation.css" rel="stylesheet" type="text/css">
+    <title>Correlation Matrix</title>
 </head>
 <body>
     <script src="../scripts/repeatTests.js"></script>
-    <script src="../scripts/chronbach.js"></script>
+    <script src="../scripts/correlMatrix.js"></script>
     <div id="langauge_bar">
         <div style="text-align:left; margin-top: 2px; margin-left: 10px; position:absolute"><a href="../index.html"><img class="picture" src="../css/back.png" alt="index"></a></div>
         <p id="lang_bun">Select Language:</p>
@@ -15,49 +15,51 @@
             <option value="jp">Japanese</option>
         </select>
     </div>
+    <br>
     <div id="bigger">
-        <h1  id="Title">Statistical Reliability Check: Chronbach's Alpha</h1>
-        <h2 id="Subtitle">Warning: this test assumes your data are paired and normally distributed</h2>
-        <div id="questions">
-            <div id="ps">
-                <br>
-                <br>
-                <p id="qq3" class="question">How many items do you have?*</p>
-                <div id ="hover3" class="hovery">This should be the number of questions, raters, or other items that you want to check reliability for. For example, if you are checking inter-rater reliability amongst esasy raters and there are 5 raters, please insert "5". If you want to check the reliability of 6 Likert-style questions, please enter "6", etc. This program currently only supports between 2 and 10 items.</div>
-                <br>
-            </div>
-            <div id="as">
+        <h1  id="Title">Create a Correlation Matrix for Several Data Sets</h1>
+        <h2 id="Subtitle">Answer the following questions about your data :</h2>
+    <div id="questions">
+        <div id="ps">
+            <p id="qq2" class="question">How many measurements or data sets do you have?*</p>
+            <div id ="hover2" class="hovery">This is the number of measurements or data sets you have. For example, if you are comparing 7 Likert-scale questions, please insert 7.</div>
+            <br>
+        </div>
+        <div id="as">
+            <div id="secondy">
                 <input type="text" id="k_value" placeholder="Input number of data sets">
                 <br>
             </div>
         </div>
-        <p id="error_text" style="display: none">Error will appear here.</p>
-        <p id="small_text">*Mouse over questions for explanation</p>
-        <br>
-        <button id="SetUp" class="button" onclick="SetUp()">Set Up the Test</button>
-        <br>
+    </div>
+    <p id="error_text" style="display: none">Error will appear here.</p>
+    <p id="small_text">*Mouse over questions for explanation</p>
+    <br>
+    <button id="SetUp" class="final_button" onclick="SetUp()">Set Up the Test</button>
+    <br>
     </div>
     <div id="datasets" style="display: none">
         <div id="jesus">
             <div id="d_container"></div>
             <div id="activate">
-                <button id="button" class="button" style="display: none" onclick="Calculate()">Calculate!</button>
+                <button id="button" class="final_button" style="display: none" onclick="Calculate()">計算</button>
             </div>
         </div>
     </div>
-
     <div id="results">
+        <div id="descriptives">
+
+        </div>
         <p id="explain_bun">The description of your test will be printed here:</p>
         <p id="results_bun">Your results will be printed here:</p>
         <div id="table_holder"></div>
         <br>
-        <button id="reset" class="button" onclick="Reset()">Reset!</button>
-        <br>
+        <button id="reset" class="reset_button" onclick="Reset()">Reset!</button>
     </div>
     <div id="Citation">
         <p>Please cite the following paper if you use this program or any of the statistics herein. The justifications are included in the paper, linked below for your reference.</p>
         <p>Spring, R. (2022) Free, Online, Multilingual Statistics for Linguistics and Language Education Researchers. <i>Center for Culture and Language Education, Tohoku University 2021 Nenpo, 8</i>, 32-38.<a href="https://doi.org/10.13140/RG.2.2.12037.63202"> https://doi.org/10.13140/RG.2.2.12037.63202</a></p>
     </div>
-
+    <div id='extra_fun'></div>
 </body>
 </html>

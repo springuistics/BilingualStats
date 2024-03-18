@@ -26,7 +26,7 @@ h1, h2, h3, p, a {
     background-color: rgb(250, 180, 94, 0.95);
     color: rgb(143, 0, 0);
     text-align: left;
-    z-index: 2;
+    z-index: 9;
     font-size: 14px;
 }
 .linky{
@@ -92,6 +92,14 @@ h1, h2, h3, p, a {
     gap: 10px;
     padding: 10px;
 }
+#advanced {
+    margin: auto;
+    width: 90%;
+    text-align: center;
+    border: solid 5px rgba(0, 0, 0, 0.884);
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
 
 #t_container {
     margin: auto;
@@ -101,14 +109,7 @@ h1, h2, h3, p, a {
     gap: 10px;
     padding: 10px;
 }
-#t_container #differences {
-    margin: auto;
-    vertical-align: top;
-    margin-top: 5px;
-    text-align: center;
-    padding: 5px;
-}
-#t_container #correls {
+#t_container .subcontainer {
     margin: auto;
     vertical-align: top;
     margin-top: 5px;
@@ -116,48 +117,14 @@ h1, h2, h3, p, a {
     padding: 5px;
 }
 
-#chisq_cont{
+.testContainer{
     position: relative;
     margin-top: 10px;
     padding: 5px;
     padding-top: 10px;
     padding-bottom:10px;
 }
-#twocomps {
-    position: relative;
-    margin-top: 10px;
-    padding: 5px;
-    padding-top: 10px;
-    padding-bottom:10px;
-}
-#twocorrs {
-    position: relative;
-    margin-top: 10px;
-    padding: 5px;
-    padding-top: 10px;
-    padding-bottom:10px;
-}
-#multi_comps {
-    position: relative;
-    margin-top: 10px;
-    padding: 5px;
-    padding-top: 10px;
-    padding-bottom:10px;
-}
-#pre_post {
-    position: relative;
-    margin-top: 10px;
-    padding: 5px;
-    padding-top: 10px;
-    padding-bottom:10px;
-}
-#multi_corrs {
-    position: relative;
-    margin-top: 10px;
-    padding: 5px;
-    padding-top: 10px;
-    padding-bottom:10px;
-}
+
 #tc1:hover + #two_comps_hover {
     display: block;
 }
@@ -176,20 +143,26 @@ h1, h2, h3, p, a {
 #cmi:hover + #chi_hover {
     display: block;
 }
+#corrM:hover + #cor_matrix_hover {
+    display: block;
+}
+#krp:hover + #krippy_hover {
+    display: block;
+}
+#chbch:hover + #chronbach_hover {
+    display: block;
+}
+#cohbase:hover + #cohens_hover {
+    display: block;
+}
+
 
 a:hover{
     color: rgb(153, 0, 0);
     text-shadow: 0 0 6px whitesmoke;
 }
 
-#tests #advanced {
-    margin: auto;
-    width: 90%;
-    text-align: center;
-    border: solid 5px rgba(0, 0, 0, 0.884);
-    border-radius: 10px;
-    margin-bottom: 10px;
-}
+
 
 #citation {
     background-color: rgb(155, 203, 211);

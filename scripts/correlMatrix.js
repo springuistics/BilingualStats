@@ -184,18 +184,20 @@ function calculateForReal(k, data){
     table.id = "data_table";
     
     //Fill out the table
+    var counter = 0;
     for (let i=0; i<data.length; i++){
         let row = document.createElement('tr');
         let khelp = data.length;
         let header = document.createElement('th');
         header.innerHTML = GroupNames[i];
         row.appendChild(header);
-        for (let j=0; j<(khelp); j++){
+        for (let j=0; j<khelp; j++){
             let item = document.createElement('td');
-            if (j==i || j>i){
+            if (j>=i){
                 item.innerHTML = "---"
             } else {
-                item.innerHTML = rs[j+i];
+                item.innerHTML = rs[counter].toFixed(3);
+                counter +=1;
             }
             row.appendChild(item);
         }

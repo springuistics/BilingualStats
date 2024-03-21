@@ -22,8 +22,8 @@ function Calculate() {
     let d1checker = predata_set1.slice(-1);
     let d2checker = predata_set2.slice(-1);
     if (d1checker == "" && d2checker == "") {
-        dataset1.pop();
-        dataset2.pop();
+        predata_set1.pop();
+        predata_set2.pop();
     }
     if (predata_set1.includes("") || predata_set2.includes("")) {
         document.getElementById("error_text").innerHTML = "データが数字ではない行、あるいはデータのない行があります。データのない行は全て削除し、全てのデータが半角数字になっていることを確認してください。";

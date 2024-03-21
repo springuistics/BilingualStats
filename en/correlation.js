@@ -21,8 +21,8 @@ function Calculate() {
     let d1checker = predata_set1.slice(-1);
     let d2checker = predata_set2.slice(-1);
     if (d1checker == "" && d2checker == "") {
-        dataset1.pop();
-        dataset2.pop();
+        predata_set1.pop();
+        predata_set2.pop();
     }
     if (predata_set1.includes("") || predata_set2.includes("")) {
         document.getElementById("error_text").innerHTML = "You have null values (lines with no values) or non-numbers in your data set. Please delete all null values, check to make sure there are no non-numbers in your data set, and then try again.";

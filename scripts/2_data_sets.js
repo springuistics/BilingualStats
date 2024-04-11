@@ -124,7 +124,7 @@ function theSetup(k){
                         document.getElementById('error_text').style.display = "inline";
                     } else {
                         if (language == "en"){
-                            details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed the Shapiro-Wilk Test of normalcy, and therefore the data was treated as ordinal. Since the data was not paired, a Friedman's Test was used.";
+                            details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed the Shapiro-Wilk Test of normalcy, and therefore the data was treated as ordinal. Since the data was not paired, a Wilcoxon Signed-Rank Test was used.";
                         } else if (language == "jp"){
                             details_of_test = "本データは連続データですが、シャピロ－ウィルク検定の結果によると、いずれか（あるいは両方）のデータセットがノンパラメトリックとみなされました。対応のあるデータであるため、ウィルコクソンの符号順位検定で計算しました。";
                         }

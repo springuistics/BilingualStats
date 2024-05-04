@@ -280,6 +280,7 @@ input[type="file"] {
     border-style: outset;
     color: white;
     background-color: black;
+    width: auto;
   }
   .custom-file-upload:hover {
       background-color: grey;

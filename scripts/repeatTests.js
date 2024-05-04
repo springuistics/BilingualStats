@@ -1411,3 +1411,134 @@ var openFile = function(event) {
   };
   reader.readAsText(input.files[0]);
 };
+
+
+function Spearman(data1, data2) {
+    let cf_x = 0;
+    let cf_y = 0;
+    function rankit(data, tf) {
+    let superdata1 = [];
+        data.forEach(function(number){
+            superdata1.push({"No":number, "Rank": number});
+        })
+    let sorted = superdata1.slice().sort((a, b) => a.No - b.No);
+    for (let i = 0; i < sorted.length; i++) {
+        sorted[i].Rank = i + 1;
+    }
+    let just_numbers = [];
+    for (let i = 0; i < superdata1.length; i++) {
+        just_numbers.push(superdata1[i].No);
+    }
+    Array.prototype.contains = function(v) {
+        for (let i = 0; i < this.length; i++) {
+          if (this[i] === v) return true;
+        }
+        return false;
+      };
+      
+      Array.prototype.unique = function() {
+        let arr = [];
+        for (let i = 0; i < this.length; i++) {
+          if (!arr.contains(this[i])) {
+            arr.push(this[i]);
+          }
+        }
+        return arr;
+      }
+    let uniques = just_numbers.unique();
+    let ties = [];
+    for (let i = 0; i < uniques.length; i++) {
+        let temp_a = 0;
+        for (let j = 0; j < just_numbers.length; j++){
+            if (uniques[i] == just_numbers[j]){
+            temp_a += 1;
+            }
+        }
+        if (temp_a > 1) {
+            ties.push(uniques[i]);
+        }
+    }
+    let ties2 = [];
+    for (let i = 0; i < ties.length; i++) {
+        for (let j = 0; j < just_numbers.length; j++){    
+            if (ties[i] == just_numbers[j]) {
+            ties2.push(just_numbers[j]);
+            }
+        }
+    }
+    let counter = ties.length;
+    let ha = [];
+    let cf = [];
+    
+    if (counter > 0) {
+        for (let i = 0; i < ties.length; i++){
+            let temp_d = 0;
+            for (let j = 0; j < ties2.length; j++){
+                if (ties[i] == ties2[j]){
+                    temp_d += 1;
+                }
+            }
+            ha.push({"ties": ties[i], "no": temp_d})
+        };
+        
+        for (let i=0; i<ha.length; i++){
+            let cx = ha[i].no;
+            let correction = (cx * ((cx**2) - 1));
+            cf.push(correction);
+        }
+        let sumcf = 0;
+        for (let i=0; i<cf.length; i++) {
+            sumcf += cf[i];
+        }
+        if (tf == true) {
+            cf_x = sumcf;
+        } else if (tf == false) {
+            cf_y = sumcf;
+        }
+
+        let newnum = [];
+        for (let i = 0; i < ha.length; i ++) {
+            let temp_val = 0;
+            for (j = 0; j < superdata1.length; j++) {
+                if (superdata1[j].No === ha[i].ties){
+                temp_val += superdata1[j].Rank;
+                }
+            }
+            if (temp_val > 1) {
+                let me = temp_val / ha[i].no;
+                let you = ha[i].ties;
+                newnum.push({"tie":you, "val":me});
+            }
+        };
+        for (let i = 0; i < superdata1.length; i ++) {
+            for (let j = 0; j < newnum.length; j++) {
+            if (superdata1[i].No == newnum[j].tie) {
+                superdata1[i].Rank = newnum[j].val;
+            } 
+        };
+        }
+    }
+    let actualranks = [];
+        superdata1.forEach(function(i, j){
+            actualranks.push(superdata1[j].Rank);
+        })
+    return actualranks;
+    }
+    let data1_ranks = rankit(data1, true);
+    let data2_ranks = rankit(data2, false);
+    let d2 = [];
+    for (let i = 0; i < data1_ranks.length; i++) {
+        let rando = (data1_ranks[i] - data2_ranks[i]);
+        let rando2 = Math.pow(rando, 2);
+        d2.push(rando2);
+    }
+    let sumofd2 = 0;
+    for (let i = 0; i < d2.length; i++) {
+        sumofd2 += d2[i];
+    }
+    let N = data1_ranks.length;
+    let top = (((Math.pow(N, 3)) - N) - (6 * sumofd2) - ((cf_x + cf_y) / 2));
+    let bottom = (((Math.pow(N, 3)) - N)**2) - ((cf_x + cf_y) * ((Math.pow(N, 3)) - N)) + (cf_x * cf_y);
+    let Rs =  top / Math.sqrt(bottom);
+    return Rs;
+}

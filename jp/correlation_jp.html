@@ -1,11 +1,12 @@
 <html>
 <head>
     <meta charset="UTF-8" lang="jp">
-    <link href="../css/correlation.css" rel="stylesheet" type="text/css">
+    <link href="../css/style_2_sets.css" rel="stylesheet" type="text/css">
     <title>Correlation Between 2 Data Sets</title>
 </head>
 <body>
-    <script src="correlation_jp.js"></script>
+    <script src="../scripts/repeatTests.js"></script>
+    <script src="../scripts/singleCorr.js"></script>
     <div id="langauge_bar">
         <div style="text-align:left; margin-top: 2px; margin-left: 10px; position:absolute"><a href="../index_jp.html"><img  class="picture" src="../css/back.png" alt="index"></a></div>
         <p id="lang_bun">言語設定:</p>
@@ -17,39 +18,51 @@
     <div id="bigger">
     <h1  id="Title">2組の数値データの相関関係</h1>
     <h2 id="Subtitle">データについて、以下の質問を答えてください。</h2>
-        <div id="questions">
-                <p id="the_question_bun">両方とも連続データですか？*</p>
-                <div id="hover1">2つのデータ組に関しては、１，２，３のような決まっている数字しか出れないものではなく、様々な数字が可能の場合は連続データです。平均より１つ大きいデータが平均より1つ小さいデータと同等に平均値から離れているという二つの条件を満たしている場合、「はい」と答えてください。時間、割合、回数、正解率などは多くの場合、「連続的データ」と見なされます。リッカート尺度のアンケート質問は継続的データとみなさらないため、いずれかのデータ組はこのようなデータである場合は「いいえ」と答えてください。もしどちらになるか分からない場合は「はい」と答えても構いません。「はい」と答えた場合、自動的にシャピロ・ウィルク検定によって正規分布を検定し、パラメトリック検定を利用できるかを確認します。その結果に基づいて、あなたのデータ分析に適切な統計手法を自動的に提示します。</div>
+    <div id="questions">
+        <div id="ps">
+            <p class="question" id="qq1">両方とも連続データですか？*</p>
+            <div id="hover1">両方のデータ組に関しては、１，２，３のような決まっている数字しか出れないものではなく、様々な数字が可能の場合は連続データです。平均より１つ大きいデータが平均より1つ小さいデータと同等に平均値から離れているという二つの条件を満たしている場合、「はい」と答えてください。時間、割合、回数、正解率などは多くの場合、「連続的データ」と見なされます。リッカート尺度のアンケート質問は継続的データとみなさらないため、いずれかのデータ組はこのようなデータである場合は「いいえ」と答えてください。もしどちらになるか分からない場合は「はい」と答えても構いません。「はい」と答えた場合、自動的にシャピロ・ウィルク検定によって正規分布を検定し、パラメトリック検定を利用できるかを確認します。その結果に基づいて、あなたのデータ分析に適切な統計手法を自動的に提示します。</div>
+            <br>
+        </div>
+        <div id="as">
+            <div id="firsty">
                 <input type="radio" id="q1_a" class="radio_btn" name="q1" value="yes">
                 <label for="q1_a" class="answer">はい</label>
                 <input type="radio" id="q1_b" class="radio_btn" name="q1" value="no">
                 <label for="q1_b" class="answer">いいえ</label>
+            </div>
         </div>
+    </div>
         <p id="error_text" style="display: none">Error will appear here.</p>
         <p id="small_text">*マウスポインターを質問の上に乗せると、説明が表示されます</p>
     </div>
-    <div id="dataholder">
+    <div id="data_holder">
+        <p style="font-size: 16px">以下のフィールドにデータをペーストする、あるいはCSVをアップロードして下さい：</p><label for="file-upload" class="custom-file-upload">CSVのアップロード</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)'><br>
         <div id="datasets">
-            <p style="font-size: 16px">以下のフィールドにデータをペーストする、あるいはCSVをアップロードして下さい：</p><label for="file-upload" class="custom-file-upload">CSVのアップロード</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)'><br>
             <div id="data1">
-                <h3>データ①をコピーして、以下にペーストしてください</h3>
-                <br>
-                <textarea id="data_set_1" class="txtarea" style="text-align: right" rows="30" columns="40" text-overflow="visible" placeholder="データをここに貼付：&#10;1&#10;2&#10;3&#10;4&#10;など"></textarea>
+                <h5>グループ名（省略可能）</h5>
+                    <input type="text" class="groupInput" id="group_name_0" value="グループ 1">
+                    <h5>データを以下にペーストしてください*:</h5>
+                <textarea id="data_set_0" class="txtarea" rows="30" columns="40" text-overflow="visible" placeholder="データをここに貼付：&#10;1&#10;2&#10;3&#10;など"></textarea>
                 <br>
             </div>
             <div id="data2">
-                <h3>データ②をコピーして、以下にペーストしてください</h3>
+                <h5>グループ名（省略可能）</h5>
+                <input type="text" class="groupInput" id="group_name_1" value="グループ 2">
+                <h5>データを以下にペーストしてください*:</h5>
+                <textarea id="data_set_1" class="txtarea" rows="30" columns="40" text-overflow="visible" placeholder="データをここに貼付：&#10;1&#10;2&#10;3&#10;など"></textarea>
                 <br>
-                <textarea id="data_set_2" class="txtarea" style="text-align: right" rows="30" columns="40" text-overflow="visible" placeholder="データをここに貼付：&#10;1&#10;2&#10;3&#10;4&#10;など"></textarea>
-                <br>
-            </div>
+            </div>    
         </div>
-        <div><p style="font-size: 12px; text-align: center; margin: auto; width: 80%;">*半角数字でデータが縦になるように、Excelなどから直接にペーストしてください</p></div>
         <div id="activate">
-            <button id="button" class="button" onclick="Calculate()">計算</button>
+            <div><p style="font-size: 12px; text-align: center; margin: auto; width: 80%; padding-bottom: 5px;">*半角数字でデータが縦になるように、Excelなどから直接にペーストしてください</p></div>
+            <button id="button" class="final_button" onclick="Calculate()">計算</button>
         </div>
     </div>
     <div id="results">
+        <div id="descriptives">
+
+        </div>
         <p id="explain_bun">利用された検定の詳細はここに書かれます</p>
         <p id="results_bun">結果はここに書かれます</p>
     </div>
@@ -57,6 +70,7 @@
         <p>本プログラムや関連する説明文などを研究で使用する場合、下記の論文を引用してください。</p>
         <p>Spring, R. (2022) Free, Online, Multilingual Statistics for Linguistics and Language Education Researchers. <i>Center for Culture and Language Education, Tohoku University 2021 Nenpo, 8</i>, 32-38.<a href="https://doi.org/10.13140/RG.2.2.12037.63202"> https://doi.org/10.13140/RG.2.2.12037.63202</a></p>
     </div>
+    <div id='extra_fun'></div>
 
 </body>
 </html>

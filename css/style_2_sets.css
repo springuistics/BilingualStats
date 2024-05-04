@@ -272,7 +272,7 @@ input[type="file"] {
   }
   
   .custom-file-upload {
-    display: inline;
+    display: inline-block;
     padding: 6px 12px;
     cursor: pointer;
     font-size: 16px;

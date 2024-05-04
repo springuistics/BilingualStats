@@ -164,6 +164,7 @@ h1, h2, h3, p, a {
     border: 3px;
     border-style: outset;
     color: white;
+    cursor: pointer;
 }
 .final_button:hover{
     background-color: rgb(141, 141, 239);
@@ -265,3 +266,21 @@ h1, h2, h3, p, a {
     background-color: rgb(210, 229, 245);
     outline: 2px solid aqua;
 }
+
+input[type="file"] {
+    display: none;
+  }
+  
+  .custom-file-upload {
+    display: inline;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 16px;
+    border: 3px;
+    border-style: outset;
+    color: white;
+    background-color: black;
+  }
+  .custom-file-upload:hover {
+      background-color: grey;
+  }

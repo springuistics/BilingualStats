@@ -1351,3 +1351,63 @@ function getGroupNames(k){
     }
     return allTheData;
 }
+
+
+//Allows CSV file reading across various tests. First row is interpreted as group names. Checks that columns match data set numbers.
+var openFile = function(event) {
+  let input = event.target;
+  var reader = new FileReader();
+  reader.onload = function() {
+        let raw = reader.result;
+        let rows = raw.split(/\r\n|\n/);
+        let groups = rows[0].split(/,/);
+        let tempK = 2;
+        if(document.getElementById('k_value')){
+                tempK = document.getElementById('k_value').value;
+                tempK = parseInt(tempK);        
+        }
+        if(document.getElementById('Title')){
+            if(/One Measurement and Several Other Co-Measurements/.test(document.getElementById('Title').innerHTML) || /データと複数の説明変数の関係性の計算/.test(document.getElementById('Title').innerHTML)){
+                tempK +=1;
+            } else if (/Testing of An Experimental and Control/.test(document.getElementById('Title').innerHTML) || /実験群・対照群の事前・事後データ比較/.test(document.getElementById('Title').innerHTML)){
+                tempK = 4;
+            }
+        }
+        if (groups.length != tempK){
+            language = document.getElementById('lang_s').value;
+            console.log(language);
+            document.getElementById('error_text').style.display = "block";
+            if (language == "en"){
+                document.getElementById("error_text").innerHTML = "The number of groups in your csv file does not match the number of groups in this test. Please check the csv file or adjust the number of groups.";
+                document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
+    
+            } else if (language == "jp"){
+                document.getElementById('error_text').innerHTML = "CSVファイルのデータ組の数と指定したデータ組の数は一致していません。CSVファイルを確認して、必要に応じて、データ組を再設定してください。";
+                document.getElementById('explain_bun').innerHTML = "結果はここに書かれます";
+            }
+        } else {
+            //Put groups in, but skip in the case of pre/post test
+            if (!(/Testing of An Experimental and Control/.test(document.getElementById('Title').innerHTML) || /実験群・対照群の事前・事後データ比較/.test(document.getElementById('Title').innerHTML))){
+                for (let j=0; j<groups.length; j++){
+                    let thisGname = 'group_name_'+j;
+                    document.getElementById(thisGname).value = groups[j];
+                }
+            }
+            //Add data to the fields
+            for (let i=1; i< rows.length; i++){
+                if (/,/.test(rows[i])){
+                    let tempCols = rows[i].split(/,/);
+                    for (let j=0; j<tempCols.length; j++){
+                            let thisDname = 'data_set_'+j;
+                            if (i==(rows.length-1)){
+                                document.getElementById(thisDname).value += tempCols[j];
+                            } else {
+                                document.getElementById(thisDname).value += tempCols[j]+'\n';
+                            }
+                    }
+                }
+            }
+        }
+  };
+  reader.readAsText(input.files[0]);
+};

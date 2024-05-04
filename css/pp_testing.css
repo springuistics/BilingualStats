@@ -185,6 +185,7 @@ td {
     border: 3px;
     border-style: outset;
     color: white;
+    cursor: pointer;
 }
 .final_button:hover{
     background-color: rgb(141, 141, 239);
@@ -205,6 +206,7 @@ td {
     border: 3px;
     border-style: outset;
     color: white;
+    cursor: pointer;
 }
 .desBTN:hover{
     background-color: darkslategrey !important;
@@ -237,4 +239,22 @@ td {
 }
 .descriptives_table th, td {
     padding: 8px;
+}
+
+input[type="file"] {
+    display: none;
+  }
+  
+.custom-file-upload {
+    display: inline;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 16px;
+    border: 3px;
+    border-style: outset;
+    color: white;
+    background-color: black;
+}
+.custom-file-upload:hover {
+      background-color: grey;
 }

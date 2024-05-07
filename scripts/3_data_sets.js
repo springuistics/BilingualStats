@@ -488,7 +488,7 @@ function RepANOVA(k,theData) {
     
             result3 += "The significant differences between specific groups, as tested by a Holm post-hoc analysis, is shown below: <br>";
             for (let i=0; i<adHocs.length; i++){
-                result3 += Groups[i].group1+" x "+Groups[i].group2+": <i>p</i> = " + adHocs[i] + "<br>";
+                result3 += Groups[i].group1+" x "+Groups[i].group2+": <i>p</i> = " + adHocs[i].p + "<br>";
             }
             result3 += "<br><p style='font-size: 10'> Holm <i>p</i> values are rounded to 2 decimal places, so interpret <i>p</i> = 0 as <i>p</i> < 0.01 and <i>p</i> = 1 as <i>p</i> > 0.99</p>";
         }
@@ -516,7 +516,7 @@ function RepANOVA(k,theData) {
             }
             result3 += "）ので、事後解析としてHolm法の検定でグループ間の差を計算しました。その結果： <br>";
             for (let i=0; i<adHocs.length; i++){
-                result3 += Groups[i].group1+" x "+Groups[i].group2+": <i>p</i> = " + adHocs[i] + "<br>";
+                result3 += Groups[i].group1+" x "+Groups[i].group2+": <i>p</i> = " + adHocs[i].p + "<br>";
             }
             result3 += "<br><p style='font-size: 10'> Holm <i>p</i> 値は小数点2位まで計算されているため、<i>p</i> = 0 は <i>p</i> < 0.01、 <i>p</i> = 1 は <i>p</i> > 0.99　と見なしてください</p>";
         }

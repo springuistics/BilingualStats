@@ -124,12 +124,12 @@ function GetQ() {
 
 function TukeyMe(q, k, df) {
     q = Math.abs(q);
-    var vw = new Array(31);
-    var qw = new Array(31);
+    var vw = new Array(62);
+    var qw = new Array(62);
     var pcutj = 0.00003;
     var pcutk = 0.0001;
     var step = 0.45;
-    var vmax = 1000.0;
+    var vmax = 10000.0;
     var cv1 = 0.193064705;
     var cv2 = 0.293525326;
     var cvmax = 0.39894228;

@@ -125,12 +125,12 @@ function GetQ() {
 
 function TukeyMe(q, k, df) {
     q = Math.abs(q);
-    var vw = new Array(31);
-    var qw = new Array(31);
+    var vw = new Array(62);
+    var qw = new Array(62);
     var pcutj = 0.00003;
     var pcutk = 0.0001;
     var step = 0.45;
-    var vmax = 1000.0;
+    var vmax = 10000.0;
     var cv1 = 0.193064705;
     var cv2 = 0.293525326;
     var cvmax = 0.39894228;
@@ -140,7 +140,7 @@ function TukeyMe(q, k, df) {
     cv[2] = -0.00268132716;
     cv[3] = 0.00347222222;
     cv[4] = 0.0833333333;
-    var jmin = 3; var jmax = 15; var kmin = 7; var kmax = 15;
+    var jmin = 3; var jmax = 50; var kmin = 7; var kmax = 50;
     var retval; var g; var gmid; var r1; var c; var h; var hj; var v2;
     var gstep; var pk; var pk1; var pk2; var pj; var j; var jj;
     var kk; var gk; var w0; var pz; var x; var jump; var ehj;

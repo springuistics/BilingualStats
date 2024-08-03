@@ -150,8 +150,10 @@ function Calculate() {
 function calculateForReal(k, data){
     let rs = [];
     for (let i=0; i<data.length; i++){
-        for (let j=i; j<data.length; j++){
-            if (j!=i){
+        for (let j=0; j<data.length; j++){
+            if (j<=i){
+                rs.push('temp_holder');
+            } else {
                 rs.push(pearson(data[i], data[j]))
             }
         }
@@ -184,7 +186,7 @@ function calculateForReal(k, data){
     table.id = "data_table";
     
     //Fill out the table
-    var counter = 0;
+    //var counter = 0;
     for (let i=0; i<data.length; i++){
         let row = document.createElement('tr');
         let khelp = data.length;
@@ -193,11 +195,11 @@ function calculateForReal(k, data){
         row.appendChild(header);
         for (let j=0; j<khelp; j++){
             let item = document.createElement('td');
-            if (j>=i){
-                item.innerHTML = "---"
+            if (rs[i+(j*khelp)]=="temp_holder"){
+                item.innerHTML = "---";
             } else {
-                item.innerHTML = rs[counter].toFixed(3);
-                counter +=1;
+                item.innerHTML = rs[i+(j*khelp)].toFixed(3);
+                //counter +=1;
             }
             row.appendChild(item);
         }

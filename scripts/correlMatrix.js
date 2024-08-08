@@ -211,8 +211,10 @@ function calculateForReal(k, data){
                 if (j<=i){
                     rs.push('temp_holder');
                 } else {
-                    let check1 = shapiroWilk(data[i]);
-                    let check2 = shapiroWilk(data[j]);
+                    let nen = data[i];
+                    let nen2 = data[j];
+                    let check1 = shapiroWilk(nen);
+                    let check2 = shapiroWilk(nen2);
                     if (check1 == true && check2 == true){
                         let thisR = pearson(data[i],data[j]);
                         let thisN = data[i].length;

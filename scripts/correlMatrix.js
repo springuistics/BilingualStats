@@ -14,7 +14,9 @@ function SetUp() {
     language = document.getElementById('lang_s').value;
     document.getElementById('error_text').style.display = "none";
     document.getElementById('descriptives').innerHTML = "";
+    document.getElementById('additional_explanation').style.display="none";
     var k = document.getElementById('k_value').value;
+    let ord_c1 = document.querySelector("[name=q1]:checked");
     k = parseInt(k);
     if (document.getElementById("dumb_div_0")){
         for (let i=0; i < k; i++ ) {
@@ -26,7 +28,16 @@ function SetUp() {
     document.getElementById('button').style.display = "inline";
     document.getElementById('datasets').style.display = "inline";
     document.getElementById('reset').style.display = "inline";
-    if (k >1){
+    if (!ord_c1) {
+        if (language == "en"){
+            document.getElementById('error_text').innerHTML = "Please select whether or not the data is continous. For an explanation, mouse over the question.";
+            document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
+        } else if (language == "jp"){
+            document.getElementById('error_text').innerHTML = "データは全て連続データかどうかを選んでください。説明が必要な場合はマウスポインターを質問の上に乗せてください。";
+            document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
+        }
+        document.getElementById('error_text').style.display = "inline";
+    } else if (k >1) {
         SetUpP2(k);
     } else {
         if (language == "en"){
@@ -77,6 +88,7 @@ function SetUpP2(k) {
 }
 
 function Reset() {
+    document.getElementById('additional_explanation').style.display="none";
     var k = document.getElementById('k_value').value;
     for (let i=0; i < k; i++ ) {
         var get_area = "dumb_div_"+(i);
@@ -149,12 +161,87 @@ function Calculate() {
 
 function calculateForReal(k, data){
     let rs = [];
-    for (let i=0; i<data.length; i++){
-        for (let j=0; j<data.length; j++){
-            if (j<=i){
-                rs.push('temp_holder');
-            } else {
-                rs.push(pearson(data[i], data[j]))
+    let ordinal_check = document.querySelector('input[name="q1"]:checked').value;
+    if (ordinal_check == "yes"){
+        for (let i=0; i<data.length; i++){
+            for (let j=0; j<data.length; j++){
+                if (j<=i){
+                    rs.push('temp_holder');
+                } else {
+                    let thisR = pearson(data[i],data[j]);
+                    let thisN = data[i].length;
+                    let thisPearsondf = thisN-2;
+                    let thishelper = (1 - (Math.pow(thisR, 2))) / thisPearsondf;
+                    let thisT = thisR / (Math.sqrt(thishelper));
+                    let thisP = getPfromT(thisT, thisPearsondf);
+                    if (thisP <= .01){
+                        rs.push("<i>r</i> = " + thisR.toFixed(3)+"**");
+                    } else if (thisP <= .05) {
+                        rs.push("<i>r</i> = " + thisR.toFixed(3)+"*");
+                    } else {
+                        rs.push("<i>r</i> = " + thisR.toFixed(3));
+                    }
+                }
+            }
+        }
+    } else if (ordinal_check == "no"){
+        for (let i=0; i<data.length; i++){
+            for (let j=0; j<data.length; j++){
+                if (j<=i){
+                    rs.push('temp_holder');
+                } else {
+                    let thisRs = Spearman(data[i],data[j]);
+                    let thisdf = (data[i].length)-2;
+                    let thisHelper = (1 - (Math.pow(thisRs, 2))) / thisdf;
+                    let thisT = thisRs / (Math.sqrt(thisHelper));
+                    let thisP = getPfromT(thisT, thisdf);
+                    if (thisP <= .01){
+                        rs.push("<i>rs</i> = " + thisRs.toFixed(3)+"**");
+                    } else if (thisP <= .05) {
+                        rs.push("<i>rs</i> = " + thisRs.toFixed(3)+"*");
+                    } else {
+                        rs.push("<i>rs</i> = " + thisRs.toFixed(3));
+                    }
+                }
+            }
+        }
+    } else if (ordinal_check == "uk"){
+        for (let i=0; i<data.length; i++){
+            for (let j=0; j<data.length; j++){
+                if (j<=i){
+                    rs.push('temp_holder');
+                } else {
+                    let check1 = shapiroWilk(data[i]);
+                    let check2 = shapiroWilk(data[j]);
+                    if (check1 == true && check2 == true){
+                        let thisR = pearson(data[i],data[j]);
+                        let thisN = data[i].length;
+                        let thisPearsondf = thisN-2;
+                        let thishelper = (1 - (Math.pow(thisR, 2))) / thisPearsondf;
+                        let thisT = thisR / (Math.sqrt(thishelper));
+                        let thisP = getPfromT(thisT, thisPearsondf);
+                        if (thisP <= .01){
+                            rs.push("<i>r</i> = " + thisR.toFixed(3)+"**");
+                        } else if (thisP <= .05) {
+                            rs.push("<i>r</i> = " + thisR.toFixed(3)+"*");
+                        } else {
+                            rs.push("<i>r</i> = " + thisR.toFixed(3));
+                        }
+                    } else {
+                        let thisRs = Spearman(data[i],data[j]);
+                        let thisdf = (data[i].length)-2;
+                        let thisHelper = (1 - (Math.pow(thisRs, 2))) / thisdf;
+                        let thisT = thisRs / (Math.sqrt(thisHelper));
+                        let thisP = getPfromT(thisT, thisdf);
+                        if (thisP <= .01){
+                            rs.push("<i>rs</i> = " + thisRs.toFixed(3)+"**");
+                        } else if (thisP <= .05) {
+                            rs.push("<i>rs</i> = " + thisRs.toFixed(3)+"*");
+                        } else {
+                            rs.push("<i>rs</i> = " + thisRs.toFixed(3));
+                        }
+                    }
+                }
             }
         }
     }
@@ -186,7 +273,6 @@ function calculateForReal(k, data){
     table.id = "data_table";
     
     //Fill out the table
-    //var counter = 0;
     for (let i=0; i<data.length; i++){
         let row = document.createElement('tr');
         let khelp = data.length;
@@ -198,8 +284,7 @@ function calculateForReal(k, data){
             if (rs[i+(j*khelp)]=="temp_holder"){
                 item.innerHTML = "---";
             } else {
-                item.innerHTML = rs[i+(j*khelp)].toFixed(3);
-                //counter +=1;
+                item.innerHTML = rs[i+(j*khelp)];
             }
             row.appendChild(item);
         }
@@ -216,6 +301,8 @@ function calculateForReal(k, data){
         finalrow.appendChild(name);
     }
     tbody.appendChild(finalrow);
+
+    document.getElementById('additional_explanation').style.display="block";
 
 }
 

@@ -30,6 +30,21 @@
                 <br>
             </div>
         </div>
+        <div id="ps">
+            <p class="question" id="qq1">全ての組は連続データですか？*</p>
+            <div id="hover1" class="hovery">全てのデータ組に関しては、１，２，３のような決まっている数字しか出れないものではなく、様々な数字が可能の場合は連続データです。平均より１つ大きいデータが平均より1つ小さいデータと同等に平均値から離れているという二つの条件を満たしている場合、「はい」と答えてください。時間、割合、回数、正解率などは多くの場合、「連続的データ」と見なされます。リッカート尺度のアンケート質問は継続的データとみなさらないため、いずれかのデータ組はこのようなデータである場合は「いいえ」と答えてください。分からない場合、あるいは、両方のデータが混ざっている場合、「分からない・混ざっている」と選択してください。その場合、データがパラメトリックであるかどうかを計算し、その結果に基づいて、あなたのデータ分析に適切な統計手法を自動的に提示します。</div>
+            <br>
+        </div>
+        <div id="as">
+            <div id="firsty">
+                <input type="radio" id="q1_a" class="radio_btn" name="q1" value="yes">
+                <label for="q1_a" class="answer">はい</label>
+                <input type="radio" id="q1_b" class="radio_btn" name="q1" value="no">
+                <label for="q1_b" class="answer">いいえ</label>
+                <input type="radio" id="q1_c" class="radio_btn" name="q1" value="uk">
+                <label for="q1_c" class="answer">分からない・混ざっている</label>
+            </div>
+        </div>
     </div>
     <p id="error_text" style="display: none">Error will appear here.</p>
     <p id="small_text">*マウスポインターを質問の上に乗せると、説明が表示されます</p>
@@ -54,6 +69,8 @@
         <p id="explain_bun">利用された検定の詳細はここに書かれます</p>
         <p id="results_bun">結果はここに書かれます</p>
         <div id="table_holder"></div>
+        <br>
+        <p id="additional_explanation" style="display:none">**<i>p</i> < .001, *<i>p</i> < .05, <i>r</i> はピアソンの積率相関係数検定、 <i>rs</i> はスピアマンの順位相関係数検定</p>
         <br>
         <button id="reset" class="reset_button" onclick="Reset()">Reset!</button>
     </div>

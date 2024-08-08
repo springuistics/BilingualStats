@@ -31,6 +31,21 @@
                 <br>
             </div>
         </div>
+        <div id="ps">
+            <p class="question" id="qq1">Are your data sets all continuous data?*</p>
+            <div id="hover1" class="hovery">You should select "yes" if ALL of your data sets are measured on scales in which: a) many different numerical answers are possible, and b) a score higher by "1" is equally opposite to a score lower by "1". For example, data measured in time, percentages, number of times, and number of correct answers are often considered to be continuous scales. Likert-scale survey questions are NOT considered to be continuous, so if either of your data sets are of this type, you should select "no." If you are unsure or have various types mixed together, you can select "not sure / mixed," and the program will automatically check the data for normalcy via a Shapiro-Wilks Test. It will automatically select the best test for each pairing.</div>
+            <br>
+        </div>
+        <div id="as">
+            <div id="firsty">
+                <input type="radio" id="q1_a" class="radio_btn" name="q1" value="yes">
+                <label for="q1_a" class="answer">Yes</label>
+                <input type="radio" id="q1_b" class="radio_btn" name="q1" value="no">
+                <label for="q1_b" class="answer">No</label>
+                <input type="radio" id="q1_c" class="radio_btn" name="q1" value="uk">
+                <label for="q1_c" class="answer">Not sure / Mixed</label>
+            </div>
+        </div>
     </div>
     <p id="error_text" style="display: none">Error will appear here.</p>
     <p id="small_text">*Mouse over questions for explanation</p>
@@ -54,6 +69,8 @@
         <p id="explain_bun">The description of your test will be printed here:</p>
         <p id="results_bun">Your results will be printed here:</p>
         <div id="table_holder"></div>
+        <br>
+        <p id="additional_explanation" style="display:none">**<i>p</i> < .001, *<i>p</i> < .05, <i>r</i> indicates Pearson's Correlation Test, <i>rs</i> indicates Spearman's Rank Correlation Test</p>
         <br>
         <button id="reset" class="reset_button" onclick="Reset()">Reset!</button>
     </div>

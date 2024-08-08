@@ -27,7 +27,6 @@ function Calculate() {
             document.getElementById('error_text').innerHTML = "データは全て連続データかどうかを選んでください。説明が必要な場合はマウスポインターを質問の上に乗せてください。";
             document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
         }
-        document.getElementById('error_text').innerHTML = "Please select whether or not the data is continous. For an explanation, mouse over the question."
         document.getElementById('error_text').style.display = "inline";
     } else {
         theSetup(2);

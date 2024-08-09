@@ -8,13 +8,14 @@
     <div id="langauge_bar">
         <p id="lang_bun">言語設定：</p>
         <select id="lang_s" onchange="L_Change()">
-            <option value="en">日本語</option>
-            <option value="jp">英語</option>
+            <option value="jp">日本語</option>
+            <option value="en">英語</option>
         </select>
     </div>
     <div id="title_stuff">
     <h1 id="main_title">言語学・言語教育研究のためのマルチリンガル統計分析</h1>
     <h3 id="instructions">以下の項目から計算とデータの種類を選んでください。マウスポインターを項目の上に乗せると詳細が表示されます。</h3>
+    <p><span style="color:red">新</span>　説明・サンプルデータ　<a href="jp/examples.html">ここをクリック</a></p>
     <br>
     </div>
     <div id="tests">
@@ -107,9 +108,9 @@
     </div>
 </body>
 <script>
-    function L_Change() {
+function L_Change() {
     var language = document.getElementById('lang_s').value;
-    if (language = "en") {
+    if (language == "en") {
         location.href = "index.html"
     }
 }

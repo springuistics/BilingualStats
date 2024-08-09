@@ -103,7 +103,7 @@ function sign (x) {
 //Runs a Shaprio Wilk test to test for normality of data; returns true or false to allow or disallow normalized tests
 function shapiroWilk (data) {
     let copy = [];
-    for (let j=0; j<data[j].length; j++){
+    for (let j=0; j<data.length; j++){
         copy.push(data[j])
     }
 
@@ -123,13 +123,13 @@ function shapiroWilk (data) {
     let x = copy.sort(function (a, b) {return a - b});
     let N = copy.length;
     let Nn2 = Math.floor(N/2);
-    let a = new Array(Math.floor(Nn2) + 1);
-    let c1 = [ 0, 0.221157, -0.147981, -2.07119, 4.434685, -2.706056 ];
-    let c2 = [ 0, 0.042981, -0.293762, -1.752461, 5.682633, -3.582633 ];
-    let i, j, i1;
-    let ssassx, summ2, ssumm2, range;
-    let a1, a2, an, sa, xi, sx, xx, w1;
-    let fac, asa, an25, ssa, sax, rsn, ssx, xsx;
+    var a = new Array(Math.floor(Nn2) + 1);
+    var c1 = [ 0, 0.221157, -0.147981, -2.07119, 4.434685, -2.706056 ];
+    var c2 = [ 0, 0.042981, -0.293762, -1.752461, 5.682633, -3.582633 ];
+    var i, j, i1;
+    var ssassx, summ2, ssumm2, range;
+    var a1, a2, an, sa, xi, sx, xx, w1;
+    var fac, asa, an25, ssa, sax, rsn, ssx, xsx;
     an = N;
     an25 = an + 0.25;
     summ2 = 0.0;

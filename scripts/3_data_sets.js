@@ -139,8 +139,7 @@ function Calculate() {
             for (let i=0; i<losData.length; i++){
                 lengthChecker.push(losData[i].length);
             }
-            var allEqual = lengthChecker => lengthChecker.every( v => v === lengthChecker[0] );
-            return allEqual;
+            return lengthChecker.every(value => value === lengthChecker[0]);
         }
         if (ordinal_check == "no") {
             if (pair_check == "yes") {

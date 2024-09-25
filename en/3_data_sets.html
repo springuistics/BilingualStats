@@ -2,11 +2,13 @@
 <head>
     <meta charset="UTF-8">
     <link href="../css/style_3_sets.css" rel="stylesheet" type="text/css">
+    <link href="../../apps/w3.css" rel="stylesheet" type="text/css">
     <title>Comparing 3+ Data Sets</title>
 </head>
 <body>
     <script src="../scripts/repeatTests.js"></script>
     <script src="../scripts/3_data_sets.js"></script>
+    <script src="../scripts/modalHelp.js"></script>
     <div id="langauge_bar">
         <div style="text-align:left; margin-top: 2px; margin-left: 10px; position:absolute"><a href="../index.html"><img class="picture" src="../css/back.png" alt="index"></a></div>
         <p id="lang_bun">Select Language:</p>
@@ -18,48 +20,69 @@
     <div id="bigger">
         <h1  id="Title">Statistical Comparison of Three or More Numerical Data Sets</h1>
         <h2 id="Subtitle">Answer the following questions about your data sets:</h2>
-        <div id="questions">
-            <div id="ps">
-                <p class="question" id="qq1">Are your data sets paired data?*</p>
-                <div id="hover1" class="hovery">You should select "yes" if your  data sets consist of the same participants. For example, select "yes" if you are testing the same participants at several points over time, or if you are comparing their answers to many different survey questions.</div>
-                <br>
-                <p class="question" id="qq2">Are your data sets all continuous data?*</p>
-                <div id="hover2" class="hovery">You should select "yes" if ALL of your data sets are measured on scales in which: a) many different numerical answers are possible, and b) a score higher by "1" is equally opposite to a score lower by "1". For example, data measured in time, percentages, number of times, and number of correct answers are often considered to be continuous scales. Likert-scale survey questions are NOT considered to be continuous, so if either of your data sets are of this type, you should select "no." If you are unsure, you can select "yes," and the program will automatically check the data for normalcy via a Shapiro-Wilks Test. If either sets of your data fail this test, it will automatically be considered ordinal and not continuous.</div>
-                <br>
-                <p id="qq3" class="question">How many data sets do you have?*</p>
-                <div id ="hover3" class="hovery">This is for example, how many groups or how many times the same group was measured.</div>
-                <br>
-            </div>
-            <div id="as">
-                <div id="firsty">
-                <input type="radio" id="q1_a" class="radio_btn" name="q1" value="yes">
-                <label for="q1_a" class="answer">Yes</label>
-                <input type="radio" id="q1_b" class="radio_btn" name="q1" value="no">
-                <label for="q1_b" class="answer">No</label>
-                <br>
-                <br>
-                <br>
+        <div id="helpModal" class="w3-modal" onclick="this.style.display='none'">
+            <div id="helpModalContent" class="w3-modal-content w3-animate-zoom" style="background-color: white; width: 80vw">
+                <span class="w3-button w3-hover-red w3-xlarge w3-display-topright" onclick="closeModal()">&times;</span>
+                <br><br>
+                <div class="w3-cell-row">
+                    <div class="w3-container w3-cell">
+                        <iframe id="theHelpVideo" width="560" height="315" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                    </div>
+                    <div class="w3-container w3-cell" style="background-color: aliceblue;">
+                        <p id="theHelpText"></p>
+                    </div>
                 </div>
-                <div id="secondy">
-                <input type="radio" id="q2_a" name = "q2" value = "yes" class="radio_btn">
-                <label for="q2_a" class="answer">Yes</label>
-                <input type="radio" id="q2_b" name = "q2" value = "no" class="radio_btn">
-                <label for="q2_b" class="answer">No</label>
-                <br>
-                <input type="text" id="k_value" placeholder="Input number of data sets">
-                <br>
-                </div>
+                <br><br>
             </div>
         </div>
+
+
+        <div>
+            <div class="w3-cell-row">
+                <br><br>
+                <div class="w3-cell w3-cell-middle w3-container w3-right-align" style="width: 50%; margin-top: 15px">
+                    <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('paired')">?</button><p class="question" id="qq1" style="display:inline">  Are your data sets paired data?*</p>
+                </div>
+                <div class="w3-cell w3-cell-middle w3-container w3-left-align" style="width: 50%; margin-top: 15px">
+                    <input type="radio" id="q1_a" class="radio_btn" name="q1" value="yes">
+                    <label for="q1_a" class="answer">Yes</label>
+                    <input type="radio" id="q1_b" class="radio_btn" name="q1" value="no">
+                    <label for="q1_b" class="answer">No</label>
+                </div>
+            </div>
+            <div class="w3-cell-row w3-center">
+                <br><br>
+                <div class="w3-cell w3-cell-middle w3-container w3-right-align" style="width: 50%; margin-top: 15px">
+                    <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('continuous')">?</button><p class="question" id="qq2" style="display:inline">  Are your data sets all continuous data?*</p>
+                </div>
+                <div class="w3-cell w3-cell-middle w3-container w3-left-align" style="width: 50%; margin-top: 15px">
+                    <input type="radio" id="q2_a" name = "q2" value = "yes" class="radio_btn">
+                    <label for="q2_a" class="answer">Yes</label>
+                    <input type="radio" id="q2_b" name = "q2" value = "no" class="radio_btn">
+                    <label for="q2_b" class="answer">No</label>
+                </div>
+            </div>
+            <div class="w3-cell-row w3-center">
+                <br><br>
+                <div class="w3-cell w3-cell-middle w3-container w3-right-align" style="width: 50%; margin-top: 15px">
+                    <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('howmany')">?</button><p id="qq3" class="question" style="display:inline">  How many data sets do you have?*</p>
+                </div>
+                <div class="w3-cell w3-cell-middle w3-container w3-left-align" style="width: 50%; margin-top: 15px">
+                    <input type="text" id="k_value" placeholder="Input number of data sets">
+                </div>
+            </div>           
+        </div>
         <div id="error_text" style="display: none"><p>Error will appear here.</p></div>
-        <p id="small_text">*Mouse over questions for explanation</p>
+        <p id="small_text">*Click on the black ? symbol for help</p>
         <br>
         <button id="SetUp" class="button" onclick="SetUp()">Set Up the Test</button>
         <br>
     </div>
     <div id="datasets" style="display: none">
         <div id="jesus">
-            <p style="font-size: 16px">Input Data Below or Click to Upload from CSV File:</p><label for="file-upload" class="custom-file-upload">Upload CSV</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)'><br>
+            <br>
+            <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('csv')">?</button><p style="font-size: 16px; display:inline"> Input Data Below or Click to Upload from CSV File:</p>
+            <br><label for="file-upload" class="custom-file-upload">Upload CSV</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)'><br>
             <div id="d_container"></div>
             <div id="activate">
                 <button id="button" class="button" style="display: none" onclick="Calculate()">Calculate!</button>

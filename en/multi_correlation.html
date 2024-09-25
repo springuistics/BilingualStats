@@ -2,11 +2,13 @@
 <head>
     <meta charset="UTF-8">
     <link href="../css/multi_correlation.css" rel="stylesheet" type="text/css">
+    <link href="../../apps/w3.css" rel="stylesheet" type="text/css">
     <title>Correlation for 3+ Data Sets</title>
 </head>
 <body>
     <script src="../scripts/repeatTests.js"></script>
     <script src="../scripts/multipleCorrelation.js"></script>
+    <script src="../scripts/modalHelp.js"></script>
     <div id="langauge_bar">
         <div style="text-align:left; margin-top: 2px; margin-left: 10px; position:absolute"><a href="../index.html"><img class="picture" src="../css/back.png" alt="index"></a></div>
         <p id="lang_bun">Select Language:</p>
@@ -19,28 +21,46 @@
     <div id="bigger">
         <h1  id="Title">Statistical Correlation Between One Measurement and Several Other Co-Measurements</h1>
         <h2 id="Subtitle">Answer the following questions about your data :</h2>
-    <div id="questions">
-        <div id="ps">
-            <p id="qq2" class="question">How many co-measurements do you have?*</p>
-            <div id ="hover2" class="hovery">This is the number of measurements in ADDITION to your main measurement. For example, if you are trying to determine how 3 different variables are related to test scores, please write '3.' You must write a number between 2 and 10.</div>
-            <br>
-        </div>
-        <div id="as">
-            <div id="secondy">
-                <input type="text" id="k_value" placeholder="Input number of data sets">
-                <br>
+
+        <div id="helpModal" class="w3-modal" onclick="this.style.display='none'">
+            <div id="helpModalContent" class="w3-modal-content w3-animate-zoom" style="background-color: white; width: 80vw">
+                <span class="w3-button w3-hover-red w3-xlarge w3-display-topright" onclick="closeModal()">&times;</span>
+                <br><br>
+                <div class="w3-cell-row">
+                    <div class="w3-container w3-cell">
+                        <iframe id="theHelpVideo" width="560" height="315" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                    </div>
+                    <div class="w3-container w3-cell" style="background-color: aliceblue;">
+                        <p id="theHelpText"></p>
+                    </div>
+                </div>
+                <br><br>
             </div>
         </div>
-    </div>
+
+        <div>
+            <div class="w3-cell-row">
+                <br><br>
+                <div class="w3-cell w3-cell-middle w3-container w3-right-align" style="width: 50%; margin-top: 15px">
+                    <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('howmany')">?</button><p id="qq2" class="question" style="display:inline">  How many co-measurements do you have?*</p>
+                </div>
+                <div class="w3-cell w3-cell-middle w3-container w3-left-align" style="width: 50%; margin-top: 15px">
+                    <input type="text" id="k_value" placeholder="Input number of data sets">
+                </div>
+            </div>       
+        </div>
+
     <p id="error_text" style="display: none">Error will appear here.</p>
-    <p id="small_text">*Mouse over questions for explanation</p>
+    <p id="small_text">*Click on the black ? symbol for help</p>
     <br>
     <button id="SetUp" class="final_button" onclick="SetUp()">Set Up the Test</button>
     <br>
     </div>
     <div id="datasets" style="display: none">
         <div id="jesus">
-            <p style="font-size: 16px">Input Data Below or Click to Upload from CSV File:</p><label for="file-upload" class="custom-file-upload">Upload CSV</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)'><br>
+            <br>
+            <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('csv')">?</button><p style="font-size: 16px; display:inline"> Input Data Below or Click to Upload from CSV File:</p>
+            <br><label for="file-upload" class="custom-file-upload">Upload CSV</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)'><br>
             <div id="data1" class="dumb_div" style="background:rgb(144, 240, 247)">
                 <h5>Predicted Variable Name (optional)</h5>
                 <div id ="hover3" class="hovery">This is the measurement that you are trying to predict with other co-measurements. It is the main number that you are checking for multiple correlations to. For example, if you are trying to determine which of three variables has the largest impact on test scores, please paste the test scores here and the three variables' data in the other areas.</div>

@@ -134,8 +134,7 @@ function Calculate() {
                 for (let i=0; i<losData.length; i++){
                     lengthChecker.push(losData[i].length);
                 }
-                var allEqual = arr => arr.every( v => v === arr[0] );
-                return allEqual(lengthChecker);
+                return lengthChecker.every(value => value === lengthChecker[0]);
             }
         }
         if (checkPairs(theBigData) == false){

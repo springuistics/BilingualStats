@@ -1019,7 +1019,7 @@ function performDescriptives(dataset){
         let tempMax = copy.reduce((a, b) => Math.max(a, b));
         finalResult.push({'m': average(dataset[i]).toFixed(3), 'sd' : stdev(dataset[i]).toFixed(4), 'mini': tempMin, 'maxi': tempMax, 'CIup':confidenceInt95upper(dataset[i]).toFixed(3), 'CIlow': confidenceInt95ower(dataset[i]).toFixed(3), 'skew':skewness(dataset[i]).toFixed(3), 'kurt':kurtosis(dataset[i]).toFixed(3)});        
     }
-    return finalResult
+    return finalResult;
 }
 
 
@@ -1042,8 +1042,14 @@ function runDescriptives(k, thisData){
     buttonHolder.id = "desBTNholder";
     let button1 = document.createElement('button');
     let button2 = document.createElement('button');
+    let questoiner = document.createElement('button');
+    document.getElementById('desBTNholder').appendChild(questoiner);
     document.getElementById('desBTNholder').appendChild(button1);
     document.getElementById('desBTNholder').appendChild(button2);
+    questoiner.className = "w3-button w3-medium w3-circle w3-black";
+    questoiner.setAttribute("onclick", "getHelp('descriptives')");
+    questoiner.setAttribute('style', 'display:inline');
+    questoiner.innerHTML = "?";
     button1.className = "desBTN";
     button2.className = "desBTN";
     button1.id="desBTN_show";
@@ -1223,8 +1229,14 @@ function specialDescriptivesForPP(thisData){
     buttonHolder.id = "desBTNholder";
     let button1 = document.createElement('button');
     let button2 = document.createElement('button');
+    let questoiner = document.createElement('button');
+    document.getElementById('desBTNholder').appendChild(questoiner);
     document.getElementById('desBTNholder').appendChild(button1);
     document.getElementById('desBTNholder').appendChild(button2);
+    questoiner.className = "w3-button w3-medium w3-circle w3-black";
+    questoiner.setAttribute("onclick", "getHelp('descriptives')");
+    questoiner.setAttribute('style', 'display:inline');
+    questoiner.innerHTML = "?";
     button1.className = "desBTN";
     button2.className = "desBTN";
     button1.id="desBTN_show";

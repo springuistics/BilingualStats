@@ -2,11 +2,13 @@
 <head>
     <meta charset="UTF-8">
     <link href="../css/pp_testing.css" rel="stylesheet" type="text/css">
+    <link href="../../apps/w3.css" rel="stylesheet" type="text/css">
     <title>２組の事前・事後比較</title>
 </head>
 <body>
     <script src="../scripts/repeatTests.js"></script>
     <script src="../scripts/pp_testing.js"></script>
+    <script src="../scripts/modalHelp_js.js"></script>
     <div id="langauge_bar">
         <div style="text-align:left; margin-top: 2px; margin-left: 10px; position:absolute"><a href="../index_jp.html"><img class="picture" src="../css/back.png" alt="index"></a></div>
         <p id="lang_bun">言語設定:</p>
@@ -26,7 +28,9 @@
     <div id="error_text" style="display: none"><p>Error will appear here.</p></div>
     </div>
     <div id="datasets">
-        <p style="font-size: 16px">以下のフィールドにデータをペーストする、あるいはCSVをアップロードして下さい：</p><label for="file-upload" class="custom-file-upload">CSVのアップロード</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)'><br>
+        <br>        
+        <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('csv')">?</button><p style="font-size: 16px; display:inline"> 以下のフィールドにデータをペーストする、あるいはCSVをアップロードして下さい：</p>
+        <br><label for="file-upload" class="custom-file-upload">CSVのアップロード</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)'><br>
         <table id="table_me">
             <tr>
         <td><div id="data1">

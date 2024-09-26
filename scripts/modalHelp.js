@@ -5,7 +5,7 @@ const messages = ['<i>Paired data</i> means data that is taken from the same gro
     'This asks how many sets of data you have. This generally refers to the number of groups you have (if you are comparing different participants) or the number of times data was taken (if you are comparing data taken at several different times). However, it is also representative of how many different measurements (if looking at correlation). <br><h5 style="color:red">Warning!</h5>If you are using the "3+ data" correlation tool for multiple regression, you should insert the number of <span style="color:red"><b>EXPLANATORY</b></span> variables (i.e., those used to predict the key variable). For this tool ONLY, do not count the key variable.'
     ];
     
-const videos = ['1MevYCdn5S8','VDlp9x0eNtM','1MevYCdn5S8','VDlp9x0eNtM','1MevYCdn5S8'];
+const videos = ['pjrY66lSm4k','AYJ11OcDqQM','MfjY0lnDk78','yIuWcxilSZs','Y7OP-SmVrK0'];
 const indexes = ['paired','continuous','csv','descriptives','howmany'];
     
 function getHelp(section){

@@ -2,11 +2,13 @@
 <head>
     <meta charset="UTF-8">
     <link href="../css/multi_correlation.css" rel="stylesheet" type="text/css">
+    <link href="../../apps/w3.css" rel="stylesheet" type="text/css">
     <title>Correlation for 3+ Data Sets</title>
 </head>
 <body>
     <script src="../scripts/repeatTests.js"></script>
     <script src="../scripts/multipleCorrelation.js"></script>
+    <script src="../scripts/modalHelp_js.js"></script>
     <div id="langauge_bar">
         <div style="text-align:left; margin-top: 2px; margin-left: 10px; position:absolute"><a href="../index_jp.html"><img class="picture" src="../css/back.png" alt="index"></a></div>
         <p id="lang_bun">言語設定:</p>
@@ -18,28 +20,45 @@
     <div id="bigger">
         <h1  id="Title">1つのデータと複数の説明変数の関係性の計算</h1>
         <h2 id="Subtitle">データについて、以下の質問を答えてください。</h2>
-    <div id="questions">
-        <div id="ps">
-            <p id="qq2" class="question">説明変数はいくつありますか？*</p>
-            <div id ="hover2" class="hovery">予測しようとしている変数（データ）ではない、同じ参加者から取った他のデータを意味にします。例えば、テストの点数が複数のクイズの点数とどのように関連しているかを分析したい場合、テストの点数は予測変数となり、それぞれのクイズの点数が説明変数になります。残念ながら、現時点では、本プログラムは10つの説明変数までしか計算できないですので、２～１０の数字を入力してください。</div>
-            <br>
-        </div>
-        <div id="as">
-            <div id="secondy">
-                <input type="text" id="k_value" placeholder="説明変数の数を入力してください">
-                <br>
+        <br>
+        <div id="helpModal" class="w3-modal" onclick="this.style.display='none'">
+            <div id="helpModalContent" class="w3-modal-content w3-animate-zoom" style="background-color: white; width: 80vw">
+                <span class="w3-button w3-hover-red w3-xlarge w3-display-topright" onclick="closeModal()">&times;</span>
+                <br><br>
+                <div class="w3-cell-row">
+                    <div class="w3-container w3-cell">
+                        <iframe id="theHelpVideo" width="560" height="315" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                    </div>
+                    <div class="w3-container w3-cell" style="background-color: aliceblue;">
+                        <p id="theHelpText"></p>
+                    </div>
+                </div>
+                <br><br>
             </div>
         </div>
-    </div>
-    <p id="error_text" style="display: none">Error will appear here.</p>
-    <p id="small_text">*マウスポインターを質問の上に乗せると、説明が表示されます</p>
-    <br>
-    <button id="SetUp" class="final_button" onclick="SetUp()">データ入力開始</button>
-    <br>
+
+        <div>
+            <div class="w3-cell-row">
+                <br><br>
+                <div class="w3-cell w3-cell-middle w3-container w3-right-align" style="width: 50%; margin-top: 15px">
+                    <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('howmany')">?</button><p id="qq2" class="question" style="display:inline">  説明変数はいくつありますか？*</p>
+                </div>
+                <div class="w3-cell w3-cell-middle w3-container w3-left-align" style="width: 50%; margin-top: 15px">
+                    <input type="text" id="k_value" placeholder="説明変数の数を入力してください">
+                </div>
+            </div>       
+        </div>
+        <p id="error_text" style="display: none">Error will appear here.</p>
+        <p id="small_text">*黒い？マークをクリックすると、説明が表示されます</p>
+        <br>
+        <button id="SetUp" class="final_button" onclick="SetUp()">データ入力開始</button>
+        <br>
     </div>
     <div id="datasets" style="display: none">
         <div id="jesus">
-            <p style="font-size: 16px">以下のフィールドにデータをペーストする、あるいはCSVをアップロードして下さい：</p><label for="file-upload" class="custom-file-upload">CSVのアップロード</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)'><br>
+            <br>        
+            <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('csv')">?</button><p style="font-size: 16px; display:inline"> 以下のフィールドにデータをペーストする、あるいはCSVをアップロードして下さい：</p>
+            <br><label for="file-upload" class="custom-file-upload">CSVのアップロード</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)'><br>
             <div id="data1" class="dumb_div" style="background:rgb(144, 240, 247)">
                 <h3 id="qq3">予測変数データ*を以下にペーストしてください</h3>
                 <h5>予測変数データ名 (省略可能)</h5>

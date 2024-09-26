@@ -76,7 +76,7 @@ h1, h2, h3, p, a {
 #questions #the_question_bun {
     color: white;
 }
-#questions .answer{
+.answer{
     color: white;
 }
 
@@ -133,6 +133,7 @@ h1, h2, h3, p, a {
 }
 .button:hover{
     background-color: rgb(141, 141, 239);
+    cursor: pointer;
 }
 
 .txtarea {
@@ -181,7 +182,6 @@ input[type="file"] {
 .custom-file-upload {
   display: inline;
   padding: 6px 12px;
-  cursor: pointer;
   font-size: 16px;
   border: 3px;
   border-style: outset;
@@ -190,4 +190,5 @@ input[type="file"] {
 }
 .custom-file-upload:hover {
     background-color: grey;
+    cursor: pointer;
 }

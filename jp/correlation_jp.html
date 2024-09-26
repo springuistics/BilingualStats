@@ -2,11 +2,13 @@
 <head>
     <meta charset="UTF-8" lang="jp">
     <link href="../css/style_2_sets.css" rel="stylesheet" type="text/css">
+    <link href="../../apps/w3.css" rel="stylesheet" type="text/css">
     <title>Correlation Between 2 Data Sets</title>
 </head>
 <body>
     <script src="../scripts/repeatTests.js"></script>
     <script src="../scripts/singleCorr.js"></script>
+    <script src="../scripts/modalHelp_js.js"></script>
     <div id="langauge_bar">
         <div style="text-align:left; margin-top: 2px; margin-left: 10px; position:absolute"><a href="../index_jp.html"><img  class="picture" src="../css/back.png" alt="index"></a></div>
         <p id="lang_bun">言語設定:</p>
@@ -16,28 +18,47 @@
         </select>
     </div>
     <div id="bigger">
-    <h1  id="Title">2組の数値データの相関関係</h1>
-    <h2 id="Subtitle">データについて、以下の質問を答えてください。</h2>
-    <div id="questions">
-        <div id="ps">
-            <p class="question" id="qq1">両方とも連続データですか？*</p>
-            <div id="hover1">両方のデータ組に関しては、１，２，３のような決まっている数字しか出れないものではなく、様々な数字が可能の場合は連続データです。平均より１つ大きいデータが平均より1つ小さいデータと同等に平均値から離れているという二つの条件を満たしている場合、「はい」と答えてください。時間、割合、回数、正解率などは多くの場合、「連続的データ」と見なされます。リッカート尺度のアンケート質問は継続的データとみなさらないため、いずれかのデータ組はこのようなデータである場合は「いいえ」と答えてください。もしどちらになるか分からない場合は「はい」と答えても構いません。「はい」と答えた場合、自動的にシャピロ・ウィルク検定によって正規分布を検定し、パラメトリック検定を利用できるかを確認します。その結果に基づいて、あなたのデータ分析に適切な統計手法を自動的に提示します。</div>
-            <br>
-        </div>
-        <div id="as">
-            <div id="firsty">
-                <input type="radio" id="q1_a" class="radio_btn" name="q1" value="yes">
-                <label for="q1_a" class="answer">はい</label>
-                <input type="radio" id="q1_b" class="radio_btn" name="q1" value="no">
-                <label for="q1_b" class="answer">いいえ</label>
+        <h1  id="Title">2組の数値データの相関関係</h1>
+        <h2 id="Subtitle">データについて、以下の質問を答えてください。</h2>
+        <br>
+        <div id="helpModal" class="w3-modal" onclick="this.style.display='none'">
+            <div id="helpModalContent" class="w3-modal-content w3-animate-zoom" style="background-color: white; width: 80vw">
+                <span class="w3-button w3-hover-red w3-xlarge w3-display-topright" onclick="closeModal()">&times;</span>
+                <br><br>
+                <div class="w3-cell-row">
+                    <div class="w3-container w3-cell">
+                        <iframe id="theHelpVideo" width="560" height="315" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                    </div>
+                    <div class="w3-container w3-cell" style="background-color: aliceblue;">
+                        <p id="theHelpText"></p>
+                    </div>
+                </div>
+                <br><br>
             </div>
         </div>
-    </div>
+
+        <div>
+            <div class="w3-cell-row">
+                <br><br>
+                <div class="w3-cell w3-cell-middle w3-container w3-right-align" style="width: 50%; margin-top: 15px">
+                    <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('continuous')">?</button><p class="question" id="qq1" style="display:inline">  両方とも連続データですか？*</p>
+                </div>
+                <div class="w3-cell w3-cell-middle w3-container w3-left-align" style="width: 50%; margin-top: 15px">
+                    <input type="radio" id="q1_a" class="radio_btn" name="q1" value="yes">
+                    <label for="q1_a" class="answer">Yes</label>
+                    <input type="radio" id="q1_b" class="radio_btn" name="q1" value="no">
+                    <label for="q1_b" class="answer">No</label>
+                </div>
+            </div>      
+        </div>
+
         <p id="error_text" style="display: none">Error will appear here.</p>
-        <p id="small_text">*マウスポインターを質問の上に乗せると、説明が表示されます</p>
+        <p id="small_text">*黒い？マークをクリックすると、説明が表示されます</p>
     </div>
     <div id="data_holder">
-        <p style="font-size: 16px">以下のフィールドにデータをペーストする、あるいはCSVをアップロードして下さい：</p><label for="file-upload" class="custom-file-upload">CSVのアップロード</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)'><br>
+        <br>        
+        <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('csv')">?</button><p style="font-size: 16px; display:inline"> 以下のフィールドにデータをペーストする、あるいはCSVをアップロードして下さい：</p>
+        <br><label for="file-upload" class="custom-file-upload">CSVのアップロード</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)'><br>
         <div id="datasets">
             <div id="data1">
                 <h5>グループ名（省略可能）</h5>

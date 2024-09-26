@@ -2,11 +2,13 @@
 <head>
     <meta charset="UTF-8">
     <link href="../css/multi_correlation.css" rel="stylesheet" type="text/css">
+    <link href="../../apps/w3.css" rel="stylesheet" type="text/css">
     <title>Correlation Matrix</title>
 </head>
 <body>
     <script src="../scripts/repeatTests.js"></script>
     <script src="../scripts/correlMatrix.js"></script>
+    <script src="../scripts/modalHelp_js.js"></script>
     <div id="langauge_bar">
         <div style="text-align:left; margin-top: 2px; margin-left: 10px; position:absolute"><a href="../index_jp.html"><img class="picture" src="../css/back.png" alt="index"></a></div>
         <p id="lang_bun">言語設定:</p>
@@ -18,43 +20,59 @@
     <div id="bigger">
         <h1  id="Title">複数のデータ組の相関行列の計算</h1>
         <h2 id="Subtitle">データについて、以下の質問を答えてください。</h2>
-    <div id="questions">
-        <div id="ps">
-            <p id="qq2" class="question">何組を比較しますか？*</p>
-            <div id ="hover2" class="hovery">例えば、質問の数、レーターの数など、関連性を比較したいデータ組を入力してください。</div>
-            <br>
-        </div>
-        <div id="as">
-            <div id="secondy">
-                <input type="text" id="k_value" placeholder="データ組の数を入力してください">
-                <br>
+        <br>
+        <div id="helpModal" class="w3-modal" onclick="this.style.display='none'">
+            <div id="helpModalContent" class="w3-modal-content w3-animate-zoom" style="background-color: white; width: 80vw">
+                <span class="w3-button w3-hover-red w3-xlarge w3-display-topright" onclick="closeModal()">&times;</span>
+                <br><br>
+                <div class="w3-cell-row">
+                    <div class="w3-container w3-cell">
+                        <iframe id="theHelpVideo" width="560" height="315" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                    </div>
+                    <div class="w3-container w3-cell" style="background-color: aliceblue;">
+                        <p id="theHelpText"></p>
+                    </div>
+                </div>
+                <br><br>
             </div>
         </div>
-        <div id="ps">
-            <p class="question" id="qq1">全ての組は連続データですか？*</p>
-            <div id="hover1" class="hovery">全てのデータ組に関しては、１，２，３のような決まっている数字しか出れないものではなく、様々な数字が可能の場合は連続データです。平均より１つ大きいデータが平均より1つ小さいデータと同等に平均値から離れているという二つの条件を満たしている場合、「はい」と答えてください。時間、割合、回数、正解率などは多くの場合、「連続的データ」と見なされます。リッカート尺度のアンケート質問は継続的データとみなさらないため、いずれかのデータ組はこのようなデータである場合は「いいえ」と答えてください。分からない場合、あるいは、両方のデータが混ざっている場合、「分からない・混ざっている」と選択してください。その場合、データがパラメトリックであるかどうかを計算し、その結果に基づいて、あなたのデータ分析に適切な統計手法を自動的に提示します。</div>
-            <br>
-        </div>
-        <div id="as">
-            <div id="firsty">
-                <input type="radio" id="q1_a" class="radio_btn" name="q1" value="yes">
-                <label for="q1_a" class="answer">はい</label>
-                <input type="radio" id="q1_b" class="radio_btn" name="q1" value="no">
-                <label for="q1_b" class="answer">いいえ</label>
-                <input type="radio" id="q1_c" class="radio_btn" name="q1" value="uk">
-                <label for="q1_c" class="answer">分からない・混ざっている</label>
+
+        <div>
+            <div class="w3-cell-row">
+                <br><br>
+                <div class="w3-cell w3-cell-middle w3-container w3-right-align" style="width: 50%; margin-top: 15px">
+                    <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('howmany')">?</button><p id="qq2" class="question" style="display:inline">  何組を比較しますか？</p>
+                </div>
+                <div class="w3-cell w3-cell-middle w3-container w3-left-align" style="width: 50%; margin-top: 15px">
+                    <input type="text" id="k_value" placeholder="Input number of data sets">
+                </div>
             </div>
+            <div class="w3-cell-row w3-center">
+                <br><br>
+                <div class="w3-cell w3-cell-middle w3-container w3-right-align" style="width: 50%; margin-top: 15px">
+                    <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('continuous')">?</button><p class="question" id="qq1" style="display:inline">  全ての組は連続データですか？*</p>
+                </div>
+                <div class="w3-cell w3-cell-middle w3-container w3-left-align" style="width: 50%; margin-top: 15px">
+                    <input type="radio" id="q1_a" class="radio_btn" name="q1" value="yes">
+                    <label for="q1_a" class="answer">はい</label>
+                    <input type="radio" id="q1_b" class="radio_btn" name="q1" value="no">
+                    <label for="q1_b" class="answer">いいえ</label>
+                    <input type="radio" id="q1_c" class="radio_btn" name="q1" value="uk">
+                    <label for="q1_c" class="answer">分からない・混ざっている</label>
+                </div>
+            </div>        
         </div>
-    </div>
     <p id="error_text" style="display: none">Error will appear here.</p>
-    <p id="small_text">*マウスポインターを質問の上に乗せると、説明が表示されます</p>
+    <p id="small_text">*黒い？マークをクリックすると、説明が表示されます</p>
     <br>
     <button id="SetUp" class="final_button" onclick="SetUp()">データ入力開始</button>
     <br>
     </div>
     <div id="datasets" style="display: none">
         <div id="jesus">
-            <p style="font-size: 16px">以下のフィールドにデータをペーストする、あるいはCSVをアップロードして下さい：</p><label for="file-upload" class="custom-file-upload">CSVのアップロード</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)'><br>
+            <br>        
+            <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('csv')">?</button><p style="font-size: 16px; display:inline"> 以下のフィールドにデータをペーストする、あるいはCSVをアップロードして下さい：</p>
+            <br><label for="file-upload" class="custom-file-upload">CSVのアップロード</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)'><br>
             <div id="d_container"></div>
             <div><p style="font-size: 12px; text-align: center; margin: auto; width: 80%; padding-top: 15px;">*半角数字でデータが縦になるように、Excelなどから直接にペーストしてください</p></div>
             <div id="activate">

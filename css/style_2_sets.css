@@ -106,7 +106,7 @@ h1, h2, h3, p, a {
     padding: 5px;
     text-align: right;
 }
-#questions #ps .question {
+.question {
     color: white;
     font-size: 14px;
     text-align: right;
@@ -117,7 +117,7 @@ h1, h2, h3, p, a {
     padding: 5px;
     text-align: left;
 }
-#questions #as .answer {
+.answer {
     color: white;
     font-size: 14px;
 }
@@ -164,10 +164,10 @@ h1, h2, h3, p, a {
     border: 3px;
     border-style: outset;
     color: white;
-    cursor: pointer;
 }
 .final_button:hover{
     background-color: rgb(141, 141, 239);
+    cursor: pointer;
 }
 
 #results {
@@ -271,17 +271,17 @@ input[type="file"] {
     display: none;
   }
   
-  .custom-file-upload {
+.custom-file-upload {
     display: inline-block;
     padding: 6px 12px;
-    cursor: pointer;
     font-size: 16px;
     border: 3px;
     border-style: outset;
     color: white;
     background-color: black;
     width: auto;
-  }
-  .custom-file-upload:hover {
+}
+.custom-file-upload:hover {
       background-color: grey;
-  }
+      cursor: pointer;
+}

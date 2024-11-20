@@ -134,16 +134,13 @@ function Calculate() {
     let helperK = 'data_set_'+(k-1);
     if (document.getElementById(helperK)){
         var theBigData = gatherDatafromForm(k);
-        function checkPairs(losData){
-            let lengthChecker = [];
-            for (let i=0; i<losData.length; i++){
-                lengthChecker.push(losData[i].length);
-            }
-            return lengthChecker.every(value => value === lengthChecker[0]);
-        }
+        var allDescriptives = runDescriptives(theBigData);
+        var checks = checkData(allDescriptives);
+        printDescriptives(allDescriptives);
+
         if (ordinal_check == "no") {
             if (pair_check == "yes") {
-                if (checkPairs(theBigData) == false){
+                if (checks.pairs == false){
                     if (language == "en"){
                         document.getElementById("error_text").innerHTML = "Paired data sets should contain the same number of values (i.e., participants, instances, etc.). You have selected paired data, but your data sets have different numbers of values. Please check, amend as necessary and retry.";
                         document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
@@ -158,7 +155,6 @@ function Calculate() {
                     } else if (language == "jp"){
                         details_of_test = "本データは順序データであり、かつ、対応のあるデータであるため、フリードマン検定で計算しました。";
                     }
-                    runDescriptives(k, theBigData);
                     Friedman(k, theBigData);
                 }
             } else if (pair_check == "no") {
@@ -167,22 +163,13 @@ function Calculate() {
                 } else if (language == "jp"){
                     details_of_test = "本データは順序データであり、かつ、対応のないデータであるため、クラスカル=ウォリス検定で計算しました。";
                 }
-                runDescriptives(k, theBigData);
                 KW(k, theBigData);
             }
         } else {
-            var wecool = [];
-            for (let i=0; i<k; i++){
-                let tempArray = [];
-                for (let j=0; j<theBigData[i].length; j++){
-                    tempArray.push(theBigData[i][j]);
-                }
-                let check = shapiroWilk(tempArray);
-                wecool.push(check);
-            }
-            if (wecool.includes(false)){
+            let leveneCheck = levenesTest(theBigData);
+            if (checks.normal == false || leveneCheck.pValue<.05){
                 if (pair_check == "yes") {
-                    if (checkPairs(theBigData) == false){
+                    if (checks.pairs == false){
                         if (language == "en"){
                             document.getElementById("error_text").innerHTML = "Paired data sets should contain the same number of values (i.e., participants, instances, etc.). You have selected paired data, but your data sets have different numbers of values. Please check, amend as necessary and retry.";
                             document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
@@ -193,21 +180,42 @@ function Calculate() {
                         document.getElementById('error_text').style.display = "inline";
                     } else {
                         if (language == "en"){
-                            details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed the Shapiro-Wilk Test of normalcy, and therefore the data was treated as ordinal. Since the data was not paired, a Friedman's Test was used.";
+                            if (checks.normal == false && leveneCheck.pValue<.05){
+                                details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed one of the tests of normalcy*, and a Levene's test revealed the groups' variances were too different from each other (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"). Therefore the data was treated as ordinal. Since the data was paired, a Friedman's Test was used.";
+                            } else if (checks.normal == false){
+                                details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed one of the tests of normalcy*. Therefore the data was treated as ordinal. Since the data was paired, a Friedman's Test was used.";
+                            } else {
+                                details_of_test = "Despite the continuous and normal* nature of your data, a Levene's test revealed the groups' variances were too different from each other (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"). Therefore the data was treated as ordinal. Since the data was paired, a Friedman's Test was used.";
+                            } 
                         } else if (language == "jp"){
-                            details_of_test = "本データは連続データですが、シャピロ－ウィルク検定の結果によると、いずれか（あるいは両方）のデータセットがノンパラメトリックとみなされました。対応のあるデータであるため、フリードマン検定で計算しました。";
+                            if (checks.normal == false && leveneCheck.pValue<.05){
+                                details_of_test = "本データは連続データですが、正規性の検定の結果*によると、いずれか（あるいは両方）のデータセットがノンパラメトリックとみなされました。また、ルビーン検定の結果によると、データセット間の分散の均質性が不十分でした（<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"）。対応のあるデータであるため、フリードマン検定で計算しました。";
+                            } else if (checks.normal == false){
+                                details_of_test = "本データは連続データですが、正規性の検定の結果*によると、いずれか（あるいは両方）のデータセットがノンパラメトリックとみなされました。対応のあるデータであるため、フリードマン検定で計算しました。";
+                            } else {
+                                details_of_test = "本データは連続データであり、正規性が確認*できましたが、ルビーン検定の結果によると、データセット間の分散の均質性が不十分でした（<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"）。対応のあるデータであるため、フリードマン検定で計算しました。";
+                            }   
                         }
-                        runDescriptives(k, theBigData);
                         Friedman(k, theBigData);
                     }
                 } else if (pair_check == "no") {
                     if (language == "en"){
-                        details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed the Shapiro-Wilk Test of normalcy, and therefore the data was treated as ordinal. Since the data was not paired, a Kruskal-Wallis Test was used.";
+                        if (checks.normal == false && leveneCheck.pValue<.05){
+                            details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed one of the tests of normalcy*, and a Levene's test revealed the groups' variances were too different from each other (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"). Therefore the data was treated as ordinal. Since the data was not paired, a Kruskal-Wallis Test was used.";
+                        } else if (checks.normal == false){
+                            details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed one of the tests of normalcy*. Therefore the data was treated as ordinal. Since the data was not paired, a Kruskal-Wallis Test was used.";
+                        } else {
+                            details_of_test = "Despite the continuous and normal* nature of your data, a Levene's test revealed the groups' variances were too different from each other (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"). Therefore the data was treated as ordinal. Since the data was not paired, a Kruskal-Wallis Test was used.";
+                        } 
                     } else if (language == "jp"){
-                        details_of_test = "本データは連続データですが、シャピロ－ウィルク検定の結果によると、いずれか（あるいは両方）のデータセットがノンパラメトリックとみなされました。対応のないデータであるため、クラスカル=ウォリス検定で計算しました。";
+                        if (checks.normal == false && leveneCheck.pValue<.05){
+                            details_of_test = "本データは連続データですが、正規性の検定の結果*によると、いずれか（あるいは両方）のデータセットがノンパラメトリックとみなされました。また、ルビーン検定の結果によると、データセット間の分散の均質性が不十分でした（<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"）。対応のないデータであるため、クラスカル=ウォリス検定で計算しました。";
+                        } else if (checks.normal == false){
+                            details_of_test = "本データは連続データですが、正規性の検定の結果*によると、いずれか（あるいは両方）のデータセットがノンパラメトリックとみなされました。対応のないデータであるため、クラスカル=ウォリス検定で計算しました。";
+                        } else {
+                            details_of_test = "本データは連続データであり、正規性が確認*できましたが、ルビーン検定の結果によると、データセット間の分散の均質性が不十分でした（<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"）。対応のないデータであるため、クラスカル=ウォリス検定で計算しました。";
+                        }  
                     }
-                    
-                    runDescriptives(k, theBigData);
                     KW(k, theBigData);
                 }
             } else {
@@ -223,20 +231,18 @@ function Calculate() {
                         document.getElementById('error_text').style.display = "inline";
                     } else {
                         if (language == "en"){
-                            details_of_test = "Due to the continuous and normal nature of the data as checked by a Shapiro-Wilk Test, and the fact that the data was paired, a one-way repeated measures ANOVA was used.";
+                            details_of_test = "Due to the continuous and normal nature of the data, as checked by an appropriate test of normality*, the homogenity of variance, as checked by a Leven's test (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"), and the fact that the data was paired, a one-way repeated measures ANOVA was used.";
                         } else if (language == "jp"){
-                            details_of_test = "本データは連続データで、シャピロ－ウィルク検定の結果によると、全てのデータはパラメトリックとみなされました。また、対応のあるデータであるため、反復測定分散分析で計算しました。";
+                            details_of_test = "本データは連続データで、分散の均質性がルビーン検定で確認できて（<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"）、正規性の検定*で全てのデータはパラメトリックであることが確認できました。また、対応のあるデータであるため、反復測定分散分析で計算しました。";
                         }
-                        runDescriptives(k, theBigData);
                         RepANOVA(k, theBigData);
                     }
                 } else if (pair_check == "no") {
                     if (language == "en"){
-                        details_of_test = "Due to the continuous and normal nature of the data as checked by a Shapiro-Wilk Test, and the fact that the data was not paired, an ANOVA (non-repeated measures) was used.";
+                        details_of_test = "Due to the continuous and normal nature of the data, as checked by an appropriate test of normality*, the homogenity of variance, as checked by a Leven's test (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"), and the fact that the data was not paired, an ANOVA (non-repeated measures) was used.";
                     } else if (language == "jp"){
-                        details_of_test = "本データは連続データで、シャピロ－ウィルク検定の結果によると、全てのデータはパラメトリックとみなされました。また、対応のないデータであるため、一元配置分散分析で計算しました。";
+                        details_of_test = "本データは連続データで、分散の均質性がルビーン検定で確認できて（<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"）、正規性の検定*で全てのデータはパラメトリックであることが確認できました。また、対応のないデータであるため、一元配置分散分析で計算しました。";
                     }
-                    runDescriptives(k, theBigData);
                     StANOVA(k, theBigData);
                 }
             }

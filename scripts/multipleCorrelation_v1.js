@@ -124,17 +124,10 @@ function Calculate() {
     let helperK = 'data_set_'+(k-1);
     if (document.getElementById(helperK)){
         var theBigData = gatherDatafromForm(realK);
-        function checkPairs(losData){
-            if(!losData.length) {return false}
-            else {
-                let lengthChecker = [];
-                for (let i=0; i<losData.length; i++){
-                    lengthChecker.push(losData[i].length);
-                }
-                return lengthChecker.every(value => value === lengthChecker[0]);
-            }
-        }
-        if (checkPairs(theBigData) == false){
+        var allDescriptives = runDescriptives(theBigData);
+        var checks = checkData(allDescriptives);
+        printDescriptives(allDescriptives);
+        if (checks.pairs == false){
             if (language == "en"){
                 document.getElementById("error_text").innerHTML = "Correlation analysis presumes measurements of the same data points (i.e., participants, instances, etc.) and therefore your data sets should have the same numbers of values, but yours do not. Please check, amend as necessary and retry.";
                 document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
@@ -144,7 +137,7 @@ function Calculate() {
             }
             document.getElementById('error_text').style.display = "inline";
         } else {
-            runDescriptives((k+1), theBigData);
+            printDescriptives(allDescriptives);
             calculateForReal(theBigData);
         }
     }

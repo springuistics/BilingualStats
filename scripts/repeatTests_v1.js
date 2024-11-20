@@ -123,19 +123,19 @@ function shapiroWilk (data) {
     let x = copy.sort(function (a, b) {return a - b});
     let N = copy.length;
     let Nn2 = Math.floor(N/2);
-    var a = new Array(Math.floor(Nn2) + 1);
-    var c1 = [ 0, 0.221157, -0.147981, -2.07119, 4.434685, -2.706056 ];
-    var c2 = [ 0, 0.042981, -0.293762, -1.752461, 5.682633, -3.582633 ];
-    var i, j, i1;
-    var ssassx, summ2, ssumm2, range;
-    var a1, a2, an, sa, xi, sx, xx, w1;
-    var fac, asa, an25, ssa, sax, rsn, ssx, xsx;
+    let a = new Array(Math.floor(Nn2) + 1);
+    let c1 = [ 0, 0.221157, -0.147981, -2.07119, 4.434685, -2.706056 ];
+    let c2 = [ 0, 0.042981, -0.293762, -1.752461, 5.682633, -3.582633 ];
+    let i, j, i1;
+    let ssassx, summ2, ssumm2, range;
+    let a1, a2, an, sa, xi, sx, xx, w1;
+    let fac, asa, an25, ssa, sax, rsn, ssx, xsx;
     an = N;
     an25 = an + 0.25;
     summ2 = 0.0;
     for (i=1; i <= Nn2; i++) {
         a[i] = normalQuantile((i - 0.375) / an25, 0, 1);
-        var r__1 = a[i];
+        let r__1 = a[i];
         summ2 += r__1 * r__1;
     }
     summ2 *= 2;
@@ -184,17 +184,175 @@ function shapiroWilk (data) {
     }
     ssassx = Math.sqrt(ssa * ssx);
     w1 = (ssassx - sax) * (ssassx + sax) / (ssa * ssx);
-    let w = 1 - w1;
-    var winterpret = [.788, .803, .818, .829, .842, .850, .859, .866, .874, .881, .887, .892, .897, .892, .897, .901, .905, .908, 911, .914, .916, .918, .920, .923, .924, .926, .927, .929, .930, .933, .934];
-    if (N < 36) {
-        let lookup = N - 6;
-        if (w > winterpret[lookup]) {
-            return true;
-        } else {return false;}
+    return (1 - w1);
+}
+
+//finds P from shapiroWilk
+function swPvalue(w, n){
+    //Solution 1 close but fail
+    //let f = 0.0038915 * Math.pow(Math.log(n), 3) - 0.083751 * Math.pow(Math.log(n), 2) - 0.31082 * Math.log(n) - 1.5861; 
+    //let h = Math.exp(0.0030302 * Math.pow(Math.log(n), 2) - 0.082676 * Math.log(n) - 0.4803); 
+    //let z = (Math.log(1 - w) - f) / h;
+    //Solution 2 far fail 
+    //let mean = -2.706056 + 4.434685 * Math.pow(n, -1) - 2.705355 * Math.pow(n, -2);
+    //let stdev = Math.exp(-1.2337141 + 0.3287221 * Math.log(n) + 0.4656758 * Math.pow(n, -1) - 0.0842308 * Math.pow(n, -2));
+    //let z = (Math.log(1 - w) - mean) / stdev;
+
+    //return 2 * (1 - shapiroCDF(Math.abs(z)));
+
+    //table lookup
+    const shapiroTable = [
+        ["na","na","na"],
+        ["na","na","na"],
+        ["na","na","na"],
+        [0.753,0.756,0.767,0.789,0.959,0.998,0.999,1,1],
+        [0.687,0.707,0.748,0.792,0.935,0.987,0.992,0.996,0.997],
+        [0.686,0.715,0.762,0.806,0.927,0.979,0.986,0.991,0.993],
+        [0.713,0.743,0.788,0.826,0.927,0.974,0.981,0.986,0.989],
+        [0.73,0.76,0.803,0.838,0.928,0.972,0.979,0.985,0.988],
+        [0.749,0.778,0.818,0.851,0.932,0.972,0.978,0.984,0.987],
+        [0.764,0.791,0.829,0.859,0.935,0.972,0.978,0.984,0.986],
+        [0.781,0.806,0.842,0.869,0.938,0.972,0.978,0.983,0.986],
+        [0.792,0.817,0.85,0.876,0.94,0.973,0.979,0.984,0.986],
+        [0.805,0.828,0.859,0.883,0.943,0.973,0.979,0.984,0.986],
+        [0.814,0.837,0.866,0.889,0.945,0.974,0.979,0.984,0.986],
+        [0.825,0.846,0.874,0.895,0.947,0.975,0.98,0.984,0.986],
+        [0.835,0.855,0.881,0.901,0.95,0.975,0.98,0.984,0.987],
+        [0.844,0.863,0.887,0.906,0.952,0.976,0.981,0.985,0.987],
+        [0.851,0.869,0.892,0.91,0.954,0.977,0.981,0.985,0.987],
+        [0.858,0.874,0.897,0.914,0.956,0.978,0.982,0.986,0.988],
+        [0.863,0.879,0.901,0.917,0.957,0.978,0.982,0.986,0.988],
+        [0.868,0.884,0.905,0.92,0.959,0.979,0.983,0.986,0.988],
+        [0.873,0.888,0.908,0.923,0.96,0.98,0.983,0.987,0.989],
+        [0.878,0.892,0.911,0.926,0.961,0.98,0.984,0.987,0.989],
+        [0.881,0.895,0.914,0.928,0.962,0.981,0.984,0.987,0.989],
+        [0.884,0.898,0.916,0.93,0.963,0.981,0.984,0.987,0.989],
+        [0.888,0.901,0.918,0.931,0.964,0.981,0.985,0.988,0.989],
+        [0.891,0.904,0.92,0.933,0.965,0.982,0.985,0.988,0.989],
+        [0.894,0.906,0.923,0.935,0.965,0.982,0.985,0.988,0.99],
+        [0.896,0.908,0.924,0.936,0.966,0.982,0.985,0.988,0.99],
+        [0.898,0.91,0.926,0.937,0.966,0.982,0.985,0.988,0.99],
+        [0.9,0.912,0.927,0.939,0.967,0.983,0.985,0.988,0.99],
+        [0.902,0.914,0.929,0.94,0.967,0.983,0.986,0.988,0.99],
+        [0.904,0.915,0.93,0.941,0.968,0.983,0.986,0.988,0.99],
+        [0.906,0.917,0.931,0.942,0.968,0.983,0.986,0.989,0.99],
+        [0.908,0.919,0.933,0.943,0.969,0.983,0.986,0.989,0.99],
+        [0.91,0.92,0.934,0.944,0.969,0.984,0.986,0.989,0.99],
+        [0.912,0.922,0.935,0.945,0.97,0.984,0.986,0.989,0.99],
+        [0.914,0.924,0.936,0.946,0.97,0.984,0.987,0.989,0.99],
+        [0.916,0.925,0.938,0.947,0.971,0.984,0.987,0.989,0.99],
+        [0.917,0.927,0.939,0.948,0.971,0.984,0.987,0.989,0.991],
+        [0.919,0.928,0.94,0.949,0.972,0.985,0.987,0.989,0.991],
+        [0.92,0.929,0.941,0.95,0.972,0.985,0.987,0.989,0.991],
+        [0.922,0.93,0.942,0.951,0.972,0.985,0.987,0.989,0.991],
+        [0.923,0.932,0.943,0.951,0.973,0.985,0.987,0.99,0.991],
+        [0.924,0.933,0.944,0.952,0.973,0.985,0.987,0.99,0.991],
+        [0.926,0.934,0.945,0.953,0.973,0.985,0.988,0.99,0.991],
+        [0.927,0.935,0.945,0.953,0.974,0.985,0.988,0.99,0.991],
+        [0.928,0.936,0.946,0.954,0.974,0.985,0.988,0.99,0.991],
+        [0.929,0.937,0.947,0.954,0.974,0.985,0.988,0.99,0.991],
+        [0.929,0.939,0.947,0.955,0.974,0.985,0.988,0.99,0.991],
+        [0.93,0.938,0.947,0.955,0.974,0.985,0.988,0.99,0.991]    
+    ];
+    let the_row = shapiroTable[n];
+    if (the_row[8]<=w){
+        return .99
+    } else if (the_row[7]<=w){
+        return .98;
+    } else if (the_row[6]<=w){
+        if (the_row[6]==w){
+            return .95;
+        } else {
+            let scale = the_row[7]-the_row[6];
+            let theValue = the_row[7]-w;
+            let pct = safeDivision(theValue, scale);
+            if (pct==0){
+                return .98
+            } else {
+                return .95+(pct*.03);
+            }
+        }
+    } else if (the_row[5]<=w){
+        if (the_row[5]==w){
+            return .9;
+        } else {
+            let scale = the_row[6]-the_row[5];
+            let theValue = the_row[6]-w;
+            let pct = safeDivision(theValue, scale);
+            if (pct==0){
+                return .95
+            } else {
+                return .90+(pct*.05);
+            }
+        }
+    } else if (the_row[4]<=w){
+        if (the_row[4]==w){
+            return .5;
+        } else {
+            let scale = the_row[5]-the_row[4];
+            let theValue = the_row[5]-w;
+            let pct = safeDivision(theValue, scale);
+            if (pct==0){
+                return .90
+            } else {
+                return .50+(pct*.40);
+            }
+        }
+    } else if (the_row[3]<=w){
+        if (the_row[3]==w){
+            return .1;
+        } else {
+            let scale = the_row[4]-the_row[3];
+            let theValue = the_row[4]-w;
+            let pct = safeDivision(theValue, scale);
+            if (pct==0){
+                return .5
+            } else {
+                return .1+(pct*.40);
+            }
+        }
+    } else if (the_row[2]<=w){
+        if (the_row[2]==w){
+            return .05;
+        } else {
+            let scale = the_row[3]-the_row[2];
+            let theValue = the_row[3]-w;
+            let pct = safeDivision(theValue, scale);
+            if (pct==0){
+                return .1
+            } else {
+                return .05+(pct*.05);
+            }
+        }
+    } else if (the_row[1]<=w){
+        if (the_row[1]==w){
+            return .02;
+        } else {
+            let scale = the_row[2]-the_row[1];
+            let theValue = the_row[2]-w;
+            let pct = safeDivision(theValue, scale);
+            if (pct==0){
+                return .05
+            } else {
+                return .02+(pct*.03);
+            }
+        }
+    } else if (the_row[1]==w){
+        return .02
     } else {
-        if (w > .80) {
-            return true;
-        } else {return false;}
+        if (the_row[0]>=w){
+            return .01
+        } else {
+            let scale = the_row[1]-the_row[0];
+            let theValue = the_row[1]-w;
+            let pct = safeDivision(theValue, scale);
+            if (pct==0){
+                return .01
+            } else {
+                return .01+(pct*.01);
+            }
+        }
+
     }
 }
 
@@ -600,16 +758,35 @@ function DunnSE(superdata) {
 //CDF - used for turning Z values into p values
 function cdf(x) {
     // constants
-    var p  =  0.2316419;
-    var b1 =  0.31938153;
-    var b2 = -0.356563782;
-    var b3 =  1.781477937;
-    var b4 = -1.821255978;
-    var b5 =  1.330274429;
-    var t = 1 / (1 + p * Math.abs(x));
-    var Z = Math.exp(-x * x / 2) / Math.sqrt(2 * Math.PI);
-    var y = 1 - Z * ((((b5 * t + b4) * t + b3) * t + b2) * t + b1) * t;
+    let p  =  0.2316419;
+    let b1 =  0.31938153;
+    let b2 = -0.356563782;
+    let b3 =  1.781477937;
+    let b4 = -1.821255978;
+    let b5 =  1.330274429;
+    let t = 1 / (1 + p * Math.abs(x));
+    let Z = Math.exp(-x * x / 2) / Math.sqrt(2 * Math.PI);
+    let y = 1 - Z * ((((b5 * t + b4) * t + b3) * t + b2) * t + b1) * t;
     return (x > 0) ? y : 1 - y;
+}
+
+function shapiroCDF(z){
+    return 0.5 * (1 + erf(z / Math.sqrt(2)));
+}
+
+function erf(x){
+    let erf_a1 = 0.254829592; 
+    let erf_a2 = -0.284496736; 
+    let erf_a3 = 1.421413741; 
+    let erf_a4 = -1.453152027; 
+    let erf_a5 = 1.061405429; 
+    let erf_p = 0.3275911; 
+    let x_sign = x < 0 ? -1 : 1; 
+    x = Math.abs(x); 
+    
+    let erf_t = 1.0 / (1.0 + erf_p * x); 
+    let erf_y = 1.0 - (((((erf_a5 * erf_t + erf_a4) * erf_t) + erf_a3) * erf_t + erf_a2) * erf_t + erf_a1) * erf_t * Math.exp(-x * x); 
+    return x_sign * erf_y;
 }
 
 //Get a p value from a t value and N (student's T)
@@ -1008,7 +1185,7 @@ function solveMatrix(matrix){
 
 
 //Takes an array of arrays. Returns an array of dictionaries with values
-function performDescriptives(dataset){
+function runDescriptives(dataset){
     let finalResult = [];
     for (let i=0; i<dataset.length; i++){
         let copy = [];
@@ -1017,19 +1194,21 @@ function performDescriptives(dataset){
         }
         let tempMin = copy.reduce((a, b) => Math.min(a, b));
         let tempMax = copy.reduce((a, b) => Math.max(a, b));
-        if (dataset.length<50){
-            finalResult.push({'m': average(dataset[i]).toFixed(3), 'sd' : stdev(dataset[i]).toFixed(4), 'mini': tempMin, 'maxi': tempMax, 'CIup':confidenceInt95upper(dataset[i]).toFixed(3), 'CIlow': confidenceInt95ower(dataset[i]).toFixed(3), 'skew':skewness(dataset[i]).toFixed(3), 'kurt':kurtosis(dataset[i]).toFixed(3), 'normType':'SW', 'norm':shapiroWilk(dataset[i])});        
+        if (dataset[i].length<50){
+            let normal = shapiroWilk(dataset[i]);
+            finalResult.push({'n': dataset[i].length, 'm': average(dataset[i]).toFixed(3), 'sd' : stdev(dataset[i]).toFixed(4), 'mini': tempMin, 'maxi': tempMax, 'CIup':confidenceInt95upper(dataset[i]).toFixed(3), 'CIlow': confidenceInt95ower(dataset[i]).toFixed(3), 'skew':skewness(dataset[i]).toFixed(3), 'kurt':kurtosis(dataset[i]).toFixed(3), 'normType':'SW', 'norm':normal, 'normP':swPvalue(normal,dataset[i].length)});        
         } else {
-
-        }
-        finalResult.push({'m': average(dataset[i]).toFixed(3), 'sd' : stdev(dataset[i]).toFixed(4), 'mini': tempMin, 'maxi': tempMax, 'CIup':confidenceInt95upper(dataset[i]).toFixed(3), 'CIlow': confidenceInt95ower(dataset[i]).toFixed(3), 'skew':skewness(dataset[i]).toFixed(3), 'kurt':kurtosis(dataset[i]).toFixed(3)});        
+            let normal = ksTestNormality(dataset[i]);
+            finalResult.push({'n': dataset[i].length, 'm': average(dataset[i]).toFixed(3), 'sd' : stdev(dataset[i]).toFixed(4), 'mini': tempMin, 'maxi': tempMax, 'CIup':confidenceInt95upper(dataset[i]).toFixed(3), 'CIlow': confidenceInt95ower(dataset[i]).toFixed(3), 'skew':skewness(dataset[i]).toFixed(3), 'kurt':kurtosis(dataset[i]).toFixed(3), 'normType':'KS', 'norm':normal, 'normP':kolmogorovSmirnovPValue(normal,dataset[i].length)});       
+        }  
     }
     return finalResult;
 }
 
 
-//Sets up descriptives table. Requires a div called "descriptives" and one called "extra_fun" for downloading
-function runDescriptives(k, thisData){
+//Sets up descriptives table. Requires a div called "descriptives" and one called "extra_fun" for downloading. Feed in the data of runDescriptives!
+function printDescriptives(thisData){
+    let k = thisData.length;
     let allTheNames = [];
     for (let i=0; i<k; i++){
         let name = document.getElementById('group_name_'+i).value;
@@ -1039,7 +1218,6 @@ function runDescriptives(k, thisData){
         allTheNames.push(name);
     }
     var language = document.getElementById('lang_s').value;
-    let dicArr = performDescriptives(thisData);
     //Prep buttons
     let buttonHolder = document.createElement('div');
     document.getElementById('descriptives').appendChild(buttonHolder);
@@ -1085,18 +1263,19 @@ function runDescriptives(k, thisData){
     //Prep Headers
     let row_1 = document.createElement('tr');
     let heading_1 = document.createElement('th');
-        if (language == "en"){
+    if (language == "en"){
             heading_1.innerHTML = "Group";
         } else if (language == "jp"){
             heading_1.innerHTML = "組";
-        }
-    
+    }
+    let heading_1_5 = document.createElement('th');
+    heading_1_5.innerHTML = "<i>N</i>";
     let heading_2 = document.createElement('th');
-        if (language == "en"){
+    if (language == "en"){
             heading_2.innerHTML = "range";
         } else if (language == "jp"){
             heading_2.innerHTML = "範囲";
-        }
+    }
     let heading_3 = document.createElement('th');
     heading_3.innerHTML = "<i>M</i>";
     let heading_4 = document.createElement('th');
@@ -1106,11 +1285,11 @@ function runDescriptives(k, thisData){
     heading_5.className = "hiddenDES";
     heading_5.style.display = "none";
     let heading_6 = document.createElement('th');
-        if (language == "en"){
+    if (language == "en"){
             heading_6.innerHTML = "Skewness";
         } else if (language == "jp"){
             heading_6.innerHTML = "歪度";
-        }
+    }
     heading_6.className = "hiddenDES";
     heading_6.style.display = "none";
     let heading_7 = document.createElement('th');
@@ -1118,45 +1297,61 @@ function runDescriptives(k, thisData){
             heading_7.innerHTML = "Kurtosis";
         } else if (language == "jp"){
             heading_7.innerHTML = "尖度";
-        }
+    }
     heading_7.className = "hiddenDES";
     heading_7.style.display = "none";
+    let heading_8 = document.createElement('th');
+    if (language == "en"){
+            heading_8.innerHTML = "Normality (<i>p</i>)";
+        } else if (language == "jp"){
+            heading_8.innerHTML = "正規性 (<i>p</i>)";
+    }
+    heading_8.className = "hiddenDES";
+    heading_8.style.display = "none";
 
     //Append headers
     row_1.appendChild(heading_1);
+    row_1.appendChild(heading_1_5);
     row_1.appendChild(heading_2);
     row_1.appendChild(heading_3);
     row_1.appendChild(heading_4);
     row_1.appendChild(heading_5);
     row_1.appendChild(heading_6);
     row_1.appendChild(heading_7);
+    row_1.appendChild(heading_8);
     thead.appendChild(row_1);
 
     //Fill out the table
     for (let i=0; i<k; i++){
         let row = document.createElement('tr');
-        for (let j=0; j<7; j++){
+        for (let j=0; j<9; j++){
             let item = document.createElement('td');
             if (j==0){
                 item.innerHTML = allTheNames[i];
                 item.style.textAlign = "left";
             } else if (j==1) {
-                item.innerHTML = dicArr[i].mini + " ~ " + dicArr[i].maxi;
+                item.innerHTML = thisData[i].n;
             } else if (j==2) {
-                item.innerHTML =  dicArr[i].m;
+                item.innerHTML = thisData[i].mini + " ~ " + thisData[i].maxi;
             } else if (j==3) {
-                item.innerHTML =  dicArr[i].sd;
+                item.innerHTML =  thisData[i].m;
             } else if (j==4) {
-                item.innerHTML = dicArr[i].CIlow + " ~ " + dicArr[i].CIup;
+                item.innerHTML =  thisData[i].sd;
+            } else if (j==5) {
+                item.innerHTML = thisData[i].CIlow + " ~ " + thisData[i].CIup;
                 item.className = "hiddenDES";
                 item.style.display = "none";
-            } else if (j==5) {
-                item.innerHTML = dicArr[i].skew;
+            } else if (j==6) {
+                item.innerHTML = thisData[i].skew;
                 item.className = "hiddenDES";
                 item.style.display = "none";
             }
-            else if (j==6) {
-                item.innerHTML = dicArr[i].kurt;
+            else if (j==7) {
+                item.innerHTML = thisData[i].kurt;
+                item.className = "hiddenDES";
+                item.style.display = "none";
+            } else if (j==8) {
+                item.innerHTML = thisData[i].norm.toFixed(2) + " ("+thisData[i].normP.toFixed(2) +")";
                 item.className = "hiddenDES";
                 item.style.display = "none";
             }
@@ -1164,6 +1359,14 @@ function runDescriptives(k, thisData){
         }
         tbody.appendChild(row);
     }
+    let note = document.createElement('p');
+    if (language == "en"){
+            note.innerHTML = "*Shapiro-Wilk test of normality used for <i>N</i> < 50, Kolmogorov-Smirnov test used for <i>N</i> ≥ 50.";
+        } else if (language == "jp"){
+            note.innerHTML = "<i>N</i> < 50 の場合、シャピロ－ウィルク検定を使用して、<i>N</i> ≥ 50 の場合、コルモゴロフ・スミルノフ検定を使用して、正規性を確認している。";
+    }
+    note.style.textAlign = "right";
+    document.getElementById('descriptives').appendChild(note);
 }
 
 function showHideDesc(){
@@ -1221,143 +1424,6 @@ function dlCsvFunc(){
         helper.parentNode.removeChild(helper);
     } else {
         alert("There are no results! 表は実在しない")
-    }
-}
-
-function specialDescriptivesForPP(thisData){
-    var language = document.getElementById('lang_s').value;
-    let dicArr = performDescriptives(thisData);
-    //Prep buttons
-    let buttonHolder = document.createElement('div');
-    document.getElementById('descriptives').appendChild(buttonHolder);
-    buttonHolder.className = "desBTNholder";
-    buttonHolder.id = "desBTNholder";
-    let button1 = document.createElement('button');
-    let button2 = document.createElement('button');
-    let questoiner = document.createElement('button');
-    document.getElementById('desBTNholder').appendChild(questoiner);
-    document.getElementById('desBTNholder').appendChild(button1);
-    document.getElementById('desBTNholder').appendChild(button2);
-    questoiner.className = "w3-button w3-medium w3-circle w3-black";
-    questoiner.setAttribute("onclick", "getHelp('descriptives')");
-    questoiner.setAttribute('style', 'display:inline');
-    questoiner.innerHTML = "?";
-    button1.className = "desBTN";
-    button2.className = "desBTN";
-    button1.id="desBTN_show";
-    button2.id="desBTN_csv";
-    if (language == "en"){
-        button1.innerHTML = "Show More Stats";
-    } else if (language == "jp"){
-        button1.innerHTML = "詳細統計表示";
-    }
-    if (language == "en"){
-        button2.innerHTML = "Download Table";
-    } else if (language == "jp"){
-        button2.innerHTML = "表をダウンロード";
-    }
-    button1.addEventListener('click', showHideDesc);
-    button2.addEventListener('click', dlCsvFunc);
-
-    //Prep descriptives table
-    let table = document.createElement('table');
-    let thead = document.createElement('thead');
-    let tbody = document.createElement('tbody');
-    table.appendChild(thead);
-    table.appendChild(tbody);
-    document.getElementById('descriptives').appendChild(table);
-    table.className = "descriptives_table";
-    table.id = "descriptives_table";
-
-    //Prep Headers
-    let row_1 = document.createElement('tr');
-    let heading_1 = document.createElement('th');
-        if (language == "en"){
-            heading_1.innerHTML = "Group";
-        } else if (language == "jp"){
-            heading_1.innerHTML = "組";
-        }
-    
-    let heading_2 = document.createElement('th');
-        if (language == "en"){
-            heading_2.innerHTML = "range";
-        } else if (language == "jp"){
-            heading_2.innerHTML = "範囲";
-        }
-    let heading_3 = document.createElement('th');
-    heading_3.innerHTML = "<i>M</i>";
-    let heading_4 = document.createElement('th');
-    heading_4.innerHTML = "<i>SD</i>";
-    let heading_5 = document.createElement('th');
-    heading_5.innerHTML = "95% C.I.";
-    heading_5.className = "hiddenDES";
-    heading_5.style.display = "none";
-    let heading_6 = document.createElement('th');
-        if (language == "en"){
-            heading_6.innerHTML = "Skewness";
-        } else if (language == "jp"){
-            heading_6.innerHTML = "歪度";
-        }
-    heading_6.className = "hiddenDES";
-    heading_6.style.display = "none";
-    let heading_7 = document.createElement('th');
-    if (language == "en"){
-            heading_7.innerHTML = "Kurtosis";
-        } else if (language == "jp"){
-            heading_7.innerHTML = "尖度";
-        }
-    heading_7.className = "hiddenDES";
-    heading_7.style.display = "none";
-
-    //Append headers
-    row_1.appendChild(heading_1);
-    row_1.appendChild(heading_2);
-    row_1.appendChild(heading_3);
-    row_1.appendChild(heading_4);
-    row_1.appendChild(heading_5);
-    row_1.appendChild(heading_6);
-    row_1.appendChild(heading_7);
-    thead.appendChild(row_1);
-
-    //Fill out the table
-    for (let i=0; i<4; i++){
-        let row = document.createElement('tr');
-        for (let j=0; j<7; j++){
-            let item = document.createElement('td');
-            if (j==0){
-                if (i==0){
-                    item.innerHTML = "Group 1 (pre-test)";
-                } else if (i==1){
-                    item.innerHTML = "Group 1 (post-test)";
-                } else if (i==2){
-                    item.innerHTML = "Group 2 (pre-test)";
-                } else if (i==3){
-                    item.innerHTML = "Group 2 (post-test)";
-                }
-                item.style.textAlign = "left";
-            } else if (j==1) {
-                item.innerHTML = dicArr[i].mini + " ~ " + dicArr[i].maxi;
-            } else if (j==2) {
-                item.innerHTML =  dicArr[i].m;
-            } else if (j==3) {
-                item.innerHTML =  dicArr[i].sd;
-            } else if (j==4) {
-                item.innerHTML = dicArr[i].CIlow + " ~ " + dicArr[i].CIup;
-                item.className = "hiddenDES";
-                item.style.display = "none";
-            } else if (j==5) {
-                item.innerHTML = dicArr[i].skew;
-                item.className = "hiddenDES";
-                item.style.display = "none";
-            }
-            else if (j==6) {
-                item.innerHTML = dicArr[i].kurt;
-                item.className = "hiddenDES";
-                item.style.display = "none";
-            }
-            row.appendChild(item);
-        }
-        tbody.appendChild(row);
     }
 }
 
@@ -1653,4 +1719,26 @@ function levenesTest(dataSets) {
     let pValue = getPfromF (k, wStatistic, df1, df2);
 
     return { wStatistic, pValue };
+}
+
+
+//This function checks normality and data sizes; run descriptives first
+function checkData(theData){
+    let nValues = [];
+    let normalities = [];
+    for (let i=0; i<theData.length; i++){
+        nValues.push(theData[i].n);
+        if (theData[i].normP < 0.05){
+            normalities.push(false);
+        } else {
+            normalities.push(true);
+        }
+    }
+    let pairsCheck = nValues.every(value => value === nValues[0]);
+    let normalCheck = true;
+    if (normalities.includes(false)){
+        normalCheck = false;
+    }
+    return {'pairs':pairsCheck, 'normal':normalCheck}
+
 }

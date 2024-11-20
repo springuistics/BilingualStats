@@ -138,7 +138,7 @@ const messages = ['データをどう扱いたいかをまず考えてくださ�
 '複数のデータ組があり、それらの多くの変数と単一の主要変数との間にどれだけの相関（または関連）があるかを確認したい場合は、このページを使用してください。このページでは、重回帰分析を使用して主要変数を予測します。変数が主要変数をどれだけ予測したかを確認するための<i>R<sup>2</sup></i>値と、主要変数と複数の他の変数との間に統計的に有意な相関があるかどうかを確認するための<i>p</i>値を提供します。また、<a href="https://doi.org/10.1111/lang.12518">水本・篤(2023)</a>のドミナンス分析による相対的な重みを示す方法を使用して、他の変数が主要変数をどれだけ強く予測するかを示します。この検定は、同じ集団サンプル（つまり、同じ参加者）からの複数の測定値を必要としますが、同じ方法で測定される必要は<span style="color:red"><b>ありません</b></span>。<br><br><span style="color:red"><b>実例</b></span><br><ul><li>複数のアンケート質問と学習成果との関係を確認する</li><li>学習成果（例えば、期末テスト点数）に対する複数の測定値（例えば、小テストの点数、宿題の点数など）の関係を確認する</li><li>複数の方法や活動が単一の学習成果に与える影響を確認する</li></ul>'
 ];
 
-const videos = ['mWYdiWBOLFs','yAEODGZthvA','IZQZRKaLurY','8LNnZOrEJRI','3Zy5We2ZNwk','qNp6tEc3kAs','oe1VJlN7jxQ','BnDWXxXni0w','YRauq4m569U','ciCupoz5NcM'];
+const videos = ['yPRugR6AKx4','DkCh0CtlAgE','DyGrXeRuC1Y','goJM9wesAhU','6oRPbHrk1pY','aYV3bz6-iO0','uVYvqEwBQIs','SUvXzDtGc98','-M-s7VhH43U','_WgS3-GMaJg'];
 const indexes = ['testHelp','countsHelp','2dataCompHelp','3dataCompHelp','PrePostHelp','reliabilityHelp','otherTestsHelp', 'corrHelp', 'corrMatrixHelp', 'multiRegHelp'];
 
 function getHelp(section){
@@ -154,6 +154,16 @@ function getHelp(section){
 }
 
 function closeModal(){
+    let containerElement = document.getElementById('helpModalContent');
+    let iframe_tag = containerElement.querySelector( 'iframe');
+    let video_tag = containerElement.querySelector( 'video' );
+    if ( iframe_tag) {
+        let iframeSrc = iframe_tag.src;
+        iframe_tag.src = iframeSrc; 
+    }
+    if ( video_tag) {
+        video_tag.pause();
+    }
     document.getElementById('helpModal').style.display="none";
 }
 </script>

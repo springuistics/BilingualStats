@@ -6,8 +6,8 @@
     <title>２組の事前・事後比較</title>
 </head>
 <body>
-    <script src="../scripts/repeatTests.js"></script>
-    <script src="../scripts/pp_testing.js"></script>
+    <script src="../scripts/repeatTests_v1.js"></script>
+    <script src="../scripts/pp_testing_v1.js"></script>
     <script src="../scripts/modalHelp_js.js"></script>
     <div id="langauge_bar">
         <div style="text-align:left; margin-top: 2px; margin-left: 10px; position:absolute"><a href="../index_jp.html"><img class="picture" src="../css/back.png" alt="index"></a></div>
@@ -35,13 +35,13 @@
             <tr>
         <td><div id="data1">
             <h3>実験群<br> 事前データ：</h3>
-            <br>
+            <br><input type="text" style="display:none" id="group_name_0" value="実験群（事前データ）">
             <textarea id="data_set_0" class="txtarea" style="text-align: right" rows="30" columns="40" text-overflow="visible" placeholder="データをここに貼付：&#10;1&#10;2&#10;3&#10;など"></textarea>
             <br>
         </div></td>
         <td><div id="data2">
             <h3>実験群<br> 事後データ：</h3>
-            <br>
+            <br><input type="text" style="display:none" id="group_name_1" value="実験群（事後データ）">
             <textarea id="data_set_1" class="txtarea" style="text-align: right" rows="30" columns="40" text-overflow="visible" placeholder="データをここに貼付：&#10;1&#10;2&#10;3&#10;など"></textarea>
             <br>
         </div></td>
@@ -49,13 +49,13 @@
             <tr>
             <td><div id="data3">
                 <h3>対照群<br> 事前データ：</h3>
-                <br>
+                <br><input type="text" style="display:none" id="group_name_2" value="対照群（事前データ）">
                 <textarea id="data_set_2" class="txtarea" style="text-align: right" rows="30" columns="40" text-overflow="visible" placeholder="データをここに貼付：&#10;1&#10;2&#10;3&#10;など"></textarea>
                 <br>
             </div></td>
             <td><div id="data4">
                 <h3>対照群<br> 事後データ：</h3>
-                <br>
+                <br><input type="text" style="display:none" id="group_name_3" value="対照群（事後データ）">
                 <textarea id="data_set_3" class="txtarea" style="text-align: right" rows="30" columns="40" text-overflow="visible" placeholder="データをここに貼付：&#10;1&#10;2&#10;3&#10;など"></textarea>
                 <br>
             </div></td>

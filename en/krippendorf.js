@@ -1,7 +1,7 @@
 function L_Change() {
     var language = document.getElementById('lang_s').value;
     if (language = "jp") {
-        location.href = "../jp/chronbach.html"
+        location.href = "../jp/krippendorf.html"
     }
 }
 var details_of_test = "Krippendorf's Alpha was used to test for inter-rater reliability. ";

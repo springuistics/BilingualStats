@@ -18,7 +18,7 @@ function Calculate() {
     var g1pre = []; var g1post = []; var g2pre = []; var g2post = []; 
     var allpre = []; var allpost = []; var allg1 = []; var allg2 = []; var all = [];
     var theBigData = gatherDatafromForm(4);
-    var theDesriptives = runDescriptives(theBigData);
+    var allDescriptives = runDescriptives(theBigData);
     var checks = checkData(allDescriptives);
     printDescriptives(allDescriptives);
     let leveneCheck = levenesTest(theBigData);
@@ -94,20 +94,18 @@ function Calculate() {
                 if (checks.normal == false && leveneCheck.pValue<.05){
                     details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed one of the tests of normalcy*, and a Levene's test revealed the groups' variances were too different from each other (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"). Therefore, a Scheirer-Ray-Hare Test was used was used to check for a significant interaction between treatment type (i.e., the difference between the experiment and control/comparison group) and treatment (i.e., the difference before and after the treatment).";
                 } else if (checks.normal == false){
-                    details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed one of the tests of normalcy*. Therefore the data was treated as ordinal. Since the data was paired, a Wilcoxon Signed-Rank Test was used.";
+                    details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed one of the tests of normalcy*. Therefore the data was treated as ordinal and a Scheirer-Ray-Hare Test was used was used to check for a significant interaction between treatment type (i.e., the difference between the experiment and control/comparison group) and treatment (i.e., the difference before and after the treatment).";
                 } else {
-                    details_of_test = "Despite the continuous and normal* nature of your data, a Levene's test revealed the groups' variances were too different from each other (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"). Therefore the data was treated as ordinal. Since the data was paired, a Wilcoxon Signed-Rank Test was used.";
+                    details_of_test = "Despite the continuous and normal* nature of your data, a Levene's test revealed the groups' variances were too different from each other (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"). Therefore the data was treated as ordinal and a Scheirer-Ray-Hare Test was used was used to check for a significant interaction between treatment type (i.e., the difference between the experiment and control/comparison group) and treatment (i.e., the difference before and after the treatment).";
                 }  
-                details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed the Shapiro-Wilk Test of normalcy, and therefore the data was treated as ordinal. Since the data was paired, a Scheirer-Ray-Hare Test was used was used to check for a significant interaction between treatment type (i.e., the difference between the experiment and control/comparison group) and treatment (i.e., the difference before and after the treatment).";
             } else if (language == "jp"){
                 if (checks.normal == false && leveneCheck.pValue<.05){
-                    details_of_test = "本データは連続データですが、正規性の検定の結果*によると、いずれか（あるいは両方）のデータセットがノンパラメトリックとみなされました。また、ルビーン検定の結果によると、データセット間の分散の均質性が不十分でした（<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"）。対応のあるデータであるため、ウィルコクソンの符号順位検定で計算しました。";
+                    details_of_test = "本データは連続データですが、正規性の検定の結果*によると、いずれか（あるいは両方）のデータセットがノンパラメトリックとみなされました。また、ルビーン検定の結果によると、データセット間の分散の均質性が不十分でした（<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"）。従って、SRHテスト（Scheirer-Ray=hare検定）を利用して、グループ（i.e., 実験群と対照群の区別）とトリートメント（実験前と実験後）の間に交互作用があるかどうかを検証した。";
                 } else if (checks.normal == false){
-                    details_of_test = "本データは連続データですが、正規性の検定の結果*によると、いずれか（あるいは両方）のデータセットがノンパラメトリックとみなされました。対応のあるデータであるため、ウィルコクソンの符号順位検定で計算しました。";
+                    details_of_test = "本データは連続データですが、正規性の検定の結果*によると、いずれか（あるいは両方）のデータセットがノンパラメトリックとみなされました。従って、SRHテスト（Scheirer-Ray=hare検定）を利用して、グループ（i.e., 実験群と対照群の区別）とトリートメント（実験前と実験後）の間に交互作用があるかどうかを検証した。";
                 } else {
-                    details_of_test = "本データは連続データであり、正規性が確認*できましたが、ルビーン検定の結果によると、データセット間の分散の均質性が不十分でした（<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"）。対応のあるデータであるため、ウィルコクソンの符号順位検定で計算しました。";
+                    details_of_test = "本データは連続データであり、正規性が確認*できましたが、ルビーン検定の結果によると、データセット間の分散の均質性が不十分でした（<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"）。従って、SRHテスト（Scheirer-Ray=hare検定）を利用して、グループ（i.e., 実験群と対照群の区別）とトリートメント（実験前と実験後）の間に交互作用があるかどうかを検証した。";
                 }    
-                details_of_test = "本データは連続データですが、シャピロ－ウィルク検定の結果によると、いずれか（あるいは両方）のデータセットがノンパラメトリックとみなされました。従って、SRHテスト（Scheirer-Ray=hare検定）を利用して、グループ（i.e., 実験群と対照群の区別）とトリートメント（実験前と実験後）の間に交互作用があるかどうかを検証した。";
             }
             var superdata = [];
             g1pre.forEach(function(number){superdata.push({"Group":1, "No": number, "Rank": number});});
@@ -179,9 +177,9 @@ function Calculate() {
             isNormal = true;
             language = document.getElementById('lang_s').value;
             if (language == "en") {
-                details_of_test = "A two-way mixed ANOVA test was used to check for a significant interaction between treatment type (i.e., the difference between the experiment and control/comparison group) and treatment (i.e., the difference before and after the treatment).";
+                details_of_test = "Due to the continuous and normal nature of the data, as checked by an appropriate test of normality*, the homogenity of variance, as checked by a Leven's test (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"), a two-way mixed ANOVA test was used to check for a significant interaction between treatment type (i.e., the difference between the experiment and control/comparison group) and treatment (i.e., the difference before and after the treatment).";
             } else if (language == "jp"){
-                details_of_test = "二元配置分散分析（対応のある因子と対応のある因子）を利用して、グループ（i.e., 実験群と対照群の区別）とトリートメント（実験前と実験後）の間に交互作用があるかどうかを検証した。";
+                details_of_test = "本データは連続データで、分散の均質性がルビーン検定で確認できて（<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"）、正規性の検定*で全てのデータはパラメトリックであることが確認できました。従って、二元配置分散分析（対応のある因子と対応のある因子）を利用して、グループ（i.e., 実験群と対照群の区別）とトリートメント（実験前と実験後）の間に交互作用があるかどうかを検証した。";
             }
             
                 g1pre.forEach(element => {

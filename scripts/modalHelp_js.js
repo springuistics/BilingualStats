@@ -5,7 +5,7 @@ const messages = ['<span style="color:red"><b>対応のあるデータ</b></span
     'データは何組があるかを示しています。例えば、グループの数、何回に繰り返してデータを取ったのか、計測や変数（特に関連性のページを使っている場合）はいくつがあるのか。<br><h5 style="color:red">注意！</h5>「1つのデータと複数の説明変数の関係性の計算」のページを使っている場合<span style="color:red"><b>のみ</b></span>は、全部で何組があるかを聞いているではなく、目的変数（従属変数・基準変数）を除いて、説明変数<span style="color:red"><b>のみ</b></span>の数を入力してください。'
     ];
     
-const videos = ['pjrY66lSm4k','AYJ11OcDqQM','MfjY0lnDk78','yIuWcxilSZs','Y7OP-SmVrK0'];
+const videos = ['gUG7DM847uA','Quh0o1pNIq4','1OTaLslTHmY','EO9HC5uK280','B6HCeJRNj_s'];
 const indexes = ['paired','continuous','csv','descriptives','howmany'];
     
 function getHelp(section){
@@ -21,5 +21,15 @@ function getHelp(section){
 }
     
 function closeModal(){
+    let containerElement = document.getElementById('helpModalContent');
+    let iframe_tag = containerElement.querySelector( 'iframe');
+    let video_tag = containerElement.querySelector( 'video' );
+    if ( iframe_tag) {
+        let iframeSrc = iframe_tag.src;
+        iframe_tag.src = iframeSrc; 
+    }
+    if ( video_tag) {
+        video_tag.pause();
+    }
     document.getElementById('helpModal').style.display="none";
 }

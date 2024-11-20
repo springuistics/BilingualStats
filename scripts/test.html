@@ -1,0 +1,11 @@
+<p id="restults"></p>
+
+<script src="repeatTests_v1.js">
+
+</script>
+
+<script>
+    const data = [1.20,1.60,1.70,1.80,1.90,2.00,2.20,2.60,3.00,3.50,4,4,3.5,3.5,4.00,4.80,5.60,6.60,7.60,1.20];
+    let result = shapiroWilk(data);
+    document.getElementById('restults').innerHTML = "Shapiro Wilk: "+result+", p="+swPvalue(result, data.length);
+</script>

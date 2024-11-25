@@ -1,0 +1,558 @@
+<p id="results"></p>
+
+
+<script>
+
+const dataframe = [
+    [16,12,23,8,3,5],//y for t1
+    [22,18,24,20,12,13],//y for t2
+    [23,24,26,28,13,11],//y for t3
+    [25,29,27,30,17,15],//y for t4
+]
+
+//[500,450,480,700,300,355,200,150,380,450],//x measurements for later
+
+calculateVarious();
+
+
+function calculateVarious(){
+    let suby = [];
+    let subx = [];
+    let subT = [];
+
+    for (let k=0; k<dataframe.length; k++){
+        for (let j=0; j<dataframe[0].length; j++){
+            let subSum = 0;
+            for (let i=0; i<dataframe.length; i++){
+                subSum+= dataframe[i][j];
+            }
+            subx.push(subSum);
+        }
+    }
+        
+    for (let k=0; k<dataframe.length; k++){
+        for (let i=0; i<dataframe[k].length; i++){
+            suby.push(dataframe[k][i]);
+        }
+    }
+    
+    for (let k=0; k<dataframe.length-1; k++){
+        let row=[];
+        for (let j=0; j<dataframe.length; j++){
+            for (let i=0; i<dataframe[k].length; i++){
+                if (j==k){
+                    row.push(1)
+                } else {
+                    row.push(0)
+                }
+            }
+        }
+        subT.push(row)
+    }
+
+
+    let fullModel = [];
+    let reducedModelyx = [];
+    let reducedModelyt = [];
+    fullModel.push(suby);
+    reducedModelyt.push(suby);
+    reducedModelyx.push(suby);
+    for (let i=0; i<subT.length; i++){
+        fullModel.push(subT[i]);
+        reducedModelyt.push(subT[i]);
+    }
+    fullModel.push(subx);
+    reducedModelyx.push(subx);
+    
+    let fm = doRegression(fullModel);
+    let rmyx = doRegression(reducedModelyx);
+    let rmyt = doRegression(reducedModelyt);
+
+    let errorMS = (fm.totalSS-fm.RegressionSS)/(fm.totalN-rmyt.df-fm.df-rmyx.df);
+    let SubjectMS = (rmyx.RegressionSS/(fm.df+rmyx.df));
+    let GroupsMS = (rmyt.RegressionSS / rmyt.df);
+
+    document.getElementById('results').innerHTML = "full:<br> df = "+fm.df+", SSreg= "+fm.RegressionSS+", MSreg= "+fm.RegressionMS+"F= "+fm.F+"<br>Residuals= "+fm.residuals+", SSres= "+fm.ResidualSS+", MSres= "+fm.ResidualsMS+"<br>N = "+fm.totalN+", Total = "+fm.totalSS+"<br><br><br>";
+    document.getElementById('results').innerHTML += "reduced yx:<br> df = "+rmyx.df+", SSreg= "+rmyx.RegressionSS+", MSreg= "+rmyx.RegressionMS+"F= "+rmyx.F+"<br>Residuals= "+rmyx.residuals+", SSres= "+rmyx.ResidualSS+", MSres= "+rmyx.ResidualsMS+"<br>N = "+rmyx.totalN+", Total = "+rmyx.totalSS+"<br><br><br>";
+    document.getElementById('results').innerHTML += "reduced yt:<br> df = "+rmyt.df+", SSreg= "+rmyt.RegressionSS+", MSreg= "+rmyt.RegressionMS+"F= "+rmyt.F+"<br>Residuals= "+rmyt.residuals+", SSres= "+rmyt.ResidualSS+", MSres= "+rmyt.ResidualsMS+"<br>N = "+rmyt.totalN+", Total = "+rmyt.totalSS+"<br><br><br>";
+    document.getElementById('results').innerHTML += "<br><br><br><br>ANCOVA:<br><br>";
+    //document.getElementById('results').innerHTML += "Covariate: df = "+(fm.df-rmyt.df)+", SS= "+(fm.RegressionSS-rmyt.RegressionSS)+", MS= "+((fm.RegressionSS-rmyt.RegressionSS)/(fm.df-rmyt.df))+", F= "+(((fm.RegressionSS-rmyt.RegressionSS)/(fm.df-rmyt.df))/fm.ResidualsMS);
+    document.getElementById('results').innerHTML += "<br>Subjects: df = "+(fm.df+rmyx.df)+", SS= "+(rmyx.RegressionSS)+", MS= "+SubjectMS+", F= "+SubjectMS/errorMS;
+    document.getElementById('results').innerHTML += "<br>Groups: df = "+rmyt.df+", SS= "+rmyt.RegressionSS+", MS= "+GroupsMS+", F= "+GroupsMS/errorMS;
+    document.getElementById('results').innerHTML += "<br>Error: df = "+(fm.totalN-rmyt.df-fm.df-rmyx.df)+", SS= "+(fm.totalSS-fm.RegressionSS)+", MS= "+errorMS;
+    //document.getElementById('results').innerHTML += "<br><br>Partial EtaSqured (treatement effect size) = "+((fm.RegressionSS-rmyx.RegressionSS)/(fm.ResidualSS+(fm.RegressionSS-rmyx.RegressionSS)));
+    //document.getElementById('results').innerHTML += "<br><br>Partial EtaSqured (covariate effect size) = "+((fm.RegressionSS-rmyt.RegressionSS)/(fm.ResidualSS+(fm.RegressionSS-rmyt.RegressionSS)));
+}
+
+
+function calculateSST(){
+    let newData = [];
+    for (let i=0; i<dataframe[1].length; i++){
+        newData.push(dataframe[1][i]);
+    }
+    for (let i=0; i<dataframe[3].length; i++){
+        newData.push(dataframe[3][i]);
+    }
+    for (let i=0; i<dataframe[5].length; i++){
+        newData.push(dataframe[5][i]);
+    }
+    for (let i=0; i<dataframe[7].length; i++){
+        newData.push(dataframe[7][i]);
+    }
+    let grandMean = average(newData);
+    let SSTofX = sumSquareOuterMean(grandMean, newData);
+    return SSTofX;
+}
+
+function doRegression(data){
+        //
+    let N0 = data[0].length;
+    let averages = [];
+    let eachX1 = [];
+    let eachXy = [];
+    let eachXx = [];
+    let sumSqs = [];
+    let sums = [];
+    
+    for (let i=0; i<data.length; i++){
+        averages.push(average(data[i]));
+        sums.push(sum(data[i]))
+        sumSqs.push(sumSquare(data[i]))
+    }
+    for (let i=1; i<data.length; i++){
+        eachX1.push(sumSquare(data[i]) - ((sum(data[i])**2)/N0) )
+    }
+    for (let i=1; i<data.length; i++){
+        eachXy.push(TwoDataSum(data[0], data[i]) - ((sum(data[0])*sum(data[i])) / N0))
+    }
+    for (let i=1; i<data.length; i++){
+        for (let j=(i+1); j<data.length; j++){
+            eachXx.push(TwoDataSum(data[i], data[j]) - ((sum(data[i])*sum(data[j])) / N0))
+        }
+    }
+    let MatrixFuel = [];
+    for (let i=0; i<data.length; i++){
+        if (i==0){
+
+        } else {
+            for (let j=0; j<data.length; j++){
+                if (i==0){
+                    MatrixFuel.push(sum(data[i]))
+                } else {
+    
+                }
+            }
+        }
+        
+    }
+    let determinants = [];
+
+    let bigA = [];
+    for (let i=0; i<data.length; i++){
+        let thisrow = [];
+        if (i==0){
+            for (let j=0; j<data.length; j++){
+                if (j==0){
+                    thisrow.push(N0)
+                } else {
+                    thisrow.push(sums[j])
+                }
+            }
+        } else {
+            for (let j=0; j<data.length; j++){
+                if (j==0){
+                    thisrow.push(sums[i])
+                } else if (j==i) {
+                    thisrow.push(sumSqs[i])
+                } else {
+                    thisrow.push(TwoDataSum(data[i],data[j]))
+                }
+            }
+        }
+        bigA.push(thisrow)
+    }
+    let denom = solveMatrix(bigA);
+    
+    for (let i=0; i<data.length; i++){
+        let thisMat = [];
+        if (i==0){
+            for (let k=0; k<data.length; k++){
+                let thisRow = [];
+                for (let j=0; j<data.length; j++){
+                    if (k==0){
+                        thisRow.push(sums[j])
+                    } else {
+                        thisRow.push(TwoDataSum(data[j], data[k]))
+                    }
+                }
+                thisMat.push(thisRow)
+            }
+            determinants.push(solveMatrix(thisMat))
+        } else {
+            for (let k=0; k<data.length; k++){
+                let thisRow = [];
+                if (k==0){
+                    for (let j=0; j<data.length; j++){
+                        if (j==0){
+                            thisRow.push(N0)
+                        } else {
+                            if (j==i){
+                                thisRow.push(sums[0])
+                            } else {
+                                thisRow.push(sums[j])
+                            }
+                        }
+                    }
+                } else {
+                    for (let j=0; j<data.length; j++){
+                        if (j==0){
+                            thisRow.push(sums[k])
+                        } else {
+                            //This should only fire when k = i
+                            if (j==i){
+                                thisRow.push(TwoDataSum(data[k], data[0]))    
+                            } else {
+                                thisRow.push(TwoDataSum(data[j], data[k]))
+                            }
+                        }
+                    }
+                }
+                thisMat.push(thisRow)
+            }
+            determinants.push(solveMatrix(thisMat))
+        }
+        
+
+    }
+    let Bs = [];
+    for (let i=0; i<determinants.length; i++){
+        Bs.push(determinants[i]/denom)
+    }
+    let ybar = [];
+    let residuals = [];
+    let yvars = [];
+    let ytotals = [];
+
+    for (let i=0; i<N0; i++) {
+        let temp = 0;
+        for (let j=0; j<Bs.length; j++){
+            if (j==0){
+                temp += Bs[0]
+            } else {
+                temp += Bs[j] * data[j][i]
+            }
+        }
+        ybar.push(temp);
+    }
+    for (let i=0; i<N0; i++) {
+        let temp = data[0][i] - ybar[i];
+        residuals.push(temp);
+    }
+    for (let i=0; i<N0; i++) {
+        let temp = ybar[i] - averages[0];
+        yvars.push(temp);
+    }
+    for (let i=0; i<N0; i++) {
+        let temp = data[0][i] - averages[0];
+        ytotals.push(temp);
+    }
+    let SSM = sumSquare(yvars);
+    let SSE = sumSquare(residuals);
+    let SST = sumSquare(ytotals);
+    let MSM = SSM / (data.length-1);
+    let MSE = SSE / (N0-data.length);
+    let F = MSM / MSE;
+    let R2 =  SSM / SST;
+    //let p = getPfromF(data.length, F, (data.length-1), (N0-data.length));
+
+    return {"F":F,"RegressionSS":SSM,"RegressionMS":MSM,"ResidualSS":SSE,"ResidualsMS":MSE,"df":data.length-1,"residuals":N0-data.length,"totalSS":SST, "totalN": N0-1}
+}
+
+function sumSquareOuterMean(mean,  data){
+    let temp = [];
+    for (let i = 0; i < data.length; i++) {
+        let temp1 = (data[i] - mean) **2;
+        temp.push(temp1);
+    }
+    let sum = 0;
+    for (var number of temp) {sum += number;}
+    return sum;
+}
+
+function sumSquare(data) {
+    let sum = 0;
+    for (let i=0; i<data.length; i++){
+        sum += (data[i] **2)
+    }
+    return sum;
+}
+
+function grandMean(dataArray){
+    let allNumbers = [];
+    for (let i=0; i<dataArray.length; i++){
+        for (let j=0; j<dataArray[i].length; j++){
+            allNumbers.push(dataArray[i][j]);
+        }
+    }
+    return (average(allNumbers))
+}
+
+function sum(data) {
+    let sum = 0;
+    for (let i=0; i<data.length; i++){
+        sum += data[i]
+    }
+    return sum;
+}
+
+function average (data){
+    return (safeDivision(sum(data),data.length));
+}
+
+function safeDivision(x,y){
+    if (y==0){
+        return 0;
+    } else {
+        return (x/y);
+    }
+}
+
+function variance (data) {
+    let M = average(data);
+    let ss =0;
+    for (let i=0; i<data.length; i++) {
+        ss += ((data[i] - M) **2)
+    }
+    return (ss / (data.length-1)); 
+}
+
+function stdev (data) {
+    return (Math.sqrt(variance(data)));
+}
+
+function sterror(d1, d2){
+    let temp_d = [];
+    for (let i=0; i<d1.length; i++) {
+        let temp = d2[i] - d1[i];
+        temp_d.push(temp);
+    }
+    let sum = 0;
+    for (var number of temp_d) {sum += number;}
+    let avg = sum / temp_d.length;
+    let sum2 = 0;
+    for (var number of temp_d) {sum2 += ((number - avg)**2)}
+    let sd = Math.sqrt((sum2/(temp_d.length-1)));
+    let se = sd / (Math.sqrt(temp_d.length));
+    return se;
+}
+
+
+function twoDataXtimesY(data1, data2) {
+    let sum = 0;
+    for (let i=0; i<data1.length; i++){
+        sum += (data1[i] * data2[i])
+    }
+    return sum;
+}
+
+function sumSquare(data) {
+    let sum = 0;
+    for (let i=0; i<data.length; i++){
+        sum += (data[i] **2)
+    }
+    return sum;
+}
+
+function TwoDataSum(data1, data2) {
+    let sum = 0;
+    for (let i=0; i<data1.length; i++){
+        sum += (data1[i] * data2[i])
+    }
+    return sum;
+}
+
+//A bunch of functions to handle matrix math - each takes an ARRAY of ARRAYs (constituting the x / y in the matrix)
+function det2(mini){
+    let a = mini[0][0]; 
+    let b = mini[0][1]; 
+    let c = mini[1][0]; 
+    let d = mini[1][1];
+    return ((a*d)-(b*c))
+}
+
+function det3(mini){
+    let det = 0;
+    for (let i=0; i<mini.length; i++){
+        if (i%2 == 0){
+            det += mini[0][i]*det2(findSub(i, mini))
+        } else if (i%2 ==1){
+            det -= mini[0][i]*det2(findSub(i, mini))
+        }
+    }
+    return det;
+}
+
+function det4(mini){
+    let det = 0;
+    for (let i=0; i<mini.length; i++){
+        if (i%2 == 0){
+            det += mini[0][i]*det3(findSub(i, mini))
+        } else if (i%2 ==1){
+            det -= mini[0][i]*det3(findSub(i, mini))
+        }
+    }
+    return det;
+}
+
+function det5(mini){
+    let det = 0;
+    for (let i=0; i<mini.length; i++){
+        if (i%2 == 0){
+            det += mini[0][i]*det4(findSub(i, mini))
+        } else if (i%2 ==1){
+            det -= mini[0][i]*det4(findSub(i, mini))
+        }
+    }
+    return det;
+}
+
+function det6(mini){
+    let det = 0;
+    for (let i=0; i<mini.length; i++){
+        if (i%2 == 0){
+            det += mini[0][i]*det5(findSub(i, mini))
+        } else if (i%2 ==1){
+            det -= mini[0][i]*det5(findSub(i, mini))
+        }
+    }
+    return det;
+}
+
+function det7(mini){
+    let det = 0;
+    for (let i=0; i<mini.length; i++){
+        if (i%2 == 0){
+            det += mini[0][i]*det6(findSub(i, mini))
+        } else if (i%2 ==1){
+            det -= mini[0][i]*det6(findSub(i, mini))
+        }
+    }
+    return det;
+}
+
+function det8(mini){
+    let det = 0;
+    for (let i=0; i<mini.length; i++){
+        if (i%2 == 0){
+            det += mini[0][i]*det7(findSub(i, mini))
+        } else if (i%2 ==1){
+            det -= mini[0][i]*det7(findSub(i, mini))
+        }
+    }
+    return det;
+}
+
+function det9(mini){
+    let det = 0;
+    for (let i=0; i<mini.length; i++){
+        if (i%2 == 0){
+            det += mini[0][i]*det8(findSub(i, mini))
+        } else if (i%2 ==1){
+            det -= mini[0][i]*det8(findSub(i, mini))
+        }
+    }
+    return det;
+}
+
+function det10(mini){
+    let det = 0;
+    for (let i=0; i<mini.length; i++){
+        if (i%2 == 0){
+            det += mini[0][i]*det9(findSub(i, mini))
+        } else if (i%2 ==1){
+            det -= mini[0][i]*det9(findSub(i, mini))
+        }
+    }
+    return det;
+}
+
+function det11(mini){
+    let det = 0;
+    for (let i=0; i<mini.length; i++){
+        if (i%2 == 0){
+            det += mini[0][i]*det10(findSub(i, mini))
+        } else if (i%2 ==1){
+            det -= mini[0][i]*det10(findSub(i, mini))
+        }
+    }
+    return det;
+}
+
+function det12(mini){
+    let det = 0;
+    for (let i=0; i<mini.length; i++){
+        if (i%2 == 0){
+            det += mini[0][i]*det11(findSub(i, mini))
+        } else if (i%2 ==1){
+            det -= mini[0][i]*det11(findSub(i, mini))
+        }
+    }
+    return det;
+}
+//Main support for solveDeterminant
+function findSub(a, mini){
+    submat = [];
+    for (let k=1; k<mini.length; k++) {
+        let subSub = [];
+        for (let j=0; j<mini.length; j++) {
+            if(j!=a){
+                subSub.push(mini[k][j])
+            }
+        }
+        submat.push(subSub);
+    }
+return (submat);
+}
+
+//This is the main one to call!
+function solveMatrix(matrix){
+    let size = matrix.length;
+    switch (size) {
+        case 2:
+            return det2(matrix); 
+            break;
+        case 3:
+            return det3(matrix); 
+            break;
+        case 4:
+            return det4(matrix); 
+            break;
+        case 5:
+            return det5(matrix); 
+            break;
+        case 6:
+            return det6(matrix); 
+            break;    
+        case 7:
+            return det7(matrix); 
+            break;
+        case 8:
+            return det8(matrix); 
+            break;
+        case 9:
+            return det9(matrix); 
+            break;
+        case 10:
+            return det10(matrix); 
+            break;
+        case 11:
+            return det11(matrix); 
+            break;
+        case 12:
+            return det12(matrix); 
+            break;    
+        }
+}
+
+
+</script>

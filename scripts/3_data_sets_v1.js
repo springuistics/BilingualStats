@@ -220,7 +220,7 @@ function Calculate() {
                 }
             } else {
                 if (pair_check == "yes") {
-                    if (checkPairs(theBigData) == false){
+                    if (checks.pairs == false){
                         if (language == "en"){
                             document.getElementById("error_text").innerHTML = "Paired data sets should contain the same number of values (i.e., participants, instances, etc.). You have selected paired data, but your data sets have different numbers of values. Please check, amend as necessary and retry.";
                             document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";

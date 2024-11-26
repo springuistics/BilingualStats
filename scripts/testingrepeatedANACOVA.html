@@ -3,13 +3,19 @@
 
 <script>
 
+/*
 const dataframe = [
     [16,12,23,8,3,5],//y for t1
     [22,18,24,20,12,13],//y for t2
     [23,24,26,28,13,11],//y for t3
     [25,29,27,30,17,15],//y for t4
 ]
-
+*/
+const dataframe = [
+    [25,20,60,25,15,50,15,50,35,25],//y for t1
+    [75,45,80,65,55,30,15,35,50,35],//y for t2
+    [85,50,85,85,45,40,45,40,70,65],//y for t3
+]
 //[500,450,480,700,300,355,200,150,380,450],//x measurements for later
 
 calculateVarious();
@@ -72,16 +78,20 @@ function calculateVarious(){
     let SubjectMS = (rmyx.RegressionSS/(fm.df+rmyx.df));
     let GroupsMS = (rmyt.RegressionSS / rmyt.df);
 
+    let MSS = rmyx.RegressionSS/(dataframe[0].length - 1);
+    let MSE = fm.ResidualSS / ((dataframe[0].length - 1)*(dataframe.length -1))
+
     document.getElementById('results').innerHTML = "full:<br> df = "+fm.df+", SSreg= "+fm.RegressionSS+", MSreg= "+fm.RegressionMS+"F= "+fm.F+"<br>Residuals= "+fm.residuals+", SSres= "+fm.ResidualSS+", MSres= "+fm.ResidualsMS+"<br>N = "+fm.totalN+", Total = "+fm.totalSS+"<br><br><br>";
     document.getElementById('results').innerHTML += "reduced yx:<br> df = "+rmyx.df+", SSreg= "+rmyx.RegressionSS+", MSreg= "+rmyx.RegressionMS+"F= "+rmyx.F+"<br>Residuals= "+rmyx.residuals+", SSres= "+rmyx.ResidualSS+", MSres= "+rmyx.ResidualsMS+"<br>N = "+rmyx.totalN+", Total = "+rmyx.totalSS+"<br><br><br>";
     document.getElementById('results').innerHTML += "reduced yt:<br> df = "+rmyt.df+", SSreg= "+rmyt.RegressionSS+", MSreg= "+rmyt.RegressionMS+"F= "+rmyt.F+"<br>Residuals= "+rmyt.residuals+", SSres= "+rmyt.ResidualSS+", MSres= "+rmyt.ResidualsMS+"<br>N = "+rmyt.totalN+", Total = "+rmyt.totalSS+"<br><br><br>";
     document.getElementById('results').innerHTML += "<br><br><br><br>ANCOVA:<br><br>";
-    //document.getElementById('results').innerHTML += "Covariate: df = "+(fm.df-rmyt.df)+", SS= "+(fm.RegressionSS-rmyt.RegressionSS)+", MS= "+((fm.RegressionSS-rmyt.RegressionSS)/(fm.df-rmyt.df))+", F= "+(((fm.RegressionSS-rmyt.RegressionSS)/(fm.df-rmyt.df))/fm.ResidualsMS);
+    document.getElementById('results').innerHTML += "<br>Full ANOVA: df = "+(fm.df+rmyx.df)+", MS= "+MSS+", ME= "+MSE+", F= "+GroupsMS/MSE;
     document.getElementById('results').innerHTML += "<br>Subjects: df = "+(fm.df+rmyx.df)+", SS= "+(rmyx.RegressionSS)+", MS= "+SubjectMS+", F= "+SubjectMS/errorMS;
     document.getElementById('results').innerHTML += "<br>Groups: df = "+rmyt.df+", SS= "+rmyt.RegressionSS+", MS= "+GroupsMS+", F= "+GroupsMS/errorMS;
     document.getElementById('results').innerHTML += "<br>Error: df = "+(fm.totalN-rmyt.df-fm.df-rmyx.df)+", SS= "+(fm.totalSS-fm.RegressionSS)+", MS= "+errorMS;
-    //document.getElementById('results').innerHTML += "<br><br>Partial EtaSqured (treatement effect size) = "+((fm.RegressionSS-rmyx.RegressionSS)/(fm.ResidualSS+(fm.RegressionSS-rmyx.RegressionSS)));
-    //document.getElementById('results').innerHTML += "<br><br>Partial EtaSqured (covariate effect size) = "+((fm.RegressionSS-rmyt.RegressionSS)/(fm.ResidualSS+(fm.RegressionSS-rmyt.RegressionSS)));
+    
+
+
 }
 
 

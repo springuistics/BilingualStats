@@ -10,65 +10,164 @@ const dataframe = [
     [85,50,85,85,45,40,45,40,70,65],//y for t3
 ]
 
+
 const extra = [500,450,480,700,300,355,200,150,380,450]//x measurements for later
 
-function repANCOVA(theData){
-    let means = [];
-    let ns = [];
-    let SBsumsqMeans = [];
-    let mgHelp = [];
-    for (let i=0; i<k; i++){
-        means.push(average(theData[i]));
-        ns.push(theData[i].length);
-        for (let j=0; j<theData[i].length; j++){
-            mgHelp.push(theData[i][j]);
+calculateVarious();
+
+
+function calculateVarious(){
+    let suby = [];
+    let subx = [];
+    let subT = [];
+    let another = [];
+    let another2 = [];
+
+    for (let k=0; k<dataframe.length; k++){
+        for (let j=0; j<dataframe[0].length; j++){
+            let subSum = 0;
+            for (let i=0; i<dataframe.length; i++){
+                subSum+= dataframe[i][j];
+            }
+            subx.push(subSum);
         }
     }
-    let Mg = average(mgHelp);
-    let GN = sum(ns);
-    let singleN = ns[0];
-    let fulls = variance(mgHelp);
-    
-    let SST = fulls*(GN-1);
-
-    let MBs = [];
-    for (let i=0; i<k; i++){
-        MBs.push(ns[i] * ((means[i] - Mg) **2))
-    }
-    let GT = sum(mgHelp);
-    var SShelper = [];
-    var sumhelper = [];
-    for (let i=0; i<singleN; i++) {
-        let tempHelp = 0;
-        for (let j=0; j<k; j++){
-            tempHelp += theData[j][i];
+        
+    for (let k=0; k<dataframe.length; k++){
+        for (let i=0; i<dataframe[k].length; i++){
+            suby.push(dataframe[k][i]);
+            another2.push(extra[i]);
         }
-        sumhelper.push(tempHelp);
-        tempHelp = tempHelp **2;
-        SShelper.push(tempHelp);
+    }
+    
+    for (let k=0; k<dataframe.length-1; k++){
+        let row=[];
+        let row2=[];
+        for (let j=0; j<dataframe.length; j++){
+            for (let i=0; i<dataframe[k].length; i++){
+                if (j==k){
+                    row.push(1)
+                    row2.push(extra[i])
+                } else {
+                    row.push(0)
+                    row2.push(0)
+                }
+            }
+        }
+        subT.push(row)
+        another.push(row2)
     }
 
 
+    let fullModel = [];
+    let reducedModelyx = [];
+    let reducedModelyt = [];
+    let reducedModelyxt = [];
+    let covariateModel = [];
+    let covMod2 = [];
+    let covMod3 = [];
+    let fullModel2 = [];
+    let modxt = [];
+    let modxn = [];
+    let modxTn = [];
+    let modelYn = [];
+    let dumbModel = [];
+    let newYNT = [];
+    let rmxnt = [];
+    let modelyxn = [];
 
-    //Calculations for the actual ANOVA now
-    let SSB = sum(MBs);
-    let SSS = (sum(SShelper) / k) - ((sum(sumhelper)**2) / (singleN * k));
-    let SSE = SST - SSB - SSS;
-    let dfb = k-1;
-    let dfs = singleN-1;
-    let dfe = dfb * dfs;
-    let MSSB = SSB / dfb;
-    let MSSS = SSS / dfs;
-    let MSE = SSE / (dfb * dfs);
-    //let = SSE / (dfb * dfs);
-    let F = MSSB / MSE;
+    //yt is the ssb
+    modelyxn.push(suby);
+    newYNT.push(suby);
+    dumbModel.push(suby);
+    fullModel.push(suby);
+    modelYn.push(suby);
+    covariateModel.push(suby);
+    covMod2.push(suby);
+    reducedModelyt.push(suby);
+    reducedModelyxt.push(suby);
+    reducedModelyx.push(suby);
+    covMod3.push(suby);
+    fullModel2.push(suby);
+    modxt.push(subx);
+    modxn.push(subx);
+    modxTn.push(subx);
+    rmxnt.push(subx);
+    modelyxn.push(subx);
+    for (let i=0; i<subT.length; i++){
+        fullModel.push(subT[i]);
+        fullModel2.push(subT[i]);
+        reducedModelyxt.push(subT[i]);
+        reducedModelyt.push(subT[i]);
+        modxt.push(subT[i]);
+        newYNT.push(subT[i]);
+        rmxnt.push(subT[i]);
+    }
 
+    fullModel.push(subx);
+    fullModel2.push(subx);
+    reducedModelyxt.push(subx);
+    reducedModelyx.push(subx);
+    covMod3.push(subx);
+    for (let i=0; i<another.length; i++){
+        fullModel2.push(another[i]);
+        covariateModel.push(another[i]);
+        covMod2.push(another[i]);
+        modxTn.push(another[i]);
+    }
+    covariateModel.push(subx);
+    covMod3.push(another2);
+    fullModel.push(another2);
+    modxn.push(another2);
+    modelYn.push(another2);
+    newYNT.push(another2);
+    rmxnt.push(another2);
+    modelyxn.push(another2);
+
+    let dumbRow = [];
+    for (let i=0; i<another2.length; i++){
+        dumbRow.push(another2[i]*subx[i])
+    }
+    dumbModel.push(dumbRow);
     
+    let fm = doRegression(fullModel);
+    let fmtt = doRegression(fullModel2);
+    let rmyxt = doRegression(reducedModelyxt);
+    let rmyx = doRegression(reducedModelyx);
+    let rmyt = doRegression(reducedModelyt);
+    let rmcov = doRegression(covariateModel);
+    let rmcov2 = doRegression(covMod2);
+    let rmcov3 = doRegression(covMod3);
+    let mxn = doRegression(modxn);
+    let mxt = doRegression(modxt);
+    let mxTn = doRegression(modxTn);
+    let myn = doRegression(modelYn)
+    let dumb = doRegression(dumbModel);
+    let dumb2 = doRegression(newYNT);
+    let modelrmxnt = doRegression(rmxnt);
+    let rmyxn = doRegression(modelyxn);
 
-    let SSC = 0;
-    let dfc = 1;
-    let MSC = SSC/dfc;
 
+    let errorMS = (fm.totalSS-fm.RegressionSS)/(fm.totalN-rmyt.df-fm.df-rmyx.df);
+    let SubjectMS = (rmyx.RegressionSS/(fm.df+rmyx.df));
+    let GroupsMS = (rmyt.RegressionSS / rmyt.df);
+
+    let MSS = rmyx.RegressionSS/(dataframe[0].length - 1);
+    let MSE = fm.ResidualSS / ((dataframe[0].length - 1)*(dataframe.length -1))
+
+    let covErrorSS = fm.RegressionSS - rmyt.RegressionSS - myn.RegressionSS;
+    let CovBetween = myn.RegressionSS;
+    let CovF = myn.RegressionSS / (covErrorSS / (dataframe[0].length -2));
+
+    document.getElementById('results').innerHTML = "full:<br> df = "+fm.df+", SSreg= "+fm.RegressionSS+", MSreg= "+fm.RegressionMS+"F= "+fm.F+"<br>Residuals= "+fm.residuals+", SSres= "+fm.ResidualSS+", MSres= "+fm.ResidualsMS+"<br>N = "+fm.totalN+", Total = "+fm.totalSS+"<br><br><br>";
+    document.getElementById('results').innerHTML += "reduced yx:<br> df = "+rmyx.df+", SSreg= "+rmyx.RegressionSS+", MSreg= "+rmyx.RegressionMS+"F= "+rmyx.F+"<br>Residuals= "+rmyx.residuals+", SSres= "+rmyx.ResidualSS+", MSres= "+rmyx.ResidualsMS+"<br>N = "+rmyx.totalN+", Total = "+rmyx.totalSS+"<br><br><br>";
+    document.getElementById('results').innerHTML += "reduced yt:<br> df = "+rmyt.df+", SSreg= "+rmyt.RegressionSS+", MSreg= "+rmyt.RegressionMS+"F= "+rmyt.F+"<br>Residuals= "+rmyt.residuals+", SSres= "+rmyt.ResidualSS+", MSres= "+rmyt.ResidualsMS+"<br>N = "+rmyt.totalN+", Total = "+rmyt.totalSS+"<br><br><br>";
+    document.getElementById('results').innerHTML += "<br><br><br><br>ANCOVA:<br><br>";
+    document.getElementById('results').innerHTML += "<br>Full ANOVA: df = "+(fm.df+rmyx.df)+", MS= "+MSS+", ME= "+MSE+", F= "+GroupsMS/MSE;
+    document.getElementById('results').innerHTML += "<br>Subjects: df = "+(fm.df+rmyx.df)+", SS= "+(rmyx.RegressionSS)+", MS= "+SubjectMS+", F= "+SubjectMS/errorMS;
+    document.getElementById('results').innerHTML += "<br>Groups: df = "+rmyt.df+", SS= "+rmyt.RegressionSS+", MS= "+GroupsMS+", F= "+GroupsMS/errorMS;
+    document.getElementById('results').innerHTML += "<br>Covariate: df = "+myn.df+", SS= "+CovBetween+", MS= "+CovBetween+", F= "+CovF;
+    document.getElementById('results').innerHTML += "<br>Error: df = "+(fm.totalN-rmyt.df-fm.df-rmyx.df)+", SS= "+(fm.totalSS-fm.RegressionSS)+", MS= "+errorMS;
 }
 
 function doRegression(data){
@@ -232,7 +331,7 @@ function doRegression(data){
     let R2 =  SSM / SST;
     //let p = getPfromF(data.length, F, (data.length-1), (N0-data.length));
 
-    return {"F":F,"RegressionSS":SSM,"RegressionMS":MSM,"ResidualSS":SSE,"ResidualsMS":MSE,"df":data.length-1,"residuals":N0-data.length,"totalSS":SST, "totalN": N0-1}
+    return {"F":F,"RegressionSS":SSM,"RegressionMS":MSM,"ResidualSS":SSE,"ResidualsMS":MSE,"df":data.length-1,"residuals":N0-data.length,"totalSS":SST, "totalN": N0-1, "B": Bs[0], "R2":R2}
 }
 
 </script>

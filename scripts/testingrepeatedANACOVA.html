@@ -275,7 +275,7 @@ function doRegression(data){
     let R2 =  SSM / SST;
     //let p = getPfromF(data.length, F, (data.length-1), (N0-data.length));
 
-    return {"F":F,"RegressionSS":SSM,"RegressionMS":MSM,"ResidualSS":SSE,"ResidualsMS":MSE,"df":data.length-1,"residuals":N0-data.length,"totalSS":SST, "totalN": N0-1}
+    return {"F":F,"RegressionSS":SSM,"RegressionMS":MSM,"ResidualSS":SSE,"ResidualsMS":MSE,"df":data.length-1,"residuals":N0-data.length,"totalSS":SST, "totalN": N0-1, "B": Bs[0], "R2":R2}
 }
 
 function sumSquareOuterMean(mean,  data){

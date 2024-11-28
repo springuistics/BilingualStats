@@ -10,18 +10,9 @@ const dataframe = [
     [85,50,85,85,45,40,45,40,70,65],//y for t3
 ]
 
-const newdata = [
-    [12,39,36,17,25,15,8,31,45,37,13,50,35,40,33,17,20,42,31,24,15,13,9,21,31,13,12,10,19,18,14,8,7,19,25,26],
-    [17.5,104.6,64.7,47,22,12.4,20,79.7,70.8,45.9,47.5,77.8,70.9,84.8,49.8,34.6,71.4,55,54,27.9,40.6,33,22.2,80.5,80,41,35,33,34.2,43.2,20,37,28.2,46.4,64.9,59.4],
-    [1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0   ],
-    [0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0    ],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0    ],
-    [17.5,104.6,64.7,47,22,12.4,20,79.7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0    ],
-    [0,0,0,0,0,0,0,0,70.8,45.9,47.5,77.8,70.9,84.8,49.8,34.6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0    ],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,71.4,55,54,27.9,40.6,33,22.2,80.5,80,41,0,0,0,0,0,0,0,0,0,0    ]
-];
-
-const extra = [500,450,480,700,300,355,200,150,380,450]//x measurements for later
+const extra = [
+    [500,450,480,700,300,355,200,150,380,450]
+]//x measurements for later
 
 calculateVarious();
 
@@ -46,7 +37,7 @@ function calculateVarious(){
     for (let k=0; k<dataframe.length; k++){
         for (let i=0; i<dataframe[k].length; i++){
             suby.push(dataframe[k][i]);
-            another2.push(extra[i]);
+            another2.push(extra[0][i]);
         }
     }
     
@@ -57,7 +48,7 @@ function calculateVarious(){
             for (let i=0; i<dataframe[k].length; i++){
                 if (j==k){
                     row.push(1)
-                    row2.push(extra[i])
+                    row2.push(extra[0][i])
                 } else {
                     row.push(0)
                     row2.push(0)
@@ -69,156 +60,80 @@ function calculateVarious(){
     }
 
 
+    let completeModel = [];
     let fullModel = [];
-    let reducedModelyx = [];
-    let reducedModelyt = [];
-    let reducedModelyxt = [];
-    let covariateModel = [];
-    let covMod2 = [];
-    let covMod3 = [];
-    let fullModel2 = [];
-    let modxt = [];
-    let modxn = [];
-    let modnTn = [];
-    let modelYn = [];
-    let dumbModel = [];
-    let newYNT = [];
-    let rmxnt = [];
-    let modelyxn = [];
-    let modelnt = [];
-    let newFullModel = [];
-    let backwards = [];
+    let covariateOnlyModel = [];
+    let noInteractionModel = [];
+    let IntertactionModel = [];
+    let timeOnlyModel = [];
 
-
-    //Test other one
-    let byxt = [];
-    let byt = [];
-    let byx = [];
-    byxt.push(newdata[0]);
-    byxt.push(newdata[1]);
-    byxt.push(newdata[2]);
-    byxt.push(newdata[3]);
-    byxt.push(newdata[4]);
-    byt.push(newdata[0]);
-    byt.push(newdata[2]);
-    byt.push(newdata[3]);
-    byt.push(newdata[4]);
-    byx.push(newdata[0]);
-    byx.push(newdata[1]);
-
-    let modelBxyt = doRegression(byxt);
-    let modelByt = doRegression(byt);
-    let modelByx = doRegression(byx);
-
-
-    //yt is the ssb
-    backwards.push(suby);
-    newFullModel.push(suby);
-    modelnt.push(another2);
-    modelyxn.push(suby);
-    newYNT.push(suby);
-    dumbModel.push(suby);
-    fullModel.push(suby);
-    modelYn.push(suby);
-    covariateModel.push(suby);
-    covMod2.push(suby);
-    reducedModelyt.push(suby);
-    reducedModelyxt.push(suby);
-    reducedModelyx.push(suby);
-    covMod3.push(suby);
-    fullModel2.push(suby);
-    modxt.push(subx);
-    modxn.push(subx);
-    rmxnt.push(subx);
-    modnTn.push(another2);
-    modelyxn.push(subx);
-    for (let i=0; i<subT.length; i++){
-        fullModel.push(subT[i]);
-        fullModel2.push(subT[i]);
-        reducedModelyxt.push(subT[i]);
-        reducedModelyt.push(subT[i]);
-        modxt.push(subT[i]);
-        newYNT.push(subT[i]);
-        rmxnt.push(subT[i]);
-        modelnt.push(subT[i]);
-        newFullModel.push(subT[i]);
-    }
-    newFullModel.push(another2);
-    fullModel.push(subx);
-    fullModel2.push(subx);
-    reducedModelyxt.push(subx);
-    reducedModelyx.push(subx);
-    covMod3.push(subx);
-    for (let i=0; i<another.length; i++){
-        fullModel2.push(another[i]);
-        covariateModel.push(another[i]);
-        covMod2.push(another[i]);
-        modnTn.push(another[i]);
-        newFullModel.push(another[i]);
-        backwards.push(another[i])
-    }
-    covariateModel.push(subx);
-    covMod3.push(another2);
-    fullModel.push(another2);
-    modxn.push(another2);
-    modelYn.push(another2);
-    newYNT.push(another2);
-    rmxnt.push(another2);
-    modelyxn.push(another2);
-    backwards.push(another2);
-
-    let dumbRow = [];
-    for (let i=0; i<another2.length; i++){
-        dumbRow.push(another2[i]*subx[i])
-    }
-    dumbModel.push(dumbRow);
     
-    let fm = doRegression(fullModel);
-    let fmtt = doRegression(fullModel2);
-    let trueFM = doRegression(newFullModel);
-    let rmyxt = doRegression(reducedModelyxt);
-    let rmyx = doRegression(reducedModelyx);
-    let rmyt = doRegression(reducedModelyt);
-    let rmcov = doRegression(covariateModel);
-    let rmcov2 = doRegression(covMod2);
-    let rmcov3 = doRegression(covMod3);
-    let mxn = doRegression(modxn);
-    let mxt = doRegression(modxt);
-    let mnTn = doRegression(modnTn);
-    let myn = doRegression(modelYn)
-    let dumb = doRegression(dumbModel);
-    let mynt = doRegression(newYNT);
-    let modelrmxnt = doRegression(rmxnt);
-    let rmyxn = doRegression(modelyxn);
-    let rmnt = doRegression(modelnt)
-    let backModel = doRegression(backwards)
+    //Push y values to various models
+    completeModel.push(suby);
+    fullModel.push(suby);
+    covariateOnlyModel.push(suby);
+    noInteractionModel.push(suby);
+    IntertactionModel.push(suby);
+    timeOnlyModel.push(suby);
+   
+    //Push raw time to complete, full, time only, and noInteraction models
+    for (let i=0; i<subT.length; i++){
+        completeModel.push(subT[i]);
+        fullModel.push(subT[i]);
+        noInteractionModel.push(subT[i]);
+        timeOnlyModel.push(subT[i]);
+    }
 
+    //Push x (sum of ys) to full model
+    fullModel.push(subx);
+    
+    //Push itneractions (covariate times 1/0 from time) for complete and interactoin model
+    for (let i=0; i<another.length; i++){
+        completeModel.push(another[i]);
+        IntertactionModel.push(another[i]);
+    }
+    
+    //Push covariate into full, complete, covariate, no interaction and interactoin models
+    fullModel.push(another2);
+    completeModel.push(another2);
+    covariateOnlyModel.push(another2);
+    noInteractionModel.push(another2);
+    IntertactionModel.push(another2);
+
+    //Get regression models for necessary variables    
+    let m_full = doRegression(fullModel);
+    let m_complete = doRegression(completeModel);
+    let m_covOnly = doRegression(covariateOnlyModel);
+    let m_noInt = doRegression(noInteractionModel);
+    let m_int = doRegression(IntertactionModel);
+    let m_timeOnly = doRegression(timeOnlyModel);
+    
     //This is the correct straight covariate measurement
-    let covErrorSS = fm.RegressionSS - rmyt.RegressionSS - myn.RegressionSS;
-    let CovBetween = myn.RegressionSS;
-    let CovF = myn.RegressionSS / (covErrorSS / (dataframe[0].length -2));
+    let covErrorSS = m_full.RegressionSS - m_timeOnly.RegressionSS - m_covOnly.RegressionSS;
+    let CovBetween = m_covOnly.RegressionSS;
+    let CovF = m_covOnly.RegressionSS / (covErrorSS / (dataframe[0].length -2));
     
     //These two below are actually correct; the overlap = time * covariate, and the_thing = time  inside of the big model
     //You actually need: fm, myn, trueFM, mynt, and backmodel
     //Go figure out why
-    let overlap = trueFM.RegressionSS-mynt.RegressionSS;
-    let the_thing = trueFM.RegressionSS-backModel.RegressionSS;
-    let errorSS = fm.totalSS - fm.RegressionSS - overlap;
-    let df_time = trueFM.df-mynt.df;
-    let df_inter = trueFM.df-backModel.df;
+    let time_within = m_complete.RegressionSS-m_int.RegressionSS;
+    let time_covariate = m_complete.RegressionSS-m_noInt.RegressionSS;
+    let errorSS = m_full.totalSS - m_full.RegressionSS - time_covariate;
+    let df_time = m_complete.df-m_noInt.df;
+    let df_inter = m_complete.df-m_int.df;
     let errordf = dataframe[0].length*2 - df_time - df_inter;
-    let MS_t = the_thing / df_time;
-    let MS_tn = overlap / df_inter;
+    let MS_t = time_within / df_time;
+    let MS_interaction = time_covariate / df_inter;
     let MS_error = errorSS / errordf;
     let F_time = MS_t / MS_error;
-    let F_tn = MS_tn / MS_error;
+    let F_interaction = MS_interaction / MS_error;
 
     document.getElementById('results').innerHTML += "<br><br><br><br>ANCOVA:<br><br>";
-    document.getElementById('results').innerHTML += "<br>Full ANOVA: df = "+(fm.df+rmyx.df)+", MS= "+MSS+", ME= "+MSE+", F= "+GroupsMS/MSE;
-    document.getElementById('results').innerHTML += "<br>Subjects: df = "+(fm.df+rmyx.df)+", SS= "+(rmyx.RegressionSS)+", MS= "+SubjectMS+", F= "+SubjectMS/errorMS;
-    document.getElementById('results').innerHTML += "<br>Groups: df = "+rmyt.df+", SS= "+rmyt.RegressionSS+", MS= "+GroupsMS+", F= "+GroupsMS/errorMS;
-    document.getElementById('results').innerHTML += "<br>Covariate: df = "+myn.df+", SS= "+CovBetween+", MS= "+CovBetween+", F= "+CovF;
-    document.getElementById('results').innerHTML += "<br>Error: df = "+(fm.totalN-rmyt.df-fm.df-rmyx.df)+", SS= "+(fm.totalSS-fm.RegressionSS)+", MS= "+errorMS;
+    document.getElementById('results').innerHTML += "<br>Effect of Time: df = "+df_time+", SS= "+time_within+", MS= "+MS_t+", F= "+F_time;
+    document.getElementById('results').innerHTML += "<br>Interaction of Time & Covariate: df = "+df_inter+", SS= "+time_covariate+", MS= "+MS_interaction+", F= "+F_interaction;
+    document.getElementById('results').innerHTML += "<br>Error: df = "+errordf+", SS= "+errorSS+", MS= "+MS_error;
+    document.getElementById('results').innerHTML += "<br><br>Pure Covariate Interaction:<br>Covariate: df = "+(extra.length)+", SS= "+CovBetween+", MS= "+CovBetween+", F= "+CovF;
+    document.getElementById('results').innerHTML += "<br>Error: df = "+(dataframe[0].length -2)+", SS= "+covErrorSS+", MS= "+(covErrorSS / (dataframe[0].length -2));
 }
 
 function doRegression(data){

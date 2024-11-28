@@ -10,6 +10,16 @@ const dataframe = [
     [85,50,85,85,45,40,45,40,70,65],//y for t3
 ]
 
+const newdata = [
+    [12,39,36,17,25,15,8,31,45,37,13,50,35,40,33,17,20,42,31,24,15,13,9,21,31,13,12,10,19,18,14,8,7,19,25,26],
+    [17.5,104.6,64.7,47,22,12.4,20,79.7,70.8,45.9,47.5,77.8,70.9,84.8,49.8,34.6,71.4,55,54,27.9,40.6,33,22.2,80.5,80,41,35,33,34.2,43.2,20,37,28.2,46.4,64.9,59.4],
+    [1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0   ],
+    [0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0    ],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0    ],
+    [17.5,104.6,64.7,47,22,12.4,20,79.7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0    ],
+    [0,0,0,0,0,0,0,0,70.8,45.9,47.5,77.8,70.9,84.8,49.8,34.6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0    ],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,71.4,55,54,27.9,40.6,33,22.2,80.5,80,41,0,0,0,0,0,0,0,0,0,0    ]
+];
 
 const extra = [500,450,480,700,300,355,200,150,380,450]//x measurements for later
 
@@ -69,14 +79,42 @@ function calculateVarious(){
     let fullModel2 = [];
     let modxt = [];
     let modxn = [];
-    let modxTn = [];
+    let modnTn = [];
     let modelYn = [];
     let dumbModel = [];
     let newYNT = [];
     let rmxnt = [];
     let modelyxn = [];
+    let modelnt = [];
+    let newFullModel = [];
+    let backwards = [];
+
+
+    //Test other one
+    let byxt = [];
+    let byt = [];
+    let byx = [];
+    byxt.push(newdata[0]);
+    byxt.push(newdata[1]);
+    byxt.push(newdata[2]);
+    byxt.push(newdata[3]);
+    byxt.push(newdata[4]);
+    byt.push(newdata[0]);
+    byt.push(newdata[2]);
+    byt.push(newdata[3]);
+    byt.push(newdata[4]);
+    byx.push(newdata[0]);
+    byx.push(newdata[1]);
+
+    let modelBxyt = doRegression(byxt);
+    let modelByt = doRegression(byt);
+    let modelByx = doRegression(byx);
+
 
     //yt is the ssb
+    backwards.push(suby);
+    newFullModel.push(suby);
+    modelnt.push(another2);
     modelyxn.push(suby);
     newYNT.push(suby);
     dumbModel.push(suby);
@@ -91,8 +129,8 @@ function calculateVarious(){
     fullModel2.push(suby);
     modxt.push(subx);
     modxn.push(subx);
-    modxTn.push(subx);
     rmxnt.push(subx);
+    modnTn.push(another2);
     modelyxn.push(subx);
     for (let i=0; i<subT.length; i++){
         fullModel.push(subT[i]);
@@ -102,8 +140,10 @@ function calculateVarious(){
         modxt.push(subT[i]);
         newYNT.push(subT[i]);
         rmxnt.push(subT[i]);
+        modelnt.push(subT[i]);
+        newFullModel.push(subT[i]);
     }
-
+    newFullModel.push(another2);
     fullModel.push(subx);
     fullModel2.push(subx);
     reducedModelyxt.push(subx);
@@ -113,7 +153,9 @@ function calculateVarious(){
         fullModel2.push(another[i]);
         covariateModel.push(another[i]);
         covMod2.push(another[i]);
-        modxTn.push(another[i]);
+        modnTn.push(another[i]);
+        newFullModel.push(another[i]);
+        backwards.push(another[i])
     }
     covariateModel.push(subx);
     covMod3.push(another2);
@@ -123,6 +165,7 @@ function calculateVarious(){
     newYNT.push(another2);
     rmxnt.push(another2);
     modelyxn.push(another2);
+    backwards.push(another2);
 
     let dumbRow = [];
     for (let i=0; i<another2.length; i++){
@@ -132,6 +175,7 @@ function calculateVarious(){
     
     let fm = doRegression(fullModel);
     let fmtt = doRegression(fullModel2);
+    let trueFM = doRegression(newFullModel);
     let rmyxt = doRegression(reducedModelyxt);
     let rmyx = doRegression(reducedModelyx);
     let rmyt = doRegression(reducedModelyt);
@@ -140,28 +184,35 @@ function calculateVarious(){
     let rmcov3 = doRegression(covMod3);
     let mxn = doRegression(modxn);
     let mxt = doRegression(modxt);
-    let mxTn = doRegression(modxTn);
+    let mnTn = doRegression(modnTn);
     let myn = doRegression(modelYn)
     let dumb = doRegression(dumbModel);
-    let dumb2 = doRegression(newYNT);
+    let mynt = doRegression(newYNT);
     let modelrmxnt = doRegression(rmxnt);
     let rmyxn = doRegression(modelyxn);
+    let rmnt = doRegression(modelnt)
+    let backModel = doRegression(backwards)
 
-
-    let errorMS = (fm.totalSS-fm.RegressionSS)/(fm.totalN-rmyt.df-fm.df-rmyx.df);
-    let SubjectMS = (rmyx.RegressionSS/(fm.df+rmyx.df));
-    let GroupsMS = (rmyt.RegressionSS / rmyt.df);
-
-    let MSS = rmyx.RegressionSS/(dataframe[0].length - 1);
-    let MSE = fm.ResidualSS / ((dataframe[0].length - 1)*(dataframe.length -1))
-
+    //This is the correct straight covariate measurement
     let covErrorSS = fm.RegressionSS - rmyt.RegressionSS - myn.RegressionSS;
     let CovBetween = myn.RegressionSS;
     let CovF = myn.RegressionSS / (covErrorSS / (dataframe[0].length -2));
+    
+    //These two below are actually correct; the overlap = time * covariate, and the_thing = time  inside of the big model
+    //You actually need: fm, myn, trueFM, mynt, and backmodel
+    //Go figure out why
+    let overlap = trueFM.RegressionSS-mynt.RegressionSS;
+    let the_thing = trueFM.RegressionSS-backModel.RegressionSS;
+    let errorSS = fm.totalSS - fm.RegressionSS - overlap;
+    let df_time = trueFM.df-mynt.df;
+    let df_inter = trueFM.df-backModel.df;
+    let errordf = dataframe[0].length*2 - df_time - df_inter;
+    let MS_t = the_thing / df_time;
+    let MS_tn = overlap / df_inter;
+    let MS_error = errorSS / errordf;
+    let F_time = MS_t / MS_error;
+    let F_tn = MS_tn / MS_error;
 
-    document.getElementById('results').innerHTML = "full:<br> df = "+fm.df+", SSreg= "+fm.RegressionSS+", MSreg= "+fm.RegressionMS+"F= "+fm.F+"<br>Residuals= "+fm.residuals+", SSres= "+fm.ResidualSS+", MSres= "+fm.ResidualsMS+"<br>N = "+fm.totalN+", Total = "+fm.totalSS+"<br><br><br>";
-    document.getElementById('results').innerHTML += "reduced yx:<br> df = "+rmyx.df+", SSreg= "+rmyx.RegressionSS+", MSreg= "+rmyx.RegressionMS+"F= "+rmyx.F+"<br>Residuals= "+rmyx.residuals+", SSres= "+rmyx.ResidualSS+", MSres= "+rmyx.ResidualsMS+"<br>N = "+rmyx.totalN+", Total = "+rmyx.totalSS+"<br><br><br>";
-    document.getElementById('results').innerHTML += "reduced yt:<br> df = "+rmyt.df+", SSreg= "+rmyt.RegressionSS+", MSreg= "+rmyt.RegressionMS+"F= "+rmyt.F+"<br>Residuals= "+rmyt.residuals+", SSres= "+rmyt.ResidualSS+", MSres= "+rmyt.ResidualsMS+"<br>N = "+rmyt.totalN+", Total = "+rmyt.totalSS+"<br><br><br>";
     document.getElementById('results').innerHTML += "<br><br><br><br>ANCOVA:<br><br>";
     document.getElementById('results').innerHTML += "<br>Full ANOVA: df = "+(fm.df+rmyx.df)+", MS= "+MSS+", ME= "+MSE+", F= "+GroupsMS/MSE;
     document.getElementById('results').innerHTML += "<br>Subjects: df = "+(fm.df+rmyx.df)+", SS= "+(rmyx.RegressionSS)+", MS= "+SubjectMS+", F= "+SubjectMS/errorMS;
@@ -332,6 +383,16 @@ function doRegression(data){
     //let p = getPfromF(data.length, F, (data.length-1), (N0-data.length));
 
     return {"F":F,"RegressionSS":SSM,"RegressionMS":MSM,"ResidualSS":SSE,"ResidualsMS":MSE,"df":data.length-1,"residuals":N0-data.length,"totalSS":SST, "totalN": N0-1, "B": Bs[0], "R2":R2}
+}
+
+function SumSq(data) {
+    let M = average(data);
+    let temp = [];
+    for (let i = 0; i < data.length; i++) {
+        let temp1 = (data[i] - M) **2;
+        temp.push(temp1);
+    }
+    return sum(temp);
 }
 
 </script>

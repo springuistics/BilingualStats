@@ -85,11 +85,10 @@ function calculateVarious(){
     document.getElementById('results').innerHTML += "reduced yx:<br> df = "+rmyx.df+", SSreg= "+rmyx.RegressionSS+", MSreg= "+rmyx.RegressionMS+"F= "+rmyx.F+"<br>Residuals= "+rmyx.residuals+", SSres= "+rmyx.ResidualSS+", MSres= "+rmyx.ResidualsMS+"<br>N = "+rmyx.totalN+", Total = "+rmyx.totalSS+"<br><br><br>";
     document.getElementById('results').innerHTML += "reduced yt:<br> df = "+rmyt.df+", SSreg= "+rmyt.RegressionSS+", MSreg= "+rmyt.RegressionMS+"F= "+rmyt.F+"<br>Residuals= "+rmyt.residuals+", SSres= "+rmyt.ResidualSS+", MSres= "+rmyt.ResidualsMS+"<br>N = "+rmyt.totalN+", Total = "+rmyt.totalSS+"<br><br><br>";
     document.getElementById('results').innerHTML += "<br><br><br><br>ANCOVA:<br><br>";
-    document.getElementById('results').innerHTML += "<br>Full ANOVA: df = "+(fm.df+rmyx.df)+", MS= "+MSS+", ME= "+MSE+", F= "+GroupsMS/MSE;
-    document.getElementById('results').innerHTML += "<br>Subjects: df = "+(fm.df+rmyx.df)+", SS= "+(rmyx.RegressionSS)+", MS= "+SubjectMS+", F= "+SubjectMS/errorMS;
-    document.getElementById('results').innerHTML += "<br>Groups: df = "+rmyt.df+", SS= "+rmyt.RegressionSS+", MS= "+GroupsMS+", F= "+GroupsMS/errorMS;
-    document.getElementById('results').innerHTML += "<br>Error: df = "+(fm.totalN-rmyt.df-fm.df-rmyx.df)+", SS= "+(fm.totalSS-fm.RegressionSS)+", MS= "+errorMS;
-    
+    document.getElementById('results').innerHTML += "<br>Full ANOVA: df = "+(fm.df+rmyx.df)+", SS= "+fm.RegressionSS+", MS= "+fm.RegressionMS;
+    document.getElementById('results').innerHTML += "<br>Groups: df = "+rmyt.df+", SS= "+rmyt.RegressionSS+", MS= "+GroupsMS+", F= "+GroupsMS/MSE;
+    document.getElementById('results').innerHTML += "<br>Error: df = "+(dataframe[0].length*2-rmyt.df)+", SS= "+(fm.totalSS-fm.RegressionSS)+", MS= "+MSE;
+    document.getElementById('results').innerHTML += "<br>Eta Squared = "+(rmyt.RegressionSS)/(rmyt.RegressionSS+fm.ResidualSS)
 
 
 }

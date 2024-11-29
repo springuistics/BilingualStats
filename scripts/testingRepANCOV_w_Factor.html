@@ -11,7 +11,8 @@ const dataframe = [
 ]
 
 const extra = [
-    [500,450,480,700,300,355,200,150,380,450]
+    [500,450,480,700,300,355,200,150,380,450],
+    [123, 100, 148, 56, 44, 98, 144, 34, 100, 105]
 ]//x measurements for later
 
 calculateVarious();
@@ -21,8 +22,33 @@ function calculateVarious(){
     let suby = [];
     let subx = [];
     let subT = [];
-    let another = [];
-    let another2 = [];
+    let nonrepeatcovariates = [];
+    let repeatcovariates;
+    let reverseRC = [];
+    let reverseNRC = [];
+    let covariateInteractions = [];
+
+    function reverseMatrix(array){
+        if (array.length===0){
+            return [];
+        } else if (array.length == 1) {
+            let newarray = [];
+            for (let i=0; i<array[0].length; i++){
+                newarray.push(array[0][i])
+            }
+            return newarray;
+        } else {
+            let n = array[0].length;
+            let result = Array.from({ length: n }, () => []); 
+            for (let i = 0; i < array.length; i++) {
+                for (let j = 0; j < n; j++) { 
+                    result[j].push(array[i][j]); 
+                } 
+            } 
+            return result;
+        }
+        
+    }
 
     for (let k=0; k<dataframe.length; k++){
         for (let j=0; j<dataframe[0].length; j++){
@@ -37,9 +63,25 @@ function calculateVarious(){
     for (let k=0; k<dataframe.length; k++){
         for (let i=0; i<dataframe[k].length; i++){
             suby.push(dataframe[k][i]);
-            another2.push(extra[0][i]);
-        }
+            let covRows = [];
+            for (let j=0; j<extra.length; j++){
+                covRows.push(extra[j][i]);
+            }
+            reverseRC.push(covRows);
+            
+        }   
     }
+
+    //might not be necessary
+    for (let i=0; i<reverseRC.length; i++){
+        let product = 1;
+        for (let j=0; j<reverseRC[i].length; j++){
+            product *= reverseRC[i][j];
+        }
+        covariateInteractions.push(product);
+    }
+
+    repeatcovariates = reverseMatrix(reverseRC);
     
     for (let k=0; k<dataframe.length-1; k++){
         let row=[];
@@ -48,15 +90,27 @@ function calculateVarious(){
             for (let i=0; i<dataframe[k].length; i++){
                 if (j==k){
                     row.push(1)
-                    row2.push(extra[0][i])
+                    let tempRow = [];
+                    for (let x=0; x<extra.length; x++){
+                        tempRow.push(extra[x][i])
+                    }
+                    row2.push(tempRow)
                 } else {
                     row.push(0)
-                    row2.push(0)
+                    let tempRow = [];
+                    for (let x=0; x<extra.length; x++){
+                        tempRow.push(0)
+                    }
+                    row2.push(tempRow)
                 }
             }
         }
         subT.push(row)
-        another.push(row2)
+        reverseNRC.push(row2)
+    }
+
+    for (let i=0; i<reverseNRC.length; i++){
+        nonrepeatcovariates.push(reverseMatrix(reverseNRC[i]));
     }
 
 
@@ -67,14 +121,40 @@ function calculateVarious(){
     let IntertactionModel = [];
     let timeOnlyModel = [];
 
-    
+    let covariateOnlyModels = [];
+    let covatiateInteractionModels = [];
+
+    //set up specific covariate models
+    for (let x=0; x<extra.length; x++){
+        let thisCovModel = [];
+        thisCovModel.push(suby);
+        thisCovModel.push(repeatcovariates[x]);
+        covariateOnlyModels.push(thisCovModel);
+    }
+
+    //set up specific interatction models for each covariate
+    for (let x=0; x<extra.length; x++){
+        let thisCovModel = [];
+        thisCovModel.push(suby);
+        for (let i=0; i<extra.length; i++){
+            thisCovModel.push(repeatcovariates[i]);
+        }
+        for (let i=0; i<subT.length; i++){
+            thisCovModel.push(subT[i]);
+        }
+        for (let i=0; i<nonrepeatcovariates.length; i++){
+            thisCovModel.push(nonrepeatcovariates[i][x]);
+        }
+        covatiateInteractionModels.push(thisCovModel);
+    }
+
     //Push y values to various models
     completeModel.push(suby);
     fullModel.push(suby);
-    covariateOnlyModel.push(suby);
     noInteractionModel.push(suby);
     IntertactionModel.push(suby);
     timeOnlyModel.push(suby);
+    covariateOnlyModel.push(suby);
    
     //Push raw time to complete, full, time only, and noInteraction models
     for (let i=0; i<subT.length; i++){
@@ -86,19 +166,25 @@ function calculateVarious(){
 
     //Push x (sum of ys) to full model
     fullModel.push(subx);
+   
     
     //Push itneractions (covariate times 1/0 from time) for complete and interactoin model
-    for (let i=0; i<another.length; i++){
-        completeModel.push(another[i]);
-        IntertactionModel.push(another[i]);
+    for (let i=0; i<nonrepeatcovariates.length; i++){
+        for (let j=0; j<nonrepeatcovariates[i].length; j++){
+            completeModel.push(nonrepeatcovariates[i][j]);
+            IntertactionModel.push(nonrepeatcovariates[i][j]);
+        }
     }
     
     //Push covariate into full, complete, covariate, no interaction and interactoin models
-    fullModel.push(another2);
-    completeModel.push(another2);
-    covariateOnlyModel.push(another2);
-    noInteractionModel.push(another2);
-    IntertactionModel.push(another2);
+    for (let i=0; i<repeatcovariates.length; i++){
+        fullModel.push(repeatcovariates[i]);
+        completeModel.push(repeatcovariates[i]);
+        covariateOnlyModel.push(repeatcovariates[i]);
+        noInteractionModel.push(repeatcovariates[i]);
+        IntertactionModel.push(repeatcovariates[i]);
+    }
+    
 
     //Get regression models for necessary variables    
     let m_full = doRegression(fullModel);
@@ -107,33 +193,73 @@ function calculateVarious(){
     let m_noInt = doRegression(noInteractionModel);
     let m_int = doRegression(IntertactionModel);
     let m_timeOnly = doRegression(timeOnlyModel);
+    let m_covariates = [];
+    for (let i=0; i<extra.length; i++){
+        m_covariates.push(doRegression(covariateOnlyModels[i]));
+    }
+    let m_indIntCovs = [];
+    for (let i=0; i<extra.length; i++){
+        m_indIntCovs.push(doRegression(covatiateInteractionModels[i]));
+    }
+
     
     //This is the correct straight covariate measurement
     let covErrorSS = m_full.RegressionSS - m_timeOnly.RegressionSS - m_covOnly.RegressionSS;
-    let CovBetween = m_covOnly.RegressionSS;
-    let CovF = m_covOnly.RegressionSS / (covErrorSS / (dataframe[0].length -2));
+    let covErrorMS = covErrorSS / (dataframe[0].length -(1 + extra.length));
+    let covBetweenSS = [];
+    for (let i=0; i<extra.length; i++){
+        covBetweenSS.push(m_covOnly.RegressionSS - m_covariates[i].RegressionSS);
+    }
+    let covBetweenMS = [];
+    for (let i=0; i<extra.length; i++){
+        covBetweenMS.push(covBetweenSS[i]);
+    }
+    let covFs = [];
+    for (let i=0; i<extra.length; i++){
+        covFs.push(covBetweenMS[i] / covErrorMS);
+    }
+
+    let covariateFinishes = [];
+    for (let i=0; i<extra.length; i++){
+        covariateFinishes.push({'covErrorSS': m_full.RegressionSS - m_timeOnly.RegressionSS - m_covariates[i].RegressionSS, 'covBetween': m_covariates[i].RegressionSS})
+    }
+
     
     //These two below are actually correct; the overlap = time * covariate, and the_thing = time  inside of the big model
-    //You actually need: fm, myn, trueFM, mynt, and backmodel
-    //Go figure out why
     let time_within = m_complete.RegressionSS-m_int.RegressionSS;
-    let time_covariate = m_complete.RegressionSS-m_noInt.RegressionSS;
+    let time_covariate = m_complete.RegressionSS-m_noInt.RegressionSS;  
     let errorSS = m_full.totalSS - m_full.RegressionSS - time_covariate;
-    let df_time = m_complete.df-m_noInt.df;
+    let df_time = dataframe.length-1;
     let df_inter = m_complete.df-m_int.df;
-    let errordf = dataframe[0].length*2 - df_time - df_inter;
+    let errordf = (dataframe[0].length - (extra.length +1)) * (dataframe.length-1);
     let MS_t = time_within / df_time;
     let MS_interaction = time_covariate / df_inter;
     let MS_error = errorSS / errordf;
     let F_time = MS_t / MS_error;
     let F_interaction = MS_interaction / MS_error;
+    let time_covariatesSS = [];
+    for (let i=0; i<extra.length; i++){
+        time_covariatesSS.push(m_complete.RegressionSS - m_indIntCovs[i].RegressionSS)
+    }
+    let time_covariateMS = [];
+    for (let i=0; i<extra.length; i++){
+        time_covariateMS.push(time_covariatesSS[i]/(dataframe.length -1));
+    }
+    let time_covariateF = [];
+    for (let i=0; i<extra.length; i++){
+        time_covariateF.push(time_covariateMS[i]/MS_error);
+    }
 
     document.getElementById('results').innerHTML += "<br><br><br><br>ANCOVA:<br><br>";
     document.getElementById('results').innerHTML += "<br>Effect of Time: df = "+df_time+", SS= "+time_within+", MS= "+MS_t+", F= "+F_time;
-    document.getElementById('results').innerHTML += "<br>Interaction of Time & Covariate: df = "+df_inter+", SS= "+time_covariate+", MS= "+MS_interaction+", F= "+F_interaction;
-    document.getElementById('results').innerHTML += "<br>Error: df = "+errordf+", SS= "+errorSS+", MS= "+MS_error;
-    document.getElementById('results').innerHTML += "<br><br>Pure Covariate Interaction:<br>Covariate: df = "+(extra.length)+", SS= "+CovBetween+", MS= "+CovBetween+", F= "+CovF;
-    document.getElementById('results').innerHTML += "<br>Error: df = "+(dataframe[0].length -2)+", SS= "+covErrorSS+", MS= "+(covErrorSS / (dataframe[0].length -2));
+    for (let i=0; i<extra.length; i++){
+        document.getElementById('results').innerHTML += "<br>Interaction of Time & Covariate "+(i+1)+": df = "+extra.length+", SS= "+time_covariatesSS[i]+", MS= "+time_covariateMS[i]+", F= "+time_covariateF[i];
+    }
+    document.getElementById('results').innerHTML += "<br>Error: df = "+errordf+", SS= "+errorSS+", MS= "+MS_error+"<br><br>Pure Covariate Interactions:";
+    for (let i=0; i<extra.length; i++){
+        document.getElementById('results').innerHTML += "<br>Covariate "+(i+1)+": df = "+1+", SS= "+covBetweenSS[i]+", MS= "+covBetweenMS[i]+", F= "+covFs[i];
+    }
+    document.getElementById('results').innerHTML += "<br>Error: df = "+(dataframe[0].length -2)+", SS= "+covErrorSS+", MS= "+covErrorMS;
 }
 
 function doRegression(data){

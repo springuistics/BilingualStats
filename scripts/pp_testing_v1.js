@@ -303,21 +303,21 @@ function Calculate() {
     
         if (pofA < .01) {
             if (isNormal==true){
-                    result2 = "<br><br>Furthermore, there was a significant difference between pre- and post-test scores overall; <i>F</i> [1, " + (allpre.length -1) + "] = " + FofA + ", <i>p</i> < .01";
+                result2 = "<br><br>Furthermore, there was a significant difference between the experimental and control/comparison groups overall; <i>F</i> [1, " + (allpre.length -1) + "] = " + FofA + ", <i>p</i> < .01";
             } else if (isNormal==false){
-                result2 = "<br><br>Furthermore, there was a significant difference between pre- and post-test scores overall; <i>H</i> [1, " + (allpre.length -1) + "] = " + HofA + ", <i>p</i> < .01";
+                result2 = "<br><br>Furthermore, there was a significant difference between the experimental and control/comparison groups overall; <i>H</i> [1, " + (allpre.length -1) + "] = " + HofA + ", <i>p</i> < .01";
             }
         } else if (pofA < .05) {
             if (isNormal==true){
-                result2 = "<br><br>Furthermore, there was a significant difference between pre- and post-test scores overall; <i>F</i> [1, " + (allpre.length -1) + "] = " + FofA + ", <i>p</i> = " + pofA;
+                result2 = "<br><br>Furthermore, there was a significant difference between the experimental and control/comparison groups overall; <i>F</i> [1, " + (allpre.length -1) + "] = " + FofA + ", <i>p</i> = " + pofA;
             } else if (isNormal==false){
-                result2 = "<br><br>Furthermore, there was a significant difference between pre- and post-test scores overall; <i>H</i> [1, " + (allpre.length -1) + "] = " + HofA + ", <i>p</i> = " + pofA;
+                result2 = "<br><br>Furthermore, there was a significant difference between the experimental and control/comparison groups overall; <i>H</i> [1, " + (allpre.length -1) + "] = " + HofA + ", <i>p</i> = " + pofA;
             }
         } else {
             if (isNormal==true){
-                result2 = "<br><br>Furthermore was no significant difference between pre- and post-test scores overall; <i>F</i> [1, " + (allpre.length -1) + "] = " + FofA + ", <i>p</i> = " + pofA;
+                result2 = "<br><br>Furthermore was no significant difference between between the experimental and control/comparison groups overall; <i>F</i> [1, " + (allpre.length -1) + "] = " + FofA + ", <i>p</i> = " + pofA;
             } else if (isNormal==false){
-                result2 = "<br><br>Furthermore was no significant difference between pre- and post-test scores overall; <i>H</i> [1, " + (allpre.length -1) + "] = " + HofA + ", <i>p</i> = " + pofA;
+                result2 = "<br><br>Furthermore was no significant difference between between the experimental and control/comparison groups overall; <i>H</i> [1, " + (allpre.length -1) + "] = " + HofA + ", <i>p</i> = " + pofA;
             }
         }
     
@@ -331,21 +331,21 @@ function Calculate() {
     
         if (pofB < .01) {
             if (isNormal==true){
-                result5 = "there was a significant difference between the experimental and control/comparison groups overall; <i>F</i> [1, " + (allpre.length -1) + "] = " + FofB + ", <i>p</i> < .01";
+                result5 = "there was a significant difference between pre- and post-test scores overall; <i>F</i> [1, " + (allpre.length -1) + "] = " + FofB + ", <i>p</i> < .01";
             } else if (isNormal==false){
-                result5 = "there was a significant difference between the experimental and control/comparison groups overall; <i>H</i> [1, " + (allpre.length -1) + "] = " + HofB + ", <i>p</i> < .01";
+                result5 = "there was a significant difference between between pre- and post-test scores overall; <i>H</i> [1, " + (allpre.length -1) + "] = " + HofB + ", <i>p</i> < .01";
             }
         } else if (pofB < .05) {
             if (isNormal==true){
-                result5 = "there was a significant difference between the experimental and control/comparison groups overall; <i>F</i> [1, " + (allpre.length -1) + "] = " + FofB + ", <i>p</i> = " + pofB;
+                result5 = "there was a significant difference between between pre- and post-test scores overall; <i>F</i> [1, " + (allpre.length -1) + "] = " + FofB + ", <i>p</i> = " + pofB;
             } else if (isNormal==false){
-                result5 = "there was a significant difference between the experimental and control/comparison groups overall; <i>H</i> [1, " + (allpre.length -1) + "] = " + HofB + ", <i>p</i> = " + pofB;
+                result5 = "there was a significant difference between between pre- and post-test scores overall; <i>H</i> [1, " + (allpre.length -1) + "] = " + HofB + ", <i>p</i> = " + pofB;
             }
         } else {
             if (isNormal==true){
-                result5 = "there was no significant difference between the experimental and control/comparison groups overall; <i>F</i> [1, " + (allpre.length -1) + "] = " + FofB + ", <i>p</i> = " + pofB;
+                result5 = "there was no significant difference between between pre- and post-test scores overall; <i>F</i> [1, " + (allpre.length -1) + "] = " + FofB + ", <i>p</i> = " + pofB;
             } else if (isNormal==false){
-                result5 = "there was no significant difference between the experimental and control/comparison groups overall; <i>H</i> [1, " + (allpre.length -1) + "] = " + HofB + ", <i>p</i> = " + pofB;
+                result5 = "there was no significant difference between between pre- and post-test scores overall; <i>H</i> [1, " + (allpre.length -1) + "] = " + HofB + ", <i>p</i> = " + pofB;
             }
         }
     
@@ -387,21 +387,21 @@ function Calculate() {
     
         if (pofA < .01) {
             if (isNormal==true){
-                    result2 = "<br><br>総合事前・事後のデータの間に有意差はあり（<i>F</i> [1, " + (allpre.length -1) + "] = " + FofA + ", <i>p</i> < .01";
+                    result2 = "<br><br>総合的に、実験群と対照群の間に有意差はあり（<i>F</i> [1, " + (allpre.length -1) + "] = " + FofA + ", <i>p</i> < .01";
             } else if (isNormal==false){
-                result2 = "<br><br>総合事前・事後のデータの間に有意差はあり（ <i>H</i> [1, " + (allpre.length -1) + "] = " + HofA + ", <i>p</i> < .01";
+                result2 = "<br><br>総合的に、実験群と対照群の間に有意差はあり（ <i>H</i> [1, " + (allpre.length -1) + "] = " + HofA + ", <i>p</i> < .01";
             }
         } else if (pofA < .05) {
             if (isNormal==true){
-                result2 = "<br><br>総合事前・事後のデータの間に有意差はあり（ <i>F</i> [1, " + (allpre.length -1) + "] = " + FofA + ", <i>p</i> = " + pofA;
+                result2 = "<br><br>総合的に、実験群と対照群の間に有意差はあり（ <i>F</i> [1, " + (allpre.length -1) + "] = " + FofA + ", <i>p</i> = " + pofA;
             } else if (isNormal==false){
-                result2 = "<br><br>総合事前・事後のデータの間に有意差はあり（ <i>H</i> [1, " + (allpre.length -1) + "] = " + HofA + ", <i>p</i> = " + pofA;
+                result2 = "<br><br>総合的に、実験群と対照群の間に有意差はあり（ <i>H</i> [1, " + (allpre.length -1) + "] = " + HofA + ", <i>p</i> = " + pofA;
             }
         } else {
             if (isNormal==true){
-                result2 = "<br><br>総合事前・事後のデータの間に有意差はなく（ <i>F</i> [1, " + (allpre.length -1) + "] = " + FofA + ", <i>p</i> = " + pofA;
+                result2 = "<br><br>総合的に、実験群と対照群の間に有意差はなく（ <i>F</i> [1, " + (allpre.length -1) + "] = " + FofA + ", <i>p</i> = " + pofA;
             } else if (isNormal==false){
-                result2 = "<br><br>総合事前・事後のデータの間に有意差はなく（　<i>H</i> [1, " + (allpre.length -1) + "] = " + HofA + ", <i>p</i> = " + pofA;
+                result2 = "<br><br>総合的に、実験群と対照群の間に有意差はなく（　<i>H</i> [1, " + (allpre.length -1) + "] = " + HofA + ", <i>p</i> = " + pofA;
             }
         }
     
@@ -415,21 +415,21 @@ function Calculate() {
     
         if (pofB < .01) {
             if (isNormal==true){
-                result5 = "。総合的に、実験群と対照群の間に有意差はあり（ <i>F</i> [1, " + (allpre.length -1) + "] = " + FofB + ", <i>p</i> < .01";
+                result5 = "。総合事前・事後のデータの間に有意差はあり（ <i>F</i> [1, " + (allpre.length -1) + "] = " + FofB + ", <i>p</i> < .01";
             } else if (isNormal==false){
-                result5 = "。総合的に、実験群と対照群の間に有意差はあり（ <i>H</i> [1, " + (allpre.length -1) + "] = " + HofB + ", <i>p</i> < .01";
+                result5 = "。総合事前・事後のデータの間に有意差はあり（ <i>H</i> [1, " + (allpre.length -1) + "] = " + HofB + ", <i>p</i> < .01";
             }
         } else if (pofB < .05) {
             if (isNormal==true){
-                result5 = "。総合的に、実験群と対照群の間に有意差はあり（ <i>F</i> [1, " + (allpre.length -1) + "] = " + FofB + ", <i>p</i> = " + pofB;
+                result5 = "。総合事前・事後のデータの間に有意差はあり（ <i>F</i> [1, " + (allpre.length -1) + "] = " + FofB + ", <i>p</i> = " + pofB;
             } else if (isNormal==false){
-                result5 = "。総合的に、実験群と対照群の間に有意差はあり（ <i>H</i> [1, " + (allpre.length -1) + "] = " + HofB + ", <i>p</i> = " + pofB;
+                result5 = "。総合事前・事後のデータの間に有意差はあり（ <i>H</i> [1, " + (allpre.length -1) + "] = " + HofB + ", <i>p</i> = " + pofB;
             }
         } else {
             if (isNormal==true){
-                result5 = "。総合的に、実験群と対照群の間に有意差はなく（ <i>F</i> [1, " + (allpre.length -1) + "] = " + FofB + ", <i>p</i> = " + pofB;
+                result5 = "。総合事前・事後のデータの間に有意差はなく（ <i>F</i> [1, " + (allpre.length -1) + "] = " + FofB + ", <i>p</i> = " + pofB;
             } else if (isNormal==false){
-                result5 = "。総合的に、実験群と対照群の間に有意差はなく（ <i>H</i> [1, " + (allpre.length -1) + "] = " + HofB + ", <i>p</i> = " + pofB;
+                result5 = "。総合事前・事後のデータの間に有意差はなく（ <i>H</i> [1, " + (allpre.length -1) + "] = " + HofB + ", <i>p</i> = " + pofB;
             }
         }
     

@@ -1000,6 +1000,8 @@ function getPfromF(k, f, n1, n2) {
 }
 
 //A bunch of functions to handle matrix math - each takes an ARRAY of ARRAYs (constituting the x / y in the matrix)
+
+//A bunch of functions to handle matrix math - each takes an ARRAY of ARRAYs (constituting the x / y in the matrix)
 function det2(mini){
     let a = mini[0][0]; 
     let b = mini[0][1]; 
@@ -1070,11 +1072,15 @@ function det7(mini){
 
 function det8(mini){
     let det = 0;
+    let breakdown = [];
     for (let i=0; i<mini.length; i++){
+        breakdown.push(mini[0][i]*det7(findSub(i, mini)));
+    }
+    for (let i=0; i<breakdown.length; i++){
         if (i%2 == 0){
-            det += mini[0][i]*det7(findSub(i, mini))
+            det += breakdown[i]
         } else if (i%2 ==1){
-            det -= mini[0][i]*det7(findSub(i, mini))
+            det -= breakdown[i]
         }
     }
     return det;
@@ -1082,11 +1088,15 @@ function det8(mini){
 
 function det9(mini){
     let det = 0;
+    let breakdown = [];
     for (let i=0; i<mini.length; i++){
+        breakdown.push(mini[0][i]*det8(findSub(i, mini)));
+    }
+    for (let i=0; i<breakdown.length; i++){
         if (i%2 == 0){
-            det += mini[0][i]*det8(findSub(i, mini))
+            det += breakdown[i]
         } else if (i%2 ==1){
-            det -= mini[0][i]*det8(findSub(i, mini))
+            det -= breakdown[i]
         }
     }
     return det;
@@ -1094,11 +1104,15 @@ function det9(mini){
 
 function det10(mini){
     let det = 0;
+    let breakdown = [];
     for (let i=0; i<mini.length; i++){
+        breakdown.push(mini[0][i]*det9(findSub(i, mini)));
+    }
+    for (let i=0; i<breakdown.length; i++){
         if (i%2 == 0){
-            det += mini[0][i]*det9(findSub(i, mini))
+            det += breakdown[i]
         } else if (i%2 ==1){
-            det -= mini[0][i]*det9(findSub(i, mini))
+            det -= breakdown[i]
         }
     }
     return det;
@@ -1106,11 +1120,15 @@ function det10(mini){
 
 function det11(mini){
     let det = 0;
+    let breakdown = [];
     for (let i=0; i<mini.length; i++){
+        breakdown.push(mini[0][i]*det10(findSub(i, mini)));
+    }
+    for (let i=0; i<breakdown.length; i++){
         if (i%2 == 0){
-            det += mini[0][i]*det10(findSub(i, mini))
+            det += breakdown[i]
         } else if (i%2 ==1){
-            det -= mini[0][i]*det10(findSub(i, mini))
+            det -= breakdown[i]
         }
     }
     return det;
@@ -1127,6 +1145,43 @@ function det12(mini){
     }
     return det;
 }
+
+function det13(mini){
+    let det = 0;
+    for (let i=0; i<mini.length; i++){
+        if (i%2 == 0){
+            det += mini[0][i]*det12(findSub(i, mini))
+        } else if (i%2 ==1){
+            det -= mini[0][i]*det12(findSub(i, mini))
+        }
+    }
+    return det;
+}
+
+function det14(mini){
+    let det = 0;
+    for (let i=0; i<mini.length; i++){
+        if (i%2 == 0){
+            det += mini[0][i]*det13(findSub(i, mini))
+        } else if (i%2 ==1){
+            det -= mini[0][i]*det13(findSub(i, mini))
+        }
+    }
+    return det;
+}
+
+function det15(mini){
+    let det = 0;
+    for (let i=0; i<mini.length; i++){
+        if (i%2 == 0){
+            det += mini[0][i]*det14(findSub(i, mini))
+        } else if (i%2 ==1){
+            det -= mini[0][i]*det14(findSub(i, mini))
+        }
+    }
+    return det;
+}
+
 //Main support for solveDeterminant
 function findSub(a, mini){
     submat = [];
@@ -1142,7 +1197,7 @@ function findSub(a, mini){
 return (submat);
 }
 
-//This is the main one to call!
+//This is a dumb, brute force solution to getting the determinant of a matrix. I can't recommend it.
 function solveMatrix(matrix){
     let size = matrix.length;
     switch (size) {
@@ -1179,7 +1234,110 @@ function solveMatrix(matrix){
         case 12:
             return det12(matrix); 
             break;    
+        case 13:
+            return det13(matrix); 
+            break;    
+        case 14:
+            return det14(matrix); 
+            break;
+        case 15:
+            return det15(matrix);
+            break;
         }
+}
+
+//Copies matrix just in case
+function deepCopyMatrix(matrix) {
+    return matrix.map(row => row.slice());
+  }
+
+//returns the determinant of square matrix using LU decomposition and partial pivoting
+//as much as possible, this should be used by "solve matrix" is a bute force solution that is acurate but slow
+function determinant(B) { 
+    //First, copy the matrix so it doesn't get messed up
+    let A = deepCopyMatrix(B);
+    let LUP = LUdecomposition(A);
+    //Actually solve the determinant now based on the upper triangle
+    let D = 1;
+    for (i=0; i < A.length; i++) {
+      D = D*LUP.LU[i][i]; 
+    }
+    if (!isFinite(D)){
+        //if this happens, my dumb solution will be used, but it is REALLY hard on the processor for larger than 7x7, so console is logged
+      console.log("You have a really hard to solve matrix that broke the LU decomposition. Now attempting brute force strategy")  
+      return solveMatrix(B);
+    } else {
+      let pivotSign = LUP.exchanges % 2 === 0 ? 1 : -1;
+      return D*pivotSign;
+    }
+  }
+  
+
+//LU decomposition with partial pivoting
+function LUdecomposition(A) { 
+    //returns the LU matrix, the permutation matrix of matrix A, and the number of row swaps 
+    //This function overwrites A, so be sure to do a deep copy if necessary first
+    const N = A.length;
+      const P = identityMatrix(N);
+      let exchanges = 0; // count the number of row swaps
+    
+      for (let i = 0; i < N; i++) {
+        // Start pivot section
+            let Umax = 0;
+            let row = i;
+            for (let r = i; r < N; r++) {
+                let Uii = A[r][i];
+                for (let q = 0; q < i; q++) {
+                    Uii -= A[r][q] * A[q][i];
+                }
+                if (Math.abs(Uii) > Umax) {
+                    Umax = Math.abs(Uii);
+                    row = r;
+                }
+            }
+        
+            if (i !== row) { // Swap rows
+                exchanges++;
+                for (let q = 0; q < N; q++) {
+                    // Swap rows in the permutation matrix P
+                    [P[i][q], P[row][q]] = [P[row][q], P[i][q]];
+                    // Swap rows in the matrix A
+                    [A[i][q], A[row][q]] = [A[row][q], A[i][q]];
+                }
+            }
+        // End pivot section
+    
+            // Determine U across row i
+            for (let j = i; j < N; j++) {
+                for (let q = 0; q < i; q++) {
+                    A[i][j] -= A[i][q] * A[q][j];
+                }
+            }
+    
+            // Determine L down column i
+            for (let j = i + 1; j < N; j++) {
+                for (let q = 0; q < i; q++) {
+                    A[j][i] -= A[j][q] * A[q][i];
+                }
+                // Ensure that the division does not lead to division by zero
+                A[j][i] = safeDivision(A[j][i], A[i][i]);
+            }
+      }
+      return { LU: A, P: P, exchanges: exchanges };
+  }
+  
+
+// returns an NxN identity matrix
+function identityMatrix(N) { 
+    var I = [];
+    for (j=0; j<N; j++) {
+      I[j] = new Array(N);
+      for (k=0; k<N; k++) {
+        I[j][k] = 0;
+      }
+     I[j][j]=1;
+    }
+    return I;
 }
 
 
@@ -1741,4 +1899,189 @@ function checkData(theData){
     }
     return {'pairs':pairsCheck, 'normal':normalCheck}
 
+}
+
+
+//This function does a regression analysis and returns a lot of pertinent infomration
+//Takes an array of arrays to apply regression to
+function doRegression(data){
+    //Set up variables to hold 
+    let N0 = data[0].length;
+    let averages = [];
+    let eachX1 = [];
+    let eachXy = [];
+    let eachXx = [];
+    let sumSqs = [];
+    let sums = [];
+
+    //Push the relevant information from the data matrix into the sub arrays
+    for (let i=0; i<data.length; i++){
+        averages.push(average(data[i]));
+        sums.push(sum(data[i]))
+        sumSqs.push(sumSquare(data[i]))
+    }
+    for (let i=1; i<data.length; i++){
+        eachX1.push(sumSquare(data[i]) - ((sum(data[i])**2)/N0) )
+    }
+    for (let i=1; i<data.length; i++){
+        eachXy.push(TwoDataSum(data[0], data[i]) - ((sum(data[0])*sum(data[i])) / N0))
+    }
+    for (let i=1; i<data.length; i++){
+        for (let j=(i+1); j<data.length; j++){
+            eachXx.push(TwoDataSum(data[i], data[j]) - ((sum(data[i])*sum(data[j])) / N0))
+        }
+    }
+    let MatrixFuel = [];
+    for (let i=0; i<data.length; i++){
+        if (i==0){
+
+        } else {
+            for (let j=0; j<data.length; j++){
+                if (i==0){
+                    MatrixFuel.push(sum(data[i]))
+                } else {
+
+                }
+            }
+        }
+        
+    }
+
+    //Solve determinants and store them in this array
+    let determinants = [];
+
+    let bigA = [];
+    for (let i=0; i<data.length; i++){
+        let thisrow = [];
+        if (i==0){
+            for (let j=0; j<data.length; j++){
+                if (j==0){
+                    thisrow.push(N0)
+                } else {
+                    thisrow.push(sums[j])
+                }
+            }
+        } else {
+            for (let j=0; j<data.length; j++){
+                if (j==0){
+                    thisrow.push(sums[i])
+                } else if (j==i) {
+                    thisrow.push(sumSqs[i])
+                } else {
+                    thisrow.push(TwoDataSum(data[i],data[j]))
+                }
+            }
+        }
+        bigA.push(thisrow)
+    }
+    let denom = determinant(bigA);
+
+    for (let i=0; i<data.length; i++){
+        let thisMat = [];
+        if (i==0){
+            for (let k=0; k<data.length; k++){
+                let thisRow = [];
+                for (let j=0; j<data.length; j++){
+                    if (k==0){
+                        thisRow.push(sums[j])
+                    } else {
+                        thisRow.push(TwoDataSum(data[j], data[k]))
+                    }
+                }
+                thisMat.push(thisRow)
+            }
+            determinants.push(determinant(thisMat))
+        } else {
+            for (let k=0; k<data.length; k++){
+                let thisRow = [];
+                if (k==0){
+                    for (let j=0; j<data.length; j++){
+                        if (j==0){
+                            thisRow.push(N0)
+                        } else {
+                            if (j==i){
+                                thisRow.push(sums[0])
+                            } else {
+                                thisRow.push(sums[j])
+                            }
+                        }
+                    }
+                } else {
+                    for (let j=0; j<data.length; j++){
+                        if (j==0){
+                            thisRow.push(sums[k])
+                        } else {
+                            //This should only fire when k = i
+                            if (j==i){
+                                thisRow.push(TwoDataSum(data[k], data[0]))    
+                            } else {
+                                thisRow.push(TwoDataSum(data[j], data[k]))
+                            }
+                        }
+                    }
+                }
+                thisMat.push(thisRow)
+            }
+            determinants.push(determinant(thisMat))
+        }
+        
+
+    }
+
+    //Solve Bs and push them into this array
+    let Bs = [];
+    for (let i=0; i<determinants.length; i++){
+        let number = determinants[i];
+        let pusher = safeDivision(number, denom);
+        Bs.push(pusher);
+    }
+
+    //Run analysis to find relevant vars for residuals and ss
+    let ybar = [];
+    let residuals = [];
+    let yvars = [];
+    let ytotals = [];
+
+    for (let i=0; i<N0; i++) {
+        let temp = 0;
+        for (let j=0; j<Bs.length; j++){
+            if (j==0){
+                temp += Bs[0]
+            } else {
+                //This is done in case there are tricky cases of NAN or stack overflow
+                try{
+                temp += Bs[j] * data[j][i]
+                }
+                catch {
+                    console.log("bvalue= "+Bs[j]+" datavalue= "+ data[j][i])
+                    temp =0;
+                }
+            }
+        }
+        ybar.push(temp);
+    }
+    for (let i=0; i<N0; i++) {
+        let temp = data[0][i] - ybar[i];
+        residuals.push(temp);
+    }
+    for (let i=0; i<N0; i++) {
+        let temp = ybar[i] - averages[0];
+        yvars.push(temp);
+    }
+    for (let i=0; i<N0; i++) {
+        let temp = data[0][i] - averages[0];
+        ytotals.push(temp);
+    }
+
+    //Calclulate relevant SS, MS, etc. from these 
+    let SSM = sumSquare(yvars);
+    let SSE = sumSquare(residuals);
+    let SST = sumSquare(ytotals);
+    let MSM = SSM / (data.length-1);
+    let MSE = SSE / (N0-data.length);
+    let F = MSM / MSE;
+    let R2 =  SSM / SST;
+    //let p = getPfromF(data.length, F, (data.length-1), (N0-data.length));
+
+    return {"F":F,"RegressionSS":SSM,"RegressionMS":MSM,"ResidualSS":SSE,"ResidualsMS":MSE,"df":data.length-1,"residuals":N0-data.length,"totalSS":SST, "totalN": N0-1, "Int": Bs[0], "R2":R2, "Bs":Bs}
 }

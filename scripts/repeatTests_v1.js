@@ -8,8 +8,17 @@ function gatherDatafromForm(k){
         let nameHelp = "data_set_"+i;
         let tempData = document.getElementById(nameHelp).value;
         let dataHelp1 = tempData.split("\n");
-        let blankChecker = dataHelp1.slice(-1);
-        if (blankChecker == "") {dataHelp1.pop();}
+        // Function to remove trailing empty elements 
+        function removeTrailingBlanks(array) { 
+            while (array[array.length - 1] === "") { 
+                array.pop(); 
+            } 
+            return array; 
+        } 
+        // Removing trailing blanks 
+        dataHelp1 = removeTrailingBlanks(dataHelp1);
+        
+        //Check if there are blanks or NaN in the middle
         if (dataHelp1.includes("") || dataHelp1.includes("NaN")) {
             isThereAnError = true;
             if (language == "en"){
@@ -21,6 +30,7 @@ function gatherDatafromForm(k){
             }
             document.getElementById('error_text').style.display = "inline";
         } else {
+            //Turn strings into numbers
             function numberify(set_o_data) {
                 temp_arry = [];
                 for (let i=0; i<set_o_data.length; i++){
@@ -29,7 +39,9 @@ function gatherDatafromForm(k){
                 }
                 return temp_arry;
             }
+
             let dataHelp2 = numberify(dataHelp1);
+            //Check that there are at least 6 numbers in each data set
             if (dataHelp2.length < 6) {
                 isThereAnError = true;
                 if (language == "en"){
@@ -1618,6 +1630,9 @@ var openFile = function(event) {
             } else if (/Testing of An Experimental and Control/.test(document.getElementById('Title').innerHTML) || /実験群・対照群の事前・事後データ比較/.test(document.getElementById('Title').innerHTML)){
                 tempK = 4;
             }
+        }
+        if(document.getElementById('noCovariates') && document.getElementById('noTests')){
+            tempK = (1 + parseInt(document.getElementById('noTests').value) + parseInt(document.getElementById('noCovariates').value))*2;
         }
         if (groups.length != tempK){
             language = document.getElementById('lang_s').value;

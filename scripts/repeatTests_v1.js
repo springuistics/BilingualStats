@@ -994,24 +994,43 @@ function getPfromChi(chi, df){
 
 //Gets p value from F; requires k first as well as dfs and dfw
 function getPfromF(k, f, n1, n2) {
-    var x=n2/(n1*f+n2);
-    var Pi=Math.PI; var PiD2=Pi/2;
+    let x=n2/(n1*f+n2);
+    var Pi=Math.PI; 
+    var PiD2=Pi/2;
     function StatCom(q,i,j,b) {
-		var zz=1; var z=zz; var k=i; while(k<=j) { zz=zz*q*k/(k-b); z=z+zz; k=k+2 }
+		let zz=1; let z=zz; let k=i; 
+        while(k<=j) { 
+            zz=zz*q*k/(k-b); 
+            z=z+zz; k=k+2;
+        }
 		return z
-		}
-    if((n1%2)==0) { return StatCom(1-x,n2,n1+n2-4,n2-2)*Math.pow(x,n2/2) }
-    if((n2%2)==0){ return 1-StatCom(x,n1,n1+n2-4,n1-2)*Math.pow(1-x,n1/2) }
-    var th=Math.atan(Math.sqrt(n1*f/n2)); var a=th/PiD2; var sth=Math.sin(th); var cth=Math.cos(th)
-    if(n2>1) { a=a+sth*cth*StatCom(cth*cth,2,n2-3,-1)/PiD2 }
-    if(n1==1) { return 1-a }
-    var c=4*StatCom(sth*sth,n2+1,n1+n2-4,n2-2)*sth*Math.pow(cth,n2)/Pi
-    if(n2==1) { return 1-a+c/2 }
-    while(k<=(n2-1)/2) {c=c*k/(k-.5); k=k+1 }
+	}
+    if((n1%2)==0) { 
+        return StatCom(1-x,n2,n1+n2-4,n2-2)*Math.pow(x,n2/2)
+    }
+    if((n2%2)==0){ 
+        return 1-StatCom(x,n1,n1+n2-4,n1-2)*Math.pow(1-x,n1/2) 
+    }
+    let th=Math.atan(Math.sqrt(n1*f/n2)); 
+    let a=th/PiD2; 
+    let sth=Math.sin(th); 
+    let cth=Math.cos(th);
+    if(n2>1) { 
+        a=a+sth*cth*StatCom(cth*cth,2,n2-3,-1)/PiD2 
+    }
+    if(n1==1) { 
+        return 1-a 
+    }
+    let c=4*StatCom(sth*sth,n2+1,n1+n2-4,n2-2)*sth*Math.pow(cth,n2)/Pi;
+    if(n2==1) { 
+        return 1-a+c/2 
+    }
+    while(k<=(n2-1)/2) {
+        c=c*k/(k-.5); 
+        k=k+1;
+    }
     return 1-a+c
 }
-
-//A bunch of functions to handle matrix math - each takes an ARRAY of ARRAYs (constituting the x / y in the matrix)
 
 //A bunch of functions to handle matrix math - each takes an ARRAY of ARRAYs (constituting the x / y in the matrix)
 function det2(mini){

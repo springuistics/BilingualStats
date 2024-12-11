@@ -1045,7 +1045,7 @@ function dlCsvofMC(){
             csv.push(row.join(','));
         }
         var csv_string = csv.join('\n');
-        let filename = 'multiCorrel_data_'+new Date().toLocaleDateString() + '.csv';
+        let filename = 'ancova_data_'+new Date().toLocaleDateString() + '.csv';
         var link = document.createElement('a');
         link.id = "temp_link"; 
         //link.style.display = 'none';

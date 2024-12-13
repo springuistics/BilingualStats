@@ -573,17 +573,12 @@ function runAncova(data){
 
     for (let i=0; i<extra.length; i++){
         for (let j=0; j<cov_t.length; j++){
-            //If there is only one covariate, push it in (becomes unused anyway)
-            //otherwise, push everything EXCEPT that covariate
-            if (covariates.length==1){
-                covatiateInteractionModels[i].push(cov_t[j][i]);
-            } else {
+            //Push everything EXCEPT that covariate
                 for (let x=0; x<extra.length; x++){
                     if (i!=x){
                         covatiateInteractionModels[i].push(cov_t[j][x]);
                     }
                 }
-            }
         }
     } 
 
@@ -687,15 +682,7 @@ function runAncova(data){
     let df_betweenCOV = (dataframe.length -1);
     let time_covariatesSS = [];
     for (let i=0; i<m_covariateInteraction.length; i++){
-        if (m_covariateInteraction.length == 2){
-            if (i==0){
-                time_covariatesSS.push(time_covariate - (m_complete.RegressionSS - m_covariateInteraction[1].RegressionSS) )
-            } else {
-                time_covariatesSS.push(m_complete.RegressionSS - m_covariateInteraction[i].RegressionSS)
-            }
-        } else {
             time_covariatesSS.push(m_complete.RegressionSS - m_covariateInteraction[i].RegressionSS)
-        }
     }
     let time_covariateMS = [];
     for (let i=0; i<time_covariatesSS.length; i++){
@@ -818,14 +805,22 @@ function runAncova(data){
     let ancovarow = document.createElement('tr');
     let ancovaHead = document.createElement('th');
     ancovaHead.setAttribute("colspan", "7");
-    ancovaHead.innerHTML = "ANCOVA Results";
+    if (language == "en"){
+        ancovaHead.innerHTML = "ANCOVA Results";
+    } else if (language == "jp"){
+        ancovaHead.innerHTML = "ANCOVAの結果";
+    }
     ancovarow.appendChild(ancovaHead);
     thead1.appendChild(ancovarow);
     
 
     let row_1 = document.createElement('tr');
     let heading_1 = document.createElement('th');
-    heading_1.innerHTML = "Factor";
+    if (language == "en"){
+        heading_1.innerHTML = "Factor";
+    } else if (language == "jp"){
+        heading_1.innerHTML = "要因";
+    }
     let heading_2 = document.createElement('th');
     heading_2.innerHTML = "df";
     let heading_3 = document.createElement('th');
@@ -856,13 +851,25 @@ function runAncova(data){
             let item = document.createElement('td');
             if (j==0){
                 if (i==0){
-                    item.innerHTML = "Time";
+                    if (language == "en"){
+                        item.innerHTML = "Time (tests)";
+                    } else if (language == "jp"){
+                        item.innerHTML = "時間（テスト比較）";
+                    }
                 } else if (i==1){
-                    item.innerHTML = "Time x Groups";
+                    if (language == "en"){
+                        item.innerHTML = "Time x Groups";
+                    } else if (language == "jp"){
+                        item.innerHTML = "時間 x グループ";
+                    }
                 } else {
                     if (covariatesK !=0){
                         let thisCov = testsK + (i-1);
-                        item.innerHTML = "Time x "+GroupNames[thisCov];
+                        if (language == "en"){
+                            item.innerHTML = "Time x "+GroupNames[thisCov];
+                        } else if (language == "jp"){
+                            item.innerHTML = "時間 x "+GroupNames[thisCov];
+                        }
                     }
                 }
                 item.style.textAlign = "left";
@@ -967,7 +974,11 @@ function runAncova(data){
     let ancovarow2 = document.createElement('tr');
     let ancovaHead2 = document.createElement('th');
     ancovaHead2.setAttribute("colspan", "7");
-    ancovaHead2.innerHTML = "1 to 1 Covariate Interactions (Between-Groups Results)";
+    if (language == "en"){
+        ancovaHead2.innerHTML = "1 to 1 Covariate Interactions (Between-Groups Results)";
+    } else if (language == "jp"){
+        ancovaHead2.innerHTML = "共変量の時間（テスト変化）への直接な影響（被験者間効果）";
+    }
     ancovarow2.appendChild(ancovaHead2);
     thead2.appendChild(ancovarow2);
     table.appendChild(thead2);
@@ -981,7 +992,11 @@ function runAncova(data){
             let item = document.createElement('td');
             if (j==0){
                 if (i==0){
-                    item.innerHTML = "Groups";
+                    if (language == "en"){
+                        item.innerHTML = "Groups";
+                    } else if (language == "jp"){
+                        item.innerHTML = "グループ";
+                    }
                 } else {
                     if (covariatesK !=0){
                         let thisCov = testsK + (i);

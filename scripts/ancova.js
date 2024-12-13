@@ -160,6 +160,10 @@ function Reset() {
         var act_area = document.getElementById(get_area);
         act_area.parentNode.removeChild(act_area);
     }
+    if(document.getElementById('data_table')){
+        document.getElementById('data_table').parentNode.removeChild(document.getElementById('data_table'))
+    };
+
     document.getElementById('button').style.display = "none";
     document.getElementById('datasets').style.display = "none";
     document.getElementById('reset').style.display = "none";
@@ -517,8 +521,15 @@ function runAncova(data){
         y_andAllCovariateModel.push(covariates[i]);
         for (let j=0; j<covariates.length; j++){
             covatiateInteractionModels[j].push(covariates[i]);
-            if (j==i){
+            //If there is only one covariate, push it into between models (becomes unused anyway)
+            //otherwise, push everything EXCEPT that covariate
+            if (covariates.length==1){
                 covariateBetweenModels[j].push(covariates[i]);
+            } else if (j!=i){
+                covariateBetweenModels[j].push(covariates[i]);
+            }
+            //Push groups just once for each covariate
+            if (j==i){
                 covariateBetweenModels[j].push(groups);
             }
         }
@@ -557,16 +568,31 @@ function runAncova(data){
         for (let x=0; x<cov_t[i].length; x++){
             completeModel.push(cov_t[i][x]);
             IntertactionModel.push(cov_t[i][x]);
-            for (let j=0; j<covatiateInteractionModels.length; j++){
-                if (i==j){
-                    covatiateInteractionModels[j].push(cov_t[x][j]);
+        }
+    } 
+
+    for (let i=0; i<extra.length; i++){
+        for (let j=0; j<cov_t.length; j++){
+            //If there is only one covariate, push it in (becomes unused anyway)
+            //otherwise, push everything EXCEPT that covariate
+            if (covariates.length==1){
+                covatiateInteractionModels[i].push(cov_t[j][i]);
+            } else {
+                for (let x=0; x<extra.length; x++){
+                    if (i!=x){
+                        covatiateInteractionModels[i].push(cov_t[j][x]);
+                    }
                 }
             }
         }
     } 
+
+
     for (let i=0; i<cov_t.length; i++){
-        for (let j=0; j<cov_t[i].length; j++)
-        covatiateInteractionModels[end].push(cov_t[i][j])
+        for (let j=0; j<cov_t[i].length; j++){
+            covatiateInteractionModels[end].push(cov_t[i][j])
+        }
+        
     }
 
 
@@ -610,7 +636,16 @@ function runAncova(data){
     let covErrorMS = covErrorSS / errorDF;
     let covBetweenSS = [];
     for (let i=0; i<m_betweenCov.length; i++){
-        covBetweenSS.push(m_yAndcovs.RegressionSS - m_betweenCov[i].RegressionSS);
+        if (m_betweenCov.length == 2){
+            //if there is only one covariate, use the m_grouponly to get the covariate betweeen calculation
+            if (i==0){
+                covBetweenSS.push(m_yAndcovs.RegressionSS - m_groupOnly.RegressionSS);
+            } else {
+                covBetweenSS.push(m_yAndcovs.RegressionSS - m_betweenCov[i].RegressionSS);
+            }
+        } else {
+            covBetweenSS.push(m_yAndcovs.RegressionSS - m_betweenCov[i].RegressionSS);
+        }
     }
     let covBetweenMS = [];
     for (let i=0; i<m_betweenCov.length; i++){
@@ -640,7 +675,7 @@ function runAncova(data){
     let errorSS = m_full.totalSS - m_full.RegressionSS - time_covariate;
     let df_time = dataframe.length-1;
     let df_inter = m_complete.df-m_interaction.df;
-    let w_errordf = errorDF*2;
+    let w_errordf = errorDF*(dataframe.length-1);
     let MS_t = time_within / df_time;
     let MS_interaction = time_covariate / df_inter;
     let MS_error = errorSS / w_errordf;
@@ -652,7 +687,15 @@ function runAncova(data){
     let df_betweenCOV = (dataframe.length -1);
     let time_covariatesSS = [];
     for (let i=0; i<m_covariateInteraction.length; i++){
-        time_covariatesSS.push(m_complete.RegressionSS - m_covariateInteraction[i].RegressionSS)
+        if (m_covariateInteraction.length == 2){
+            if (i==0){
+                time_covariatesSS.push(time_covariate - (m_complete.RegressionSS - m_covariateInteraction[1].RegressionSS) )
+            } else {
+                time_covariatesSS.push(m_complete.RegressionSS - m_covariateInteraction[i].RegressionSS)
+            }
+        } else {
+            time_covariatesSS.push(m_complete.RegressionSS - m_covariateInteraction[i].RegressionSS)
+        }
     }
     let time_covariateMS = [];
     for (let i=0; i<time_covariatesSS.length; i++){
@@ -841,9 +884,9 @@ function runAncova(data){
                     }
                 } else {
                     if (covariatesK !=0){
-                        let thisCov = time_covariatesSS.length-1;
-                        thisCov -= (i-1);
-                        item.innerHTML = time_covariatesSS[thisCov].toFixed(1);
+                        //let thisCov = time_covariatesSS.length-1;
+                        //thisCov -= (i-1);
+                        item.innerHTML = time_covariatesSS[i-2].toFixed(1);
                     }
                 }
             } else if (j==3) {
@@ -858,9 +901,9 @@ function runAncova(data){
                     }
                 } else {
                     if (covariatesK !=0){
-                        let thisCov = time_covariateMS.length-1;
-                        thisCov -= (i-1);
-                        item.innerHTML = time_covariateMS[thisCov].toFixed(1);
+                        //let thisCov = time_covariateMS.length-1;
+                        //thisCov -= (i-1);
+                        item.innerHTML = time_covariateMS[i-2].toFixed(1);
                     }
                 }
             } else if (j==4) {
@@ -875,9 +918,9 @@ function runAncova(data){
                     }
                 } else {
                     if (covariatesK !=0){
-                        let thisCov = time_covariateF.length-1;
-                        thisCov -= (i-1);
-                        item.innerHTML = time_covariateF[thisCov].toFixed(3);
+                        //let thisCov = time_covariateF.length-1;
+                        //thisCov -= (i-1);
+                        item.innerHTML = time_covariateF[i-2].toFixed(3);
                     }
                 }
             } else if (j==5) {
@@ -892,9 +935,9 @@ function runAncova(data){
                     }
                 } else {
                     if (covariatesK !=0){
-                        let thisCov = time_covariateP.length-1;
-                        thisCov -= (i-1);
-                        item.innerHTML = time_covariateP[thisCov].toFixed(2);
+                        //let thisCov = time_covariateP.length-1;
+                        //thisCov -= (i-1);
+                        item.innerHTML = time_covariateP[i-2].toFixed(2);
                     }
                 }
             } else if (j==6) {
@@ -909,9 +952,9 @@ function runAncova(data){
                     }
                 } else {
                     if (covariatesK !=0){
-                        let thisCov = time_covariateEtas.length-1;
-                        thisCov -= (i-1);
-                        item.innerHTML = time_covariateEtas[thisCov].toFixed(3);
+                        //let thisCov = time_covariateEtas.length-1;
+                        //thisCov -= (i-1);
+                        item.innerHTML = time_covariateEtas[i-2].toFixed(3);
                     }
                 }
             }
@@ -958,9 +1001,9 @@ function runAncova(data){
                     }
                 } else {
                     if (covariatesK !=0){
-                        let thisCov = covBetweenSS.length-1;
-                        thisCov -= (i);
-                        item.innerHTML = covBetweenSS[thisCov].toFixed(1);
+                        //let thisCov = covBetweenSS.length-1;
+                        //thisCov -= (i);
+                        item.innerHTML = covBetweenSS[i-1].toFixed(1);
                     }
                 }
             } else if (j==3) {
@@ -973,9 +1016,9 @@ function runAncova(data){
                     }
                 } else {
                     if (covariatesK !=0){
-                        let thisCov = covBetweenMS.length-1;
-                        thisCov -= (i);
-                        item.innerHTML = covBetweenMS[thisCov].toFixed(1);
+                        //let thisCov = covBetweenMS.length-1;
+                        //thisCov -= (i);
+                        item.innerHTML = covBetweenMS[i-1].toFixed(1);
                     }
                 }
             } else if (j==4) {
@@ -988,9 +1031,9 @@ function runAncova(data){
                     }
                 } else {
                     if (covariatesK !=0){
-                        let thisCov = covFs.length-1;
-                        thisCov -= (i);
-                        item.innerHTML = covFs[thisCov].toFixed(3);
+                        //let thisCov = covFs.length-1;
+                        //thisCov -= (i);
+                        item.innerHTML = covFs[i-1].toFixed(3);
                     }
                 }
             } else if (j==5) {
@@ -1003,9 +1046,9 @@ function runAncova(data){
                     }
                 } else {
                     if (covariatesK !=0){
-                        let thisCov = covPs.length-1;
-                        thisCov -= (i);
-                        item.innerHTML = covPs[thisCov].toFixed(2);
+                        //let thisCov = covPs.length-1;
+                        //thisCov -= (i);
+                        item.innerHTML = covPs[i-1].toFixed(2);
                     }
                 }
             } else if (j==6) {
@@ -1018,9 +1061,9 @@ function runAncova(data){
                     }
                 } else {
                     if (covariatesK !=0){
-                        let thisCov = covEtas.length-1;
-                        thisCov -= (i);
-                        item.innerHTML = covEtas[thisCov].toFixed(3);
+                        //let thisCov = covEtas.length-1;
+                        //thisCov -= (i);
+                        item.innerHTML = covEtas[i-1].toFixed(3);
                     }
                 }
             }

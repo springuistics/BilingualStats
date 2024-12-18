@@ -152,16 +152,18 @@ function SetUpP2(k) {
 
 function Reset() {
     language = document.getElementById('lang_s').value;
-    testsK = parseInt(document.getElementById('noTests').value);
-    covariatesK = parseInt(document.getElementById('noCovariates').value);
-    let k = (testsK+covariatesK+1)*2;
-    for (let i=0; i < k; i++ ) {
-        var get_area = "dumb_div_"+i;
-        var act_area = document.getElementById(get_area);
-        act_area.parentNode.removeChild(act_area);
+    for (let i=0; i < 40; i++ ) {
+        let get_area = "dumb_div_"+i;
+        if(document.getElementById(get_area)){
+            let act_area = document.getElementById(get_area);
+            act_area.parentNode.removeChild(act_area);
+        }
     }
     if(document.getElementById('data_table')){
         document.getElementById('data_table').parentNode.removeChild(document.getElementById('data_table'))
+    };
+    if(document.getElementById('data_table2')){
+        document.getElementById('data_table2').parentNode.removeChild(document.getElementById('data_table'))
     };
 
     document.getElementById('button').style.display = "none";
@@ -702,6 +704,117 @@ function runAncova(data){
         time_covariateEtas.push(safeDivision(time_covariatesSS[i], (errorSS+time_covariatesSS[i])));        
     }
 
+    //Do pairwise comparisons for ad-hoc
+    //Get covariate means
+    let covMeans = [];
+    for (let i=0; i<covariates.length; i++){
+        covMeans.push(average(covariates[i]))
+    }
+    //Set up group means
+    let groupmeans = [
+        [],
+        []
+    ];
+    //Push B0 for each time point into the two groups to begin with
+    for (let i=0; i<dataframe.length; i++){
+        groupmeans[0].push(m_complete.Bs[0]);
+        groupmeans[1].push(m_complete.Bs[0]);
+    }
+    //Add the appropriate Betas from the complete model for each group/time
+    for (let i=0; i<2; i++){
+        for (let j=0; j<dataframe.length; j++){
+            let a = dataframe.length;
+            let b = extra.length;
+            let c = (a-1)*b;
+            //Add in all the covariates that gotta be added in
+            for (let x=0; x<covMeans.length; x++){
+                groupmeans[i][j] += (m_complete.Bs[1+x] * covMeans[x]);
+                //groupmeans[i][j] += (m_complete.Bs[1+a+b+x]  * covMeans[x]);
+            }
+            //Add in the groups when they should be added in
+            if (i==1){
+                groupmeans[i][j] += m_complete.Bs[b+i];
+                if (j!=(a-1)){
+                    groupmeans[i][j] += m_complete.Bs[1+b+a+c+j];
+                }
+            }
+            //Add in the times when they should be
+            if (j!=(a-1)){
+                groupmeans[i][j] += m_complete.Bs[2+b+j];
+                //Add in the correct interaction model
+                let g = j*b;
+                for (let x=0; x<covMeans.length; x++){
+                    groupmeans[i][j] += (m_complete.Bs[1+a+b+g+x] * covMeans[x]);
+                }
+            }
+        }
+    }
+
+    //Prep stdevs, assuming 2 groups
+    let stdevs = [];
+    for (let i=0; i<2; i++){
+        let row = [];
+        for (let j=0; j<groupmeans[i].length; j++){
+            if (i==0){
+                let varinace = sumSquareOuterMean(groupmeans[i][j], dataframe[j]);
+                row.push(Math.sqrt((varinace / (dataframe[j].length -1))))
+            } else if (i==1){
+                let varinace = sumSquareOuterMean(groupmeans[i][j], dataframe2[j]);
+                row.push(Math.sqrt((varinace / (dataframe2[j].length -1))))
+            }
+        }
+        stdevs.push(row)
+    }
+
+    //Prep t-tests with bonferonni, ns should be inserted as n-1, k is number of comparisons
+    function correctedTtest (m1, m2, s1, s2, n1, n2, k){
+        let s_help = ((n1 / (n1 + n2))*s1) + ((n2 / (n1 + n2))*s2);
+        let ss1 = s_help / n1;
+        let ss2 = s_help / n2;
+        let difference = m1-m2;
+        let t = (m1 - m2) / (Math.sqrt(ss1 + ss2));
+        let df = (n1 + n2);
+        let p = getPfromT(t, df);
+        p *= k;
+        let d = 0;
+        let var1 = s1**2;
+        let var2 = ss2**2;
+        let sdpooled = Math.sqrt((var1 + var2) / (n1 + n2));
+        if ((n1 + n2 + 2) >= 50) {
+            d = (m1 - m2) / sdpooled;
+        } else {
+            d = ((m1 - m2) / sdpooled) * ((n1 + n1 - 1) / (n1 + n2 - 0.25)) * (Math.sqrt(((n1 + n1)/ (n1 + n2 + 2))))
+        }
+        d = Math.abs(d);
+        return {'diff':difference, 't': t, 'p':p, 'd':d}
+    }
+
+    let grouppairwise = [];
+    for (let i=0; i<groupmeans[0].length; i++){
+        let length1=dataframe[0].length-1;
+        let length2=dataframe2[0].length-1;
+        let thistest = correctedTtest(groupmeans[0][i], groupmeans[1][i], stdevs[0][i], stdevs[1][i], length1, length2, 1)
+        grouppairwise.push(thistest);
+    }
+
+    let timepairwise = [];
+    for (let i=0; i<groupmeans.length; i++){
+        let row = []; let thisK = dataframe.length;
+        for (let j=0; j<groupmeans[i].length; j++){
+            for (let x=j+1; x<groupmeans[i].length; x++){
+                if (i==0){
+                    row.push(correctedTtest(groupmeans[i][j],groupmeans[i][x], stdevs[i][j], stdevs[i][x], dataframe2[0].length-1, dataframe2[0].length-1,thisK))
+                } else if (i==1) {
+                    row.push(correctedTtest(groupmeans[i][j],groupmeans[i][x], stdevs[i][j], stdevs[i][x], dataframe2[0].length-1, dataframe2[0].length-1,thisK))
+                }
+            }
+        }
+        timepairwise.push(row);
+    }
+
+
+    
+
     var result1 = "";
     var result2 = "";
     language = document.getElementById('lang_s').value;
@@ -1086,6 +1199,259 @@ function runAncova(data){
         }
         tbody2.appendChild(row);
     }
+
+
+    //create repeat-test results:
+    let table2 = document.createElement('table');
+    document.getElementById('postHoc').appendChild(table2);
+    let thead1v2 = document.createElement('thead');
+    let thead2v2 = document.createElement('thead');
+    let tbody3 = document.createElement('tbody');
+    table2.appendChild(thead1v2);
+    table2.appendChild(thead2v2);
+    table2.appendChild(tbody3);
+    table2.className = "data_table";
+    table2.id = "data_table2";
+    let adhocrow = document.createElement('tr');
+    let adhochead = document.createElement('th');
+    adhochead.setAttribute("colspan", "3");
+
+    if (language == "en"){
+        adhochead.innerHTML = "Ad-hoc Tests: Adjusted Means for Groups over Time and Bonferroni-corrected <i>t</i>-tests";
+    } else if (language == "jp"){
+        adhochead.innerHTML = "アドホックテスト：グループとテストの調整済みの平均とボンフェローニ補正法をかけた<i>t</i>検定の比較";
+    }
+
+    adhocrow.appendChild(adhochead);
+    thead1v2.appendChild(adhocrow);
+    
+
+    let row_1_g = document.createElement('tr');
+    let heading_1_g = document.createElement('th');
+    if (language == "en"){
+        heading_1_g.innerHTML = "Time";
+    } else if (language == "jp"){
+        heading_1_g.innerHTML = "グループ・テスト";
+    }
+    let heading_2_g = document.createElement('th');
+    if (language == "en"){
+        heading_2_g.innerHTML = "Adjusted Mean<br>Group 1";
+    } else if (language == "jp"){
+        heading_2_g.innerHTML = "調整済みの平均<br>グループ１";
+    }
+    let heading_3_g = document.createElement('th');
+    if (language == "en"){
+        heading_3_g.innerHTML = "Adjusted Mean<br>Group 2";
+    } else if (language == "jp"){
+        heading_3_g.innerHTML = "調整済みの平均<br>グループ２";
+    }
+
+    row_1_g.appendChild(heading_1_g);
+    row_1_g.appendChild(heading_2_g);
+    row_1_g.appendChild(heading_3_g);
+    thead2v2.appendChild(row_1_g);
+
+    //Fill out Between-Groups part of the table
+    for (let i=0; i<groupmeans[0].length; i++){
+        let row = document.createElement('tr');
+            for (let j=0; j<3; j++){
+                let item = document.createElement('td');
+                if (j==0){
+                    if (i==0) {
+                        item.innerHTML = "Pre-test";
+                    } else {
+                        item.innerHTML = "Post-test "+(i);
+                    }
+                    item.style.textAlign = "left";
+                } else if (j==1){
+                    item.innerHTML = (groupmeans[0][i].toFixed(2));
+                } else if (j==2){
+                    item.innerHTML = (groupmeans[1][i].toFixed(2));
+                }
+                row.appendChild(item);
+            }
+        tbody3.appendChild(row);
+    }
+
+    let thead1v3 = document.createElement('thead');
+    let thead2v3 = document.createElement('thead');
+
+    let adhocrow2 = document.createElement('tr');
+    let adhochead2_a = document.createElement('th');
+    adhochead2_a.setAttribute("colspan", "5");
+
+    if (language == "en"){
+        adhochead2_a.innerHTML = "Comparisons Between Groups";
+    } else if (language == "jp"){
+        adhochead2_a.innerHTML = "グループの比較";
+    }
+
+    adhocrow2.appendChild(adhochead2_a);
+    thead1v3.appendChild(adhocrow2);
+    table2.appendChild(thead1v3);
+    table2.appendChild(thead2v3);
+
+    let row_1_g2 = document.createElement('tr');
+    let heading_1_g2 = document.createElement('th');
+    if (language == "en"){
+        heading_1_g2.innerHTML = "Comparison";
+    } else if (language == "jp"){
+        heading_1_g2.innerHTML = "比較";
+    }
+    let heading_2_g2 = document.createElement('th');
+    if (language == "en"){
+        heading_2_g2.innerHTML = "Difference in Mean";
+    } else if (language == "jp"){
+        heading_2_g2.innerHTML = "平均差";
+    }
+    let heading_3_g2 = document.createElement('th');
+    heading_3_g2.innerHTML = "<i>t</i>";
+    let heading_4_g2 = document.createElement('th');
+    heading_4_g2.innerHTML = "<i>p</i>";
+    let heading_5_g2 = document.createElement('th');
+    heading_5_g2.innerHTML = "<i>d</i>";
+
+    row_1_g2.appendChild(heading_1_g2);
+    row_1_g2.appendChild(heading_2_g2);
+    row_1_g2.appendChild(heading_3_g2);
+    row_1_g2.appendChild(heading_4_g2);
+    row_1_g2.appendChild(heading_5_g2);
+    thead2v3.appendChild(row_1_g2);
+
+    let tbody4 = document.createElement('tbody');
+    table2.appendChild(tbody4);
+
+    //Print these out now {'diff':difference, 't': t, 'p':p, 'd':d}
+    for (let i=0; i<grouppairwise.length; i++){
+        let row = document.createElement('tr');
+            for (let j=0; j<5; j++){
+                let item = document.createElement('td');
+                if (j==0){
+                    if (i==0) {
+                        item.innerHTML += "Pre-test (G1 x G2)";
+                    } else {
+                        item.innerHTML += "Post-test "+(i) + "(G1 x G2)";
+                    }
+                    item.style.textAlign = "left";
+                } if (j==1){
+                    item.innerHTML = (grouppairwise[i].diff.toFixed(2));
+                } if (j==2){
+                    item.innerHTML = (grouppairwise[i].t.toFixed(2));
+                } if (j==3){
+                    item.innerHTML = (grouppairwise[i].p.toFixed(2));
+                } if (j==4){
+                    item.innerHTML = (grouppairwise[i].d.toFixed(2));
+                }
+                row.appendChild(item);
+            }
+            tbody4.appendChild(row);
+    }
+    
+    //Make new heading and reprint old main row
+    let thead1v4 = document.createElement('thead');
+    let thead2v5 = document.createElement('thead');
+
+    let adhocnewrow = document.createElement('tr');
+    let adhochead2_b = document.createElement('th');
+    adhochead2_b.setAttribute("colspan", "5");
+    if (language == "en"){
+        adhochead2_b.innerHTML = "Comparisons Between Times";
+    } else if (language == "jp"){
+        adhochead2_b.innerHTML = "テスト間の比較";
+    }
+    adhocnewrow.appendChild(adhochead2_b);
+    thead1v4.appendChild(adhocnewrow);
+
+    table2.appendChild(thead1v4);
+    table2.appendChild(thead2v5);
+
+    let copyRow = document.createElement('tr');
+    let heading_1_g2c = document.createElement('th');
+    if (language == "en"){
+        heading_1_g2c.innerHTML = "Comparison";
+    } else if (language == "jp"){
+        heading_1_g2c.innerHTML = "比較";
+    }
+    let heading_2_g2c = document.createElement('th');
+    if (language == "en"){
+        heading_2_g2c.innerHTML = "Difference in Mean";
+    } else if (language == "jp"){
+        heading_2_g2c.innerHTML = "平均差";
+    }
+    let heading_3_g2c = document.createElement('th');
+    heading_3_g2c.innerHTML = "<i>t</i>";
+    let heading_4_g2c = document.createElement('th');
+    heading_4_g2c.innerHTML = "<i>p</i>";
+    let heading_5_g2c = document.createElement('th');
+    heading_5_g2c.innerHTML = "<i>d</i>";
+
+    copyRow.appendChild(heading_1_g2c);
+    copyRow.appendChild(heading_2_g2c);
+    copyRow.appendChild(heading_3_g2c);
+    copyRow.appendChild(heading_4_g2c);
+    copyRow.appendChild(heading_5_g2c);
+
+    thead2v5.appendChild(copyRow);
+    let tbody5 = document.createElement('tbody');
+    table2.appendChild(tbody5);
+
+
+    //
+    
+    
+
+    //Print these out
+    //Print these out now {'diff':difference, 't': t, 'p':p, 'd':d}
+    for (let i=0; i<timepairwise.length; i++){
+        for (let x=0; x<timepairwise[i].length; x++){
+            let row = document.createElement('tr');
+            for (let j=0; j<5; j++){
+                let item = document.createElement('td');
+                if (j==0){
+                    item.innerHTML = "Group "+(i+1);
+                    let k = dataframe.length;
+                    if (k==2){
+                        item.innerHTML += " Pretext x Posttest";
+                    }
+                    if (k==3){
+                        if (x==0) {
+                            item.innerHTML += " Pretext x Posttest 1";
+                        } else if (x==1) {
+                            item.innerHTML += " Pretest x Posttest 2";
+                        } else {
+                            item.innerHTML += " Posttest 1 x Posttest 2";
+                        }
+                    } else if (k==4){
+                        if (x==0){
+                        item.innerHTML += " Pretext x Posttest 1";
+                        } else if (x==1) {
+                            item.innerHTML += " Pretext x Posttest 2";
+                        } else if (x==2) {
+                            item.innerHTML += " Pretest x Posttest 3";
+                        } else if (x==3) {
+                            item.innerHTML += " Posttest 1 x Posttest 2";
+                        } else if (x==4) {
+                            item.innerHTML += " Posttest 1 x Posttest 3";
+                        } else if (x==5) {
+                            item.innerHTML += " Posttest 2 x Posttest 3";
+                        }
+                    }
+                    item.style.textAlign = "left";
+                } if (j==1){
+                    item.innerHTML = (timepairwise[i][x].diff.toFixed(2));
+                } if (j==2){
+                    item.innerHTML = (timepairwise[i][x].t.toFixed(2));
+                } if (j==3){
+                    item.innerHTML = (timepairwise[i][x].p.toFixed(2));
+                } if (j==4){
+                    item.innerHTML = (timepairwise[i][x].d.toFixed(2));
+                }
+                row.appendChild(item);
+            }
+            tbody5.appendChild(row);
+        }
+    }
+    
 }
 
 function dlCsvofMC(){

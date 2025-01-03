@@ -1,15 +1,6 @@
-function L_Change() {
-    language = document.getElementById('lang_s').value;
-    if (language == "jp") {
-        location.href = "../jp/ancova.html"
-    } else if (language == "en"){
-        location.href = "../en/ancova.html"
-    }
-}
 var details_of_test = "";
 var results_of_test = "";
 var testsK; var covariatesK;
-var language;
 var GroupNames = [];
 
 
@@ -163,7 +154,7 @@ function Reset() {
         document.getElementById('data_table').parentNode.removeChild(document.getElementById('data_table'))
     };
     if(document.getElementById('data_table2')){
-        document.getElementById('data_table2').parentNode.removeChild(document.getElementById('data_table'))
+        document.getElementById('data_table2').parentNode.removeChild(document.getElementById('data_table2'))
     };
 
     document.getElementById('button').style.display = "none";
@@ -750,50 +741,37 @@ function runAncova(data){
         }
     }
 
-    //Prep stdevs, assuming 2 groups
-    let stdevs = [];
-    for (let i=0; i<2; i++){
-        let row = [];
-        for (let j=0; j<groupmeans[i].length; j++){
-            if (i==0){
-                let varinace = sumSquareOuterMean(groupmeans[i][j], dataframe[j]);
-                row.push(Math.sqrt((varinace / (dataframe[j].length -1))))
-            } else if (i==1){
-                let varinace = sumSquareOuterMean(groupmeans[i][j], dataframe2[j]);
-                row.push(Math.sqrt((varinace / (dataframe2[j].length -1))))
-            }
-        }
-        stdevs.push(row)
-    }
-
-    //Prep t-tests with bonferonni, ns should be inserted as n-1, k is number of comparisons
-    function correctedTtest (m1, m2, s1, s2, n1, n2, k){
-        let s_help = ((n1 / (n1 + n2))*s1) + ((n2 / (n1 + n2))*s2);
-        let ss1 = s_help / n1;
-        let ss2 = s_help / n2;
-        let difference = m1-m2;
-        let t = (m1 - m2) / (Math.sqrt(ss1 + ss2));
-        let df = (n1 + n2);
-        let p = getPfromT(t, df);
-        p *= k;
-        let d = 0;
-        let var1 = s1**2;
-        let var2 = ss2**2;
-        let sdpooled = Math.sqrt((var1 + var2) / (n1 + n2));
+    function runComps(data1, data2, adj1, adj2){
+        let m1 = average(data1);
+        let m2 = average(data2);
+        let rawdif = (m1-m2)**2;
+        let truedif = adj1-adj2;
+        let n1 = data1.length;
+        let n2 = data2.length;
+        let corN = (1/n1)+(1/n2);
+        let inner = MS_t * (corN + (rawdif/m_complete.RegressionSS));
+        let se = Math.sqrt(inner)
+        let thist = truedif/se;
+        let thisp = getPfromT(thist, (n1+n2));
+        //Cohen's d
+        let s1 = stdev(data1);
+        let s2 = stdev(data2);
+        let d=0;
+        let sdpooled = Math.sqrt((s1**2 + s2**2) / (n1 + n2 -2));
         if ((n1 + n2 + 2) >= 50) {
             d = (m1 - m2) / sdpooled;
         } else {
             d = ((m1 - m2) / sdpooled) * ((n1 + n1 - 1) / (n1 + n2 - 0.25)) * (Math.sqrt(((n1 + n1)/ (n1 + n2 + 2))))
         }
         d = Math.abs(d);
-        return {'diff':difference, 't': t, 'p':p, 'd':d}
+        return {'diff':truedif, 'se': se, 't':thist, 'p':thisp, 'd':d}
     }
 
     let grouppairwise = [];
     for (let i=0; i<groupmeans[0].length; i++){
         let length1=dataframe[0].length-1;
         let length2=dataframe2[0].length-1;
-        let thistest = correctedTtest(groupmeans[0][i], groupmeans[1][i], stdevs[0][i], stdevs[1][i], length1, length2, 1)
+        let thistest = runComps(dataframe[i],dataframe2[i],groupmeans[0][i], groupmeans[1][i])
         grouppairwise.push(thistest);
     }
 
@@ -803,9 +781,9 @@ function runAncova(data){
         for (let j=0; j<groupmeans[i].length; j++){
             for (let x=j+1; x<groupmeans[i].length; x++){
                 if (i==0){
-                    row.push(correctedTtest(groupmeans[i][j],groupmeans[i][x], stdevs[i][j], stdevs[i][x], dataframe2[0].length-1, dataframe2[0].length-1,thisK))
+                    row.push(runComps(dataframe[j],dataframe[x],groupmeans[i][j],groupmeans[i][x]))
                 } else if (i==1) {
-                    row.push(correctedTtest(groupmeans[i][j],groupmeans[i][x], stdevs[i][j], stdevs[i][x], dataframe2[0].length-1, dataframe2[0].length-1,thisK))
+                    row.push(runComps(dataframe2[j],dataframe2[x],groupmeans[i][j],groupmeans[i][x]))
                 }
             }
         }
@@ -1278,7 +1256,7 @@ function runAncova(data){
 
     let adhocrow2 = document.createElement('tr');
     let adhochead2_a = document.createElement('th');
-    adhochead2_a.setAttribute("colspan", "5");
+    adhochead2_a.setAttribute("colspan", "6");
 
     if (language == "en"){
         adhochead2_a.innerHTML = "Comparisons Between Groups";
@@ -1304,6 +1282,12 @@ function runAncova(data){
     } else if (language == "jp"){
         heading_2_g2.innerHTML = "平均差";
     }
+    let heading_2_g2b = document.createElement('th');
+    if (language == "en"){
+        heading_2_g2b.innerHTML = "Std. Error";
+    } else if (language == "jp"){
+        heading_2_g2b.innerHTML = "標準偏差";
+    }
     let heading_3_g2 = document.createElement('th');
     heading_3_g2.innerHTML = "<i>t</i>";
     let heading_4_g2 = document.createElement('th');
@@ -1313,6 +1297,7 @@ function runAncova(data){
 
     row_1_g2.appendChild(heading_1_g2);
     row_1_g2.appendChild(heading_2_g2);
+    row_1_g2.appendChild(heading_2_g2b);
     row_1_g2.appendChild(heading_3_g2);
     row_1_g2.appendChild(heading_4_g2);
     row_1_g2.appendChild(heading_5_g2);
@@ -1324,7 +1309,7 @@ function runAncova(data){
     //Print these out now {'diff':difference, 't': t, 'p':p, 'd':d}
     for (let i=0; i<grouppairwise.length; i++){
         let row = document.createElement('tr');
-            for (let j=0; j<5; j++){
+            for (let j=0; j<6; j++){
                 let item = document.createElement('td');
                 if (j==0){
                     if (i==0) {
@@ -1336,10 +1321,12 @@ function runAncova(data){
                 } if (j==1){
                     item.innerHTML = (grouppairwise[i].diff.toFixed(2));
                 } if (j==2){
-                    item.innerHTML = (grouppairwise[i].t.toFixed(2));
+                    item.innerHTML = (grouppairwise[i].se.toFixed(2));
                 } if (j==3){
-                    item.innerHTML = (grouppairwise[i].p.toFixed(2));
+                    item.innerHTML = (grouppairwise[i].t.toFixed(2));
                 } if (j==4){
+                    item.innerHTML = (grouppairwise[i].p.toFixed(2));
+                } if (j==5){
                     item.innerHTML = (grouppairwise[i].d.toFixed(2));
                 }
                 row.appendChild(item);
@@ -1353,7 +1340,7 @@ function runAncova(data){
 
     let adhocnewrow = document.createElement('tr');
     let adhochead2_b = document.createElement('th');
-    adhochead2_b.setAttribute("colspan", "5");
+    adhochead2_b.setAttribute("colspan", "6");
     if (language == "en"){
         adhochead2_b.innerHTML = "Comparisons Between Times";
     } else if (language == "jp"){
@@ -1378,6 +1365,12 @@ function runAncova(data){
     } else if (language == "jp"){
         heading_2_g2c.innerHTML = "平均差";
     }
+    let heading_2_g2cb = document.createElement('th');
+    if (language == "en"){
+        heading_2_g2cb.innerHTML = "Std. Error";
+    } else if (language == "jp"){
+        heading_2_g2cb.innerHTML = "標準誤差";
+    }
     let heading_3_g2c = document.createElement('th');
     heading_3_g2c.innerHTML = "<i>t</i>";
     let heading_4_g2c = document.createElement('th');
@@ -1387,6 +1380,7 @@ function runAncova(data){
 
     copyRow.appendChild(heading_1_g2c);
     copyRow.appendChild(heading_2_g2c);
+    copyRow.appendChild(heading_2_g2cb);
     copyRow.appendChild(heading_3_g2c);
     copyRow.appendChild(heading_4_g2c);
     copyRow.appendChild(heading_5_g2c);
@@ -1405,7 +1399,7 @@ function runAncova(data){
     for (let i=0; i<timepairwise.length; i++){
         for (let x=0; x<timepairwise[i].length; x++){
             let row = document.createElement('tr');
-            for (let j=0; j<5; j++){
+            for (let j=0; j<6; j++){
                 let item = document.createElement('td');
                 if (j==0){
                     item.innerHTML = "Group "+(i+1);
@@ -1440,10 +1434,12 @@ function runAncova(data){
                 } if (j==1){
                     item.innerHTML = (timepairwise[i][x].diff.toFixed(2));
                 } if (j==2){
-                    item.innerHTML = (timepairwise[i][x].t.toFixed(2));
+                    item.innerHTML = (timepairwise[i][x].se.toFixed(2));
                 } if (j==3){
-                    item.innerHTML = (timepairwise[i][x].p.toFixed(2));
+                    item.innerHTML = (timepairwise[i][x].t.toFixed(2));
                 } if (j==4){
+                    item.innerHTML = (timepairwise[i][x].p.toFixed(2));
+                } if (j==5){
                     item.innerHTML = (timepairwise[i][x].d.toFixed(2));
                 }
                 row.appendChild(item);

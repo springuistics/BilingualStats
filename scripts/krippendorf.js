@@ -1,16 +1,8 @@
-function L_Change() {
-    var language = document.getElementById('lang_s').value;
-    if (language == "jp") {
-        location.href = "../jp/krippendorf.html"
-    } else if (language == "en"){
-        location.href = "../en/krippendorf.html"
-    }
-}
 
 var details_of_test = "";
 var results_of_test = "";
 var typeYo;
-var language;
+
 var GroupNames = [];
 
 function SetUp() {

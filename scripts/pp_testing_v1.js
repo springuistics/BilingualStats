@@ -1,15 +1,5 @@
-function L_Change() {
-    language = document.getElementById('lang_s').value;
-    if (language == "jp") {
-        location.href = "../jp/pp_testing.html";
-    } else if (language == "en"){
-        location.href = "../en/pp_testing.html";
-    }
-}
-
 var results_of_test = "";
 var details_of_test = "";
-
 
 function Calculate() {
     language = document.getElementById('lang_s').value;

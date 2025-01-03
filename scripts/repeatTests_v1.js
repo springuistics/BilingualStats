@@ -1,7 +1,29 @@
+var language;
+//Handles language change
+function L_Change(){
+    // Get the current URL path 
+    let currentPath = window.location.pathname; 
+    //Get current langauge
+    let language = document.getElementById('lang_s').value;
+    let newPath;
+    //Change if not in the right place now
+    if (language == "jp") {
+        if (currentPath.includes('/en/')) {
+            newPath = currentPath.replace('/en/', '/jp/'); 
+            window.location.href = newPath; 
+        }
+    } else if (language == "en"){
+        if (currentPath.includes('/jp/')) {
+            newPath = currentPath.replace('/jp/', '/en/'); 
+            window.location.href = newPath; 
+        }
+    }
+}
+
 //Preps all datasets and pushes them into an array of arrays
 //Requieres a k value and that all data sets have id of "data_set_i"
 function gatherDatafromForm(k){
-    var language = document.getElementById('lang_s').value;
+    language = document.getElementById('lang_s').value;
     var isThereAnError = false;
     var allTheData = [];
     for (let i=0; i<k; i++){
@@ -2116,6 +2138,213 @@ function doRegression(data){
     let F = MSM / MSE;
     let R2 =  SSM / SST;
     //let p = getPfromF(data.length, F, (data.length-1), (N0-data.length));
+    let helper_SeXs = [];
+    for (let i=1; i<data.length; i++){
+        let tempArray = [data[i]];
+        for (let j=1; j<data.length; j++){
+            if(j != i){
+                tempArray.push(data[j])
+            }
+        }
+        let newR2helper = reg2(tempArray);
+        helper_SeXs.push(newR2helper)
+    }
+    let SEs = [];
+    for (let i=0; i<helper_SeXs.length; i++){
+        SEs.push(Math.sqrt((1-R2)/((1-(helper_SeXs[i]))*(N0-data.length))) * ((Math.sqrt(variance(data[0]))) / (Math.sqrt(variance(data[i+1])))))
+    }
+    let tVals = [];
+    let pVals = [];
+    let betas = [];
+    for (let i=0; i<SEs.length; i++){
+        tVals.push(Bs[i+1]/SEs[i])
+    }
+    for (let i=0; i<tVals.length; i++){
+        pVals.push(getPfromT(tVals[i], (N0-data.length)))
+    }
+    for (let i=0; i<SEs.length; i++){
+        betas.push(Bs[i+1]* ((Math.sqrt(variance(data[i+1]))) / (Math.sqrt(variance(data[0])))))
+    }
 
-    return {"F":F,"RegressionSS":SSM,"RegressionMS":MSM,"ResidualSS":SSE,"ResidualsMS":MSE,"df":data.length-1,"residuals":N0-data.length,"totalSS":SST, "totalN": N0-1, "Int": Bs[0], "R2":R2, "Bs":Bs}
+    return {"F":F,"RegressionSS":SSM,"RegressionMS":MSM,"ResidualSS":SSE,"ResidualsMS":MSE,"df":data.length-1,"residuals":N0-data.length,"totalSS":SST, "totalN": N0-1, "Int": Bs[0], "R2":R2, "Bs":Bs, 'ts': tVals, 'ses': SEs}
+}
+
+function reg2(data){
+    //Set up variables to hold 
+    let N0 = data[0].length;
+    let averages = [];
+    let eachX1 = [];
+    let eachXy = [];
+    let eachXx = [];
+    let sumSqs = [];
+    let sums = [];
+
+    //Push the relevant information from the data matrix into the sub arrays
+    for (let i=0; i<data.length; i++){
+        averages.push(average(data[i]));
+        sums.push(sum(data[i]))
+        sumSqs.push(sumSquare(data[i]))
+    }
+    for (let i=1; i<data.length; i++){
+        eachX1.push(sumSquare(data[i]) - ((sum(data[i])**2)/N0) )
+    }
+    for (let i=1; i<data.length; i++){
+        eachXy.push(TwoDataSum(data[0], data[i]) - ((sum(data[0])*sum(data[i])) / N0))
+    }
+    for (let i=1; i<data.length; i++){
+        for (let j=(i+1); j<data.length; j++){
+            eachXx.push(TwoDataSum(data[i], data[j]) - ((sum(data[i])*sum(data[j])) / N0))
+        }
+    }
+    let MatrixFuel = [];
+    for (let i=0; i<data.length; i++){
+        if (i==0){
+
+        } else {
+            for (let j=0; j<data.length; j++){
+                if (i==0){
+                    MatrixFuel.push(sum(data[i]))
+                } else {
+
+                }
+            }
+        }
+        
+    }
+
+    //Solve determinants and store them in this array
+    let determinants = [];
+
+    let bigA = [];
+    for (let i=0; i<data.length; i++){
+        let thisrow = [];
+        if (i==0){
+            for (let j=0; j<data.length; j++){
+                if (j==0){
+                    thisrow.push(N0)
+                } else {
+                    thisrow.push(sums[j])
+                }
+            }
+        } else {
+            for (let j=0; j<data.length; j++){
+                if (j==0){
+                    thisrow.push(sums[i])
+                } else if (j==i) {
+                    thisrow.push(sumSqs[i])
+                } else {
+                    thisrow.push(TwoDataSum(data[i],data[j]))
+                }
+            }
+        }
+        bigA.push(thisrow)
+    }
+    let denom = determinant(bigA);
+
+    for (let i=0; i<data.length; i++){
+        let thisMat = [];
+        if (i==0){
+            for (let k=0; k<data.length; k++){
+                let thisRow = [];
+                for (let j=0; j<data.length; j++){
+                    if (k==0){
+                        thisRow.push(sums[j])
+                    } else {
+                        thisRow.push(TwoDataSum(data[j], data[k]))
+                    }
+                }
+                thisMat.push(thisRow)
+            }
+            determinants.push(determinant(thisMat))
+        } else {
+            for (let k=0; k<data.length; k++){
+                let thisRow = [];
+                if (k==0){
+                    for (let j=0; j<data.length; j++){
+                        if (j==0){
+                            thisRow.push(N0)
+                        } else {
+                            if (j==i){
+                                thisRow.push(sums[0])
+                            } else {
+                                thisRow.push(sums[j])
+                            }
+                        }
+                    }
+                } else {
+                    for (let j=0; j<data.length; j++){
+                        if (j==0){
+                            thisRow.push(sums[k])
+                        } else {
+                            //This should only fire when k = i
+                            if (j==i){
+                                thisRow.push(TwoDataSum(data[k], data[0]))    
+                            } else {
+                                thisRow.push(TwoDataSum(data[j], data[k]))
+                            }
+                        }
+                    }
+                }
+                thisMat.push(thisRow)
+            }
+            determinants.push(determinant(thisMat))
+        }
+        
+
+    }
+
+    //Solve Bs and push them into this array
+    let Bs = [];
+    for (let i=0; i<determinants.length; i++){
+        let number = determinants[i];
+        let pusher = safeDivision(number, denom);
+        Bs.push(pusher);
+    }
+
+    //Run analysis to find relevant vars for residuals and ss
+    let ybar = [];
+    let residuals = [];
+    let yvars = [];
+    let ytotals = [];
+
+    for (let i=0; i<N0; i++) {
+        let temp = 0;
+        for (let j=0; j<Bs.length; j++){
+            if (j==0){
+                temp += Bs[0]
+            } else {
+                //This is done in case there are tricky cases of NAN or stack overflow
+                try{
+                temp += Bs[j] * data[j][i]
+                }
+                catch {
+                    console.log("bvalue= "+Bs[j]+" datavalue= "+ data[j][i])
+                    temp =0;
+                }
+            }
+        }
+        ybar.push(temp);
+    }
+    for (let i=0; i<N0; i++) {
+        let temp = data[0][i] - ybar[i];
+        residuals.push(temp);
+    }
+    for (let i=0; i<N0; i++) {
+        let temp = ybar[i] - averages[0];
+        yvars.push(temp);
+    }
+    for (let i=0; i<N0; i++) {
+        let temp = data[0][i] - averages[0];
+        ytotals.push(temp);
+    }
+
+    //Calclulate relevant SS, MS, etc. from these 
+    let SSM = sumSquare(yvars);
+    let SSE = sumSquare(residuals);
+    let SST = sumSquare(ytotals);
+    let MSM = SSM / (data.length-1);
+    let MSE = SSE / (N0-data.length);
+    let F = MSM / MSE;
+    let R2 =  SSM / SST;
+    return R2;
 }

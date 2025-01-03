@@ -1,3 +1,24 @@
+//Handles language change
+function L_Change(){
+    // Get the current URL path 
+    let currentPath = window.location.pathname; 
+    //Get current langauge
+    let language = document.getElementById('lang_s').value;
+    let newPath;
+    //Change if not in the right place now
+    if (language == "jp") {
+        if (currentPath.includes('/en/')) {
+            newPath = currentPath.replace('/en/', '/jp/'); 
+            window.location.href = newPath; 
+        }
+    } else if (language == "en"){
+        if (currentPath.includes('/jp/')) {
+            newPath = currentPath.replace('/jp/', '/en/'); 
+            window.location.href = newPath; 
+        }
+    }
+}
+
 //Preps all datasets and pushes them into an array of arrays
 //Requieres a k value and that all data sets have id of "data_set_i"
 function gatherDatafromForm(k){

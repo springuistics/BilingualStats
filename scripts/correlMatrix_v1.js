@@ -1,13 +1,3 @@
-function L_Change() {
-    language = document.getElementById('lang_s').value;
-    if (language == "jp") {
-        location.href = "../jp/correlation_matrix.html"
-    } else if (language == "en"){
-        location.href = "../en/correlation_matrix.html"
-    }
-}
-
-var language;
 var GroupNames = [];
 
 function SetUp() {

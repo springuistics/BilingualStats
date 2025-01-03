@@ -1,15 +1,6 @@
-function L_Change() {
-    language = document.getElementById('lang_s').value;
-    if (language == "jp") {
-        location.href = "../jp/correlation_jp.html";
-    } else if (language == "en"){
-        location.href = "../en/correlation.html";
-    }
-}
 var details_of_test = "";
 var results_of_test = "";
 var ord_c1;
-var language;
 var GroupNames = [];
 
 

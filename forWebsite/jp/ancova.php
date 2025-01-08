@@ -7,7 +7,7 @@
 </head>
 <body>
     <script src="../scripts/repeatTests_v1.js?v=1"></script>
-    <script src="../scripts/ancova.js?v=1"></script>
+    <script src="../scripts/ancova.js?v=2"></script>
     <script src="../scripts/modalHelp_js.js?v=1"></script>
     <?php include 'languagebar.php'; ?>
     <div id="bigger">
@@ -52,7 +52,7 @@
                     <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('covariate')">?</button><p class="question" id="qq2" style="display:inline">  共変量の数*</p>
                 </div>
                 <div class="w3-cell w3-cell-middle w3-container w3-left-align" style="width: 50%; margin-top: 15px">
-                    <select class="w3-input w3-border-blue" id="noCovariates" style="width: 100px">
+                    <select class="w3-input w3-border-blue" id="noCovariates" style="width: 100px; text-align: center;">
                         <option value="x">--Select--</option>
                         <option value="0">0</option>
                         <option value="1">1</option>

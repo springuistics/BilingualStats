@@ -143,7 +143,7 @@ const messages = ['データをどう扱いたいかをまず考えてくださ�
 '実験群と対照群（又は比較群）があり、1つ以上の事後テスト、又は共変量がある場合、このオプションを選択してANCOVA（共分散分析）を実行します。このテストにより、グループ間、時間間、及びその2つの組み合わせに全体的な差異があるかどうかが判断されます。<br><br>2つの異なるグループが異なる対応（教授法など）を受けて、両方とも同じ事前テストと事後テストを受けた場合、この検定を利用できます。以下の条件がある場合は、上記の事前/事後実験/対照テストの代わりに、このオプションを選択してください：<br><ul><li>1つ以上の事後テスト（例：事後テストおよび遅延事後テスト）がある場合</li><li><u>共変量</u>：授業参加のスコア、課題に取り組んだ時間などの緩和要因の測定値がある場合</li></ul><br><br>共変量の測定値は、事前テスト及び事後テストと同じ尺度で測定する<span style="color:red"><b>必要がありません</b></span>が、事前テストおよび事後テストは同じ尺度で測定する<span style="color:red"><b>必要があります</b></span>。'
 ];
 
-const videos = ['yPRugR6AKx4','DkCh0CtlAgE','DyGrXeRuC1Y','goJM9wesAhU','6oRPbHrk1pY','aYV3bz6-iO0','uVYvqEwBQIs','SUvXzDtGc98','-M-s7VhH43U','_WgS3-GMaJg','_WgS3-GMaJg'];
+const videos = ['yPRugR6AKx4','DkCh0CtlAgE','DyGrXeRuC1Y','goJM9wesAhU','6oRPbHrk1pY','aYV3bz6-iO0','uVYvqEwBQIs','SUvXzDtGc98','-M-s7VhH43U','_WgS3-GMaJg','GY2eMJclDOA'];
 const indexes = ['testHelp','countsHelp','2dataCompHelp','3dataCompHelp','PrePostHelp','reliabilityHelp','otherTestsHelp', 'corrHelp', 'corrMatrixHelp', 'multiRegHelp', 'ancovaHelp'];
 
 function getHelp(section){

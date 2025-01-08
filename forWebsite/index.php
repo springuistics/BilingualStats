@@ -142,7 +142,7 @@ const messages = ['First, consider what you want to do with your data. <br><br>I
 'If you have an experimental and control (or comparison) group, with more than 1 post test and/or covariates, select this option to run an ANCOVA (analysis of covariance). This test will determine if there are overall differences between groups, times, and the combinations of the two. <br><br>You should choose this if you have two different groups who received different treatment, but both took the same pretests and posttests. You should select this as opposed to the simple pre/post experiment/control test above if you have:<br><ul><li>More than one posttest (e.g., posttest and delayed posttest)</li><li><u>Covariates</u>: measures of mitigating factors, such as participation scores, time spent on task, etc.</li></ul><br><br>Measures of covariates do <span style="color:red"><b>NOT</b></span> need to be made on the same scale as the pre- and posttests, but the pre- and posttests <span style="color:red"><b>MUST</b></span> be measured on the same scale.'
 ];
 
-const videos = ['mWYdiWBOLFs','yAEODGZthvA','IZQZRKaLurY','8LNnZOrEJRI','3Zy5We2ZNwk','qNp6tEc3kAs','oe1VJlN7jxQ','BnDWXxXni0w','YRauq4m569U','ciCupoz5NcM', 'ciCupoz5NcM'];
+const videos = ['mWYdiWBOLFs','yAEODGZthvA','IZQZRKaLurY','8LNnZOrEJRI','3Zy5We2ZNwk','qNp6tEc3kAs','oe1VJlN7jxQ','BnDWXxXni0w','YRauq4m569U','ciCupoz5NcM', 'xcV_AnfWYzs'];
 const indexes = ['testHelp','countsHelp','2dataCompHelp','3dataCompHelp','PrePostHelp','reliabilityHelp','otherTestsHelp', 'corrHelp', 'corrMatrixHelp', 'multiRegHelp', 'ancovaHelp'];
 
 function getHelp(section){

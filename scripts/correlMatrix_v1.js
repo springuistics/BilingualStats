@@ -136,12 +136,12 @@ function Calculate() {
             document.getElementById('error_text').style.display = "inline";
         } else {
             printDescriptives(allDescriptives);
-            calculateForReal(k, theBigData);
+            calculateForReal(k, theBigData, allDescriptives);
         }
     }
 }
 
-function calculateForReal(k, data){
+function calculateForReal(k, data, allDescriptives){
     let rs = [];
     let ordinal_check = document.querySelector('input[name="q1"]:checked').value;
     if (ordinal_check == "yes"){
@@ -188,6 +188,7 @@ function calculateForReal(k, data){
             }
         }
     } else if (ordinal_check == "uk"){
+        
         for (let i=0; i<data.length; i++){
             for (let j=0; j<data.length; j++){
                 if (j<=i){

@@ -186,7 +186,7 @@ function shapiroWilk (data) {
     }
     range = x[N - 1] - x[0];
     if (range < 0.0000000000001) {
-        return false;
+        return 0;
     }
     xx = x[0] / range;
     sx = xx;
@@ -194,7 +194,7 @@ function shapiroWilk (data) {
     for (i = 1, j = (N-1); i < N; j--) {
         xi = x[i] / range;
             if ((xx - xi) > 0.000000000000001) {
-                return false;
+                return 0;
             }
         sx += xi;
         i++;
@@ -1407,6 +1407,7 @@ function runDescriptives(dataset){
         let tempMax = copy.reduce((a, b) => Math.max(a, b));
         if (dataset[i].length<50){
             let normal = shapiroWilk(dataset[i]);
+            console.log(normal);
             finalResult.push({'n': dataset[i].length, 'm': average(dataset[i]).toFixed(3), 'sd' : stdev(dataset[i]).toFixed(4), 'mini': tempMin, 'maxi': tempMax, 'CIup':confidenceInt95upper(dataset[i]).toFixed(3), 'CIlow': confidenceInt95ower(dataset[i]).toFixed(3), 'skew':skewness(dataset[i]).toFixed(3), 'kurt':kurtosis(dataset[i]).toFixed(3), 'normType':'SW', 'norm':normal, 'normP':swPvalue(normal,dataset[i].length)});        
         } else {
             let normal = ksTestNormality(dataset[i]);

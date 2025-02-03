@@ -193,21 +193,27 @@ function Calculate() {
                     if (language == "en"){
                         if (checks.normal == false && leveneCheck.pValue<.05){
                             details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed one of the tests of normalcy*, and a Levene's test revealed the groups' variances were too different from each other (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"). Therefore the data was treated as ordinal. Since the data was not paired, a Kruskal-Wallis Test was used.";
+                            KW(k, theBigData);
                         } else if (checks.normal == false){
                             details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed one of the tests of normalcy*. Therefore the data was treated as ordinal. Since the data was not paired, a Kruskal-Wallis Test was used.";
+                            KW(k, theBigData);
                         } else {
-                            details_of_test = "Despite the continuous and normal* nature of your data, a Levene's test revealed the groups' variances were too different from each other (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"). Therefore the data was treated as ordinal. Since the data was not paired, a Kruskal-Wallis Test was used.";
+                            details_of_test = "Despite the continuous and normal* nature of your data, a Levene's test revealed the groups' variances were too different from each other (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"). Therefore, a Welch's ANOVA Test was used.";
+                            WelchesANOVA(k, theBigData);
                         } 
                     } else if (language == "jp"){
                         if (checks.normal == false && leveneCheck.pValue<.05){
                             details_of_test = "本データは連続データですが、正規性の検定の結果*によると、いずれか（あるいは両方）のデータセットがノンパラメトリックとみなされました。また、ルビーン検定の結果によると、データセット間の分散の均質性が不十分でした（<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"）。対応のないデータであるため、クラスカル=ウォリス検定で計算しました。";
+                            KW(k, theBigData);
                         } else if (checks.normal == false){
                             details_of_test = "本データは連続データですが、正規性の検定の結果*によると、いずれか（あるいは両方）のデータセットがノンパラメトリックとみなされました。対応のないデータであるため、クラスカル=ウォリス検定で計算しました。";
+                            KW(k, theBigData);
                         } else {
-                            details_of_test = "本データは連続データであり、正規性が確認*できましたが、ルビーン検定の結果によると、データセット間の分散の均質性が不十分でした（<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"）。対応のないデータであるため、クラスカル=ウォリス検定で計算しました。";
+                            details_of_test = "本データは連続データであり、正規性が確認*できましたが、ルビーン検定の結果によると、データセット間の分散の均質性が不十分でした（<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"）。対応のないデータであるため、ウェルチの一元配置分散分析で計算しました。";
+                            WelchesANOVA(k, theBigData);
                         }  
                     }
-                    KW(k, theBigData);
+                    
                 }
             } else {
                 if (pair_check == "yes") {
@@ -274,10 +280,6 @@ function StANOVA(k, theData) {
         SMsumqMeans.push(sumSquareOuterMean(means[i], theData[i]));
         MBs.push(ns[i] * ((means[i] - Mg) **2))
     }
-    console.log(means);
-    console.log(Mg);
-    console.log(ns);
-    console.log(MBs);
     let dfs = k-1;
     let SSW = sum(SMsumqMeans);
     let MSSW = SSW / (GN - k);
@@ -365,6 +367,153 @@ function StANOVA(k, theData) {
     results_of_test = result1 + result2 + result3 + "<br>" + results4;
     document.getElementById("explain_bun").innerHTML = details_of_test;
     document.getElementById("results_bun").innerHTML = results_of_test;
+}
+
+function WelchesANOVA(k, theData){
+    let Ns = [];
+    let Ms = [];
+    let Vars = [];
+    for (let i=0; i<theData.length; i++){
+        Ns.push(theData[i].length);
+        Ms.push(average(theData[i]));
+        Vars.push(variance(theData[i]));
+    }
+    let Ws = [];
+    for (let i=0; i<Ns.length; i++){
+        Ws.push(safeDivision(Ns[i],Vars[i]));
+    }
+    let means2 = [];
+    for (let i=0; i<Ns.length; i++){
+        means2.push(Ms[i]*Ws[i]);
+    }
+    let sumW = sum(Ws);
+    let superAv = (sum(means2))/sumW;
+    let As = [];
+    let Bs = [];
+    for (let i=0; i<Ws.length; i++){
+        As.push(Ws[i]*(Ms[i]-superAv)**2 );
+    }
+    for (let i=0; i<Ws.length; i++){
+        Bs.push( ((1-Ws[i]/sumW)**2)/(Ns[i]-1) );
+    }
+    let superA = sum(As) / (k-1);
+    let superB = sum(Bs);
+    let F = superA/(1+2*superB*(k-2)/(k**2-1));
+    let dfs = k-1;
+    let dfw = ((k**2)-1)/(3*superB);
+    let p = getPfromF(k, F, dfs, dfw);
+    F = F.toFixed(2);
+
+
+    //Calculate effect size
+    let SBsumsqMeans = [];
+    let mgHelp = [];
+    for (let i=0; i<k; i++){
+        for (let j=0; j<theData[i].length; j++){
+            mgHelp.push(theData[i][j]);
+        }
+    }
+    let Mg = average(mgHelp);
+    for (let i=0; i<k; i++){
+        SBsumsqMeans.push(sumSquareOuterMean(Mg, theData[i]));
+    }
+    let SMsumqMeans = [];
+    let MBs = [];
+    for (let i=0; i<k; i++){
+        SMsumqMeans.push(sumSquareOuterMean(Ms[i], theData[i]));
+        MBs.push(Ns[i] * ((Ms[i] - Mg) **2))
+    }
+    let SSW = sum(SMsumqMeans);
+    let MSB = sum(MBs);
+    let W2 = (MSB) / (MSB + SSW)
+    W2 =W2.toFixed(2);
+
+    //Post-hoc analysis with games-howell
+    let GN = sum(Ns);
+    let MSSW = SSW / (GN - k);
+    let combos = 0;
+    let HSDs = [];
+    let Groups = [];
+    for (let i=(k-1); i>0; i--){
+        combos += i;
+    }
+    for (let i=0; i<k; i++){
+        for (let j=(i+1); j<k; j++){
+            let var1 = variance(theData[i])/Ns[i];
+            let var2 = variance(theData[j])/Ns[j];
+            let ste = Math.sqrt((var1 + var2) /2);
+            let tempComp = (Math.abs(Ms[i] - Ms[j])) / (ste);
+            let thisDF = (4*(ste**4))/(((var1)**2)/(Ns[i]-1))+((var2)**2/(Ns[j]-1));
+            let tempP = tukeyMe(tempComp, k, thisDF); tempP = tempP.toFixed(2);
+            HSDs.push(tempP);
+            Groups.push({"group1":GroupNames[i], "group2":GroupNames[j]});
+        }
+    }
+    
+    //Spit out results
+    dfw = dfw.toFixed(2);
+    var result1 = "";
+    var result2 = "";
+    var result3 = "";
+    var results4 = "";
+    if (language == "en"){
+        if (W2<.15) {
+            results4 = "Furthermore, there was a small effect size;  <i>η<sup>2</i></sup> = " + W2;
+        } else if (W2<0.35) {
+            results4 =  "Furthermore, there was a medium effect size;  <i>η<sup>2</i></sup> = " + W2;
+        } else {
+            results4 =  "Furthermore, there was a large effect size;  <i>η<sup>2</i></sup> = " + W2;
+        }
+        if (p > 0.05) {
+            result1 = "There was no significant difference amongst any of the groups; "
+            p = p.toFixed(2);
+            result2 = "<i>F</i>[" + dfs + ", " + dfw + "] = " + F + ", <i>p</i> = " + p ;
+            result3 = ". Therefore, no pair-wise analysis will be conducted. "
+        } else {
+            var result1 = "There was a significant difference between at least two of the groups; "
+            if (p < 0.01) {
+                result2 = "<i>F</i>[" + dfs + ", " + dfw + "] = " + F + ", <i>p</i> < 0.01. ";
+            } else {
+                p = p.toFixed(2);
+                result2 = "<i>F</i>[" + dfs + ", " + dfw + "] = " + F + ", <i>p</i> = " + p + ". ";
+            }
+            result3 += "The significant differences between specific groups, as tested by a Tukey's HSD post-hoc analysis, is shown below: <br>";
+            for (let i=0; i<HSDs.length; i++){
+                result3 += Groups[i].group1+" x "+Groups[i].group2+": <i>p</i> = " + HSDs[i] + "<br>";
+            }
+        }
+    } else if (language == "jp"){
+        if (W2<.15) {
+            results4 = "また、小さい効果が観察されました。 <i>η<sup>2</i></sup> = " + W2;
+        } else if (W2<0.35) {
+            results4 =  "また、中くらいの効果が観察されました。 <i>η<sup>2</i></sup> = " + W2;
+        } else {
+            results4 =  "また、大きい効果が観察されました。 <i>η<sup>2</i></sup> = " + W2;
+        }
+        if (p > 0.05) {
+            result1 = "総合的な有意差はありませんでした（"
+            p = p.toFixed(2);
+            result2 = "<i>F</i>[" + dfs + ", " + dfw + "] = " + F + ", <i>p</i> = " + p;
+            result3 = "）ので、事後解析は省略します。"
+        } else {
+            result1 = "総合的な有意差はありました（ "
+            if (p < 0.01) {
+                result2 = "<i>F</i>[" + dfs + ", " + dfw + "] = " + F + ", <i>p</i> < 0.01 ）。";
+            } else {
+                p = p.toFixed(2);
+                result2 = "<i>F</i>[" + dfs + ", " + dfw + "] = " + F + ", <i>p</i> = " + p + "）。";
+            }
+            result3 += "）ので、事後解析としてTukeyのHSD検定でグループ間の差を計算しました。その結果：";
+            for (let i=0; i<HSDs.length; i++){
+                result3 += Groups[i].group1+" x "+Groups[i].group2+": <i>p</i> = " + HSDs[i] + "<br>";
+            }
+        }
+    }
+    results_of_test = result1 + result2 + result3 + "<br>" + results4;
+    document.getElementById("explain_bun").innerHTML = details_of_test;
+    document.getElementById("results_bun").innerHTML = results_of_test;
+
+    
 }
 
 function doHolms(holms) {

@@ -157,39 +157,50 @@ function Calculate() {
                 KW(k, theBigData);
             }
         } else {
-            let leveneCheck = levenesTest(theBigData);
-            if (checks.normal == false || leveneCheck.pValue<.05){
-                if (pair_check == "yes") {
-                    if (checks.pairs == false){
-                        if (language == "en"){
-                            document.getElementById("error_text").innerHTML = "Paired data sets should contain the same number of values (i.e., participants, instances, etc.). You have selected paired data, but your data sets have different numbers of values. Please check, amend as necessary and retry.";
-                            document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
-                        } else if (language == "jp"){
-                            document.getElementById("error_text").innerHTML = "組に異なる数のデータが入力されています（対応のあるデータは、全組に同じ数のデータを含みます）。それぞれの組に同数のデータが入っているかを確認し、もう一度試してみてください。";
-                            document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
-                        }
-                        document.getElementById('error_text').style.display = "inline";
-                    } else {
-                        if (language == "en"){
-                            if (checks.normal == false && leveneCheck.pValue<.05){
-                                details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed one of the tests of normalcy*, and a Levene's test revealed the groups' variances were too different from each other (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"). Therefore the data was treated as ordinal. Since the data was paired, a Friedman's Test was used.";
-                            } else if (checks.normal == false){
-                                details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed one of the tests of normalcy*. Therefore the data was treated as ordinal. Since the data was paired, a Friedman's Test was used.";
-                            } else {
-                                details_of_test = "Despite the continuous and normal* nature of your data, a Levene's test revealed the groups' variances were too different from each other (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"). Therefore the data was treated as ordinal. Since the data was paired, a Friedman's Test was used.";
-                            } 
-                        } else if (language == "jp"){
-                            if (checks.normal == false && leveneCheck.pValue<.05){
-                                details_of_test = "本データは連続データですが、正規性の検定の結果*によると、いずれか（あるいは両方）のデータセットがノンパラメトリックとみなされました。また、ルビーン検定の結果によると、データセット間の分散の均質性が不十分でした（<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"）。対応のあるデータであるため、フリードマン検定で計算しました。";
-                            } else if (checks.normal == false){
-                                details_of_test = "本データは連続データですが、正規性の検定の結果*によると、いずれか（あるいは両方）のデータセットがノンパラメトリックとみなされました。対応のあるデータであるため、フリードマン検定で計算しました。";
-                            } else {
-                                details_of_test = "本データは連続データであり、正規性が確認*できましたが、ルビーン検定の結果によると、データセット間の分散の均質性が不十分でした（<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"）。対応のあるデータであるため、フリードマン検定で計算しました。";
-                            }   
-                        }
-                        Friedman(k, theBigData);
+            if (pair_check == "yes"){
+                let malchy = mauchlysTest(theBigData);
+                if (checks.pairs == false){
+                    if (language == "en"){
+                        document.getElementById("error_text").innerHTML = "Paired data sets should contain the same number of values (i.e., participants, instances, etc.). You have selected paired data, but your data sets have different numbers of values. Please check, amend as necessary and retry.";
+                        document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
+                    } else if (language == "jp"){
+                        document.getElementById("error_text").innerHTML = "組に異なる数のデータが入力されています（対応のあるデータは、全組に同じ数のデータを含みます）。それぞれの組に同数のデータが入っているかを確認し、もう一度試してみてください。";
+                        document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
                     }
-                } else if (pair_check == "no") {
+                    document.getElementById('error_text').style.display = "inline";
+                } else {
+                    if (language == "en"){
+                        if (checks.normal == false){
+                            details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed one of the tests of normalcy*. Therefore the data was treated as ordinal. Since the data was paired, a Friedman's Test was used.";
+                            Friedman(k, theBigData);
+                        } else {
+                            if (malchy.p < .05){
+                                details_of_test = "Due to the continuous and normal nature of the data, as checked by an appropriate test of normality*, a repeated measures ANOVA was used. However, because the data violated the assumption of sphericity as checked by Mauchly's Test of Sphericity (<i>w</i> = "+malchy.w.toFixed(2)+"; <i>p</i> = "+malchy.p.toFixed(2)+"), a Huynh and Feldt epsilon correction was used.";
+                                RepANOVA(k, theBigData, true);
+                            } else {
+                                details_of_test = "Due to the continuous and normal nature of the data, as checked by an appropriate test of normality*, and no violation of sphericity as checked by Mauchly's Test of Sphericity (<i>w</i> = "+malchy.w.toFixed(2)+"; <i>p</i> = "+malchy.p.toFixed(2)+"), and the fact that the data was paired, a one-way repeated measures ANOVA without correction was used.";
+                                RepANOVA(k, theBigData, false);
+                            }
+                        } 
+                    } else if (language == "jp"){
+                        if (checks.normal == false){
+                            details_of_test = "本データは連続データですが、正規性の検定の結果*によると、いずれか（あるいは両方）のデータセットがノンパラメトリックとみなされました。対応のあるデータであるため、フリードマン検定で計算しました。";
+                            Friedman(k, theBigData);
+                        } else {
+                            if (malchy.p < .05){
+                                details_of_test = "本データは連続データで、Mauchlyの球面性検定が満たされていない（<i>w</i> = "+malchy.w.toFixed(2)+"; <i>p</i> = "+malchy.p.toFixed(2)+"）が、 正規性の検定*で全てのデータはパラメトリックであることが確認できました。また、対応のあるデータであるため、Huynh-Feldtのイプシロンで自由度の調整をかけた反復測定分散分析で計算しました。"
+                                RepANOVA(k, theBigData, true);
+                            } else {
+                                details_of_test = "本データは連続データで、Mauchlyの球面性検定が満たされ（<i>w</i> = "+malchy.w.toFixed(2)+"; <i>p</i> = "+malchy.p.toFixed(2)+"）、 正規性の検定*で全てのデータはパラメトリックであることが確認できました。また、対応のあるデータであるため、反復測定分散分析で計算しました。";
+                                RepANOVA(k, theBigData, false);
+                            }
+                        }   
+                    }
+                    
+                }
+            } else {
+                let leveneCheck = levenesTest(theBigData);
+                if (checks.normal == false || leveneCheck.pValue<.05){
                     if (language == "en"){
                         if (checks.normal == false && leveneCheck.pValue<.05){
                             details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed one of the tests of normalcy*, and a Levene's test revealed the groups' variances were too different from each other (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"). Therefore the data was treated as ordinal. Since the data was not paired, a Kruskal-Wallis Test was used.";
@@ -213,28 +224,7 @@ function Calculate() {
                             WelchesANOVA(k, theBigData);
                         }  
                     }
-                    
-                }
-            } else {
-                if (pair_check == "yes") {
-                    if (checks.pairs == false){
-                        if (language == "en"){
-                            document.getElementById("error_text").innerHTML = "Paired data sets should contain the same number of values (i.e., participants, instances, etc.). You have selected paired data, but your data sets have different numbers of values. Please check, amend as necessary and retry.";
-                            document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
-                        } else if (language == "jp"){
-                            document.getElementById("error_text").innerHTML = "組に異なる数のデータが入力されています（対応のあるデータは、全組に同じ数のデータを含みます）。それぞれの組に同数のデータが入っているかを確認し、もう一度試してみてください。";
-                            document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
-                        }
-                        document.getElementById('error_text').style.display = "inline";
-                    } else {
-                        if (language == "en"){
-                            details_of_test = "Due to the continuous and normal nature of the data, as checked by an appropriate test of normality*, the homogenity of variance, as checked by a Leven's test (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"), and the fact that the data was paired, a one-way repeated measures ANOVA was used.";
-                        } else if (language == "jp"){
-                            details_of_test = "本データは連続データで、分散の均質性がルビーン検定で確認できて（<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"）、正規性の検定*で全てのデータはパラメトリックであることが確認できました。また、対応のあるデータであるため、反復測定分散分析で計算しました。";
-                        }
-                        RepANOVA(k, theBigData);
-                    }
-                } else if (pair_check == "no") {
+                } else {
                     if (language == "en"){
                         details_of_test = "Due to the continuous and normal nature of the data, as checked by an appropriate test of normality*, the homogenity of variance, as checked by a Leven's test (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"), and the fact that the data was not paired, an ANOVA (non-repeated measures) was used.";
                     } else if (language == "jp"){
@@ -243,6 +233,7 @@ function Calculate() {
                     StANOVA(k, theBigData);
                 }
             }
+
         }
     } else {
         if (language == "en"){
@@ -528,9 +519,10 @@ function doHolms(holms) {
     }
 }
 
-function RepANOVA(k,theData) {
+function RepANOVA(k,theData, check) {
     let means = [];
     let ns = [];
+    let vars = [];
     let SBsumsqMeans = [];
     let mgHelp = [];
     for (let i=0; i<k; i++){
@@ -539,6 +531,7 @@ function RepANOVA(k,theData) {
         for (let j=0; j<theData[i].length; j++){
             mgHelp.push(theData[i][j]);
         }
+        vars.push(variance(theData[i]));
     }
     let Mg = average(mgHelp);
     let GN = sum(ns);
@@ -568,12 +561,57 @@ function RepANOVA(k,theData) {
     let SSE = SST - SSB - SSS;
     let dfb = k-1;
     let dfs = singleN-1;
-    let dfe = dfb * dfs;
+    let dfe = ((k*singleN)-1) - dfb - dfs;
     let MSSB = SSB / dfb;
     let MSSS = SSS / dfs;
-    let MSE = SSE / (dfb * dfs);
-    let = SSE / (dfb * dfs);
-    let F = MSSB / MSE;
+    let MSE;
+    let F;
+    let W2;
+    if (check==false){
+        MSE = SSE / (dfb * dfs);
+        F = MSSB / MSE;
+        W2 = SSB / (SSB + SSE);
+    } else {
+        let meanVar = average(vars);
+        let covMat = covarianceMatrix(theData);
+        let allcovs = [];
+        let MMmeans = [];
+        for (let i=0; i<covMat.length; i++){
+            let temparray = [];
+            for (let j=0; j<covMat.length; j++){
+                temparray.push(covMat[j][i]);
+            }
+            MMmeans.push(average(temparray));
+        }
+        for (let i=0; i<covMat.length; i++){
+            for (let j=0; j<covMat[i].length; j++){
+                allcovs.push(covMat[i][j]);
+            }
+        }
+        let matrixMean = average(allcovs);
+        let SSmatrix = sumSquare(allcovs);
+        let SSrowmeans = sumSquare(MMmeans);
+        let GGnum = (k*(meanVar-matrixMean))**2;
+        let GGdenom = (k-1)*(SSmatrix-2*k*SSrowmeans+k**2*matrixMean**2);
+        let GGep = GGnum/GGdenom;
+        let HFnum = singleN*(k-1)*GGep-2;
+        let HFdenom = (k-1)*(singleN-1-(k-1)*GGep);
+        let HFepsilon = HFnum/HFdenom;
+        let dfbGG = MSSB * GGep;
+        let MSGG = SSE/dfbGG;
+        let efGG = dfe * GGep;
+        let MSEGG = SSE/efGG;
+        dfb *= HFepsilon;
+        dfe *= HFepsilon;
+        MSSB = SSB / dfb;
+        MSE = SSE / dfe;
+        F = MSSB / MSE;
+        let esNum = (singleN-k)/(singleN*k)*(MSGG-MSEGG);
+        let esDenom = MSGG+(SSB-MSEGG)/k+esNum;
+        W2 = esNum/esDenom;
+    }
+
+
 
     //Ad hoc testing using Holmes' method
     let combos = 0;
@@ -581,7 +619,6 @@ function RepANOVA(k,theData) {
     let Groups = [];
     for (let i=(k-1); i>0; i--){
         combos += i;
-        console.log(combos);
     }
     for (let i=0; i<k; i++){
         for (let j=(i+1); j<k; j++){
@@ -600,10 +637,11 @@ function RepANOVA(k,theData) {
 
     //Fine tuning and effect size
     let p = getPfromF(k, F, dfb, dfs);
-    F = F.toFixed(2);
-    let W2 = SSB / (SSB + SSE);
     W2 = W2.toFixed(2);
-
+    F = F.toFixed(2);
+    if (check==true){
+        dfb = dfb.toFixed(2);
+    }
     //Wrap up the results
     let result1 = "";
     let result2 = "";
@@ -926,3 +964,62 @@ function Friedman(k, theData) {
     document.getElementById("explain_bun").innerHTML = details_of_test;
     document.getElementById("results_bun").innerHTML = results_of_test;
 }
+
+
+//For checking sphericity
+function mauchlysTest(data) {
+    let covMatrix = covarianceMatrix(data);
+    let k = data.length;
+    let n = data[0].length;
+
+    let sumsacross = [];
+    let sumsdown = [];
+    for (let i=0; i<covMatrix.length; i++){
+        let sum = 0;
+        let tate = [];
+        for (let j=0; j<covMatrix.length; j++){
+            sum += covMatrix[i][j];
+            tate.push(covMatrix[j][i]);
+        }
+        sumsacross.push(sum);
+        let thisValue = 0;
+        for (let i=0; i<tate.length; i++){
+            thisValue+=tate[i];
+        }
+        sumsdown.push(thisValue);
+    }
+    let avgacross = [];
+    let avgdown = [];
+    for (let i=0; i<sumsacross.length; i++){
+        avgacross.push(sumsacross[i]/covMatrix.length);
+        avgdown.push(sumsdown[i]/covMatrix.length);
+    }
+    let bigAvg = average(avgacross);
+    let newMatrix = [];
+    for (let i=0; i<covMatrix.length; i++){
+        let row = [];
+        for (let j=0; j<covMatrix.length; j++){
+            row.push(covMatrix[i][j]-avgacross[i]-avgdown[j]+bigAvg);
+        }
+        newMatrix.push(row);
+    }
+
+    let eig = numeric.eig(newMatrix);
+    let eigenvalues = eig.lambda.x;
+    let eigenvectors = eig.E;
+    let product = 1;
+    let sum = 0;
+    for (let i=0; i<eigenvalues.length-1; i++){
+        product *= eigenvalues[i];
+        sum += eigenvalues[i];
+    }
+
+    let w = product/(sum/(k-1))**(k-1);
+    let hisF = (2*(k-1)**2+k+1)/(6*(k-1)*(n-1));
+    let chi = (hisF-1)*(n-1)*Math.log(w);
+    let hisdf =k*(k-1)/2-1;
+    let thisp = getPfromChi(chi, hisdf);
+
+    return {'w':w, 'p':thisp,'chi':chi};
+}
+

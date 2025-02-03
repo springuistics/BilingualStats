@@ -461,6 +461,32 @@ function variance (data) {
     return (ss / (data.length-1)); 
 }
 
+function covariance(data1, data2){
+    let average1 = average(data1);
+    let average2 = average(data2);
+    let products = [];
+    for (let i=0; i<data1.length; i++){
+        products.push((data1[i]-average1)*(data2[i]-average2))
+    }
+    return ((sum(products))/(data1.length-1));
+}
+
+function covarianceMatrix(data){
+    let bigdaddy = [];
+    for (let i=0; i<data.length; i++){
+        let row = [];
+        for (let j=0; j<data.length; j++){
+            if (i==j){
+                row.push(variance(data[i]))
+            } else {
+                row.push(covariance(data[i], data[j]))
+            }
+        }
+        bigdaddy.push(row);
+    }
+    return bigdaddy;
+}
+
 function stdev (data) {
     return (Math.sqrt(variance(data)));
 }
@@ -1011,6 +1037,9 @@ function getPfromChi(chi, df){
         return Math.exp(-x + (s - 0.5) * Math.log(x) - Math.log(sum));
     }
     let theP = incompleteGammaFunction(df, chi);
+    if (isNaN(theP)){
+        theP = 0.000000001;
+    }
     return theP;
 }
 
@@ -1393,7 +1422,21 @@ function identityMatrix(N) {
     return I;
 }
 
+function findTrace(matrix) {
+    let trace = 0;
 
+    // Ensure the matrix is square
+    if (matrix.length !== matrix[0].length) {
+        throw new Error("The matrix must be square.");
+    }
+
+    // Sum the elements on the main diagonal
+    for (let i = 0; i < matrix.length; i++) {
+        trace += matrix[i][i];
+    }
+
+    return trace;
+}
 
 //Takes an array of arrays. Returns an array of dictionaries with values
 function runDescriptives(dataset){
@@ -1407,7 +1450,6 @@ function runDescriptives(dataset){
         let tempMax = copy.reduce((a, b) => Math.max(a, b));
         if (dataset[i].length<50){
             let normal = shapiroWilk(dataset[i]);
-            console.log(normal);
             finalResult.push({'n': dataset[i].length, 'm': average(dataset[i]).toFixed(3), 'sd' : stdev(dataset[i]).toFixed(4), 'mini': tempMin, 'maxi': tempMax, 'CIup':confidenceInt95upper(dataset[i]).toFixed(3), 'CIlow': confidenceInt95ower(dataset[i]).toFixed(3), 'skew':skewness(dataset[i]).toFixed(3), 'kurt':kurtosis(dataset[i]).toFixed(3), 'normType':'SW', 'norm':normal, 'normP':swPvalue(normal,dataset[i].length)});        
         } else {
             let normal = ksTestNormality(dataset[i]);

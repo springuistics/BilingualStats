@@ -154,7 +154,7 @@ function theSetup(k){
                     }
                 } else if (pair_check == "no") {
                     if (language == "en"){
-                        details_of_test = "Due to the continuous and normal nature of the data, as checked by an appropriate test of normality*, as checked by a Leven's test (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"), and the fact that the data was not paired, an independent t-test was used.";
+                        details_of_test = "Due to the continuous and normal nature of the data, as checked by an appropriate test of normality*, the homogenity of variance, as checked by a Leven's test (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"), and the fact that the data was not paired, an independent t-test was used.";
                     } else if (language == "jp"){
                         details_of_test = "本データは連続データで、分散の均質性がルビーン検定で確認できて（<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"）、正規性の検定*で全てのデータはパラメトリックであることが確認できました。対応のないデータであるため、独立したt検定で計算しました。";
                     }

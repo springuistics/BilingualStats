@@ -1471,6 +1471,17 @@ function dlCsvofMC(){
                 }
             csv.push(row.join(','));
         }
+        var rows = document.querySelectorAll('table#data_table2 tr');
+        for (var i=0; i<rows.length; i++) {
+            var row = [];
+            var cols = rows[i].querySelectorAll('td, th');
+                for (var j=0; j <cols.length; j++) {
+                    var data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s\s)/gm, ' ');
+                    data = data.replace(/"/g, '""');
+                    row.push('"' + data + '"');
+                }
+            csv.push(row.join(','));
+        }
         var csv_string = csv.join('\n');
         let filename = 'ancova_data_'+new Date().toLocaleDateString() + '.csv';
         var link = document.createElement('a');

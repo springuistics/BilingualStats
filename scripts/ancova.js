@@ -1523,8 +1523,7 @@ function depTtest(data1, data2){
     for (let i = 0; i < ss.length; i++) {
         ss2 += ((ss[i] - numerator) ** 2);
     }
-    const ss3 = ss2 / Nm;
-    const denominator = ss3 / data1.length;
+    const denominator = (ss2 / Nm) / N;
     const t = numerator / (Math.sqrt(denominator));
     const p = getPfromT(t, Nm);
     let possibleSD1 = stdev(data1);
@@ -1594,3 +1593,4 @@ function runHolmCorrection(dataset){
     }
     return holms;
 }
+

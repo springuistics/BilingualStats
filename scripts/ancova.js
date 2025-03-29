@@ -771,7 +771,6 @@ function runAncova(data){
 
     function runComps(data1, data2, adj1, adj2, isPaired){     
         const truedif = adj1-adj2;
-        console.log(truedif);
         let testresults;
         if (isPaired == true){
             testresults = depTtest(data1, data2);
@@ -1528,12 +1527,9 @@ function depTtest(data1, data2){
     const denominator = ss3 / data1.length;
     const t = numerator / (Math.sqrt(denominator));
     const p = getPfromT(t, Nm);
-    let variance = 0;
-    for (let number of ss) {
-        variance += ((number - numerator) ** 2); 
-    }
-    const sdford = Math.sqrt(variance / Nm);
-    let d = numerator / sdford;
+    let possibleSD1 = stdev(data1);
+    let possibleSD2 = stdev(data2);
+    let d = numerator/((possibleSD1+possibleSD2)/2);
     d = Math.abs(d);
     return {'t':t, 'p':p, 'd':d}
 }

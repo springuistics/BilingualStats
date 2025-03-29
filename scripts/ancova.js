@@ -741,7 +741,8 @@ function runAncova(data){
         }
     }
 
-    function runComps(data1, data2, adj1, adj2){
+    /* An old school way of doing this
+    function runComps(data1, data2, adj1, adj2){     
         let m1 = average(data1);
         let m2 = average(data2);
         let rawdif = (m1-m2)**2;
@@ -766,32 +767,57 @@ function runAncova(data){
         d = Math.abs(d);
         return {'diff':truedif, 'se': se, 't':thist, 'p':thisp, 'd':d}
     }
+        */
 
-    let grouppairwise = [];
+    function runComps(data1, data2, adj1, adj2, isPaired){     
+        const truedif = adj1-adj2;
+        console.log(truedif);
+        let testresults;
+        if (isPaired == true){
+            testresults = depTtest(data1, data2);
+        } else if (isPaired == false){
+            testresults = indepTtest(data1, data2);
+        }
+        return {'diff':truedif, 't':testresults.t, 'p':testresults.p, 'd':testresults.d}
+    }
+
+    let pairwise = [];
+    let groupComps = 0;
     for (let i=0; i<groupmeans[0].length; i++){
-        let length1=dataframe[0].length-1;
-        let length2=dataframe2[0].length-1;
-        let thistest = runComps(dataframe[i],dataframe2[i],groupmeans[0][i], groupmeans[1][i])
-        grouppairwise.push(thistest);
+        let thistest = runComps(dataframe[i],dataframe2[i],groupmeans[0][i], groupmeans[1][i], false)
+        pairwise.push(thistest);
+        groupComps +=1;
     }
 
     let timepairwise = [];
     for (let i=0; i<groupmeans.length; i++){
-        let row = []; let thisK = dataframe.length;
+        let row = [];
         for (let j=0; j<groupmeans[i].length; j++){
             for (let x=j+1; x<groupmeans[i].length; x++){
                 if (i==0){
-                    row.push(runComps(dataframe[j],dataframe[x],groupmeans[i][j],groupmeans[i][x]))
+                    let testResult = runComps(dataframe[j],dataframe[x],groupmeans[i][j],groupmeans[i][x], true);
+                    row.push(testResult)
+                    pairwise.push(testResult);
                 } else if (i==1) {
-                    row.push(runComps(dataframe2[j],dataframe2[x],groupmeans[i][j],groupmeans[i][x]))
+                    let testResult = runComps(dataframe2[j],dataframe2[x],groupmeans[i][j],groupmeans[i][x],true);
+                    row.push(testResult);
+                    pairwise.push(testResult);
                 }
             }
         }
         timepairwise.push(row);
     }
 
-
-    
+    const finalPairwise = runHolmCorrection(pairwise);
+    for (let i=0; i<timepairwise.length; i++){
+        for (let j=0; j<timepairwise[i].length; j++){
+            for (let q=0; q<finalPairwise.length; q++){
+                if (finalPairwise[q].t == timepairwise[i][j].t.toFixed(2) && finalPairwise[q].d == timepairwise[i][j].d.toFixed(2) && finalPairwise[q].diff == timepairwise[i][j].diff.toFixed(2)){
+                    timepairwise[i][j].p = finalPairwise[q].p;
+                }
+            }
+        }
+    }
 
     var result1 = "";
     var result2 = "";
@@ -1289,12 +1315,6 @@ function runAncova(data){
     } else if (language == "jp"){
         heading_2_g2.innerHTML = "平均差";
     }
-    let heading_2_g2b = document.createElement('th');
-    if (language == "en"){
-        heading_2_g2b.innerHTML = "Std. Error";
-    } else if (language == "jp"){
-        heading_2_g2b.innerHTML = "標準偏差";
-    }
     let heading_3_g2 = document.createElement('th');
     heading_3_g2.innerHTML = "<i>t</i>";
     let heading_4_g2 = document.createElement('th');
@@ -1304,7 +1324,6 @@ function runAncova(data){
 
     row_1_g2.appendChild(heading_1_g2);
     row_1_g2.appendChild(heading_2_g2);
-    row_1_g2.appendChild(heading_2_g2b);
     row_1_g2.appendChild(heading_3_g2);
     row_1_g2.appendChild(heading_4_g2);
     row_1_g2.appendChild(heading_5_g2);
@@ -1314,9 +1333,9 @@ function runAncova(data){
     table2.appendChild(tbody4);
 
     //Print these out now {'diff':difference, 't': t, 'p':p, 'd':d}
-    for (let i=0; i<grouppairwise.length; i++){
+    for (let i=0; i<groupComps; i++){
         let row = document.createElement('tr');
-            for (let j=0; j<6; j++){
+            for (let j=0; j<5; j++){
                 let item = document.createElement('td');
                 if (j==0){
                     if (i==0) {
@@ -1326,15 +1345,13 @@ function runAncova(data){
                     }
                     item.style.textAlign = "left";
                 } if (j==1){
-                    item.innerHTML = (grouppairwise[i].diff.toFixed(2));
+                    item.innerHTML = (finalPairwise[i].diff.toFixed(2));
                 } if (j==2){
-                    item.innerHTML = (grouppairwise[i].se.toFixed(2));
+                    item.innerHTML = (finalPairwise[i].t);
                 } if (j==3){
-                    item.innerHTML = (grouppairwise[i].t.toFixed(2));
+                    item.innerHTML = (finalPairwise[i].p);
                 } if (j==4){
-                    item.innerHTML = (grouppairwise[i].p.toFixed(2));
-                } if (j==5){
-                    item.innerHTML = (grouppairwise[i].d.toFixed(2));
+                    item.innerHTML = (finalPairwise[i].d);
                 }
                 row.appendChild(item);
             }
@@ -1372,12 +1389,6 @@ function runAncova(data){
     } else if (language == "jp"){
         heading_2_g2c.innerHTML = "平均差";
     }
-    let heading_2_g2cb = document.createElement('th');
-    if (language == "en"){
-        heading_2_g2cb.innerHTML = "Std. Error";
-    } else if (language == "jp"){
-        heading_2_g2cb.innerHTML = "標準誤差";
-    }
     let heading_3_g2c = document.createElement('th');
     heading_3_g2c.innerHTML = "<i>t</i>";
     let heading_4_g2c = document.createElement('th');
@@ -1387,7 +1398,6 @@ function runAncova(data){
 
     copyRow.appendChild(heading_1_g2c);
     copyRow.appendChild(heading_2_g2c);
-    copyRow.appendChild(heading_2_g2cb);
     copyRow.appendChild(heading_3_g2c);
     copyRow.appendChild(heading_4_g2c);
     copyRow.appendChild(heading_5_g2c);
@@ -1406,7 +1416,7 @@ function runAncova(data){
     for (let i=0; i<timepairwise.length; i++){
         for (let x=0; x<timepairwise[i].length; x++){
             let row = document.createElement('tr');
-            for (let j=0; j<6; j++){
+            for (let j=0; j<5; j++){
                 let item = document.createElement('td');
                 if (j==0){
                     item.innerHTML = "Group "+(i+1);
@@ -1439,15 +1449,13 @@ function runAncova(data){
                     }
                     item.style.textAlign = "left";
                 } if (j==1){
-                    item.innerHTML = (timepairwise[i][x].diff.toFixed(2));
+                    item.innerHTML = (finalPairwise[x+groupComps*(i+1)].diff.toFixed(2));
                 } if (j==2){
-                    item.innerHTML = (timepairwise[i][x].se.toFixed(2));
+                    item.innerHTML = (finalPairwise[x+groupComps*(i+1)].t);
                 } if (j==3){
-                    item.innerHTML = (timepairwise[i][x].t.toFixed(2));
+                    item.innerHTML = (finalPairwise[x+groupComps*(i+1)].p);
                 } if (j==4){
-                    item.innerHTML = (timepairwise[i][x].p.toFixed(2));
-                } if (j==5){
-                    item.innerHTML = (timepairwise[i][x].d.toFixed(2));
+                    item.innerHTML = (finalPairwise[x+groupComps*(i+1)].d);
                 }
                 row.appendChild(item);
             }
@@ -1501,3 +1509,92 @@ function dlCsvofMC(){
 }
 
 
+function depTtest(data1, data2){
+    const N = data1.length;
+    const Nm = N - 1;
+    let sumdif = 0;
+    let ss = [];
+    for (let i = 0; i < data1.length; i++) {
+        let tempy = (data2[i] - data1[i]);
+        sumdif += tempy;
+        ss.push(tempy);
+    }
+    let ss2 = 0;
+    const numerator = sumdif / N;
+    for (let i = 0; i < ss.length; i++) {
+        ss2 += ((ss[i] - numerator) ** 2);
+    }
+    const ss3 = ss2 / Nm;
+    const denominator = ss3 / data1.length;
+    const t = numerator / (Math.sqrt(denominator));
+    const p = getPfromT(t, Nm);
+    let variance = 0;
+    for (let number of ss) {
+        variance += ((number - numerator) ** 2); 
+    }
+    const sdford = Math.sqrt(variance / Nm);
+    let d = numerator / sdford;
+    d = Math.abs(d);
+    return {'t':t, 'p':p, 'd':d}
+}
+
+function indepTtest (data1, data2) {
+    const N1 = data1.length;
+    const N2 = data2.length;
+    const M1 = average(data1);
+    const M2 = average(data2);
+    let var1 = 0;
+    for (let number of data1) {
+        var1 += ((number - M1) ** 2); 
+    }
+    let var2 = 0;
+    for (let number of data2)  {
+        var2 += ((number - M2) ** 2);
+    }
+    const Nm1 = N1 - 1;
+    const Nm2 = N2 - 1;
+    const S1 = var1 / Nm1;
+    const S2 = var2 / Nm2;
+    const s_help = ((Nm1 / (Nm1 + Nm2))*S1) + ((Nm2 / (Nm1 + Nm2))*S2);
+    const ss1 = s_help / N1;
+    const ss2 = s_help / N2;
+    const t = (M1 - M2) / (Math.sqrt(ss1 + ss2));
+    const df = (Nm1 + Nm2);
+    const p = getPfromT(t, df);
+    let d;
+    const sdpooled = Math.sqrt((var1 + var2) / (N1 + N2 - 2));
+    if ((N1 + N2) >= 50) {
+        d = (M1 - M2) / sdpooled;
+    } else {
+        d = ((M1 - M2) / sdpooled) * ((N1 + N2 - 3) / (N1 + N2 - 2.25)) * (Math.sqrt(((N1 + N2 -2)/ (N1 + N2))))
+    }
+    d = Math.abs(d);
+    return {'t':t, 'p':p, 'd':d}
+}
+
+function runHolmCorrection(dataset){
+    let sorted = [];
+    let holms = [];
+    for (let i=0; i<dataset.length; i++){
+        holms.push({"index": i, "p":dataset[i].p, "rank":0, "t":dataset[i].t, "d":dataset[i].d, "diff":dataset[i].diff})
+    }
+    holms.forEach(function(number, index) {sorted.push(holms[index].p)});
+    let sorted2 = sorted.slice().sort((a, b) => b - a);
+    for (let i=0; i<sorted2.length; i++){
+        for (let j=0; j<holms.length; j++)
+        if (sorted2[i] == holms[j].p) {
+            holms[j].rank = (i+1);
+        }
+    }
+    for (let i=0; i<holms.length; i++){
+        holms[i].p *= holms[i].rank;
+        holms[i].p = holms[i].p.toFixed(2);
+        holms[i].p = Math.abs(holms[i].p);
+        if (holms[i].p > 1){
+            holms[i].p = 1;
+        }
+        holms[i].t = holms[i].t.toFixed(2);
+        holms[i].d = holms[i].d.toFixed(2);
+    }
+    return holms;
+}

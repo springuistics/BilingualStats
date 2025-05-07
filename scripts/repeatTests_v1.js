@@ -461,6 +461,15 @@ function variance (data) {
     return (ss / (data.length-1)); 
 }
 
+function varianceP(data){
+    let M = average(data);
+    let ss =0;
+    for (let i=0; i<data.length; i++) {
+        ss += ((data[i] - M) **2)
+    }
+    return (ss / (data.length)); 
+}
+
 function covariance(data1, data2){
     let average1 = average(data1);
     let average2 = average(data2);

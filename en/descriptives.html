@@ -1,0 +1,338 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link href="../css/style_3_sets.css" rel="stylesheet" type="text/css">
+    <link href="../../apps/w3.css" rel="stylesheet" type="text/css">
+    <title>Data Reliability Check</title>
+</head>
+<body>
+    <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-core.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-cartesian.min.js"></script>
+    <script src="../scripts/repeatTests_v1.js"></script>
+    <script src="../scripts/modalHelp.js"></script>
+    <div id="langauge_bar">
+        <div style="text-align:left; margin-top: 2px; margin-left: 10px; position:absolute"><a href="../index.html"><img class="picture" src="../css/back.png" alt="index"></a></div>
+        <p id="lang_bun">Select Language:</p>
+        <select id="lang_s" onchange="L_Change()">
+            <option value="en">English</option>
+            <option value="jp">Japanese</option>
+        </select>
+    </div>
+    <div id="bigger">
+        <h1  id="Title">Descriptive Data and Vizualisation</h1>
+        <h2 id="Subtitle">Warning: Some tests might be irrelevant for your datasets</h2>
+        <br>
+        <div id="helpModal" class="w3-modal" onclick="this.style.display='none'">
+            <div id="helpModalContent" class="w3-modal-content w3-animate-zoom" style="background-color: white; width: 80vw">
+                <span class="w3-button w3-hover-red w3-xlarge w3-display-topright" onclick="closeModal()">&times;</span>
+                <br><br>
+                <div class="w3-cell-row">
+                    <div class="w3-container w3-cell">
+                        <iframe id="theHelpVideo" width="560" height="315" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                    </div>
+                    <div class="w3-container w3-cell" style="background-color: aliceblue;">
+                        <p id="theHelpText"></p>
+                    </div>
+                </div>
+                <br><br>
+            </div>
+        </div>
+        <div>
+            <div class="w3-cell-row w3-center">
+                <br><br>
+                <div class="w3-cell w3-cell-middle w3-container w3-right-align" style="width: 50%; margin-top: 15px">
+                    <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('howmany')">?</button><p id="qq3" class="question" style="display:inline">  How many data sets do you have?*</p>
+                </div>
+                <div class="w3-cell w3-cell-middle w3-container w3-left-align" style="width: 50%; margin-top: 15px">
+                    <input type="text" id="k_value" placeholder="Input number of data sets">
+                </div>
+            </div>
+            <div class="w3-cell-row w3-center">
+                <br><br>
+                <div class="w3-cell w3-cell-middle w3-container w3-right-align" style="width: 50%; margin-top: 15px">
+                    <p id="qq2" class="question" style="display:inline">  Graph Title:</p>
+                </div>
+                <div class="w3-cell w3-cell-middle w3-container w3-left-align" style="width: 50%; margin-top: 15px">
+                    <input type="text" id="graphName" placeholder="Write name of Graph Title">
+                </div>
+            </div>            
+        </div>
+
+        <p id="error_text" style="display: none">Error will appear here.</p>
+        <p id="small_text">*Click on the black ? symbol for help</p>
+        <br>
+        <button id="SetUp" class="button" onclick="SetUp()">Set Up the Test</button>
+        <br>
+    </div>
+    <div id="datasets" style="display: none">
+        <div id="jesus">
+            <br>
+            <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('csv')">?</button><p style="font-size: 16px; display:inline"> Input Data Below or Click to Upload from CSV File:</p>
+            <br><label for="file-upload" class="custom-file-upload">Upload CSV</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)'><br>
+            <div id="d_container"></div>
+            <div id="activate">
+                <button id="button" class="button" style="display: none" onclick="Calculate()">Calculate!</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="results">
+        <p id="explain_bun">The description of your test will be printed here:</p>
+        <p id="results_bun">Your results will be printed here:</p>
+        <div id="descriptives">
+
+        </div>
+        <div id="table_holder"></div>
+        <br>
+        <div id="allImgHolder"></div>
+        <br>
+        <button id="reset" class="button" onclick="Reset()">Reset!</button>
+        <br>
+    </div>
+    <div id="Citation">
+        <p>Please cite the following paper if you use this program or any of the statistics herein. The justifications are included in the paper, linked below for your reference.</p>
+        <p>Spring, R. (2022) Free, Online, Multilingual Statistics for Linguistics and Language Education Researchers. <i>Center for Culture and Language Education, Tohoku University 2021 Nenpo, 8</i>, 32-38.<a href="https://doi.org/10.13140/RG.2.2.12037.63202"> https://doi.org/10.13140/RG.2.2.12037.63202</a></p>
+    </div>
+    <div id='extra_fun'></div>
+</body>
+</html>
+<style type="text/css">
+    #Chart_container {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+</style>
+<script>
+var details_of_test = "";
+var results_of_test = "";
+var k;
+
+var GroupNames = [];
+
+function SetUp() {
+    language = document.getElementById('lang_s').value;
+    document.getElementById('error_text').style.display = "none";
+    var k = document.getElementById('k_value').value;
+    k = parseInt(k);
+    if (document.getElementById("dumb_div_0")){
+        for (let i=0; i < k; i++ ) {
+            var get_area = "dumb_div_"+(i);
+            var act_area = document.getElementById(get_area);
+            act_area.parentNode.removeChild(act_area);
+        }
+    }
+    document.getElementById('button').style.display = "inline";
+    document.getElementById('datasets').style.display = "inline";
+    document.getElementById('reset').style.display = "inline";
+    SetUpP2(k);    
+}
+function SetUpP2(k) {
+    language = document.getElementById('lang_s').value;
+    document.getElementById('allImgHolder').innerHTML = "";
+    for (let i=0; i < k; i++ ) {
+        let dumb_div = document.createElement("div");
+        dumb_div.id = "dumb_div_" + (i);
+        dumb_div.className = "dumb_div"
+        let helper = dumb_div.id;
+        let data = document.createElement("textarea");
+        data.id = "data_set_" + (i);
+        data.className = "dataset";
+        let label = document.createElement("h5");
+        let label2 = document.createElement("h5");
+        let nameBox = document.createElement("input");
+        nameBox.type = "text";
+        nameBox.classname = "groupInput";
+        label.className = "data_label";
+        nameBox.id = "group_name_"+(i);
+        label2.className = "data_label";
+        if (language == "en"){
+            nameBox.value = "Explanatory Var "+(i);
+            label.innerHTML = "Variable name (optional)";
+            label2.innerHTML = "Paste data below:";
+        } else if (language == "jp"){
+            nameBox.value = "説明変数 "+(i);
+            label.innerHTML = "説明変数名（省略可能）";
+            label2.innerHTML = "データを以下にペーストしてください*:";
+        }
+        document.getElementById('d_container').appendChild(dumb_div);
+        document.getElementById(helper).appendChild(label);
+        document.getElementById(helper).appendChild(nameBox);
+        document.getElementById(helper).appendChild(label2);
+        document.getElementById(helper).appendChild(data);
+        document.getElementById(data.id).rows = "20";
+        document.getElementById(data.id).columns = "30";
+        document.getElementById(data.id).placeholder="1\n 2\n 3\n 4\n etc.";
+    }
+}
+
+function Reset() {
+    k = document.getElementById('k_value').value;
+    for (let i=0; i < k; i++ ) {
+        var get_area = "dumb_div_"+(i);
+        var act_area = document.getElementById(get_area);
+        act_area.parentNode.removeChild(act_area);
+    }
+    document.getElementById('button').style.display = "none";
+    document.getElementById('datasets').style.display = "none";
+    document.getElementById('reset').style.display = "none";
+    document.getElementById('allImgHolder').innerHTML = "";
+    if (language == "en"){
+        document.getElementById('explain_bun').innerHTML = "The description of your test will be printed here:";
+        document.getElementById('results_bun').innerHTML = "Your results will be printed here:";
+    } else if (language == "jp"){
+        document.getElementById('explain_bun').innerHTML = "利用された検定の詳細はここに書かれます";
+        document.getElementById('results_bun').innerHTML = "結果はここに書かれます";
+    }
+    let thisTbl = document.getElementById('data_table');
+    thisTbl.parentNode.removeChild(thisTbl);   
+}
+
+function Calculate() {
+    if(document.getElementById('data_table')){
+        let thisTbl = document.getElementById('data_table');
+        thisTbl.parentNode.removeChild(thisTbl); 
+    }
+    language = document.getElementById('lang_s').value;
+    document.getElementById("error_text").innerHTML = "";
+    document.getElementById('error_text').style.display = "none";
+    document.getElementById('allImgHolder').innerHTML = "";
+    if (language == "en"){
+        document.getElementById('explain_bun').innerHTML = "The description of your test will be printed here:";
+        document.getElementById('results_bun').innerHTML = "Your results will be printed here:";
+    } else if (language == "jp"){
+        document.getElementById('explain_bun').innerHTML = "利用された検定の詳細はここに書かれます";
+        document.getElementById('results_bun').innerHTML = "結果はここに書かれます";
+    }
+    k = document.getElementById('k_value').value;
+    k = parseInt(k);
+    GroupNames = getGroupNames(k);
+    let helperK = 'data_set_'+(k-1);
+    if (document.getElementById(helperK)){
+        let picBTN = document.createElement('button');
+        let picDIV = document.createElement('div');
+        picBTN.id="dlPic";
+        picBTN.className="button";
+        picBTN.innerHTML="Download Chart";
+        picBTN.onclick = downloadPicture;
+        picDIV.id="Chart_container";
+        document.getElementById('allImgHolder').appendChild(picBTN);
+        document.getElementById('allImgHolder').appendChild(picDIV);
+
+        var titleOfChart = document.getElementById('graphName').value;
+        if (titleOfChart == ""){
+            titleOfChart = "Box and Whiskers Plot";
+        }
+        var theBigData = gatherDatafromForm(k);
+        var allDescriptives = runDescriptives(theBigData);
+        printDescriptives(allDescriptives); 
+        var ChartData = [];
+        for (let i=0; i<theBigData.length; i++){
+            let copy = [];
+            for (let j=0; j<theBigData[i].length; j++){
+                copy.push(theBigData[i][j])
+            }
+            ChartData.push(calculateBoxPlotStats(GroupNames[i], copy));
+        }
+        var chart = anychart.box();
+        // create a box series and set the data
+        var series = chart.box(ChartData);
+        // set the chart title
+        chart.title(titleOfChart);
+        // set the container id
+        chart.container('Chart_container');
+        // draw the chart
+        chart.draw();
+    }
+}
+
+function calculateBoxPlotStats(name, data) {
+    // Sort the data in ascending order
+    data.sort((a, b) => a - b);
+
+    // Helper function to calculate quartiles
+    function getMedian(arr) {
+        const mid = Math.floor(arr.length / 2);
+        return arr.length % 2 === 0 ? (arr[mid - 1] + arr[mid]) / 2 : arr[mid];
+    }
+
+    const q1 = getMedian(data.slice(0, Math.floor(data.length / 2)));
+    const q3 = getMedian(data.slice(Math.ceil(data.length / 2)));
+    const median = getMedian(data);
+
+    // Calculate interquartile range (IQR)
+    const iqr = q3 - q1;
+
+    // Define lower and upper bounds for outliers
+    const lowerBound = q1 - 1.5 * iqr;
+    const upperBound = q3 + 1.5 * iqr;
+
+    // Identify outliers
+    const outliers = data.filter(x => x < lowerBound || x > upperBound);
+
+    // Define min and max within non-outlier range
+    const min = Math.min(...data.filter(x => x >= lowerBound));
+    const max = Math.max(...data.filter(x => x <= upperBound));
+
+    return {
+        'x': name,
+        'low': min,
+        'q1': q1,
+        'median': median,
+        'q3': q3,
+        'high': max,
+        'outliers': outliers
+    };
+}
+
+function downloadPicture(){
+    const svgElement = document.querySelector("#Chart_container svg");
+
+    if (!svgElement) {
+        alert("No chart found.");
+        return;
+    }
+
+    // Serialize the SVG to a string
+    const serializer = new XMLSerializer();
+    const svgString = serializer.serializeToString(svgElement);
+
+    // Create a Blob URL for the SVG
+    const svgBlob = new Blob([svgString], { type: "image/svg+xml" });
+    const svgUrl = URL.createObjectURL(svgBlob);
+
+    // Create an image element to load the SVG
+    const img = new Image();
+    img.onload = function () {
+        // Create a canvas to draw the image
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        // Set canvas size to match the SVG
+        canvas.width = svgElement.clientWidth || 800; // Default width if not specified
+        canvas.height = svgElement.clientHeight || 600; // Default height if not specified
+
+        // Draw the SVG onto the canvas
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        // Convert canvas to JPG and trigger download
+        const jpgUrl = canvas.toDataURL("image/jpeg", 1.0); // 1.0 = highest quality
+        const link = document.createElement("a");
+        link.href = jpgUrl;
+        link.download = "Box_and_Whiskers_Plot.jpg";
+
+        // Trigger download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Cleanup
+        URL.revokeObjectURL(svgUrl);
+    };
+
+    img.src = svgUrl;
+
+}
+
+</script>

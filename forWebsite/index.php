@@ -98,6 +98,9 @@
                 <div id="others" class="subcontainer">
                     <button class="w3-button w3-medium w3-circle w3-black" style="display:inline" onclick="getHelp('otherTestsHelp')">?</button><p class="subheading" style="display:inline">  Individual P or Effect Sizes</p>
                     <div class="testContainer">
+                        <a href="en/descriptive_vizualization.php" class="linky">Descriptive Data and Visualization</a>
+                    </div>
+                    <div class="testContainer">
                         <a href="en/effect_calc.php" class="linky">Effect Size Calculator (<i>r</i> from <i>Z</i> and <i>N</i>)</a>
                     </div>
                     <div id="cohens" class="testContainer">

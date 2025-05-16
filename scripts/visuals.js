@@ -1,110 +1,3 @@
-<html>
-<head>
-    <meta charset="UTF-8">
-    <link href="../css/style_3_sets.css" rel="stylesheet" type="text/css">
-    <link href="../../apps/w3.css" rel="stylesheet" type="text/css">
-    <title>Descriptives and Vizualization</title>
-</head>
-<body>
-    <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-core.min.js"></script>
-    <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-cartesian.min.js"></script>
-    <script src="../scripts/repeatTests_v1.js"></script>
-    <script src="../scripts/modalHelp.js"></script>
-    <div id="langauge_bar">
-        <div style="text-align:left; margin-top: 2px; margin-left: 10px; position:absolute"><a href="../index.html"><img class="picture" src="../css/back.png" alt="index"></a></div>
-        <p id="lang_bun">Select Language:</p>
-        <select id="lang_s" onchange="L_Change()">
-            <option value="en">English</option>
-            <option value="jp">Japanese</option>
-        </select>
-    </div>
-    <div id="bigger">
-        <h1  id="Title">Descriptive Data and Vizualisation</h1>
-        <h2 id="Subtitle">Warning: Some tests might be irrelevant for your datasets</h2>
-        <br>
-        <div id="helpModal" class="w3-modal" onclick="this.style.display='none'">
-            <div id="helpModalContent" class="w3-modal-content w3-animate-zoom" style="background-color: white; width: 80vw">
-                <span class="w3-button w3-hover-red w3-xlarge w3-display-topright" onclick="closeModal()">&times;</span>
-                <br><br>
-                <div class="w3-cell-row">
-                    <div class="w3-container w3-cell">
-                        <iframe id="theHelpVideo" width="560" height="315" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-                    </div>
-                    <div class="w3-container w3-cell" style="background-color: aliceblue;">
-                        <p id="theHelpText"></p>
-                    </div>
-                </div>
-                <br><br>
-            </div>
-        </div>
-        <div>
-            <div class="w3-cell-row w3-center">
-                <br><br>
-                <div class="w3-cell w3-cell-middle w3-container w3-right-align" style="width: 50%; margin-top: 15px">
-                    <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('howmany')">?</button><p id="qq3" class="question" style="display:inline">  How many data sets do you have?*</p>
-                </div>
-                <div class="w3-cell w3-cell-middle w3-container w3-left-align" style="width: 50%; margin-top: 15px">
-                    <input type="text" id="k_value" placeholder="Input number of data sets">
-                </div>
-            </div>
-            <div class="w3-cell-row w3-center">
-                <br><br>
-                <div class="w3-cell w3-cell-middle w3-container w3-right-align" style="width: 50%; margin-top: 15px">
-                    <p id="qq2" class="question" style="display:inline">  Graph Title:</p>
-                </div>
-                <div class="w3-cell w3-cell-middle w3-container w3-left-align" style="width: 50%; margin-top: 15px">
-                    <input type="text" id="graphName" placeholder="Write name of Graph Title">
-                </div>
-            </div>            
-        </div>
-
-        <p id="error_text" style="display: none">Error will appear here.</p>
-        <p id="small_text">*Click on the black ? symbol for help</p>
-        <br>
-        <button id="SetUp" class="button" onclick="SetUp()">Set Up the Test</button>
-        <br>
-    </div>
-    <div id="datasets" style="display: none">
-        <div id="jesus">
-            <br>
-            <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('csv')">?</button><p style="font-size: 16px; display:inline"> Input Data Below or Click to Upload from CSV File:</p>
-            <br><label for="file-upload" class="custom-file-upload">Upload CSV</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)'><br>
-            <div id="d_container"></div>
-            <div id="activate">
-                <button id="button" class="button" style="display: none" onclick="Calculate()">Calculate!</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="results">
-        <p id="explain_bun">The description of your test will be printed here:</p>
-        <p id="results_bun">Your results will be printed here:</p>
-        <div id="descriptives">
-
-        </div>
-        <div id="table_holder"></div>
-        <br>
-        <div id="allImgHolder"></div>
-        <br>
-        <button id="reset" class="button" onclick="Reset()">Reset!</button>
-        <br>
-    </div>
-    <div id="Citation">
-        <p>Please cite the following paper if you use this program or any of the statistics herein. The justifications are included in the paper, linked below for your reference.</p>
-        <p>Spring, R. (2022) Free, Online, Multilingual Statistics for Linguistics and Language Education Researchers. <i>Center for Culture and Language Education, Tohoku University 2021 Nenpo, 8</i>, 32-38.<a href="https://doi.org/10.13140/RG.2.2.12037.63202"> https://doi.org/10.13140/RG.2.2.12037.63202</a></p>
-    </div>
-    <div id='extra_fun'></div>
-</body>
-</html>
-<style type="text/css">
-    #Chart_container {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-    }
-</style>
-<script>
 var details_of_test = "";
 var results_of_test = "";
 var k;
@@ -116,17 +9,29 @@ function SetUp() {
     document.getElementById('error_text').style.display = "none";
     var k = document.getElementById('k_value').value;
     k = parseInt(k);
-    if (document.getElementById("dumb_div_0")){
-        for (let i=0; i < k; i++ ) {
-            var get_area = "dumb_div_"+(i);
-            var act_area = document.getElementById(get_area);
-            act_area.parentNode.removeChild(act_area);
+    if (k>0){
+        if (document.getElementById("dumb_div_0")){
+            for (let i=0; i < k; i++ ) {
+                var get_area = "dumb_div_"+(i);
+                var act_area = document.getElementById(get_area);
+                act_area.parentNode.removeChild(act_area);
+            }
         }
+        document.getElementById('button').style.display = "inline";
+        document.getElementById('datasets').style.display = "inline";
+        document.getElementById('reset').style.display = "inline";
+        SetUpP2(k);   
+    } else {
+        if (language == "en"){
+            document.getElementById('error_text').innerHTML = "You must have at least one data set.";
+            document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
+        } else if (language == "jp"){
+            document.getElementById('error_text').innerHTML = "データ組は少なくとも一つが必要です。１以上の数字を入力してください。";
+            document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
+        }
+        document.getElementById('error_text').style.display = "inline";
     }
-    document.getElementById('button').style.display = "inline";
-    document.getElementById('datasets').style.display = "inline";
-    document.getElementById('reset').style.display = "inline";
-    SetUpP2(k);    
+ 
 }
 function SetUpP2(k) {
     language = document.getElementById('lang_s').value;
@@ -214,7 +119,12 @@ function Calculate() {
         let picDIV = document.createElement('div');
         picBTN.id="dlPic";
         picBTN.className="button";
-        picBTN.innerHTML="Download Chart";
+        if (language == "en"){
+            picBTN.innerHTML="Download Chart";
+        } else if (language == "jp"){
+            picBTN.innerHTML="図をダウンロード";
+        }
+
         picBTN.onclick = downloadPicture;
         picDIV.id="Chart_container";
         document.getElementById('allImgHolder').appendChild(picBTN);
@@ -334,5 +244,3 @@ function downloadPicture(){
     img.src = svgUrl;
 
 }
-
-</script>

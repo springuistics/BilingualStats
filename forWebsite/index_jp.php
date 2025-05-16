@@ -98,6 +98,9 @@
                 <div id="others" class="subcontainer">
                     <button class="w3-button w3-medium w3-circle w3-black" style="display:inline" onclick="getHelp('otherTestsHelp')">?</button><p class="subheading" style="display:inline">  <i>p</i>値・効果量</p>
                     <div class="testContainer">
+                        <a href="jp/descriptive_vizualization.php" class="linky">記述統計とデータの可視化</a>
+                    </div>
+                    <div class="testContainer">
                         <a href="jp/effect_calc.php" class="linky">効果量 (<i>r</i> を <i>Z</i> と <i>N</i>から計算する）</a>
                     </div>
                     <div id="cohens" class="testContainer">

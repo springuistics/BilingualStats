@@ -82,6 +82,8 @@ function Reset() {
     document.getElementById('button').style.display = "none";
     document.getElementById('datasets').style.display = "none";
     document.getElementById('reset').style.display = "none";
+    document.getElementById('table_holder').innerHTML = "";
+    document.getElementById('descriptives').innerHTML = "";
     document.getElementById('allImgHolder').innerHTML = "";
     if (language == "en"){
         document.getElementById('explain_bun').innerHTML = "The description of your test will be printed here:";
@@ -99,6 +101,8 @@ function Calculate() {
         let thisTbl = document.getElementById('data_table');
         thisTbl.parentNode.removeChild(thisTbl); 
     }
+    document.getElementById('table_holder').innerHTML = "";
+    document.getElementById('descriptives').innerHTML = "";    
     language = document.getElementById('lang_s').value;
     document.getElementById("error_text").innerHTML = "";
     document.getElementById('error_text').style.display = "none";

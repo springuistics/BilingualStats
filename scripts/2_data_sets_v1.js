@@ -349,9 +349,9 @@ function Wilcoxon (k, data) {
             result3 = "The effect size suggests a medium effect."
         } else {result3 = "The effect size suggests a large effect."}
         if (p < 0.01) {
-            result2 = "<i>Z</i> = " + Z + ", <i>p</i> < 0.01, <i>rs</i> = " + r + ". ";
+            result2 = "<i>Z</i> = " + Z + ", <i>p</i> < 0.01, <i>r</i> = " + r + ". ";
         } else {
-            result2 = "<i>Z</i> = " + Z + ", <i>p</i> = " + p + ", <i>rs</i> = " + r + ". ";
+            result2 = "<i>Z</i> = " + Z + ", <i>p</i> = " + p + ", <i>r</i> = " + r + ". ";
         }
     } else if (language == "jp"){
         if (p <= .05) {
@@ -367,9 +367,9 @@ function Wilcoxon (k, data) {
         } else {result3 = "また、大きい効果が観察されました。"}
     
         if (p < 0.01) {
-            result2 = "<i>Z</i> = " + Z + ", <i>p</i> < 0.01, <i>rs</i> = " + r + ". ";
+            result2 = "<i>Z</i> = " + Z + ", <i>p</i> < 0.01, <i>r</i> = " + r + ". ";
         } else {
-            result2 = "<i>Z</i> = " + Z + ", <i>p</i> = " + p + ", <i>rs</i> = " + r + ". ";
+            result2 = "<i>Z</i> = " + Z + ", <i>p</i> = " + p + ", <i>r</i> = " + r + ". ";
         }
     }
     results_of_test = result1 + result2 + result3;
@@ -545,9 +545,9 @@ function MannWhiteny (k, data) {
         } else {result3 = "The effect size suggests a large effect."}
 
         if (p < 0.01) {
-            result2 = "<i>Z</i> = " + Z + ", <i>p</i> < 0.01, <i>rs</i> = " + r + ". ";
+            result2 = "<i>Z</i> = " + Z + ", <i>p</i> < 0.01, <i>r</i> = " + r + ". ";
         } else {
-            result2 = "<i>Z</i> = " + Z + ", <i>p</i> = " + p + ", <i>rs</i> = " + r + ". ";
+            result2 = "<i>Z</i> = " + Z + ", <i>p</i> = " + p + ", <i>r</i> = " + r + ". ";
         }
     } else if (language == "jp"){
         if (p <= .05) {
@@ -564,9 +564,9 @@ function MannWhiteny (k, data) {
         } else {result3 = "また、大きい効果が観察されました。"}
     
         if (p < 0.01) {
-            result2 = "<i>Z</i> = " + Z + ", <i>p</i> < 0.01, <i>rs</i> = " + r + ". ";
+            result2 = "<i>Z</i> = " + Z + ", <i>p</i> < 0.01, <i>r</i> = " + r + ". ";
         } else {
-            result2 = "<i>Z</i> = " + Z + ", <i>p</i> = " + p + ", <i>rs</i> = " + r + ". ";
+            result2 = "<i>Z</i> = " + Z + ", <i>p</i> = " + p + ", <i>r</i> = " + r + ". ";
         }
     }
     results_of_test = result1 + result2 + result3;

@@ -284,11 +284,11 @@ function Calculate() {
         }
     
         if (eta_int<.06) {
-            results4 = ", with a small effect size; <i>η<sup>2</i></sup> = " + eta_int;
+            results4 = ", with a small effect size; <i>η<sub>p</sub><sup>2</sup></i> = " + eta_int;
         } else if (eta_int<0.138) {
-            results4 =  ", with a medium effect size; <i>η<sup>2</i></sup> = " + eta_int;
+            results4 =  ", with a medium effect size; <i>η<sub>p</sub><sup>2</sup></i> = " + eta_int;
         } else if (eta_int>=0.138) {
-            results4 =  ", with a large effect size; <i>η<sup>2</i></sup> = " + eta_int;
+            results4 =  ", with a large effect size; <i>η<sub>p</sub><sup>2</sup></i> = " + eta_int;
         }
     
         if (pofA < .01) {
@@ -312,11 +312,11 @@ function Calculate() {
         }
     
         if (eta_A<.06) {
-            result3 = ", with a small effect size; <i>η<sup>2</i></sup> = " + eta_A + ", and ";
+            result3 = ", with a small effect size; <i>η<sub>p</sub><sup>2</sup></i> = " + eta_A + ", and ";
         } else if (eta_A<0.138) {
-            result3 =  ", with a medium effect size; <i>η<sup>2</i></sup> = " + eta_A + ", and ";
+            result3 =  ", with a medium effect size; <i>η<sub>p</sub><sup>2</sup></i> = " + eta_A + ", and ";
         } else if (eta_A>=0.138) {
-            result3 =  ", with a large effect size; <i>η<sup>2</i></sup> = " + eta_A + ", and ";
+            result3 =  ", with a large effect size; <i>η<sub>p</sub><sup>2</sup></i> = " + eta_A + ", and ";
         }
     
         if (pofB < .01) {
@@ -340,11 +340,11 @@ function Calculate() {
         }
     
         if (eta_B<.06) {
-            result6 = ", with a small effect size; <i>η<sup>2</i></sup> = " + eta_B + ".";
+            result6 = ", with a small effect size; <i>η<sub>p</sub><sup>2</sup></i> = " + eta_B + ".";
         } else if (eta_B<0.138) {
-            result6 =  ", with a medium effect size; <i>η<sup>2</i></sup> = " + eta_B + ".";
+            result6 =  ", with a medium effect size; <i>η<sub>p</sub><sup>2</sup></i> = " + eta_B + ".";
         } else if (eta_B>=0.138) {
-            result6 =  ", with a large effect size; <i>η<sup>2</i></sup> = " + eta_B + ".";
+            result6 =  ", with a large effect size; <i>η<sub>p</sub><sup>2</sup></i> = " + eta_B + ".";
         }
     } else if (language == "jp"){
         if (pofInt < .01) {
@@ -368,11 +368,11 @@ function Calculate() {
         }
     
         if (eta_int<.06) {
-            results4 = "。また、 交互作用の効果は小さかった： <i>η<sup>2</i></sup> = " + eta_int;
+            results4 = "。また、 交互作用の効果は小さかった： <i>η<sub>p</sub><sup>2</sup></i> = " + eta_int;
         } else if (eta_int<0.138) {
-            results4 =  "。また、 交互作用の効果は中ぐらいだった： <i>η<sup>2</i></sup> = " + eta_int;
+            results4 =  "。また、 交互作用の効果は中ぐらいだった： <i>η<sub>p</sub><sup>2</sup></i> = " + eta_int;
         } else if (eta_int>=0.138) {
-            results4 =  "。また、 交互作用の効果は大きかった： <i>η<sup>2</i></sup> = " + eta_int;
+            results4 =  "。また、 交互作用の効果は大きかった： <i>η<sub>p</sub><sup>2</sup></i> = " + eta_int;
         }
     
         if (pofA < .01) {
@@ -396,11 +396,11 @@ function Calculate() {
         }
     
         if (eta_A<.06) {
-            result3 = "）、効果量は小さい： <i>η<sup>2</i></sup> = " + eta_A;
+            result3 = "）、効果量は小さい： <i>η<sub>p</sub><sup>2</sup></i> = " + eta_A;
         } else if (eta_A<0.138) {
-            result3 =  "）、効果量は中ぐらい： <i>η<sup>2</i></sup> = " + eta_A;
+            result3 =  "）、効果量は中ぐらい： <i>η<sub>p</sub><sup>2</sup></i> = " + eta_A;
         } else if (eta_A>=0.138) {
-            result3 =  "）、効果量は大きい： <i>η<sup>2</i></sup> = " + eta_A;
+            result3 =  "）、効果量は大きい： <i>η<sub>p</sub><sup>2</sup></i> = " + eta_A;
         }
     
         if (pofB < .01) {
@@ -424,11 +424,11 @@ function Calculate() {
         }
     
         if (eta_B<.06) {
-            result6 = "）、効果量は小さい：<i>η<sup>2</i></sup> = " + eta_B + "。";
+            result6 = "）、効果量は小さい：<i>η<sub>p</sub><sup>2</sup></i> = " + eta_B + "。";
         } else if (eta_B<0.138) {
-            result6 =  "）、効果量は中ぐらい：<i>η<sup>2</i></sup> = " + eta_B + "。";
+            result6 =  "）、効果量は中ぐらい：<i>η<sub>p</sub><sup>2</sup></i> = " + eta_B + "。";
         } else if (eta_B>=0.138) {
-            result6 =   "）、効果量は大きい：<i>η<sup>2</i></sup> = " + eta_B + "。";
+            result6 =   "）、効果量は大きい：<i>η<sub>p</sub><sup>2</sup></i> = " + eta_B + "。";
         }
     }
 

@@ -304,11 +304,11 @@ function StANOVA(k, theData) {
     var results4 = "";
     if (language == "en"){
         if (W2<.15) {
-            results4 = "Furthermore, there was a small effect size;  <i>η<sup>2</i></sup> = " + W2;
+            results4 = "Furthermore, there was a small effect size;  <i>η<sub>p</sub><sup>2</sup></i> = " + W2;
         } else if (W2<0.35) {
-            results4 =  "Furthermore, there was a medium effect size;  <i>η<sup>2</i></sup> = " + W2;
+            results4 =  "Furthermore, there was a medium effect size;  <i>η<sub>p</sub><sup>2</sup></i> = " + W2;
         } else {
-            results4 =  "Furthermore, there was a large effect size;  <i>η<sup>2</i></sup> = " + W2;
+            results4 =  "Furthermore, there was a large effect size;  <i>η<sub>p</sub><sup>2</sup></i> = " + W2;
         }
         if (p > 0.05) {
             result1 = "There was no significant difference amongst any of the groups; "
@@ -330,11 +330,11 @@ function StANOVA(k, theData) {
         }
     } else if (language == "jp"){
         if (W2<.15) {
-            results4 = "また、小さい効果が観察されました。 <i>η<sup>2</i></sup> = " + W2;
+            results4 = "また、小さい効果が観察されました。 <i>η<sub>p</sub><sup>2</sup></i> = " + W2;
         } else if (W2<0.35) {
-            results4 =  "また、中くらいの効果が観察されました。 <i>η<sup>2</i></sup> = " + W2;
+            results4 =  "また、中くらいの効果が観察されました。 <i>η<sub>p</sub><sup>2</sup></i> = " + W2;
         } else {
-            results4 =  "また、大きい効果が観察されました。 <i>η<sup>2</i></sup> = " + W2;
+            results4 =  "また、大きい効果が観察されました。 <i>η<sub>p</sub><sup>2</sup></i> = " + W2;
         }
         if (p > 0.05) {
             result1 = "総合的な有意差はありませんでした（"
@@ -449,11 +449,11 @@ function WelchesANOVA(k, theData){
     var results4 = "";
     if (language == "en"){
         if (W2<.15) {
-            results4 = "Furthermore, there was a small effect size;  <i>η<sup>2</i></sup> = " + W2;
+            results4 = "Furthermore, there was a small effect size;  <i>η<sub>p</sub><sup>2</sup></i> = " + W2;
         } else if (W2<0.35) {
-            results4 =  "Furthermore, there was a medium effect size;  <i>η<sup>2</i></sup> = " + W2;
+            results4 =  "Furthermore, there was a medium effect size;  <i>η<sub>p</sub><sup>2</sup></i> = " + W2;
         } else {
-            results4 =  "Furthermore, there was a large effect size;  <i>η<sup>2</i></sup> = " + W2;
+            results4 =  "Furthermore, there was a large effect size;  <i>η<sub>p</sub><sup>2</sup></i> = " + W2;
         }
         if (p > 0.05) {
             result1 = "There was no significant difference amongst any of the groups; "
@@ -475,11 +475,11 @@ function WelchesANOVA(k, theData){
         }
     } else if (language == "jp"){
         if (W2<.15) {
-            results4 = "また、小さい効果が観察されました。 <i>η<sup>2</i></sup> = " + W2;
+            results4 = "また、小さい効果が観察されました。 <i>η<sub>p</sub><sup>2</sup></i> = " + W2;
         } else if (W2<0.35) {
-            results4 =  "また、中くらいの効果が観察されました。 <i>η<sup>2</i></sup> = " + W2;
+            results4 =  "また、中くらいの効果が観察されました。 <i>η<sub>p</sub><sup>2</sup></i> = " + W2;
         } else {
-            results4 =  "また、大きい効果が観察されました。 <i>η<sup>2</i></sup> = " + W2;
+            results4 =  "また、大きい効果が観察されました。 <i>η<sub>p</sub><sup>2</sup></i> = " + W2;
         }
         if (p > 0.05) {
             result1 = "総合的な有意差はありませんでした（"
@@ -649,11 +649,11 @@ function RepANOVA(k,theData, check) {
     let results4 = "";
     if (language == "en"){
         if (W2<.1) {
-            results4 = "Furthermore, there was a small effect size; <i>η<sup>2</i></sup> = " + W2;
+            results4 = "Furthermore, there was a small effect size; <i>η<sub>p</sub><sup>2</sup></i> = " + W2;
         } else if (W2<0.35) {
-            results4 =  "Furthermore, there was a medium effect size; <i>η<sup>2</i></sup> = " + W2;
+            results4 =  "Furthermore, there was a medium effect size; <i>η<sub>p</sub><sup>2</sup></i> = " + W2;
         } else {
-            results4 =  "Furthermore, there was a large effect size; <i>η<sup>2</i></sup> = " + W2;
+            results4 =  "Furthermore, there was a large effect size; <i>η<sub>p</sub><sup>2</sup></i> = " + W2;
         }
         if (p > 0.05) {
             result1 = "There was no significant difference amongst any of the groups; "
@@ -677,11 +677,11 @@ function RepANOVA(k,theData, check) {
         }
     } else if (language == "jp"){
         if (W2<.1) {
-            results4 = "また、小さい効果が観察されました。 <i>η<sup>2</i></sup> = " + W2;
+            results4 = "また、小さい効果が観察されました。 <i>η<sub>p</sub><sup>2</sup></i> = " + W2;
         } else if (W2<0.35) {
-            results4 =  "また、中くらいの効果が観察されました。 <i>η<sup>2</i></sup> = " + W2;
+            results4 =  "また、中くらいの効果が観察されました。 <i>η<sub>p</sub><sup>2</sup></i> = " + W2;
         } else {
-            results4 =  "また、大きい効果が観察されました。 <i>η<sup>2</i></sup> = " + W2;
+            results4 =  "また、大きい効果が観察されました。 <i>η<sub>p</sub><sup>2</sup></i> = " + W2;
         }
         if (p > 0.05) {
             result1 = "総合的な有意差はありませんでした（"
@@ -781,13 +781,13 @@ function KW(k, theData) {
     if (language == "en"){
         if (eta<.06) {
             eta = eta.toFixed(2);
-            results4 = "Furthermore, there was a small effect size; <i>η<sup>2</i></sup> = " + eta;
+            results4 = "Furthermore, there was a small effect size; <i>η<sub>p</sub><sup>2</sup></i> = " + eta;
         } else if (eta<0.138) {
             eta = eta.toFixed(2);
-            results4 = "Furthermore, there was a medium effect size; <i>η<sup>2</i></sup> = " + eta;
+            results4 = "Furthermore, there was a medium effect size; <i>η<sub>p</sub><sup>2</sup></i> = " + eta;
         } else if (eta>=0.138) {
             eta = eta.toFixed(2);
-            results4 = "Furthermore, there was a large effect size; <i>η<sup>2</i></sup> = " + eta;
+            results4 = "Furthermore, there was a large effect size; <i>η<sub>p</sub><sup>2</sup></i> = " + eta;
         }
         if (p > 0.05) {
             result1 = "There was no significant difference amongst any of the groups; ";
@@ -811,13 +811,13 @@ function KW(k, theData) {
     } else if (language == "jp"){
         if (eta<.06) {
             eta = eta.toFixed(2);
-            results4 = "また、小さい効果が観察されました。 <i>η<sup>2</i></sup> = " + eta;
+            results4 = "また、小さい効果が観察されました。 <i>η<sub>p</sub><sup>2</sup></i> = " + eta;
         } else if (eta<0.138) {
             eta = eta.toFixed(2);
-            results4 =  "また、中くらいの効果が観察されました。 <i>η<sup>2</i></sup> = " + eta;
+            results4 =  "また、中くらいの効果が観察されました。 <i>η<sub>p</sub><sup>2</sup></i> = " + eta;
         } else if (eta>=0.138) {
             eta = eta.toFixed(2);
-            results4 =  "また、大きい効果が観察されました。 <i>η<sup>2</i></sup> = " + eta;
+            results4 =  "また、大きい効果が観察されました。 <i>η<sub>p</sub><sup>2</sup></i> = " + eta;
         }
         if (p > 0.05) {
             result1 = "総合的な有意差はありませんでした（"

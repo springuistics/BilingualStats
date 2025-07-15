@@ -1157,9 +1157,9 @@ function runAncova(data){
             result1 += "with a large effect size; ";
         }
         if (timep<.001){
-            result1 += "<i>F</i> = " + F_time.toFixed(3) + ", <i>p</i> < .001, <i>η<sup>2</i></sup> = "+time_within_eta.toFixed(3)+" <br>";
+            result1 += "<i>F</i> = " + F_time.toFixed(3) + ", <i>p</i> < .001, <i>η<sub>p</sub><sup>2</sup></i> = "+time_within_eta.toFixed(3)+" <br>";
         } else {
-            result1 += "<i>F</i> = " + F_time.toFixed(3) + ", <i>p</i> = "+timep.toFixed(3)+", <i>η<sup>2</i></sup> = "+time_within_eta.toFixed(3)+" <br>";
+            result1 += "<i>F</i> = " + F_time.toFixed(3) + ", <i>p</i> = "+timep.toFixed(3)+", <i>η<sub>p</sub><sup>2</sup></i> = "+time_within_eta.toFixed(3)+" <br>";
         }
 
         if (interactionp < .05){
@@ -1175,9 +1175,9 @@ function runAncova(data){
             result1 += "with a large effect size; ";
         }
         if (interactionp<.001){
-            result1 += "<i>F</i> = " + F_interaction.toFixed(3) + ", <i>p</i> < .001, <i>η<sup>2</i></sup> = "+interaction_eta.toFixed(3)+" <br>";
+            result1 += "<i>F</i> = " + F_interaction.toFixed(3) + ", <i>p</i> < .001, <i>η<sub>p</sub><sup>2</sup></i> = "+interaction_eta.toFixed(3)+" <br>";
         } else {
-            result1 += "<i>F</i> = " + F_interaction.toFixed(3) + ", <i>p</i> = "+interactionp.toFixed(3)+", <i>η<sup>2</i></sup> = "+interaction_eta.toFixed(3)+" <br>";
+            result1 += "<i>F</i> = " + F_interaction.toFixed(3) + ", <i>p</i> = "+interactionp.toFixed(3)+", <i>η<sub>p</sub><sup>2</sup></i> = "+interaction_eta.toFixed(3)+" <br>";
         }
         result2 = "<br><br>The full results of the ANCOVA test are presented below:<br>";
     } else if (language == "jp"){
@@ -1189,11 +1189,11 @@ function runAncova(data){
             result1 += "大きな効果量で、";
         }
         if (timep < .001){
-            result1 = "時間帯に総合的な有意差が確認できた： <i>F</i> = " + F_time.toFixed(3) + ", <i>p</i> < .001, <i>η<sup>2</i></sup> = "+interaction_eta.toFixed(3)+" <br>";
+            result1 = "時間帯に総合的な有意差が確認できた： <i>F</i> = " + F_time.toFixed(3) + ", <i>p</i> < .001, <i>η<sub>p</sub><sup>2</sup></i> = "+interaction_eta.toFixed(3)+" <br>";
         } else if (timep < .05){
-            result1 = "時間帯に総合的な有意差が確認できた： <i>F</i> = " + F_time.toFixed(3) + ", <i>p</i> = "+timep.toFixed(3)+", <i>η<sup>2</i></sup> = "+interaction_eta.toFixed(3)+" <br>";
+            result1 = "時間帯に総合的な有意差が確認できた： <i>F</i> = " + F_time.toFixed(3) + ", <i>p</i> = "+timep.toFixed(3)+", <i>η<sub>p</sub><sup>2</sup></i> = "+interaction_eta.toFixed(3)+" <br>";
         } else {
-            result1 = "時間帯に総合的な有意差が確認できなかったた： <i>F</i> = " + F_time.toFixed(3) + ", <i>p</i> = "+timep.toFixed(3)+", <i>η<sup>2</i></sup> = "+interaction_eta.toFixed(3)+" <br>";
+            result1 = "時間帯に総合的な有意差が確認できなかったた： <i>F</i> = " + F_time.toFixed(3) + ", <i>p</i> = "+timep.toFixed(3)+", <i>η<sub>p</sub><sup>2</sup></i> = "+interaction_eta.toFixed(3)+" <br>";
         }
         if (interactionp < .001){
             result1 += "特定の時間帯において、共変量またはグループが有意に影響を及ぼしたことが確認された： <i>F</i> = " + F_interaction.toFixed(3) + ", <i>p</i> < .001。<br>";
@@ -1274,7 +1274,7 @@ function runAncova(data){
     let heading_6 = document.createElement('th');
     heading_6.innerHTML = "<i>p</i>";
     let heading_7 = document.createElement('th');
-    heading_7.innerHTML = "<i>η<sup>2</i></sup>";
+    heading_7.innerHTML = "<i>η<sub>p</sub><sup>2</sup></i>";
 
     row_1.appendChild(heading_1);
     row_1.appendChild(heading_2);

@@ -874,6 +874,155 @@ function getPfromT(t,n) {
         { return 1-sth*StatCom(cth*cth,1,n-3,-1) }
 }
 
+function inverse_t(prob, df) {
+  // Ensure valid inputs
+  if (df <= 0 || prob <= 0 || prob >= 1) {
+    throw new Error("Invalid degrees of freedom or probability.");
+  }
+
+  // Approximate inverse CDF via scipy’s t.ppf formula
+  // We'll use an inverse Beta relationship for moderate accuracy
+
+  const a = 0.5 * df;
+  const b = 0.5;
+  const x = inverse_beta(2 * Math.min(prob, 1 - prob), a, b);
+  const t = Math.sqrt(df * (1 - x) / x);
+
+  return prob > 0.5 ? t : -t;
+}
+
+function inverseT(prob, df) {
+  // Ensure valid inputs
+  if (df <= 0 || prob <= 0 || prob >= 1) {
+    console.log("Invalid degrees of freedom or probability.");
+  }
+
+
+  const a = 0.5 * df;
+  const b = 0.5;
+  const x = inverse_beta(2 * Math.min(prob, 1 - prob), a, b);
+  const t = Math.sqrt(df * (1 - x) / x);
+
+  return prob > 0.5 ? t : -t;
+}
+// Incomplete beta approximation via continued fraction (simplified)
+function inverse_beta(p, a, b, maxIter = 50) {
+  // Use binary search to invert the incomplete beta
+  let lower = 0;
+  let upper = 1;
+  let x = 0.5;
+
+  for (let i = 0; i < maxIter; i++) {
+    const fx = incompleteBeta(x, a, b);
+    if (fx < p) {
+      lower = x;
+    } else {
+      upper = x;
+    }
+    x = (lower + upper) / 2;
+  }
+
+  return x;
+}
+
+//find InverseF
+function inverseF(prob, df1, df2, maxIter = 100, tolerance = 1e-6) {
+  if (prob <= 0 || prob >= 1 || df1 <= 0 || df2 <= 0) {
+    console.log("Invalid input: probability must be between 0 and 1, degrees of freedom > 0");
+  }
+
+  // Start with reasonable bounds
+  let lower = 0.0001;
+  let upper = 1000;
+  let mid;
+
+  for (let i = 0; i < maxIter; i++) {
+    mid = (lower + upper) / 2;
+    const p = fCDF(mid, df1, df2);
+    if (Math.abs(p - prob) < tolerance) break;
+    if (p < prob) {
+      lower = mid;
+    } else {
+      upper = mid;
+    }
+  }
+
+  return mid;
+}
+function fCDF(x, df1, df2) {
+  const a = df1 / 2;
+  const b = df2 / 2;
+  const z = (df1 * x) / (df1 * x + df2);
+  return incompleteBeta(z, a, b);
+}
+function incompleteBeta(x, a, b) {
+    if (x <= 0 || x >= 1) {
+        return 0;
+    } else {
+        let bt = Math.exp(
+            logGamma(a + b) - logGamma(a) - logGamma(b) +
+            a * Math.log(x) + b * Math.log(1 - x)
+        );
+
+        if (x < (a + 1) / (a + b + 2)) {
+            return bt * betaCF(x, a, b) / a;
+        } else {
+            return 1 - bt * betaCF(1 - x, b, a) / b;
+        }
+    }
+}
+function logGamma(z) {
+  // Approximation for z > 0
+  const coefficients = [
+    76.18009172947146, -86.50532032941677, 24.01409824083091,
+    -1.231739572450155, 0.001208650973866179, -0.000005395239384953
+  ];
+  let x = z;
+  let y = z;
+  let tmp = x + 5.5;
+  tmp -= (x + 0.5) * Math.log(tmp);
+  let ser = 1.000000000190015;
+  for (let i = 0; i < coefficients.length; ++i) {
+    y += 1;
+    ser += coefficients[i] / y;
+  }
+  return -tmp + Math.log(2.5066282746310005 * ser / x);
+}
+function betaCF(x, a, b, maxIter = 200, epsilon = 1e-10) {
+  let am = 1;
+  let bm = 1;
+  let az = 1;
+  let qab = a + b;
+  let qap = a + 1;
+  let qam = a - 1;
+  let bz = 1 - qab * x / qap;
+
+  for (let m = 1; m <= maxIter; m++) {
+    const em = m;
+    const tem = em + em;
+    const d = em * (b - em) * x / ((qam + tem) * (a + tem));
+    const ap = az + d * am;
+    const bp = bz + d * bm;
+
+    const d2 = -(a + em) * (qab + em) * x / ((a + tem) * (qap + tem));
+    const app = ap + d2 * az;
+    const bpp = bp + d2 * bz;
+
+    const aold = az;
+    am = ap / bpp;
+    bm = bp / bpp;
+    az = app / bpp;
+    bz = 1;
+
+    if (Math.abs(az - aold) < epsilon * Math.abs(az)) {
+      return az;
+    }
+  }
+
+  throw new Error("betaCF did not converge");
+}
+
+
 //Returns p value from q, k, df for Tukey's HSD for post-hoc testing
 function tukeyMe(q, k, df) {
 q = Math.abs(q);
@@ -1446,6 +1595,82 @@ function findTrace(matrix) {
 
     return trace;
 }
+
+function multiplyMatrices(A, B) {
+    // Normalize A or B: convert 1D array into a 1-row matrix
+    if (!Array.isArray(A[0])) {
+        A = [A];
+    }
+    if (!Array.isArray(B[0])) {
+        B = [B];
+    }
+
+    const rowsA = A.length;
+    const colsA = A[0].length;
+    const rowsB = B.length;
+    const colsB = B[0].length;
+
+    if (colsA !== rowsB) {
+        throw new Error("Incompatible matrices: columns of A must equal rows of B");
+    }
+
+    const result = Array.from({ length: rowsA }, () => Array(colsB).fill(0));
+
+    for (let i = 0; i < rowsA; i++) {
+        for (let j = 0; j < colsB; j++) {
+        for (let k = 0; k < colsA; k++) {
+            result[i][j] += A[i][k] * B[k][j];
+        }
+        }
+    }
+
+    return result;
+}
+
+function inverseMatrix(matrix) {
+    const n = matrix.length;
+    const identity = identityMatrix(n)
+
+    // Augment the original matrix with the identity matrix
+    const augmented = matrix.map((row, i) => [...row, ...identity[i]]);
+
+    // Step 3: Apply Gauss-Jordan elimination
+    for (let i = 0; i < n; i++) {
+        // Make the diagonal element 1
+        let diagEl = augmented[i][i];
+        if (diagEl === 0) {
+        throw new Error("Matrix is singular and cannot be inverted");
+        }
+
+        for (let j = 0; j < 2 * n; j++) {
+        augmented[i][j] /= diagEl;
+        }
+
+        // Make all other elements in column i zero
+        for (let k = 0; k < n; k++) {
+        if (k !== i) {
+            const factor = augmented[k][i];
+            for (let j = 0; j < 2 * n; j++) {
+            augmented[k][j] -= factor * augmented[i][j];
+            }
+        }
+        }
+    }
+
+    // Extract the right half as the inverse
+    return augmented.map(row => row.slice(n));
+}
+
+function transposeMatrix(matrix) {
+  // If it's a 1D array, convert to column vector first
+  if (!Array.isArray(matrix[0])) {
+    return matrix.map(value => [value]);
+  }
+
+  // Regular 2D matrix transpose
+  return matrix[0].map((_, colIndex) => matrix.map(row => row[colIndex]));
+}
+
 
 //Takes an array of arrays. Returns an array of dictionaries with values
 function runDescriptives(dataset){
@@ -2399,4 +2624,12 @@ function reg2(data){
     let F = MSM / MSE;
     let R2 =  SSM / SST;
     return R2;
+}
+
+function findT2(nvalue, matrix1, matrix2){
+    const inner1 = transposeMatrix(matrix1);
+    const inner2 = inverseMatrix(matrix2);
+    const mid = multiplyMatrices(matrix1,inner2);
+    const final = multiplyMatrices(mid,inner1);
+    return nvalue*final
 }

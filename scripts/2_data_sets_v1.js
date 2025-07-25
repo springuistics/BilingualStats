@@ -117,21 +117,27 @@ function theSetup(k){
                     if (language == "en"){
                         if (checks.normal == false && leveneCheck.pValue<.05){
                             details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed one of the tests of normalcy*, and a Levene's test revealed the groups' variances were too different from each other (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"). Therefore the data was treated as ordinal. Since the data was not paired, a Mann-Whitney Test was used.";
+                            MannWhiteny(k, theBigData);
                         } else if (checks.normal == false){
                             details_of_test = "Despite the continuous nature of the data, at least one of the data sets failed one of the tests of normalcy*. Therefore the data was treated as ordinal. Since the data was not paired, a Mann-Whitney Test was used.";
+                            MannWhiteny(k, theBigData);
                         } else {
-                            details_of_test = "Despite the continuous and normal* nature of your data, a Levene's test revealed the groups' variances were too different from each other (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"). Therefore the data was treated as ordinal. Since the data was not paired, a Mann-Whitney Test was used.";
+                            details_of_test = "Despite the continuous and normal* nature of your data, a Levene's test revealed the groups' variances were too different from each other (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"). Therefore, a Welch's independent t-test was used.";
+                            IndepTtest(k, theBigData, false);
                         }       
                     } else if (language == "jp"){
                         if (checks.normal == false && leveneCheck.pValue<.05){
                             details_of_test = "本データは連続データですが、正規性の検定の結果*によると、いずれか（あるいは両方）のデータセットがノンパラメトリックとみなされました。また、ルビーン検定の結果によると、データセット間の分散の均質性が不十分でした（<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"）。対応のないデータであるため、マン・ホイットニーのU検定で計算しました。";
+                            MannWhiteny(k, theBigData);
                         } else if (checks.normal == false){
                             details_of_test = "本データは連続データですが、正規性の検定の結果*によると、いずれか（あるいは両方）のデータセットがノンパラメトリックとみなされました。対応のないデータであるため、マン・ホイットニーのU検定で計算しました。";
+                            MannWhiteny(k, theBigData);
                         } else {
-                            details_of_test = "本データは連続データであり、正規性が確認*できましたが、ルビーン検定の結果によると、データセット間の分散の均質性が不十分でした（<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"）。対応のないデータであるため、マン・ホイットニーのU検定で計算しました。";
+                            details_of_test = "本データは連続データであり、正規性が確認*できましたが、ルビーン検定の結果によると、データセット間の分散の均質性が不十分でした（<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"）ので、ウェルチのt検定で計算しました。";
+                            IndepTtest(k, theBigData, false);
                         }    
                     }
-                    MannWhiteny(k, theBigData);
+                    
                 }
             } else {
                 if (pair_check == "yes") {
@@ -146,7 +152,7 @@ function theSetup(k){
                         document.getElementById('error_text').style.display = "inline";
                     } else {
                         if (language == "en"){
-                            details_of_test = "Due to the continuous and normal nature of the data, as checked by an appropriate test of normality*, the homogenity of variance, as checked by a Leven's test (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"), and the fact that the data was paired, a dependent (or paired) t-test was used.";
+                            details_of_test = "Due to the continuous and normal nature of the data, as checked by an appropriate test of normality*, the homogenity of variance, as checked by a Levene's test (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"), and the fact that the data was paired, a dependent (or paired) t-test was used.";
                         } else if (language == "jp"){
                             details_of_test = "本データは連続データで、分散の均質性がルビーン検定で確認できて（<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"）、正規性の検定*で全てのデータはパラメトリックであることが確認できました。対応のあるデータであるため、対応のあるt検定で計算しました。";
                         }
@@ -154,11 +160,11 @@ function theSetup(k){
                     }
                 } else if (pair_check == "no") {
                     if (language == "en"){
-                        details_of_test = "Due to the continuous and normal nature of the data, as checked by an appropriate test of normality*, the homogenity of variance, as checked by a Leven's test (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"), and the fact that the data was not paired, an independent t-test was used.";
+                        details_of_test = "Due to the continuous and normal nature of the data, as checked by an appropriate test of normality*, the homogenity of variance, as checked by a Levene's test (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"), and the fact that the data was not paired, an independent t-test was used.";
                     } else if (language == "jp"){
                         details_of_test = "本データは連続データで、分散の均質性がルビーン検定で確認できて（<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"）、正規性の検定*で全てのデータはパラメトリックであることが確認できました。対応のないデータであるため、独立したt検定で計算しました。";
                     }
-                    IndepTtest(k, theBigData);
+                    IndepTtest(k, theBigData, true);
                 }
             }
         }
@@ -668,7 +674,7 @@ function DepTtest (k, data) {
     document.getElementById("results_bun").innerHTML = results_of_test;
 }
 
-function IndepTtest (k, data) {
+function IndepTtest (k, data, decision) {
     let data1 = [];
     let data2 = [];
     for (let i=0; i<k; i++){
@@ -707,7 +713,12 @@ function IndepTtest (k, data) {
     var s_help = ((Nm1 / (Nm1 + Nm2))*S1) + ((Nm2 / (Nm1 + Nm2))*S2);
     var ss1 = s_help / N1;
     var ss2 = s_help / N2;
-    var t = (M1 - M2) / (Math.sqrt(ss1 + ss2));
+    var t;
+    if (decision==true){
+        t = (M1 - M2) / (Math.sqrt(ss1 + ss2));
+    } else {
+        t = (M1 - M2) / (Math.sqrt( ((var1**2)/Nm1) + ((var2**2)/Nm2) ));
+    }
     var df = (Nm1 + Nm2);
     var p = getPfromT(t, df);
     var d = 0;

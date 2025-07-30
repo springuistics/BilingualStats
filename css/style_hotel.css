@@ -1,0 +1,342 @@
+h1, h2, h3, p, a {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+#Title {
+    margin:auto;
+    padding: 20px;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    text-shadow: 3px 3px 8px gray;
+    width: 80%;
+}
+
+#langauge_bar {
+    margin: auto;
+    width: 90%;
+    text-align: right;
+    height: 65px;
+    background-color: rgb(1, 1, 121);
+}
+#langauge_bar #lang_bun{
+    display: inline-block;
+    color: white;
+    font-size: 12pt;
+    font-weight: bold;
+}
+#langauge_bar #lang_s{
+    font-size: 12pt;
+    display: inline-block;
+}
+
+#ps .hovery {
+    position: absolute;
+    width: 400px;
+    border: 3px black;
+    right: 10px;
+    border-radius: 5px;
+    background-color: rgb(250, 180, 94, 0.95);
+    color: rgb(143, 0, 0);
+    display: none;
+    text-align: left;
+}
+#qq1:hover + #hover1 {
+    display: block;
+}
+#qq2:hover + #hover2 {
+    display: block;
+}
+#qq3:hover + #hover3 {
+    display: block;
+}
+
+#Subtitle {
+    margin: auto;
+    text-align: center;
+    color: white;
+}
+#small_text{
+    font-size: 12px;
+    text-align: right;
+    margin-right: 30px;
+    color: white;
+    margin: auto;
+}
+
+#bigger {
+    width: 90%;
+    background-color:rgb(45, 176, 194);
+    margin: auto;
+    text-align: center;
+}
+
+#questions {
+    margin: auto;
+    text-align: center;
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 10px;
+    padding: 10px;
+}
+#error_text {
+    font-size: large;
+    font-weight: bold;
+    color: rgb(199, 0, 0);
+    border-left: 6px solid red;
+    margin: 2px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 2px;
+    background-color: rgb(235, 200, 200);
+}
+#questions #ps {
+    grid-column:1;
+    position: relative;
+    margin-top: 20px;
+    padding: 5px;
+    text-align: right;
+}
+.question {
+    font-size: 14px;
+    text-align: right;
+    color: white;
+}
+
+#questions #as {
+    grid-column:2;
+    margin-top: 38px;
+    padding: 5px;
+    text-align: left;
+}
+.answer {
+    font-size: 14px;
+    color: white;
+}
+
+#questions #as #k_value {
+    margin: auto;
+    margin-top: 45px;
+}
+
+#datasets #jesus {
+    width: 90%;
+    background: rgb(229, 248, 207);
+    margin: auto;
+    text-align: center;
+}
+
+#datasets #d_container {
+    display: inline-block; /* No grid layout */
+    text-align: center;
+}
+[id^="divider_"] {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  width: 100%;
+  max-width: 800px;
+  box-sizing: border-box;
+
+}
+.divider_X {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+
+}
+
+
+#datasets .dumb_div {
+  width: 100%; /* important to fill grid cell */
+  padding: 10px;
+  box-sizing: border-box;
+}
+.dataset {
+    margin: auto;
+    padding: 5px;
+    text-align: right;
+    text-overflow:"visible";
+    border: 4px solid rgb(0, 0, 154);
+    border-radius: 10px;
+}
+.dataset:focus{
+    background-color: rgb(210, 229, 245);
+    outline: 2px solid aqua;
+}
+
+#datasets .data_label {
+    margin: auto;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    text-shadow: 1px 1px 1px 1px white;
+}
+
+#activate {
+    margin: auto;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    text-align: center;
+}
+
+.button {
+    width: 200px;
+    height: 35px;
+    font-size: 20px;
+    background-color: blue;
+    border: 3px;
+    border-style: outset;
+    color: white;
+}
+.button:hover{
+    background-color: rgb(141, 141, 239);
+    cursor: pointer;
+}
+
+#SetUp {
+    margin-bottom: 20px;
+}
+
+#reset {
+    text-align: center;
+    margin: auto;
+    background-color: rgb(139, 0, 0); 
+    margin-bottom: 10px;
+}
+#reset:hover{
+    background-color: rgb(250, 150, 150); 
+    cursor: pointer;
+}
+
+#results {
+    margin: auto;
+    width: 90%;
+    background-color:rgb(87, 190, 66);
+    text-align: center;
+}
+#explain_bun {
+    margin: auto;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    font-weight: bold; font-size: 16px; 
+    color: rgb(217, 255, 253);
+}
+#results_bun {
+    margin: auto;
+    font-weight: bold; font-size: 18px; color:rgb(255, 252, 217);
+    padding: 5px;
+}
+
+#Citation {
+    margin-top: 10px;
+    margin: auto;
+    text-align: center;
+    width: 80%;
+}
+
+.data_table {
+    width: 80%;
+    border-collapse: collapse;
+    margin: auto;
+}
+.data_table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    background-color:rgb(102, 0, 0);
+    color: white;
+}
+.data_table td {
+    text-align: right;
+    background-color: rgb(233, 255, 205);
+}
+.data_table tr:hover {
+    background-color: #ddd !important;
+}
+.data_table th, td {
+    border: 2px solid black;
+    padding: 8px;
+}
+
+.picture:hover {
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.desBTNholder{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    text-align: center;
+}
+.desBTN{
+    width: auto;
+    height: 35px;
+    font-size: 16px;
+    border: 3px;
+    border-style: outset;
+    color: white;
+}
+.desBTN:hover{
+    background-color: darkslategrey !important;
+    cursor: pointer !important;
+}
+#desBTN_show{
+    background-color: darkblue;
+}
+#desBTN_csv{
+    background-color: black;
+}
+#resBTN_csv{
+    background-color: black;
+}
+
+.descriptives_table{
+    width: 80%;
+    border-collapse: collapse;
+    margin: auto;
+}
+.descriptives_table th {
+    text-align: center;
+    background-color:rgb(22, 0, 102);
+    color: white;
+    border: 2px solid black;
+}
+.descriptives_table td {
+    text-align: right;
+    background-color: rgb(233, 255, 205);
+}
+.descriptives_table tr:hover {
+    background-color: #ddd !important;
+}
+.descriptives_table th, td {
+    padding: 8px;
+}
+
+.groupInput{
+    border: 4px solid rgb(0, 0, 154);
+    border-radius: 10px;
+}
+.groupInput:focus{
+    background-color: rgb(210, 229, 245);
+    outline: 2px solid aqua;
+}
+
+input[type="file"] {
+    display: none;
+  }
+  
+.custom-file-upload {
+    display: inline;
+    padding: 6px 12px;
+    font-size: 16px;
+    border: 3px;
+    border-style: outset;
+    color: white;
+    background-color: black;
+}
+.custom-file-upload:hover {
+    background-color: grey;
+    cursor: pointer;
+}

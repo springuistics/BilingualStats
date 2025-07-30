@@ -6,9 +6,10 @@
     <title>Comparing 3+ Data Sets</title>
 </head>
 <body>
-    <script src="../scripts/repeatTests_v1.js?v=1"></script>
-    <script src="../scripts/3_data_sets_v1.js?v=2"></script>
-    <script src="../scripts/modalHelp_js.js?v=1"></script>
+    <script src="../scripts/repeatTests_v1.js?v=2"></script>
+    <script src="../scripts/3_data_sets_v1.js?v=3"></script>
+    <script src="../scripts/modalHelp_js.js?v=2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
     <?php include 'languagebar.php'; ?>
     <div id="bigger">
         <h1  id="Title">3組以上の数値データの統計比較</h1>

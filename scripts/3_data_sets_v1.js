@@ -1005,16 +1005,20 @@ function mauchlysTest(data) {
     }
 
     let eig = numeric.eig(newMatrix);
-    let eigenvalues = eig.lambda.x;
+    let eigenvalues = eig.lambda.x.map(val => typeof val === 'number' ? val : val[0]);
+    console.log(eigenvalues);
     let eigenvectors = eig.E;
-    let product = 1;
-    let sum = 0;
-    for (let i=0; i<eigenvalues.length-1; i++){
-        product *= eigenvalues[i];
-        sum += eigenvalues[i];
-    }
+    let truncatedEig = eigenvalues.slice(0, k - 1); // remove last eigenvalue
+    
+    let product = truncatedEig.reduce((acc, val) => acc * val, 1);
+    let sum = truncatedEig.reduce((acc, val) => acc + val, 0);
+    
+    let w = product / Math.pow(sum / (k - 1), k - 1);
 
-    let w = product/(sum/(k-1))**(k-1);
+
+    console.log(w);
+    if (w <= 0) return { w: 0, p: 1, chi: 0 };
+
     let hisF = (2*(k-1)**2+k+1)/(6*(k-1)*(n-1));
     let chi = (hisF-1)*(n-1)*Math.log(w);
     let hisdf =k*(k-1)/2-1;

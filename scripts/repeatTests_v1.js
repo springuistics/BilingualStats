@@ -1947,6 +1947,8 @@ var openFile = function(event) {
                 tempK +=1;
             } else if (/Testing of An Experimental and Control/.test(document.getElementById('Title').innerHTML) || /実験群・対照群の事前・事後データ比較/.test(document.getElementById('Title').innerHTML)){
                 tempK = 4;
+            } else if(/Paired Sample Hotellings T-square/.test(document.getElementById('Title').innerHTML) || /対応のある標本に対するホテリングのT-square検定/.test(document.getElementById('Title').innerHTML)){
+                tempK *= 2;
             }
         }
         if(document.getElementById('noCovariates') && document.getElementById('noTests')){

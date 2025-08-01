@@ -55,6 +55,10 @@
                         <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('3dataCompHelp')">?</button>
                         <a href="jp/3_data_sets.php" class="linky" id="mc1">3組以上の数値データの比較</a>
                     </div>
+                    <div id="multi_comps2" class="testContainer">
+                        <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('3measuresHelp')">?</button>
+                        <a href="jp/hotelling.php" class="linky" id="mc1">2組に対して、3つ以上の異なる尺度で測定した数値データ</a>
+                    </div>
                     <div id="pre_post" class="testContainer">
                         <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('PrePostHelp')">?</button>
                         <a href="jp/pp_testing.php" class="linky"  id="pp2">実験群・対照群の事前・事後データ比較</a>
@@ -143,11 +147,12 @@ const messages = ['データをどう扱いたいかをまず考えてくださ�
 '2つデータ組があって、それらの間に相関（または関連）があるかどうかを知りたい場合は、このページを使用してください。データの正規性に基づいてPearsonの相関検定またはSpearmanの順位相関検定を使用します。このページはデータの正規性を自動的に確認して適切な検定を使用していることを確認し、相関の大きさを確認するための相関値と、相関が統計的に有意かどうかを確認するための<i>p</i>値を提供します。この検定は、同じ集団サンプル（つまり、同じ参加者）からの2つの測定値を必要としますが、同じ方法で測定される必要は<span style="color:red"><b>ありません</b></span>。<br><br><span style="color:red"><b>実例</b></span><br><ul><li>アンケート質問と学習成果の相関性を確認する</li><li>2つの学習成果の関係を確認する</li><li>実験参加者の2つの特徴の関係を確認する</li></ul>',
 '複数のデータ組があり、それらの間の相関（または関連）を一度に確認したい場合は、このページを使用してください。このページでは、「2組の数値データの関連性の確認」のページと同じように、データの正規性を確認し、適切な検定を使用しますが、相関値を見やすいダウンロード可能な表にまとめ、変数間の相関の量を比較します。<br><br>例えば、複数のリッカート尺度の質問間でどこに多くの関連があるか、または少ないかを知るのに役立ちます。',
 '複数のデータ組があり、それらの多くの変数と単一の主要変数との間にどれだけの相関（または関連）があるかを確認したい場合は、このページを使用してください。このページでは、重回帰分析を使用して主要変数を予測します。変数が主要変数をどれだけ予測したかを確認するための<i>R<sup>2</sup></i>値と、主要変数と複数の他の変数との間に統計的に有意な相関があるかどうかを確認するための<i>p</i>値を提供します。また、<a href="https://doi.org/10.1111/lang.12518">水本・篤(2023)</a>のドミナンス分析による相対的な重みを示す方法を使用して、他の変数が主要変数をどれだけ強く予測するかを示します。この検定は、同じ集団サンプル（つまり、同じ参加者）からの複数の測定値を必要としますが、同じ方法で測定される必要は<span style="color:red"><b>ありません</b></span>。<br><br><span style="color:red"><b>実例</b></span><br><ul><li>複数のアンケート質問と学習成果との関係を確認する</li><li>学習成果（例えば、期末テスト点数）に対する複数の測定値（例えば、小テストの点数、宿題の点数など）の関係を確認する</li><li>複数の方法や活動が単一の学習成果に与える影響を確認する</li></ul>',
-'実験群と対照群（又は比較群）があり、1つ以上の事後テスト、又は共変量がある場合、このオプションを選択してANCOVA（共分散分析）を実行します。このテストにより、グループ間、時間間、及びその2つの組み合わせに全体的な差異があるかどうかが判断されます。<br><br>2つの異なるグループが異なる対応（教授法など）を受けて、両方とも同じ事前テストと事後テストを受けた場合、この検定を利用できます。以下の条件がある場合は、上記の事前/事後実験/対照テストの代わりに、このオプションを選択してください：<br><ul><li>1つ以上の事後テスト（例：事後テストおよび遅延事後テスト）がある場合</li><li><u>共変量</u>：授業参加のスコア、課題に取り組んだ時間などの緩和要因の測定値がある場合</li></ul><br><br>共変量の測定値は、事前テスト及び事後テストと同じ尺度で測定する<span style="color:red"><b>必要がありません</b></span>が、事前テストおよび事後テストは同じ尺度で測定する<span style="color:red"><b>必要があります</b></span>。'
+'実験群と対照群（又は比較群）があり、1つ以上の事後テスト、又は共変量がある場合、このオプションを選択してANCOVA（共分散分析）を実行します。このテストにより、グループ間、時間間、及びその2つの組み合わせに全体的な差異があるかどうかが判断されます。<br><br>2つの異なるグループが異なる対応（教授法など）を受けて、両方とも同じ事前テストと事後テストを受けた場合、この検定を利用できます。以下の条件がある場合は、上記の事前/事後実験/対照テストの代わりに、このオプションを選択してください：<br><ul><li>1つ以上の事後テスト（例：事後テストおよび遅延事後テスト）がある場合</li><li><u>共変量</u>：授業参加のスコア、課題に取り組んだ時間などの緩和要因の測定値がある場合</li></ul><br><br>共変量の測定値は、事前テスト及び事後テストと同じ尺度で測定する<span style="color:red"><b>必要がありません</b></span>が、事前テストおよび事後テストは同じ尺度で測定する<span style="color:red"><b>必要があります</b></span>。',
+'2つのグループ（または1つのグループに対する2つの条件、例：事前テストと事後テスト）があり、それぞれに複数の指標（尺度）がある場合は、ここをクリックして、HotellingのT-squared検定を使用することができます。<br><br>たとえば、複数のアンケート項目に対する男女の回答傾向に違いがあるかを調べたい場合、2群間のt検定を複数回行うのではなく、この検定の「対応のない」設定を使うことができます。このようなケースは、<b>非対応（non-paired）</b>のHotellingのT-squared検定の使用例です（男女は異なる回答者であるため）。一方、<b>対応あり（paired）</b>のHotellingのT²検定の例としては、事前・事後の作文スコアに対する複数の客観的指標を比較する場合が挙げられます。たとえば、統語的複雑性、語彙的多様性、語彙的洗練度などの指標が、介入後に改善されたかどうかを調べたいときに、この検定を使用できます。この場合、回答者は事前・事後で同一ですが、各指標は異なる尺度で測定されています。<br><br><h5 style="color:red">注意！</h5>この検定は、以下のようなケースには<span style="color:red"><b>使用しないで</b></span>ください：<br><ul><li>統制群と実験群の事前・事後テストスコアの比較（このための専用ページがあります）</li><li>同じテストに対する4つのグループのスコア比較（「3組以上の数値データの比較」ツールを使用してください）</li></ul>'
 ];
 
-const videos = ['yPRugR6AKx4','DkCh0CtlAgE','DyGrXeRuC1Y','goJM9wesAhU','6oRPbHrk1pY','aYV3bz6-iO0','uVYvqEwBQIs','SUvXzDtGc98','-M-s7VhH43U','_WgS3-GMaJg','GY2eMJclDOA'];
-const indexes = ['testHelp','countsHelp','2dataCompHelp','3dataCompHelp','PrePostHelp','reliabilityHelp','otherTestsHelp', 'corrHelp', 'corrMatrixHelp', 'multiRegHelp', 'ancovaHelp'];
+const videos = ['yPRugR6AKx4','DkCh0CtlAgE','DyGrXeRuC1Y','goJM9wesAhU','6oRPbHrk1pY','aYV3bz6-iO0','uVYvqEwBQIs','SUvXzDtGc98','-M-s7VhH43U','_WgS3-GMaJg','GY2eMJclDOA', 'ifSBgbfOFPk'];
+const indexes = ['testHelp','countsHelp','2dataCompHelp','3dataCompHelp','PrePostHelp','reliabilityHelp','otherTestsHelp', 'corrHelp', 'corrMatrixHelp', 'multiRegHelp', 'ancovaHelp', '3measuresHelp'];
 
 function getHelp(section){
     document.getElementById('helpModal').style.display="block";

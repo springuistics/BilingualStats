@@ -3,16 +3,16 @@
     <meta charset="UTF-8">
     <link href="../css/style_hotel.css" rel="stylesheet" type="text/css">
     <link href="../../apps/w3.css" rel="stylesheet" type="text/css">
-    <title>対応のある標本に対するホテリングのT-square</title>
+    <title>ホテリングのT-square</title>
 </head>
 <body>
-    <script src="../scripts/repeatTests_v1.js?v=2"></script>
+    <script src="../scripts/repeatTests_v1.js?v=3"></script>
     <script src="../scripts/hotelling.js?v=1"></script>
     <script src="../scripts/modalHelp_js.js?v=2"></script>
     <?php include 'languagebar.php'; ?>
     <div id="bigger">
-        <h1  id="Title">対応のある標本に対するホテリングのT<sup>2</sup>検定</h1>
-        <h2 id="Subtitle">この検定は、データが「対応あり」で「正規分布」に従っていることを前提としています</h2>
+        <h1  id="Title">ホテリングのT<sup>2</sup>検定</h1>
+        <h2 id="Subtitle">この検定は、データが「正規分布」に従っていることを前提としています</h2>
         <h3 style="text-align:center">この検定は、「統制群」と「実験群」の比較には適していません</h3>
         <br>
         <div id="helpModal" class="w3-modal" onclick="this.style.display='none'">
@@ -31,6 +31,18 @@
             </div>
         </div>
         <div>
+            <div class="w3-cell-row">
+                <br><br>
+                <div class="w3-cell w3-cell-middle w3-container w3-right-align" style="width: 50%; margin-top: 15px">
+                    <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('paired')">?</button><p class="question" id="qq1" style="display:inline">  対応のあるデータですか？*</p>
+                </div>
+                <div class="w3-cell w3-cell-middle w3-container w3-left-align" style="width: 50%; margin-top: 15px">
+                    <input type="radio" id="q1_a" class="radio_btn" name="q1" value="yes">
+                    <label for="q1_a" class="answer">Yes</label>
+                    <input type="radio" id="q1_b" class="radio_btn" name="q1" value="no">
+                    <label for="q1_b" class="answer">No</label>
+                </div>
+            </div>
             <div class="w3-cell-row w3-center">
                 <br><br>
                 <div class="w3-cell w3-cell-middle w3-container w3-right-align" style="width: 50%; margin-top: 15px">

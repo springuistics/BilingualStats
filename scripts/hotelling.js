@@ -2,6 +2,7 @@ var details_of_test = "";
 var results_of_test = "";
 
 var GroupNames = [];
+var pair_c1; 
 
 function SetUp() {
     language = document.getElementById('lang_s').value;
@@ -20,6 +21,15 @@ function SetUp() {
     document.getElementById('reset').style.display = "inline";
     if (k >1){
         SetUpP2(k);
+    } else if (!pair_c1){
+        if (language == "en"){
+            document.getElementById('error_text').innerHTML = "Please select whether or not the data is paired. For an explanation, mouse over the question.";
+            document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
+        } else if (language == "jp"){
+            document.getElementById('error_text').innerHTML = "対応のあるデータかどうかを選んでください。説明が必要な場合はマウスポインターを質問の上に乗せてください。";
+            document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
+        }
+        document.getElementById('error_text').style.display = "inline";
     } else {
         if (language == "en"){
             document.getElementById("error_text").innerHTML = "This test assumes more than one pair of tests."
@@ -113,43 +123,61 @@ function Calculate() {
     document.getElementById('descriptives').innerHTML = "";
     document.getElementById("error_text").innerHTML = "";
     document.getElementById('error_text').style.display = "none";
-    if (language == "en"){
-        document.getElementById('explain_bun').innerHTML = "The description of your test will be printed here:";
-        document.getElementById('results_bun').innerHTML = "Your results will be printed here:";
-    } else if (language == "jp"){
-        document.getElementById('explain_bun').innerHTML = "利用された検定の詳細はここに書かれます";
-        document.getElementById('results_bun').innerHTML = "結果はここに書かれます";
-    }
-    var ok = document.getElementById('k_value').value;
-    ok = parseInt(ok);
-    ok *=2;
-    GroupNames = getGroupNames(ok);
-    let helperK = 'data_set_'+(ok-1);
-    if (document.getElementById(helperK)){
-        var theBigData = gatherDatafromForm(ok);
-        function checkPairs(losData){
-            if(!losData.length) {return false}
-            else {
-                let lengthChecker = [];
-                for (let i=0; i<losData.length; i++){
-                    lengthChecker.push(losData[i].length);
-                }
-                return lengthChecker.every(value => value === lengthChecker[0]);
-            }
+    pair_c1 = document.querySelector("[name=q1]:checked");
+    let pair_check = document.querySelector('input[name="q1"]:checked').value;
+    if (!pair_c1) {
+        if (language == "en"){
+            document.getElementById('error_text').innerHTML = "Please select whether or not the data is paired. For an explanation, mouse over the question.";
+            document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
+        } else if (language == "jp"){
+            document.getElementById('error_text').innerHTML = "対応のあるデータかどうかを選んでください。説明が必要な場合はマウスポインターを質問の上に乗せてください。";
+            document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
         }
-        if (checkPairs(theBigData) == false){
+        document.getElementById('error_text').style.display = "inline";
+    } else {
             if (language == "en"){
-                document.getElementById("error_text").innerHTML = "Paired Sample Hotelling's T-square presumes that your datasets have the same numbers of values, but yours do not. Please check, amend as necessary and retry.";
-                document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
+                document.getElementById('explain_bun').innerHTML = "The description of your test will be printed here:";
+                document.getElementById('results_bun').innerHTML = "Your results will be printed here:";
             } else if (language == "jp"){
-                document.getElementById("error_text").innerHTML = "対応のあるサンプルに対するホテリングの<i>T<sup>2</sup></i>検定では、各データセットに同じ数の値が含まれていることが前提ですが、あなたのデータセットはそうなっていません。ご確認のうえ、必要に応じて修正し、再度お試しください。";
-                document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
+                document.getElementById('explain_bun').innerHTML = "利用された検定の詳細はここに書かれます";
+                document.getElementById('results_bun').innerHTML = "結果はここに書かれます";
             }
-            document.getElementById('error_text').style.display = "inline";
-        } else {
-            runHotelling(theBigData);
+            let ok = document.getElementById('k_value').value;
+            ok = parseInt(ok);
+            ok *=2;
+            GroupNames = getGroupNames(ok);
+            let helperK = 'data_set_'+(ok-1);
+            if (document.getElementById(helperK)){
+                var theBigData = gatherDatafromForm(ok);
+                if (pair_check == "yes"){
+                    function checkPairs(losData){
+                        if(!losData.length) {return false}
+                        else {
+                            let lengthChecker = [];
+                            for (let i=0; i<losData.length; i++){
+                                lengthChecker.push(losData[i].length);
+                            }
+                            return lengthChecker.every(value => value === lengthChecker[0]);
+                        }
+                    }
+                    if (checkPairs(theBigData) == false){
+                        if (language == "en"){
+                            document.getElementById("error_text").innerHTML = "Paired Sample Hotelling's T-square presumes that your datasets have the same numbers of values, but yours do not. Please check, amend as necessary and retry.";
+                            document.getElementById('explain_bun').innerHTML = "An error has ocurred. Please see the error message above.";
+                        } else if (language == "jp"){
+                            document.getElementById("error_text").innerHTML = "対応のあるサンプルに対するホテリングの<i>T<sup>2</sup></i>検定では、各データセットに同じ数の値が含まれていることが前提ですが、あなたのデータセットはそうなっていません。ご確認のうえ、必要に応じて修正し、再度お試しください。";
+                            document.getElementById('explain_bun').innerHTML = "エラー発生。上記のエラー説明を確認してください";
+                        }
+                        document.getElementById('error_text').style.display = "inline";
+                    } else {
+                        runHotelling(theBigData);
+                    }
+                } else {
+                    runHotellingIndependent(theBigData);
+                }
+                
+            }
         }
-    }
 }
 
 function runHotelling(firstdata){
@@ -229,7 +257,124 @@ function runHotelling(firstdata){
     }
     document.getElementById("explain_bun").innerHTML = details_of_test;
     document.getElementById("results_bun").innerHTML = results_of_test;
+}
 
+function runHotellingIndependent(firstdata){
+    let aData = [];
+    let bData = [];
+    let pooledData = [];
+    for (let i = 0; i < firstdata.length; i++) {
+        if (i%2==0){
+            aData.push(firstdata[i]);
+        } else {
+            bData.push(firstdata[i]);
+        }
+        pooledData.push(firstdata[i]);
+    }
+    let diffMatrix = [];
+    for (let i=0; i<aData.length;i++){
+        diffMatrix.push(average(aData[i])-average(bData[i]));
+    }
+
+    const n1 = aData[0].length;
+    const n2 = bData[0].length;
+    const grandN = n1+n2;
+    const df1 = aData.length;
+    const df2 = grandN-df1-1;
+    const aCov = covarianceMatrix(aData);
+    const bCov = covarianceMatrix(bData);
+    const pooledMatrix = pooledCovarianceMatrix(aCov, bCov, n1, n2);
+
+    const thisT2 = findIndependentT2(diffMatrix, pooledMatrix, n1, n2);
+    let thisF = thisT2 * (grandN - df1) / (df1 * (grandN-1));
+    let thisp = getPfromF(df1, thisF, df1, df2);
+    let thisEta2 = (df1*thisF) / (df1*thisF+df2);
+    // Standard errors from diagonal of covariance
+    const standardErrors = [];
+    for (let i = 0; i < df1; i++) {
+        const var_i = pooledMatrix[i][i];
+        standardErrors.push(Math.sqrt(var_i * (1 / n1 + 1 / n2)));
+    }
+    // Critical values
+    const alpha = 0.05;
+    const bonf_t = inverseT(1 - alpha / (2 * df1), n1 + n2 - 2);
+    const sim_Fcrit = inverseF(1 - alpha, df1, n1 + n2 - df1 - 1);
+    console.log(bonf_t);
+    console.log(sim_Fcrit);
+
+    // Build intervals
+    const bonfIntervals = [];
+    const simIntervals = [];
+    const pValues = [];
+
+    for (let i = 0; i < df1; i++) {
+        const mean = diffMatrix[i];
+        const se = standardErrors[i];
+        const pooledVar_i = pooledMatrix[i][i]; // Extract s_ii
+    
+        // Bonferroni interval
+        const bonfRadius = bonf_t * Math.sqrt(pooledVar_i) * Math.sqrt(1 / n1 + 1 / n2);
+        bonfIntervals.push([mean - bonfRadius, mean + bonfRadius]);
+    
+        // Simultaneous interval
+        const scalingFactor = Math.sqrt((df1 * (n1 + n2 - 2)) / (n1 + n2 - df1 - 1) * sim_Fcrit);
+        const simRadius = scalingFactor * Math.sqrt(pooledVar_i) * Math.sqrt(1 / n1 + 1 / n2);
+        simIntervals.push([mean - simRadius, mean + simRadius]);
+    
+        // p-value
+        const t_stat = mean / se;
+        const p = getPfromT(Math.abs(t_stat), df2);
+        pValues.push(p);
+    }
+
+    if (language == "en"){
+        details_of_test = "An independent-samples Hotelling's T-square was used to check for overall differences in your datasets. Decisions per paired dataset, as well as simultaneous and Bonferroni-corrected 95% confidence intervals are provided.";
+        if (thisp <= 0.05) {
+            results_of_test = "At least one of your pairs of datasets showed significant differences; ";
+            drawTable(simIntervals, bonfIntervals, pValues);
+        } else {
+            results_of_test = "None of your pairs of datasets showed significant differences; ";
+        }
+        results_of_test += "<i>T<sup>2</sup></i>("+df1+", "+df2+") = "+thisT2.toFixed(2)+", <i>F</i> = "+thisF.toFixed(2)+", <i>p</i> = "+thisp.toFixed(3)+", <i>η<sub>p</sub><sup>2</sup></i> = "+thisEta2.toFixed(3)+".<br><br>";
+    } else if (language == "jp"){
+        details_of_test = "対応のない標本に対してHotellingの<i>T<sup>2</sup></i>検定が実施され、各データセット間の全体的な差異が評価されました。各ペアのデータセットに対する判定結果に加えて、同時およびボンフェローニ補正を適用した95％信頼区間も提供されています。";
+        if (thisp <= 0.05) {
+            results_of_test = "少なくとも1組のデータセット間に有意な差が見られました： ";
+            drawTable(simIntervals, bonfIntervals, pValues);
+        } else {
+            results_of_test = "いずれのデータセット間にも有意な差は見られませんでした： ";
+        }
+        results_of_test += "<i>T<sup>2</sup></i>("+df1+", "+df2+") = "+thisT2.toFixed(2)+", <i>F</i> = "+thisF.toFixed(2)+", <i>p</i> = "+thisp.toFixed(3)+", <i>η<sub>p</sub><sup>2</sup></i> = "+thisEta2.toFixed(3)+"。<br><br>";
+    }
+    document.getElementById("explain_bun").innerHTML = details_of_test;
+    document.getElementById("results_bun").innerHTML = results_of_test;
+}
+
+function findIndependentT2(diffMatrix, covMatrix, n1, n2){
+    const inner1 = transposeMatrix(diffMatrix);
+    const scalar = 1 / n1 + 1 / n2;
+    const scaledMatrix = covMatrix.map(row => row.map(value => value * scalar));
+    const inner2 = inverseMatrix(scaledMatrix);
+    const mid = multiplyMatrices(diffMatrix,inner2);
+    const final = multiplyMatrices(mid,inner1);
+    return final[0][0];
+}
+
+function pooledCovarianceMatrix(S1, S2, n1, n2) {
+    const rows = S1.length;
+    const cols = S1[0].length;
+    const pooled = [];
+    
+    for (let i = 0; i < rows; i++) {
+        const row = [];
+        for (let j = 0; j < cols; j++) {
+          const val = ((n1 - 1) * S1[i][j] + (n2 - 1) * S2[i][j]) / (n1 + n2 - 2);
+          row.push(val);
+        }
+        pooled.push(row);
+    }
+    
+    return pooled;
 }
 
 function drawTable(sims, bonfs, pvals){

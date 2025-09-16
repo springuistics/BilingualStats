@@ -149,6 +149,8 @@ function Calculate() {
             let helperK = 'data_set_'+(ok-1);
             if (document.getElementById(helperK)){
                 var theBigData = gatherDatafromForm(ok);
+                var allDescriptives = runDescriptives(theBigData);
+                printDescriptives(allDescriptives); 
                 if (pair_check == "yes"){
                     function checkPairs(losData){
                         if(!losData.length) {return false}
@@ -240,7 +242,7 @@ function runHotelling(firstdata){
         details_of_test = "A paired-samples Hotelling's T-square was used to check for overall differences in your datasets. Decisions per paired dataset, as well as simultaneous and Bonferroni-corrected 95% confidence intervals are provided.";
         if (thisp <= 0.05) {
             results_of_test = "At least one of your pairs of datasets showed significant differences; ";
-            drawTable(simIntervals, bonfIntervals, pValues);
+            
         } else {
             results_of_test = "None of your pairs of datasets showed significant differences; ";
         }
@@ -249,7 +251,6 @@ function runHotelling(firstdata){
         details_of_test = "対応のある標本に対してHotellingの<i>T<sup>2</sup></i>検定が実施され、各データセット間の全体的な差異が評価されました。各ペアのデータセットに対する判定結果に加えて、同時およびボンフェローニ補正を適用した95％信頼区間も提供されています。";
         if (thisp <= 0.05) {
             results_of_test = "少なくとも1組のデータセット間に有意な差が見られました： ";
-            drawTable(simIntervals, bonfIntervals, pValues);
         } else {
             results_of_test = "いずれのデータセット間にも有意な差は見られませんでした： ";
         }
@@ -257,6 +258,7 @@ function runHotelling(firstdata){
     }
     document.getElementById("explain_bun").innerHTML = details_of_test;
     document.getElementById("results_bun").innerHTML = results_of_test;
+    drawTable(simIntervals, bonfIntervals, pValues);
 }
 
 function runHotellingIndependent(firstdata){

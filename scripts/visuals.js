@@ -153,8 +153,16 @@ function Calculate() {
         // create a box series and set the data
         var series = chart.box(ChartData);
         // set the chart title
-        chart.title(titleOfChart);
-        // set the container id
+        chart.title()
+            .text(titleOfChart)
+            .fontSize(24);  // Adjust as needed
+
+        // customize axis labels
+        chart.xAxis().labels().fontSize(20);
+        chart.yAxis().labels().fontSize(20);
+
+        // customize tooltip font size (if tooltips are enabled)
+        series.tooltip().fontSize(20);
         chart.container('Chart_container');
         // draw the chart
         chart.draw();

@@ -9,7 +9,7 @@
     <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-core.min.js"></script>
     <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-cartesian.min.js"></script>
     <script src="../scripts/repeatTests_v1.js?v=1"></script>
-    <script src="../scripts/visuals.js?v=3"></script>
+    <script src="../scripts/visuals.js?v=4"></script>
     <script src="../scripts/modalHelp.js"></script>
 <?php include 'languagebar.php'; ?>
     <div id="bigger">

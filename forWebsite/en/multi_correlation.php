@@ -7,11 +7,11 @@
 </head>
 <body>
     <script src="../scripts/repeatTests_v1.js?v=1"></script>
-    <script src="../scripts/multipleCorrelation_v1.js?v=1"></script>
+    <script src="../scripts/multipleCorrelation_v1.js?v=2"></script>
     <script src="../scripts/modalHelp.js?v=1"></script>
 <?php include 'languagebar.php'; ?>
     <div id="bigger">
-        <h1  id="Title">Statistical Correlation Between One Measurement and Several Other Co-Measurements</h1>
+        <h1  id="Title">Multiple Regression Predicting One Variable and from Several Other Variables</h1>
         <h2 id="Subtitle">Answer the following questions about your data :</h2>
         <br>
         <div id="helpModal" class="w3-modal" onclick="this.style.display='none'">
@@ -34,10 +34,10 @@
             <div class="w3-cell-row">
                 <br><br>
                 <div class="w3-cell w3-cell-middle w3-container w3-right-align" style="width: 50%; margin-top: 15px">
-                    <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('howmany')">?</button><p id="qq2" class="question" style="display:inline">  How many co-measurements do you have?*</p>
+                    <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('howmany')">?</button><p id="qq2" class="question" style="display:inline">  How many predictor variables do you have?*</p>
                 </div>
                 <div class="w3-cell w3-cell-middle w3-container w3-left-align" style="width: 50%; margin-top: 15px">
-                    <input type="text" id="k_value" placeholder="Input number of data sets">
+                    <input type="text" id="k_value" placeholder="Input number of predictors">
                 </div>
             </div>       
         </div>
@@ -54,9 +54,8 @@
             <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('csv')">?</button><p style="font-size: 16px; display:inline"> Input Data Below or Click to Upload from CSV File:</p>
             <br><label for="file-upload" class="custom-file-upload">Upload CSV</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)'><br>
             <div id="data1" class="dumb_div" style="background:rgb(144, 240, 247)">
-                <h5>Predicted Variable Name (optional)</h5>
-                <div id ="hover3" class="hovery">This is the measurement that you are trying to predict with other co-measurements. It is the main number that you are checking for multiple correlations to. For example, if you are trying to determine which of three variables has the largest impact on test scores, please paste the test scores here and the three variables' data in the other areas.</div>
-                <input type="text" class="groupInput" id="group_name_0" value="Predict_Me">
+                <h5>Outcome Variable Name (optional)</h5>
+                <input type="text" class="groupInput" id="group_name_0" value="Outcome_Variable">
                 <h5>Paste data below:</h5>
                 <textarea id="data_set_0" class ="dataset" rows="30" columns="40" text-overflow="visible" placeholder="Copy and paste data here"></textarea>
                 <br>

@@ -51,7 +51,7 @@ function SetUpP2(k) {
         nameBox.id = "group_name_"+(i+1);
         label2.className = "data_label";
         if (language == "en"){
-            nameBox.value = "Explanatory Var "+(i+1);
+            nameBox.value = "Predictor Var "+(i+1);
             label.innerHTML = "Variable name (optional)";
             label2.innerHTML = "Paste data below:";
         } else if (language == "jp"){

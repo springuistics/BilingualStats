@@ -7,11 +7,11 @@
 </head>
 <body>
     <script src="../scripts/repeatTests_v1.js?v=1"></script>
-    <script src="../scripts/multipleCorrelation_v1.js?v=1"></script>
+    <script src="../scripts/multipleCorrelation_v1.js?v=2"></script>
     <script src="../scripts/modalHelp_js.js?v=1"></script>
     <?php include 'languagebar.php'; ?>
     <div id="bigger">
-        <h1  id="Title">1つのデータと複数の説明変数の関係性の計算</h1>
+        <h1  id="Title">複数の変数から1つの変数を予測する重回帰分析</h1>
         <h2 id="Subtitle">データについて、以下の質問を答えてください。</h2>
         <br>
         <div id="helpModal" class="w3-modal" onclick="this.style.display='none'">
@@ -54,9 +54,8 @@
             <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('csv')">?</button><p style="font-size: 16px; display:inline"> 以下のフィールドにデータをペーストする、あるいはCSVをアップロードして下さい：</p>
             <br><label for="file-upload" class="custom-file-upload">CSVのアップロード</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)'><br>
             <div id="data1" class="dumb_div" style="background:rgb(144, 240, 247)">
-                <h3 id="qq3">予測変数データ*を以下にペーストしてください</h3>
-                <h5>予測変数データ名 (省略可能)</h5>
-                <div id ="hover3" class="hovery">予測したい変数のこと。例えば、テストの点数が複数のクイズの点数とどのように関連しているかを分析したい場合、テストの点数は予測変数となり、それぞれのクイズの点数が説明変数になります。</div>
+                <h3 id="qq3">目的変数データ*を以下にペーストしてください</h3>
+                <h5>目的変数データ名 (省略可能)</h5>
                 <input type="text" class="groupInput" id="group_name_0" value="PredictMe">
                 <h5>データを以下にペーストしてください*</h5>
                 <textarea id="data_set_0" class ="dataset" rows="30" columns="40" text-overflow="visible" placeholder="データをここに貼付：&#10;1&#10;2&#10;3&#10;など"></textarea>

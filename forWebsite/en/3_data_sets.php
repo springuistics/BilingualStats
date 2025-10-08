@@ -7,7 +7,7 @@
 </head>
 <body>
     <script src="../scripts/repeatTests_v1.js?v=2"></script>
-    <script src="../scripts/3_data_sets_v1.js?v=3"></script>
+    <script src="../scripts/3_data_sets_v1.js?v=4"></script>
     <script src="../scripts/modalHelp.js?v=2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
     <?php include 'languagebar.php'; ?>

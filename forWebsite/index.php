@@ -45,42 +45,42 @@
                     <p id="diff_text" class="subheading">Is there a difference between groups?</p>
                     <div id="chisq_cont" class="testContainer">
                         <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('countsHelp')">?</button>
-                        <a href="en/chisquare.php" class="linky" id="cmi">Counts or Percentages</a>
+                        <a href="en/chisquare.php" class="linky" id="cmi">Counts or percentages</a>
                     </div>
                     <div id="twocomps" class="testContainer">
                         <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('2dataCompHelp')">?</button>
-                        <a href="en/2_data_sets.php" class="linky" id="tc1">2 Numerical Datasets</a>
+                        <a href="en/2_data_sets.php" class="linky" id="tc1">2 numerical datasets</a>
                     </div>
                     <div id="multi_comps" class="testContainer">
                         <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('3dataCompHelp')">?</button>
-                        <a href="en/3_data_sets.php" class="linky" id="mc1">3+ Numerical Datasets</a>
+                        <a href="en/3_data_sets.php" class="linky" id="mc1">3+ numerical datasets</a>
                     </div>
                     <div id="multi_comps2" class="testContainer">
                         <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('3measuresHelp')">?</button>
-                        <a href="en/hotelling.php" class="linky" id="mc1">3+ Different Measures of 2 Datasets</a>
+                        <a href="en/hotelling.php" class="linky" id="mc1">3+ different measures of 2 datasets</a>
                     </div>
                     <div id="pre_post" class="testContainer">
                         <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('PrePostHelp')">?</button>
-                        <a href="en/pp_testing.php" class="linky"  id="pp2">Pre/Post Tests of Experimental and Control Groups</a>
+                        <a href="en/pp_testing.php" class="linky"  id="pp2">Pre/post tests of experimental and control groups</a>
                     </div>
                     <div id="ancova" class="testContainer">
                         <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('ancovaHelp')">?</button>
-                        <a href="en/ancova.php" class="linky"  id="pp2">Experimental vs Control with covariates or 2+ post-tests</a>
+                        <a href="en/ancova.php" class="linky"  id="pp2">Experimental vs control with covariates or 2+ post-tests</a>
                     </div>
                 </div>
                 <div id="correls" class="subcontainer">
-                    <p id="correl_text" class="subheading">Is there a correlation between data sets?</p>
+                    <p id="correl_text" class="subheading">Is there a correlation between datasets?</p>
                     <div class="testContainer">
                         <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('corrHelp')">?</button>
-                        <a href="en/correlation.php" class="linky" id="tc2">For 2 Data Sets</a>
+                        <a href="en/correlation.php" class="linky" id="tc2">For 2 datasets</a>
                     </div>
                     <div id="cor_matrix" class="testContainer">
                         <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('corrMatrixHelp')">?</button>
-                        <a href="en/correlation_matrix.php" class="linky" id="corrM">Correlation Matrix</a>
+                        <a href="en/correlation_matrix.php" class="linky" id="corrM">Correlation matrix</a>
                     </div>
                     <div id="multi_corrs" class="testContainer">
                         <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('multiRegHelp')">?</button>
-                        <a href="en/multi_correlation.php" class="linky" id="mc2">For 3+ Data Sets</a>
+                        <a href="en/multi_correlation.php" class="linky" id="mc2">Predicting a dataset from 2+ other datasets</a>
                     </div>
                 </div>
             </div>
@@ -90,25 +90,25 @@
             <h3 style="font:bold; font-size: 20px; text-shadow: 2px 2px 6px grey">Other Calculators:</h3>
             <div id="t_container">
                 <div id="advLeft" class="subcontainer">
-                    <button class="w3-button w3-medium w3-circle w3-black" style="display:inline" onclick="getHelp('reliabilityHelp')">?</button><p id="diff_text" class="subheading" style="display:inline">  Inter-rater Reliabiliity</p>
+                    <button class="w3-button w3-medium w3-circle w3-black" style="display:inline" onclick="getHelp('reliabilityHelp')">?</button><p id="diff_text" class="subheading" style="display:inline">  Inter-rater reliabiliity</p>
                     <br>
                     <div id="chronbach" class="testContainer">
-                        <a href="en/chronbach.php" class="linky" id="chbch">Chronbach's Alpha</a>
+                        <a href="en/chronbach.php" class="linky" id="chbch">Chronbach's alpha</a>
                     </div>
                     <div id="krippy" class="testContainer">
-                        <a href="en/krippendorf.html" class="linky" id="krp">Krippendorf's Alpha</a>
+                        <a href="en/krippendorf.html" class="linky" id="krp">Krippendorf's alpha</a>
                     </div>
                 </div>
                 <div id="others" class="subcontainer">
-                    <button class="w3-button w3-medium w3-circle w3-black" style="display:inline" onclick="getHelp('otherTestsHelp')">?</button><p class="subheading" style="display:inline">  Individual P or Effect Sizes</p>
+                    <button class="w3-button w3-medium w3-circle w3-black" style="display:inline" onclick="getHelp('otherTestsHelp')">?</button><p class="subheading" style="display:inline">  Individual P or effect sizes</p>
                     <div class="testContainer">
-                        <a href="en/descriptive_vizualization.php" class="linky">Descriptive Data and Visualization</a>
+                        <a href="en/descriptive_vizualization.php" class="linky">Descriptive data and visualization</a>
                     </div>
                     <div class="testContainer">
-                        <a href="en/effect_calc.php" class="linky">Effect Size Calculator (<i>r</i> from <i>Z</i> and <i>N</i>)</a>
+                        <a href="en/effect_calc.php" class="linky">Effect size calculator (<i>r</i> from <i>Z</i> and <i>N</i>)</a>
                     </div>
                     <div id="cohens" class="testContainer">
-                        <a href="en/cohens_d.php" class="linky" id="cohbase">Calculate Cohen's D</a>
+                        <a href="en/cohens_d.php" class="linky" id="cohbase">Cohen's <i>d</i> for independent t-test</a>
                     </div>
                     <div class="testContainer">
                         <a href="en/p_finder.php" class="linky">Calculate <i>p</i> from <i>Z</i>, <i>t</i>, <i>Χ<sup>2</sup></i>, or <i>q</i> values</a>

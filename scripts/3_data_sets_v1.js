@@ -647,7 +647,7 @@ function RepANOVA(k,theData, check) {
     //Fine tuning and effect size
     let p = getPfromF(k, F, dfb, dfs);
     W2 = W2.toFixed(2);
-    fullW2.toFixed(2);
+    fullW2 = fullW2.toFixed(2);
     F = F.toFixed(2);
     if (check==true){
         dfb = dfb.toFixed(2);

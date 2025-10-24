@@ -226,7 +226,7 @@ function Calculate() {
                     }
                 } else {
                     if (language == "en"){
-                        details_of_test = "Due to the continuous and normal nature of the data, as checked by an appropriate test of normality*, the homogenity of variance, as checked by a Leven's test (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"), and the fact that the data was not paired, an ANOVA (non-repeated measures) was used.";
+                        details_of_test = "Due to the continuous and normal nature of the data, as checked by an appropriate test of normality*, the homogenity of variance, as checked by a Levene's test (<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"), and the fact that the data was not paired, an ANOVA (non-repeated measures) was used.";
                     } else if (language == "jp"){
                         details_of_test = "本データは連続データで、分散の均質性がルビーン検定で確認できて（<i>w</i> = "+leveneCheck.wStatistic.toFixed(2)+"; <i>p</i> = "+leveneCheck.pValue.toFixed(2)+"）、正規性の検定*で全てのデータはパラメトリックであることが確認できました。また、対応のないデータであるため、一元配置分散分析で計算しました。";
                     }
@@ -393,7 +393,7 @@ function WelchesANOVA(k, theData){
     let superB = sum(Bs);
     let F = superA/(1+2*superB*(k-2)/(k**2-1));
     let dfs = k-1;
-    let dfw = ((k**2)-1)/(3*superB);
+    let dfw = ((k**2)-1)/(k*superB);
     let p = getPfromF(k, F, dfs, dfw);
     F = F.toFixed(2);
 

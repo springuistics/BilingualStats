@@ -240,9 +240,9 @@ function Calculate() {
                 var HofA = (SS_A/MSE)
                 var HofB = (SS_B/MSE)
                 var HofInter = (SS_AxB / MSE)
-                var pofA = getPfromChi(HofA, 1).toFixed(2);
-                var pofB = getPfromChi(HofB, 1).toFixed(2);
-                var pofInt = getPfromChi(HofInter, 1).toFixed(2);
+                var pofA = GimmietheP(HofA, 1).toFixed(2);
+                var pofB = GimmietheP(HofB, 1).toFixed(2);
+                var pofInt = GimmietheP(HofInter, 1).toFixed(2);
                 HofA = HofA.toFixed(2);
                 HofB = HofB.toFixed(2);
                 HofInter = HofInter.toFixed(2);
@@ -456,3 +456,15 @@ function SumSq(data) {
     return sum(temp);
 }
 
+function GimmietheP(x,n) { 
+    var Pi=Math.PI;
+    if(n==1 & x>1000) {return 0} 
+    if(x>1000 | n>1000) { 
+        var q=GimmietheP((x-n)*(x-n)/(2*n),1)/2 
+        if(x>n) {return q} {return 1-q} 
+        } 
+    var p=Math.exp(-0.5*x); if((n%2)==1) { p=p*Math.sqrt(2*x/Pi) } 
+    var k=n; while(k>=2) { p=p*x/k; k=k-2 } 
+    var t=p; var a=n; while(t>0.0000000001*p) { a=a+2; t=t*x/a; p=p+t } 
+    return 1-p 
+    } 

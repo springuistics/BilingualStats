@@ -40,16 +40,17 @@
             <br><br>
         </div>
     </div>
-    <div class="w3-container BG4" >
+    <div class="w3-container BG2">
         <br>
-        <div class="w3-center border_help">
+        <div class="w3-center border_help BG4">
             <h2 style="font:bold">Get Help Choosing A Test:</h3>
             <button class="w3-button w3-large w3-circle w3-black" style="display: inline" onclick="getHelp('testHelp')">?</button><p style="font:bold; font-size: 20px; text-shadow: 2px 2px 6px rgb(255, 255, 255); display: inline">  What do you want to check?</p>
             <br><br>
-            <div class="w3-cell-row">
-                <div class="w3-cell stats-cell">
+            <div class="w3-row" style="display:flex; justify-content: center;">
+                <div class="w3-half stats-cell">
                     <div id="differences" class="subcontainer">
                         <h3 class="w3-center">Is there a difference between groups?</h3>
+                        <div style="display: inline-block; text-align:left; margin: 0 auto"></div>
                         <div id="chisq_cont" class="testContainer">
                             <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('countsHelp')">?</button>
                             <a href="en/chisquare.html" class="linky" id="cmi">Counts or Percentages</a><span> (Chi-Square)</span>
@@ -62,74 +63,88 @@
                             <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('3dataCompHelp')">?</button>
                             <a href="en/3_data_sets.html" class="linky" id="mc1">3+ Numerical Data Sets</a><span> (ANOVA, Friedman, Kruskall-Wallis)</span>
                         </div>
+                        <div id="multi_comps2" class="testContainer">
+                            <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('3measuresHelp')">?</button>
+                            <a href="en/hotelling.php" class="linky" id="mc1">3+ different measures of 2 datasets</a><span> (Hotelling's T<sup>2</sup>)</span>
+                        </div>
                         <div id="pre_post" class="testContainer">
                             <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('PrePostHelp')">?</button>
                             <a href="en/pp_testing.html" class="linky"  id="pp2">Pre/Post Tests of Experimental and Control Groups</a><span> (Mixed ANOVA)</span>
                         </div>
+                        <div id="ancova" class="testContainer">
+                            <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('ancovaHelp')">?</button>
+                            <a href="en/ancova.php" class="linky"  id="pp2">Experimental vs control with covariates or 2+ post-tests</a><span> (ANCOVA)</span>
+                        </div>
                     </div>
                 </div>
-                <div class="w3-cell stats-cell">
+                <div class="w3-half stats-cell">
                     <div id="correls" class="subcontainer">
                         <h3 class="w3-center">Is there a correlation between data sets?</h3>
                         <div class="testContainer">
                             <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('corrHelp')">?</button>
-                            <a href="en/correlation.html" class="linky" id="tc2">For 2 Data Sets</a>
+                            <a href="en/correlation.html" class="linky" id="tc2">For 2 Data Sets</a><span> (Pearson, Spearman)</span>
                         </div>
                         <div id="cor_matrix" class="testContainer">
                             <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('corrMatrixHelp')">?</button>
-                            <a href="en/correlation_matrix.html" class="linky" id="corrM">Correlation Matrix</a>
+                            <a href="en/correlation_matrix.html" class="linky" id="corrM">Correlation Matrix</a><span> (Pearson, Spearman)</span>
                         </div>
                         <div id="multi_corrs" class="testContainer">
                             <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('multiRegHelp')">?</button>
-                            <a href="en/multi_correlation.html" class="linky" id="mc2">For 3+ Data Sets</a>
+                            <a href="en/multi_correlation.html" class="linky" id="mc2">For 3+ Data Sets</a><span> (Multiple regression)</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     
-        <div id="advanced" class="w3-center border_help" style="margin-bottom: 30px">
+        <div id="advanced" class="w3-center border_help BG4" style="margin-bottom: 30px">
             <h2 style="font:bold">Other Calculators:</h3>
             <br>
-            <div class="w3-cell-row">
-                <div class="w3-cell stats-cell">
-                    <div id="advLeft" class="w3-center">
-                    <button class="w3-button w3-medium w3-circle w3-black" style="display:inline" onclick="getHelp('reliabilityHelp')">?</button><h3 style="display:inline-block; margin-left: 15px">Inter-rater Reliabiliity</h3>
-                    <br>
-                    </div>
-                    <div id="chronbach" class="testContainer">
-                        <a href="en/chronbach.html" class="linky" id="chbch">Chronbach's Alpha</a>
-                    </div>
-                    <div id="krippy" class="testContainer">
-                        <a href="en/krippendorf.html" class="linky" id="krp">Krippendorf's Alpha</a>
+            <div class="w3-row">
+                <div class="w3-half stats-cell">
+                    <div class="subcontainer">
+                        <div id="advLeft" class="w3-center">
+                            <button class="w3-button w3-medium w3-circle w3-black" style="display:inline" onclick="getHelp('reliabilityHelp')">?</button><h3 style="display:inline-block; margin-left: 15px">Inter-rater Reliabiliity</h3>
+                            <br>
+                        </div>
+                        <div id="chronbach" class="testContainer">
+                            <a href="en/chronbach.html" class="linky" id="chbch">Chronbach's Alpha</a>
+                        </div>
+                        <div id="krippy" class="testContainer">
+                            <a href="en/krippendorf.html" class="linky" id="krp">Krippendorf's Alpha</a>
+                        </div>
                     </div>
                 </div>
-                <div class="w3-cell stats-cell">
-                    <div class="w3-center">
-                        <button class="w3-button w3-medium w3-circle w3-black" style="display:inline" onclick="getHelp('otherTestsHelp')">?</button><h3 style="display:inline-block; margin-left: 15px">Individual P or Effect Sizes</h3>
-                    </div>
-                    <div class="testContainer">
-                        <a href="en/effect_calc.html" class="linky">Effect Size Calculator (<i>r</i> from <i>Z</i> and <i>N</i>)</a>
-                    </div>
-                    <div id="cohens" class="testContainer">
-                        <a href="en/cohens_d.html" class="linky" id="cohbase">Calculate Cohen's D</a>
-                    </div>
-                    <div class="testContainer">
-                        <a href="en/p_finder.html" class="linky">Calculate <i>p</i> from <i>Z</i>, <i>t</i>, <i>Χ<sup>2</sup></i>, or <i>q</i> values</a>
+                <div class="w3-half stats-cell">
+                    <div class="subcontainer">
+                        <div class="w3-center">
+                            <button class="w3-button w3-medium w3-circle w3-black" style="display:inline" onclick="getHelp('otherTestsHelp')">?</button><h3 style="display:inline-block; margin-left: 15px">Individual P or Effect Sizes</h3>
+                        </div>
+                        <div class="testContainer">
+                            <a href="en/descriptive_vizualization.php" class="linky">Descriptive data and visualization</a><span> (table, box and whiskers)</span>
+                        </div>
+                        <div class="testContainer">
+                            <a href="en/effect_calc.php" class="linky">Effect size calculator (<i>r</i> from <i>Z</i> and <i>N</i>)</a>
+                        </div>
+                        <div id="cohens" class="testContainer">
+                            <a href="en/cohens_d.php" class="linky" id="cohbase">Cohen's <i>d</i> for independent t-test</a>
+                        </div>
+                        <div class="testContainer">
+                            <a href="en/p_finder.php" class="linky">Calculate <i>p</i> from <i>Z</i>, <i>t</i>, <i>Χ<sup>2</sup></i>, or <i>q</i> values</a>
+                        </div>
                     </div>
                 </div>
             </div>           
         </div>
     </div>
     <div id="citation" class="BG1">
-        <br>
-        <h3 style="margin-top: 10px; width: 90%; margin: auto; text-align: center">For details on the calculations provided by this website, please see the paper below. Please cite the paper if used for research purposes.</h3>
-        <br>
-        <p id="paper">Spring, R. (2022) Free, Online, Multilingual Statistics for Linguistics and Language Education Researchers. <i>Center for Culture and Language Education, Tohoku University 2021 Nenpo, 8</i>, 32-38. https://doi.org/10.13140/RG.2.2.12037.63202</p>
-        <br>
-        <a id="paper_link" href="https://doi.org/10.13140/RG.2.2.12037.63202" class="linky">Click here to read the paper.</a>
-        <br>
-        <div id="personal_hp"><p >Visit the <a style="color: rgb(183, 255, 239); text-decoration: underline;" href="https://sites.google.com/view/ryanspring/home">research page</a> of the creator, Ryan Spring, for examples of these tests used in practical research.</p>
+        <h3 style="margin-top: 10px; width: 90%; margin: auto; text-align: center">Please cite the book below if used for research purposes.</h3>
+        <div style="margin-left: 10%">
+            <p class="paper">Spring, R. (2026). <i>From concept to calculation: Classical statistics in language education research</i>. TESL-EJ Publications.</p>
+            <h5>Get the free book here or purchase it here. Get explanations, sample data and explanatory Excel Sheets <a href="en/examples.html">here</a>.</h5>
+            <div id="personal_hp"><p >Visit the <a style="color: rgb(183, 255, 239); text-decoration: underline;" href="https://sites.google.com/view/ryanspring/home">research page</a> of the creator, Ryan Spring, for examples of these tests used in practical research.</p>
+            <br>
+        </div>
     </div>
 </body>
 <script>

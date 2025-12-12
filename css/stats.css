@@ -1,10 +1,8 @@
 #langauge_bar #lang_bun{
-    display: block;
     font-weight: bold;
 }
 #langauge_bar #lang_s{
     font-size: 12pt;
-    display: block;
 }
 .BG1 {
     background-color: #5C7E8F;
@@ -26,6 +24,10 @@ a:link {
     color: rgb(138, 0, 0);
     font-weight: bold;
 }
+a:visited{
+    color: rgb(138, 0, 120);
+    font-weight: bold;
+}
 .border_help {
     border: solid 5px rgba(0, 0, 0, 0.884);
     border-radius: 10px;
@@ -35,12 +37,172 @@ a:link {
     width: 90%;
 }
 .stats-cell{
-    text-align: left;
-    margin-left: 25px;
+  display: flex;              /* use flexbox for centering */
+  justify-content: center;    /* center the inner block horizontally */
 }
+.stats-cell .subcontainer {
+  text-align: left;           /* keep text left-aligned */
+  max-width: 90%;             /* optional: prevent overflow */
+}
+
 .testContainer{
     margin-top: 10px;
     padding: 5px;
     padding-top: 10px;
     padding-bottom:10px;
+}
+.paper{
+    margin-top: 10px;
+    padding-top: 10px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    font-size: large;
+}
+.picture:hover {
+    opacity: 0.5;
+}
+.picture{
+    margin:auto; 
+    margin-left: 10px; 
+    margin-top:2px; 
+    margin-bottom:2px
+}
+#data_holder #datasets {
+    margin: auto;
+    text-align: center;
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+    gap: 1rem;
+}
+#datasets #data1 {
+    grid-column:1;
+    margin: auto;
+    padding: 5px;
+    text-align: center;
+}
+
+#datasets #data2 {
+    grid-column:2;
+    margin: auto;
+    padding: 5px;
+    text-align: center;
+}
+
+#datasets .data_label {
+    margin: auto;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+#datasets #d_container {
+    margin: auto;
+    text-align: center;
+    display: grid;
+    grid-template-columns: auto auto auto;
+}
+textarea:focus, input[type="text"]:focus {
+    background-color: rgb(210, 229, 245);
+    outline: 2px solid teal;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 16px;
+    border: 3px;
+    border-style: outset;
+    color: white;
+    background-color: black;
+    width: auto;
+}
+#error_text {
+    font-size: large;
+    font-weight: bold;
+    color: rgb(199, 0, 0);
+    border-left: 6px solid red;
+    margin: 2px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 2px;
+    background-color: rgb(235, 200, 200);
+}
+#results {
+    background-color: #D4DDE2;
+    color: black;
+    text-align: center;
+}
+.descriptives_table{
+    width: 80%;
+    border-collapse: collapse;
+    margin: auto;
+    border: 2px solid black;
+}
+.descriptives_table th {
+    text-align: center;
+    background-color:rgb(22, 0, 102);
+    color: white;
+    border: 2px solid black;
+}
+.descriptives_table td {
+    text-align: right;
+    background-color: rgb(205, 235, 255);
+    border: 2px solid black;
+}
+.descriptives_table tr:hover {
+    background-color: #dbddfd !important;
+}
+.descriptives_table th, td {
+    padding: 8px;
+}
+.desBTNholder{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    text-align: center;
+}
+.desBTN{
+    width: auto;
+    height: 35px;
+    font-size: 16px;
+    border: 3px;
+    border-style: outset;
+    color: white;
+}
+.desBTN:hover{
+    background-color: darkslategrey !important;
+    cursor: pointer !important;
+}
+#desBTN_show{
+    background-color: darkblue;
+}
+#desBTN_csv{
+    background-color: black;
+}
+.data_table {
+    width: 80%;
+    border-collapse: collapse;
+    margin: auto;
+}
+.data_table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    background-color:rgb(38, 27, 77);
+    color: white;
+}
+.data_table td {
+    text-align: right;
+    background-color: rgb(196, 247, 253);
+}
+.data_table tr:hover {
+    background-color: #ddd !important;
+}
+.data_table th, td {
+    border: 2px solid black;
+    padding: 8px;
+}
+#resBTN_csv{
+    background-color: darkblue;
 }

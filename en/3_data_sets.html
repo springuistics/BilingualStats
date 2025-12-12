@@ -1,8 +1,8 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link href="../css/style_3_sets.css" rel="stylesheet" type="text/css">
-    <link href="../../apps/w3.css" rel="stylesheet" type="text/css">
+    <link href="../css/stats.css" rel="stylesheet" type="text/css">
+    <link href="https://springsenglish.online/apps/w3.css" rel="stylesheet" type="text/css">
     <title>Comparing 3+ Data Sets</title>
 </head>
 <body>
@@ -10,15 +10,22 @@
     <script src="../scripts/3_data_sets_v1.js"></script>
     <script src="../scripts/modalHelp.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
-    <div id="langauge_bar">
-        <div style="text-align:left; margin-top: 2px; margin-left: 10px; position:absolute"><a href="../index.html"><img class="picture" src="../css/back.png" alt="index"></a></div>
-        <p id="lang_bun">Select Language:</p>
-        <select id="lang_s" onchange="L_Change()">
-            <option value="en">English</option>
-            <option value="jp">Japanese</option>
-        </select>
+    <div id="langauge_bar" class="w3-row BG1" style="display:flex; align-items:center;">
+        <div style="flex: 1; text-align: left">
+            <a href="../index.html"><img class="picture" src="../css/back.png" alt="index"></a>
+        </div>
+        <div style="flex: 1; text-align: center">
+            <h3 style="text-align: center; margin:0"><b>Multilingual Statistics</b></h3>
+        </div>
+        <div style="flex: 1; text-align: right">
+            <select id="lang_s" onchange="L_Change()" style="text-align: left; margin-right: 10px">
+                <option value="en">English</option>
+                <option value="jp">Japanese</option>
+            </select>
+        </div>
+
     </div>
-    <div id="bigger">
+    <div id="bigger" class="w3-center w3-container BG3">
         <h1  id="Title">Statistical Comparison of Three or More Numerical Data Sets</h1>
         <h2 id="Subtitle">Answer the following questions about your data sets:</h2>
         <br>
@@ -77,34 +84,46 @@
         <div id="error_text" style="display: none"><p>Error will appear here.</p></div>
         <p id="small_text">*Click on the black ? symbol for help</p>
         <br>
-        <button id="SetUp" class="button" onclick="SetUp()">Set Up the Test</button>
-        <br>
+        <button id="SetUp" class="w3-button w3-indigo w3-round-xlarge w3-hover-grey" onclick="SetUp()">Set Up the Test</button>
+        <br><br>
     </div>
-    <div id="datasets" style="display: none">
-        <div id="jesus">
-            <br>
-            <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('csv')">?</button><p style="font-size: 16px; display:inline"> Input Data Below or Click to Upload from CSV File:</p>
-            <br><label for="file-upload" class="custom-file-upload">Upload CSV</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)'><br>
-            <div id="d_container"></div>
-            <div id="activate">
-                <button id="button" class="button" style="display: none" onclick="Calculate()">Calculate!</button>
+    <div id="data_holder"class="w3-container BG2">
+        <div class="w3-center border_help BG4" style="margin-bottom:15px">
+            <div id="datasets" style="display: none">
+                <div id="jesus">
+                    <br>
+                    <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('csv')">?</button><p style="font-size: 16px; display:inline"> Input Data Below or Click to Upload from CSV File:</p>
+                    <br><label for="file-upload" class="w3-button w3-teal w3-round-xlarge w3-hover-grey">Upload CSV</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)' style="display:none"><span>   </span><button id="button" class="w3-button w3-indigo w3-round-xlarge w3-hover-grey" onclick="Calculate()">Calculate!</button><br>
+                    <div id="d_container"></div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div id="results">
+
+    <div id="results" class="w3-container">
         <div id="descriptives">
 
         </div>
-        <p id="explain_bun">The description of your test will be printed here:</p>
-        <p id="results_bun">Your results will be printed here:</p>
+        <div class="border_help BG4">
+            <h4><b>For Methods Section:</b></h4>
+            <p id="explain_bun" style="text-align: left; margin-left: 20px;">The description of your test will be printed here:</p>
+            <br>
+            <h4><b>For Results Section:</b></h4>
+            <p id="results_bun" style="text-align: left; margin-left: 20px;">Your results will be printed here:</p>
+        </div>
         <br>
-        <button id="reset" class="button" onclick="Reset()">Reset!</button>
-        <br>
+        <button id="reset" class="w3-button w3-red w3-round-xlarge w3-hover-grey" style="display:none" onclick="Reset()">Reset!</button>
+        <br><br>
     </div>
-    <div id="Citation">
-        <p>Please cite the following paper if you use this program or any of the statistics herein. The justifications are included in the paper, linked below for your reference.</p>
-        <p>Spring, R. (2022) Free, Online, Multilingual Statistics for Linguistics and Language Education Researchers. <i>Center for Culture and Language Education, Tohoku University 2021 Nenpo, 8</i>, 32-38.<a href="https://doi.org/10.13140/RG.2.2.12037.63202"> https://doi.org/10.13140/RG.2.2.12037.63202</a></p>
+    <div id="citation" class="BG1">
+        <h3 style="margin-top: 10px; width: 90%; margin: auto; text-align: center">Please cite the book below if used for research purposes.</h3>
+        <div style="margin-left: 10%">
+            <p class="paper">Spring, R. (2026). <i>From concept to calculation: Classical statistics in language education research</i>. TESL-EJ Publications.</p>
+            <h5>Get the free book here or purchase it here. Get explanations, sample data and explanatory Excel Sheets <a href="en/examples.html">here</a>.</h5>
+            <div id="personal_hp"><p >Visit the <a style="color: rgb(183, 255, 239); text-decoration: underline;" href="https://sites.google.com/view/ryanspring/home">research page</a> of the creator, Ryan Spring, for examples of these tests used in practical research.</p>
+            <br>
+        </div>
     </div>
     <div id='extra_fun'></div>
 </body>

@@ -1,24 +1,31 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link href="../css/multi_correlation.css" rel="stylesheet" type="text/css">
-    <link href="../../apps/w3.css" rel="stylesheet" type="text/css">
+    <link href="../css/stats.css" rel="stylesheet" type="text/css">
+    <link href="https://springsenglish.online/apps/w3.css" rel="stylesheet" type="text/css">
     <title>Correlation for 3+ Data Sets</title>
 </head>
 <body>
     <script src="../scripts/repeatTests_v1.js"></script>
     <script src="../scripts/multipleCorrelation_v1.js"></script>
     <script src="../scripts/modalHelp.js"></script>
-    <div id="langauge_bar">
-        <div style="text-align:left; margin-top: 2px; margin-left: 10px; position:absolute"><a href="../index.html"><img class="picture" src="../css/back.png" alt="index"></a></div>
-        <p id="lang_bun">Select Language:</p>
-        <select id="lang_s" onchange="L_Change()">
-            <option value="en">English</option>
-            <option value="jp">Japanese</option>
-        </select>
+    <div id="langauge_bar" class="w3-row BG1" style="display:flex; align-items:center;">
+        <div style="flex: 1; text-align: left">
+            <a href="../index.html"><img class="picture" src="../css/back.png" alt="index"></a>
+        </div>
+        <div style="flex: 1; text-align: center">
+            <h3 style="text-align: center; margin:0"><b>Multilingual Statistics</b></h3>
+        </div>
+        <div style="flex: 1; text-align: right">
+            <select id="lang_s" onchange="L_Change()" style="text-align: left; margin-right: 10px">
+                <option value="en">English</option>
+                <option value="jp">Japanese</option>
+            </select>
+        </div>
+
     </div>
     <br>
-    <div id="bigger">
+    <div id="bigger" class="w3-center w3-container BG3">
         <h1  id="Title">Statistical Correlation Between One Measurement and Several Other Co-Measurements</h1>
         <h2 id="Subtitle">Answer the following questions about your data :</h2>
         <br>
@@ -53,41 +60,54 @@
     <p id="error_text" style="display: none">Error will appear here.</p>
     <p id="small_text">*Click on the black ? symbol for help</p>
     <br>
-    <button id="SetUp" class="final_button" onclick="SetUp()">Set Up the Test</button>
-    <br>
+    <button id="SetUp" class="w3-button w3-indigo w3-round-xlarge w3-hover-grey" onclick="SetUp()">Set Up the Test</button>
+    <br><br>
     </div>
-    <div id="datasets" style="display: none">
-        <div id="jesus">
-            <br>
-            <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('csv')">?</button><p style="font-size: 16px; display:inline"> Input Data Below or Click to Upload from CSV File:</p>
-            <br><label for="file-upload" class="custom-file-upload">Upload CSV</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)'><br>
-            <div id="data1" class="dumb_div" style="background:rgb(144, 240, 247)">
-                <h5>Predicted Variable Name (optional)</h5>
-                <div id ="hover3" class="hovery">This is the measurement that you are trying to predict with other co-measurements. It is the main number that you are checking for multiple correlations to. For example, if you are trying to determine which of three variables has the largest impact on test scores, please paste the test scores here and the three variables' data in the other areas.</div>
-                <input type="text" class="groupInput" id="group_name_0" value="Predict_Me">
-                <h5>Paste data below:</h5>
-                <textarea id="data_set_0" class ="dataset" rows="30" columns="40" text-overflow="visible" placeholder="Copy and paste data here"></textarea>
-                <br>
-            </div>
-            <div id="d_container"></div>
-            <div id="activate">
-                <button id="button" class="final_button" style="display: none" onclick="Calculate()">Calculate!</button>
+    <div id="data_holder"class="w3-container BG2">
+        <div class="w3-center border_help BG4" style="margin-bottom:15px">
+            <div id="datasets" style="display: none">
+                <div id="jesus">
+                    <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('csv')">?</button><p style="font-size: 16px; display:inline"> Input Data Below or Click to Upload from CSV File:</p>
+                    <br><label for="file-upload" class="w3-button w3-teal w3-round-xlarge w3-hover-grey">Upload CSV</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)' style="display:none"><span>   </span><button id="button" class="w3-button w3-indigo w3-round-xlarge w3-hover-grey" onclick="Calculate()">Calculate!</button><br>
+                    <br>
+                    <div id="data1" class="dumb_div" style="background:rgb(144, 240, 247)">
+                        <h5>Outcome Variable Name (optional)</h5>
+                        <input type="text" class="groupInput" id="group_name_0" value="Outcome_Variable">
+                        <h5>Paste data below:</h5>
+                        <textarea id="data_set_0" class ="dataset" rows="30" columns="20" text-overflow="visible" placeholder="Copy and paste data here"></textarea>
+                        <br>
+                    </div>
+                    <div id="d_container"></div>
+                </div>
             </div>
         </div>
     </div>
-    <div id="results">
+    <div id="results" class="w3-container">
         <div id="descriptives">
 
         </div>
-        <p id="explain_bun">The description of your test will be printed here:</p>
-        <p id="results_bun">Your results will be printed here:</p>
-        <div id="table_holder"></div>
+        <div class="border_help BG4">
+            <h4><b>For Methods Section:</b></h4>
+            <p id="explain_bun" style="text-align: left; margin-left: 20px;">The description of your test will be printed here:</p>
+            <br>
+            <h4><b>For Results Section:</b></h4>
+            <p id="results_bun" style="text-align: left; margin-left: 20px;">Your results will be printed here:</p>
+            <br><br>
+            <div id="table_holder"></div>
+            <br>
+        </div>
         <br>
-        <button id="reset" class="reset_button" style="display: none;" onclick="Reset()">Reset!</button>
+        <button id="reset" class="w3-button w3-red w3-round-xlarge w3-hover-grey" style="display:none" onclick="Reset()">Reset!</button>
+        <br><br>
     </div>
-    <div id="Citation">
-        <p>Please cite the following paper if you use this program or any of the statistics herein. The justifications are included in the paper, linked below for your reference.</p>
-        <p>Spring, R. (2022) Free, Online, Multilingual Statistics for Linguistics and Language Education Researchers. <i>Center for Culture and Language Education, Tohoku University 2021 Nenpo, 8</i>, 32-38.<a href="https://doi.org/10.13140/RG.2.2.12037.63202"> https://doi.org/10.13140/RG.2.2.12037.63202</a></p>
+    <div id="citation" class="BG1">
+        <h3 style="margin-top: 10px; width: 90%; margin: auto; text-align: center">Please cite the book below if used for research purposes.</h3>
+        <div style="margin-left: 10%">
+            <p class="paper">Spring, R. (2026). <i>From concept to calculation: Classical statistics in language education research</i>. TESL-EJ Publications.</p>
+            <h5>Get the free book here or purchase it here. Get explanations, sample data and explanatory Excel Sheets <a href="en/examples.html">here</a>.</h5>
+            <div id="personal_hp"><p >Visit the <a style="color: rgb(183, 255, 239); text-decoration: underline;" href="https://sites.google.com/view/ryanspring/home">research page</a> of the creator, Ryan Spring, for examples of these tests used in practical research.</p>
+            <br>
+        </div>
     </div>
     <div id='extra_fun'></div>
 </body>

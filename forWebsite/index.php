@@ -1,24 +1,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link href="css/index.css" rel="stylesheet" type="text/css">
+    <link href="css/stats.css" rel="stylesheet" type="text/css">
     <link href="../apps/w3.css" rel="stylesheet" type="text/css">
     <title>Multilingual Stats for Language Studies</title>
 </head>
 <body>
-    <div id="langauge_bar">
+    <div id="langauge_bar" class="w3-container w3-cell-row">
+        <div class="w3-cell-middle" style="text-align:center">
+
+        </div>
+        <div class="w3-cell-middle" style="text-align:right">
         <p id="lang_bun">Select Language:</p>
-        <select id="lang_s" onchange="L_Change()">
-            <option value="en">English</option>
-            <option value="jp">Japanese</option>
-        </select>
+            <select id="lang_s" onchange="L_Change()">
+                <option value="en">English</option>
+                <option value="jp">Japanese</option>
+            </select>
+        </div>
     </div>
     <div id="title_stuff">
-    <h1 id="main_title">Multilingual Statistics for Linguistics and Language Teaching Studies</h1>
-    <h3 id="instructions">Choose the type of calculation and data set that you have from the options below.</h3>
-    <h3 id="instructions">Click the question marks for help and details.</h3>
-    <p><span style="color:red">New!</span> Explanations and Sample Data <a href="en/examples.html">Click here!</a></p>
-    <br>
+        <h1 id="main_title">Multilingual Statistics for Linguistics and Language Teaching Studies</h1>
+        <h3 id="instructions">Choose the type of calculation and data set that you have from the options below.</h3>
+        <h3 id="instructions">Click the question marks for help and details.</h3>
+        <p><span style="color:red">New!</span> Explanations and Sample Data <a href="en/examples.html">Click here!</a></p>
+        <br>
     </div>
     <div id="helpModal" class="w3-modal" onclick="this.style.display='none'">
         <div id="helpModalContent" class="w3-modal-content w3-animate-zoom" style="background-color: white; width: 80vw">
@@ -96,7 +101,7 @@
                         <a href="en/chronbach.php" class="linky" id="chbch">Chronbach's alpha</a>
                     </div>
                     <div id="krippy" class="testContainer">
-                        <a href="en/krippendorf.html" class="linky" id="krp">Krippendorf's alpha</a>
+                        <a href="en/krippendorf.html" class="linky" id="krp">Krippendorff's alpha</a>
                     </div>
                 </div>
                 <div id="others" class="subcontainer">

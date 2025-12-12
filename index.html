@@ -1,24 +1,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link href="css/index.css" rel="stylesheet" type="text/css">
-    <link href="../apps/w3.css" rel="stylesheet" type="text/css">
+    <link href="css/stats.css" rel="stylesheet" type="text/css">
+    <link href="https://springsenglish.online/apps/w3.css" rel="stylesheet" type="text/css">
     <title>Multilingual Stats for Language Studies</title>
 </head>
 <body>
-    <div id="langauge_bar">
-        <p id="lang_bun">Select Language:</p>
-        <select id="lang_s" onchange="L_Change()">
-            <option value="en">English</option>
-            <option value="jp">Japanese</option>
-        </select>
+    <div id="langauge_bar" class="w3-row BG1" style="display:flex; justify-content:flex-end; align-items:center; position:relative;">
+        <!-- Centered text -->
+        <div style="flex:1; text-align:center; min-width:0; overflow:hidden; text-overflow:ellipsis;">
+            <h3><b>Multilingual Statistics</b></h3>
+        </div>
+        <div style="flex:0 1 auto; text-align:right; min-width:0; overflow:hidden; text-overflow:ellipsis; margin-right: 10px;">
+            <select id="lang_s" onchange="L_Change()">
+                <option value="en">English</option>
+                <option value="jp">Japanese</option>
+            </select>
+        </div>
     </div>
-    <div id="title_stuff">
-    <h1 id="main_title">Multilingual Statistics for Linguistics and Language Teaching Studies</h1>
-    <h3 id="instructions">Choose the type of calculation and data set that you have from the options below.</h3>
-    <h3 id="instructions">Click the question marks for help and details.</h3>
-    <p><span style="color:red">New!</span> Explanations and Sample Data <a href="en/examples.html">Click here!</a></p>
-    <br>
+    <div id="title_stuff" class="w3-center w3-container BG3">
+        <h2>Statistics for Linguistics and Language Teaching Studies</h2>
+        <h3>Companion Site for "From Concept to Calculation"</h3>
+        <h4>Choose a langauge above. Select a test from below. Click the question marks for explanations, help and details.</h4>
+        <h5>Get the free book here or purchase it here. Get explanations, sample data and explanatory Excel Sheets <a href="en/examples.html">here</a>. </h5>
+        <br>
     </div>
     <div id="helpModal" class="w3-modal" onclick="this.style.display='none'">
         <div id="helpModalContent" class="w3-modal-content w3-animate-zoom" style="background-color: white; width: 80vw">
@@ -35,55 +40,63 @@
             <br><br>
         </div>
     </div>
-    <div id="tests">
+    <div class="w3-container BG4" >
         <br>
-        <div id="border_help">
-            <h2 style="font:bold; font-size: 24px; color: white">Get Help Choosing A Test:</h3>
+        <div class="w3-center border_help">
+            <h2 style="font:bold">Get Help Choosing A Test:</h3>
             <button class="w3-button w3-large w3-circle w3-black" style="display: inline" onclick="getHelp('testHelp')">?</button><p style="font:bold; font-size: 20px; text-shadow: 2px 2px 6px rgb(255, 255, 255); display: inline">  What do you want to check?</p>
-            <div id="t_container">
-                <div id="differences" class="subcontainer">
-                    <p id="diff_text" class="subheading">Is there a difference between groups?</p>
-                    <div id="chisq_cont" class="testContainer">
-                        <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('countsHelp')">?</button>
-                        <a href="en/chisquare.html" class="linky" id="cmi">Counts or Percentages</a>
-                    </div>
-                    <div id="twocomps" class="testContainer">
-                        <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('2dataCompHelp')">?</button>
-                        <a href="en/2_data_sets.html" class="linky" id="tc1">2 Numerical Data Sets</a>
-                    </div>
-                    <div id="multi_comps" class="testContainer">
-                        <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('3dataCompHelp')">?</button>
-                        <a href="en/3_data_sets.html" class="linky" id="mc1">3+ Numerical Data Sets</a>
-                    </div>
-                    <div id="pre_post" class="testContainer">
-                        <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('PrePostHelp')">?</button>
-                        <a href="en/pp_testing.html" class="linky"  id="pp2">Pre/Post Tests of Experimental and Control Groups</a>
+            <br><br>
+            <div class="w3-cell-row">
+                <div class="w3-cell stats-cell">
+                    <div id="differences" class="subcontainer">
+                        <h3 class="w3-center">Is there a difference between groups?</h3>
+                        <div id="chisq_cont" class="testContainer">
+                            <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('countsHelp')">?</button>
+                            <a href="en/chisquare.html" class="linky" id="cmi">Counts or Percentages</a><span> (Chi-Square)</span>
+                        </div>
+                        <div id="twocomps" class="testContainer">
+                            <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('2dataCompHelp')">?</button>
+                            <a href="en/2_data_sets.html" class="linky" id="tc1">2 Numerical Data Sets</a><span> (t-test, Mann-Whitney, Wilcoxon)</span>
+                        </div>
+                        <div id="multi_comps" class="testContainer">
+                            <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('3dataCompHelp')">?</button>
+                            <a href="en/3_data_sets.html" class="linky" id="mc1">3+ Numerical Data Sets</a><span> (ANOVA, Friedman, Kruskall-Wallis)</span>
+                        </div>
+                        <div id="pre_post" class="testContainer">
+                            <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('PrePostHelp')">?</button>
+                            <a href="en/pp_testing.html" class="linky"  id="pp2">Pre/Post Tests of Experimental and Control Groups</a><span> (Mixed ANOVA)</span>
+                        </div>
                     </div>
                 </div>
-                <div id="correls" class="subcontainer">
-                    <p id="correl_text" class="subheading">Is there a correlation between data sets?</p>
-                    <div class="testContainer">
-                        <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('corrHelp')">?</button>
-                        <a href="en/correlation.html" class="linky" id="tc2">For 2 Data Sets</a>
-                    </div>
-                    <div id="cor_matrix" class="testContainer">
-                        <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('corrMatrixHelp')">?</button>
-                        <a href="en/correlation_matrix.html" class="linky" id="corrM">Correlation Matrix</a>
-                    </div>
-                    <div id="multi_corrs" class="testContainer">
-                        <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('multiRegHelp')">?</button>
-                        <a href="en/multi_correlation.html" class="linky" id="mc2">For 3+ Data Sets</a>
+                <div class="w3-cell stats-cell">
+                    <div id="correls" class="subcontainer">
+                        <h3 class="w3-center">Is there a correlation between data sets?</h3>
+                        <div class="testContainer">
+                            <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('corrHelp')">?</button>
+                            <a href="en/correlation.html" class="linky" id="tc2">For 2 Data Sets</a>
+                        </div>
+                        <div id="cor_matrix" class="testContainer">
+                            <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('corrMatrixHelp')">?</button>
+                            <a href="en/correlation_matrix.html" class="linky" id="corrM">Correlation Matrix</a>
+                        </div>
+                        <div id="multi_corrs" class="testContainer">
+                            <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('multiRegHelp')">?</button>
+                            <a href="en/multi_correlation.html" class="linky" id="mc2">For 3+ Data Sets</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     
-        <div id="advanced">
-            <h3 style="font:bold; font-size: 20px; text-shadow: 2px 2px 6px grey">Other Calculators:</h3>
-            <div id="t_container">
-                <div id="advLeft" class="subcontainer">
-                    <button class="w3-button w3-medium w3-circle w3-black" style="display:inline" onclick="getHelp('reliabilityHelp')">?</button><p id="diff_text" class="subheading" style="display:inline">  Inter-rater Reliabiliity</p>
+        <div id="advanced" class="w3-center border_help" style="margin-bottom: 30px">
+            <h2 style="font:bold">Other Calculators:</h3>
+            <br>
+            <div class="w3-cell-row">
+                <div class="w3-cell stats-cell">
+                    <div id="advLeft" class="w3-center">
+                    <button class="w3-button w3-medium w3-circle w3-black" style="display:inline" onclick="getHelp('reliabilityHelp')">?</button><h3 style="display:inline-block; margin-left: 15px">Inter-rater Reliabiliity</h3>
                     <br>
+                    </div>
                     <div id="chronbach" class="testContainer">
                         <a href="en/chronbach.html" class="linky" id="chbch">Chronbach's Alpha</a>
                     </div>
@@ -91,8 +104,10 @@
                         <a href="en/krippendorf.html" class="linky" id="krp">Krippendorf's Alpha</a>
                     </div>
                 </div>
-                <div id="others" class="subcontainer">
-                    <button class="w3-button w3-medium w3-circle w3-black" style="display:inline" onclick="getHelp('otherTestsHelp')">?</button><p class="subheading" style="display:inline">  Individual P or Effect Sizes</p>
+                <div class="w3-cell stats-cell">
+                    <div class="w3-center">
+                        <button class="w3-button w3-medium w3-circle w3-black" style="display:inline" onclick="getHelp('otherTestsHelp')">?</button><h3 style="display:inline-block; margin-left: 15px">Individual P or Effect Sizes</h3>
+                    </div>
                     <div class="testContainer">
                         <a href="en/effect_calc.html" class="linky">Effect Size Calculator (<i>r</i> from <i>Z</i> and <i>N</i>)</a>
                     </div>
@@ -106,7 +121,7 @@
             </div>           
         </div>
     </div>
-    <div id="citation">
+    <div id="citation" class="BG1">
         <br>
         <h3 style="margin-top: 10px; width: 90%; margin: auto; text-align: center">For details on the calculations provided by this website, please see the paper below. Please cite the paper if used for research purposes.</h3>
         <br>

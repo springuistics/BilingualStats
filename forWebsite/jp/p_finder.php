@@ -44,7 +44,7 @@
     </div>
     <div id="ZtoP_p" style="display:none">
         <div id="data_holder"class="w3-container BG2">
-            <h2 class="subheader"><i>Z</i>値から<i>p</i>値を計算する</h2>
+            <h2 class="subheader2"><i>Z</i>値から<i>p</i>値を計算する</h2>
             <div class="w3-center border_help BG4" style="margin-bottom:15px; display:flex; justify-content: center;">
                 <div id="datasets" >
                     <div id="jesus" style="margin-left: auto; margin-right: auto; text-align: center;">
@@ -71,7 +71,7 @@
     </div>
     <div id="TtoP" style="display:none">
         <div id="data_holder"class="w3-container BG2">
-            <h2 class="subheader"><i>t</i>値から<i>p</i>を計算する</h2>
+            <h2 class="subheader2"><i>t</i>値から<i>p</i>を計算する</h2>
             <div class="w3-center border_help BG4" style="margin-bottom:15px; display:flex; justify-content: center;">
                 <div id="datasets" >
                     <div id="jesus" style="margin-left: auto; margin-right: auto; text-align: center;">
@@ -100,7 +100,7 @@
     </div>
     <div id="XtoP" style="display:none">
         <div id="data_holder"class="w3-container BG2">
-            <h2 class="subheader"><i>Χ<sup>2</sup></i> 値から <i>p</i> を計算する</h2>
+            <h2 class="subheader2"><i>Χ<sup>2</sup></i> 値から <i>p</i> を計算する</h2>
             <div class="w3-center border_help BG4" style="margin-bottom:15px; display:flex; justify-content: center;">
                 <div id="datasets" >
                     <div id="jesus" style="margin-left: auto; margin-right: auto; text-align: center;">
@@ -129,7 +129,7 @@
     </div>
     <div id="QtoP" style="display:none">
         <div id="data_holder"class="w3-container BG2">
-            <h2 class="subheader"><i>q</i> 値から <i>p</i> を計算する</h2>
+            <h2 class="subheader2"><i>q</i> 値から <i>p</i> を計算する</h2>
             <div class="w3-center border_help BG4" style="margin-bottom:15px; display:flex; justify-content: center;">
                 <div id="datasets" >
                     <div id="jesus" style="margin-left: auto; margin-right: auto; text-align: center;">
@@ -160,7 +160,7 @@
     </div>
     <div id="FtoP" style="display:none">
         <div id="data_holder"class="w3-container BG2">
-            <h2 class="subheader"><i>F</i>値から <i>p</i> を計算する</h2>
+            <h2 class="subheader2"><i>F</i>値から <i>p</i> を計算する</h2>
             <div class="w3-center border_help BG4" style="margin-bottom:15px; display:flex; justify-content: center;">
                 <div id="datasets">
                     <div id="jesus" style="margin-left: auto; margin-right: auto; text-align: center;">
@@ -193,6 +193,13 @@
     </div>
     <?php include 'citation.php'; ?>
 </body>
+
+<style>
+    .subheader2{
+        text-align: center;
+        margin:auto;
+    }
+</style>
 
 <script>
 

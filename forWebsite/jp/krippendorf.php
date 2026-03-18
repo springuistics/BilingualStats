@@ -46,11 +46,11 @@
                 </div>
                 <div class="w3-cell w3-cell-middle w3-container w3-left-align" style="width: 50%; margin-top: 15px">
                     <input type="radio" id="q1a" class="radio_btn" name="q1" value="cat">
-                    <label for="q1" class="answer" style="color: white">カテゴリー</label>
+                    <label for="q1" class="answer" >カテゴリー</label>
                     <input type="radio" id="q1b" class="radio_btn" name="q1" value="ord">
-                    <label for="q1" class="answer" style="color: white">順序</label>
+                    <label for="q1" class="answer" >順序</label>
                     <input type="radio" id="q1c" class="radio_btn" name="q1" value="con">
-                    <label for="q1" class="answer" style="color: white">連続</label>
+                    <label for="q1" class="answer" >連続</label>
                 </div>
             </div>
         </div>

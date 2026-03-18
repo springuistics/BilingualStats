@@ -1,13 +1,13 @@
 <html>
 <head>
-    <meta charset="UTF-8">
-    <link href="../css/style_3_sets.css" rel="stylesheet" type="text/css">
-    <link href="../../apps/w3.css" rel="stylesheet" type="text/css">
+    <meta charset="UTF-8" lang="jp">
+    <link href="../css/stats.css" rel="stylesheet" type="text/css">
+    <link href="https://springsenglish.online/apps/w3.css" rel="stylesheet" type="text/css">
     <title>1回以上の事後テスト（と共変量）を伴う二つの対象群の検定</title>
 </head>
 <body>
     <script src="../scripts/repeatTests_v1.js?v=1"></script>
-    <script src="../scripts/ancova.js?v=4"></script>
+    <script src="../scripts/ancova.js?v=5"></script>
     <script src="../scripts/modalHelp_js.js?v=1"></script>
     <?php include 'languagebar.php'; ?>
     <div id="bigger" class="w3-center w3-container BG3">
@@ -76,6 +76,8 @@
                     <br>        
                     <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('csv')">?</button><p style="font-size: 16px; display:inline"> 以下のフィールドにデータをペーストする、あるいはCSVをアップロードして下さい：</p>
                     <br><label for="file-upload" class="w3-button w3-teal w3-round-xlarge w3-hover-grey">CSVのアップロード</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)' style="display:none"><span>   </span><button id="button" class="w3-button w3-indigo w3-round-xlarge w3-hover-grey" onclick="Calculate()">計算</button><br>
+                    <div id="d_container1"></div>
+                    <div id="d_container2"></div>
                 </div>
                 <div><p style="font-size: 12px; text-align: center; margin: auto; width: 80%; padding-bottom: 5px;">*半角数字でデータが縦になるように、Excelなどから直接にペーストしてください</p></div>
             </div>

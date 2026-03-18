@@ -100,7 +100,7 @@
     </div>
     <div id="XtoP" style="display:none">
         <div id="data_holder"class="w3-container BG2">
-            <h2 class="subheader"><i>t</i> value to <i>p</i> Value Calculator</h2>
+            <h2 class="subheader"><i>Χ<sup>2</sup></i> value to <i>p</i> Value Calculator</h2>
             <div class="w3-center border_help BG4" style="margin-bottom:15px; display:flex; justify-content: center;">
                 <div id="datasets" >
                     <div id="jesus" style="margin-left: auto; margin-right: auto; text-align: center;">

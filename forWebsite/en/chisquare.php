@@ -55,6 +55,8 @@
             <div id="datasets" style="display: none">
                 <div id="jesus">
                     <br>
+                    <h2>Please insert the total count for each group/answer pairing.</h2>
+                    <p>*This test does NOT allow counts of 0</p>
                     <button id="button" class="w3-button w3-indigo w3-round-xlarge w3-hover-grey" onclick="Calculate()">Calculate!</button>
                     <br><br>
                     <div id="d_container"></div>

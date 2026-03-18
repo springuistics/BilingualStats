@@ -1,8 +1,8 @@
 <html>
 <head>
     <meta charset="UTF-8" lang="jp">
-    <link href="../css/style_3_sets.css" rel="stylesheet" type="text/css">
-    <link href="../../apps/w3.css" rel="stylesheet" type="text/css">
+    <link href="../css/stats.css" rel="stylesheet" type="text/css">
+    <link href="https://springsenglish.online/apps/w3.css" rel="stylesheet" type="text/css">
     <title>Comparing 3+ Data Sets</title>
 </head>
 <body>
@@ -11,7 +11,7 @@
     <script src="../scripts/modalHelp_js.js?v=2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
     <?php include 'languagebar.php'; ?>
-    <div id="bigger">
+    <div id="bigger" class="w3-center w3-container BG3">
         <h1  id="Title">3組以上の数値データの統計比較</h1>
         <h2 id="Subtitle">データについて、以下の質問を答えてください。</h2>
         <br>
@@ -71,30 +71,38 @@
         <div id="error_text" style="display: none"><p>Error will appear here.</p></div>
         <p id="small_text">*黒い？マークをクリックすると、説明が表示されます</p>
         <br>
-        <button id="SetUp" class="button" onclick="SetUp()">データ入力開始</button>
-        <br>
+        <button id="SetUp" class="w3-button w3-indigo w3-round-xlarge w3-hover-grey" onclick="SetUp()">データ入力開始</button>
+        <br><br>
     </div>
-    <div id="datasets" style="display: none">
-        <div id="jesus">
-            <br>        
-            <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('csv')">?</button><p style="font-size: 16px; display:inline"> 以下のフィールドにデータをペーストする、あるいはCSVをアップロードして下さい：</p>
-            <br><label for="file-upload" class="custom-file-upload">CSVのアップロード</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)'><br>
-            <div id="d_container"></div>
-            <div><p style="font-size: 12px; text-align: center; margin: auto; width: 80%; padding-top: 15px;">*半角数字でデータが縦になるように、Excelなどから直接にペーストしてください</p></div>
-            <div id="activate">
-                <button id="button" class="button" style="display: none" onclick="Calculate()">計算</button>
+    <div id="data_holder"class="w3-container BG2">
+        <div class="w3-center border_help BG4" style="margin-bottom:15px">
+            <div id="datasets" style="display: none">
+                <div id="jesus">
+                    <br>        
+                    <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('csv')">?</button><p style="font-size: 16px; display:inline"> 以下のフィールドにデータをペーストする、あるいはCSVをアップロードして下さい：</p>
+                    <br><label for="file-upload" class="w3-button w3-teal w3-round-xlarge w3-hover-grey">CSVのアップロード</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)' style="display:none"><span>   </span><button id="button" class="w3-button w3-indigo w3-round-xlarge w3-hover-grey" onclick="Calculate()">計算</button><br>
+                    <div id="d_container">
+                    
+                    </div>
+                </div>
+            <p style="font-size: 12px; text-align: center; margin: auto; width: 80%; padding-top: 15px;">*半角数字でデータが縦になるように、Excelなどから直接にペーストしてください</p>
             </div>
         </div>
     </div>
-    
-    <div id="results">
+    <div id="results" class="w3-container">
         <div id="descriptives">
 
         </div>
-        <p id="explain_bun">利用された検定の詳細はここに書かれます</p>
-        <p id="results_bun">結果はここに書かれます</p>
+        <div class="border_help BG4">
+            <h4><b>研究方法（Methods）セクションで使用する文：</b></h4>
+            <p id="explain_bun" style="text-align: left; margin-left: 20px;">利用された検定の詳細はここに書かれます</p>
+            <br>
+            <h4><b>結果（Results）セクションで使用する文：</b></h4>
+            <p id="results_bun" style="text-align: left; margin-left: 20px;">結果はここに書かれます</p>
+        </div>
         <br>
-        <button id="reset" class="button" onclick="Reset()">Reset!</button>
+        <button id="reset" class="w3-button w3-red w3-round-xlarge w3-hover-grey" style="display:none" onclick="Reset()">やり直し</button>
+        <br><br>
     </div>
     <?php include 'citation.php'; ?>
     <div id='extra_fun'></div>

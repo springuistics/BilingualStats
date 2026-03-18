@@ -1,8 +1,8 @@
 <html>
 <head>
-    <meta charset="UTF-8">
-    <link href="../css/style_3_sets.css" rel="stylesheet" type="text/css">
-    <link href="../../apps/w3.css" rel="stylesheet" type="text/css">
+    <meta charset="UTF-8" lang="jp">
+    <link href="../css/stats.css" rel="stylesheet" type="text/css">
+    <link href="https://springsenglish.online/apps/w3.css" rel="stylesheet" type="text/css">
     <title>Data Reliability Check</title>
 </head>
 <body>
@@ -10,7 +10,7 @@
     <script src="../scripts/krippendorf.js?v=1"></script>
     <script src="../scripts/modalHelp_js.js?v=1"></script>
     <?php include 'languagebar.php'; ?>
-    <div id="bigger">
+    <div id="bigger" class="w3-center w3-container BG3">
         <h1  id="Title">Krippendorffのアルファ係数を用いた合意測定</h1>
         <br>
         <div id="helpModal" class="w3-modal" onclick="this.style.display='none'">
@@ -54,31 +54,44 @@
                 </div>
             </div>
         </div>
-        <p id="error_text" style="display: none">Error will appear here.</p>
+        <div id="error_text" style="display: none"><p>Error will appear here.</p></div>
         <p id="small_text">*黒い？マークをクリックすると、説明が表示されます</p>
         <br>
-        <button id="SetUp" class="button" onclick="SetUp()">データ入力開始</button>
-        <br>
+        <button id="SetUp" class="w3-button w3-indigo w3-round-xlarge w3-hover-grey" onclick="SetUp()">データ入力開始</button>
+        <br><br>
     </div>
-    <div id="datasets" style="display: none">
-        <div id="jesus">
-            <br>        
-            <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('csv')">?</button><p style="font-size: 16px; display:inline"> 以下のフィールドにデータをペーストする、あるいはCSVをアップロードして下さい：</p>
-            <br><label for="file-upload" class="custom-file-upload">CSVのアップロード</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)'><br>
-            <div id="d_container"></div>
-            <div id="activate">
-                <button id="button" class="button" style="display: none" onclick="Calculate()">計算</button>
+    <div id="data_holder"class="w3-container BG2">
+        <div class="w3-center border_help BG4" style="margin-bottom:15px">
+            <div id="datasets" style="display: none">
+                <div id="jesus">
+                    <br>        
+                    <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('csv')">?</button><p style="font-size: 16px; display:inline"> 以下のフィールドにデータをペーストする、あるいはCSVをアップロードして下さい：</p>
+                    <br><label for="file-upload" class="w3-button w3-teal w3-round-xlarge w3-hover-grey">CSVのアップロード</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)' style="display:none"><span>   </span><button id="button" class="w3-button w3-indigo w3-round-xlarge w3-hover-grey" onclick="Calculate()">計算</button><br>
+                    <div id="d_container">
+                    
+                    </div>
+                </div>
+            <p style="font-size: 12px; text-align: center; margin: auto; width: 80%; padding-top: 15px;">*半角数字でデータが縦になるように、Excelなどから直接にペーストしてください</p>
             </div>
         </div>
     </div>
 
-    <div id="results">
-        <p id="explain_bun">The description of your test will be printed here:</p>
-        <p id="results_bun">Your results will be printed here:</p>
-        <div id="table_holder"></div>
+    <div id="results" class="w3-container">
+        <div id="descriptives">
+
+        </div>
+        <div class="border_help BG4">
+            <h4><b>研究方法（Methods）セクションで使用する文：</b></h4>
+            <p id="explain_bun" style="text-align: left; margin-left: 20px;">利用された検定の詳細はここに書かれます</p>
+            <br>
+            <h4><b>結果（Results）セクションで使用する文：</b></h4>
+            <p id="results_bun" style="text-align: left; margin-left: 20px;">結果はここに書かれます</p>
+            <div id="table_holder"></div>
+            <br>
+        </div>
         <br>
-        <button id="reset" class="button" onclick="Reset()">Reset!</button>
-        <br>
+        <button id="reset" class="w3-button w3-red w3-round-xlarge w3-hover-grey" style="display:none" onclick="Reset()">やり直し</button>
+        <br><br>
     </div>
     <?php include 'citation.php'; ?>
     <div id='extra_fun'></div>

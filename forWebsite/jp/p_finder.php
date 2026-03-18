@@ -1,104 +1,195 @@
 <html>
 <head>
     <meta charset="UTF-8" lang="jp">
-    <link href="../css/general.css" rel="stylesheet" type="text/css">
-    <title>P Value Calculator</title>
+    <link href="../css/stats.css" rel="stylesheet" type="text/css">
+    <link href="https://springsenglish.online/apps/w3.css" rel="stylesheet" type="text/css">
+    <title>様々な検定の値（<i>t</i>、<i>Z</i>など）から<i>p</i>値を算出</title>
 </head>
 <body>
 <script src="../scripts/repeatTests_v1.js?v=1"></script>
     <?php include 'languagebar.php'; ?>
-    <div id="setup">
-        <h1  id="title_bun">を <i>Z</i> あるいは <i>t</i> から<i>p</i> 値の計算</h1>
+    <div id="bigger" class="w3-center w3-container BG3">
+        <h1  id="Title">様々な検定の値（<i>t</i>、<i>Z</i>など）から<i>p</i>値を算出</h1>
+        <h2 id="Subtitle"><i>p</i>は何から算出しますか？</h2>
         <br>
-        <p id="data_q" class="data_q"><i>p</i>は何から計算しますか？</p>
-        <br>
+        <div id="helpModal" class="w3-modal" onclick="this.style.display='none'">
+            <div id="helpModalContent" class="w3-modal-content w3-animate-zoom" style="background-color: white; width: 80vw">
+                <span class="w3-button w3-hover-red w3-xlarge w3-display-topright" onclick="closeModal()">&times;</span>
+                <br><br>
+                <div class="w3-cell-row">
+                    <div class="w3-container w3-cell">
+                        <iframe id="theHelpVideo" width="560" height="315" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                    </div>
+                    <div class="w3-container w3-cell" style="background-color: aliceblue;">
+                        <p id="theHelpText"></p>
+                    </div>
+                </div>
+                <br><br>
+            </div>
+        </div>
+        <div id="setup">
             <input type="radio" id="q1_a" class="radio_btn" name="q1" value="Z_value">
-            <label for="q1_a" class="answer"><i>Z</i> 値から</label>
+            <label for="q1_a" class="answer"><i>Z</i>値から</label>
             <input type="radio" id="q1_b" class="radio_btn" name="q1" value="t_value">
-            <label for="q1_b" class="answer"><i>t</i> 値から</label>
-            <input type="radio" id="q1_b" class="radio_btn" name="q1" value="x_value">
-            <label for="q1_b" class="answer"><i>Χ<sup>2</sup></i> 値から</label>
+            <label for="q1_b" class="answer"><i>t</i>値から</label>
+            <input type="radio" id="q1_c" class="radio_btn" name="q1" value="x_value">
+            <label for="q1_c" class="answer"><i>Χ<sup>2</sup></i>値から</label>
             <input type="radio" id="q1_d" class="radio_btn" name="q1" value="q_value">
-            <label for="q1_d" class="answer"><i>q</i> 値から</label>
-        <br>
-        <br>
-        <button id="setting_btn" class="button" onclick="SetUp()">データ入力開始</button>
-        <br>
-    </div>
-    <div id="ZtoP_p" class="hidden" >
-        <h2 class="subheader"><i>Z</i>値から<i>p</i>値を計算する</h2>
-        <br>
-        <table id="Cohen_table">
-            <tr>
-                <td class="tblwords"><i>Z</i> 値:</td>
-                <td class="tblbox"><input id="zv" type="text" class="adjustobox"></td>
-            </tr>
-        </table>
-        <br>
-        <p id="z_result" class="results">Results go here</p>
-        <br>
-        <div class="bcon">
-            <button id="zbtn" class="button" onclick="GetZ()"><i>p</i>を計算</button>
+            <label for="q1_d" class="answer"><i>q</i>値から</label>
+            <input type="radio" id="q1_e" class="radio_btn" name="q1" value="f_value">
+            <label for="q1_e" class="answer"><i>F</i>値から</label>
+            <br>
             <br>
         </div>
     </div>
-    <div id="TtoP" class="hidden">
-        <h2 class="subheader"><i>t</i>値から<i>p</i>を計算する</h2>
-        <br>
-        <table id="Cohen_table">
-            <tr>
-                <td class="tblwords"><i>t</i> 値:</td>
-                <td class="tblbox"><input id="tv" type="text" class="adjustobox"></td>
-                <td class="tblwords">自由度（df）:</td>
-                <td class="tblbox"><input id="dfv" type="text" class="adjustobox"></td>
-            </tr>
-        </table>
-        <br>
-        <p id="t_result" class="results">Results go here</p>
-        <br>
-        <div class="bcon">
-            <button id="tbtn" class="button" onclick="GetT()"><i>p</i>を計算</button>
-            <br>
+    <div id="ZtoP_p" style="display:none">
+        <div id="data_holder"class="w3-container BG2">
+            <h2 class="subheader"><i>Z</i>値から<i>p</i>値を計算する</h2>
+            <div class="w3-center border_help BG4" style="margin-bottom:15px; display:flex; justify-content: center;">
+                <div id="datasets" >
+                    <div id="jesus" style="margin-left: auto; margin-right: auto; text-align: center;">
+                        <button id="button" class="w3-button w3-indigo w3-round-xlarge w3-hover-grey" onclick="GetZ()">Calculate <i>p</i></button>
+                        <br><br>
+                        <table id="Cohen_table">
+                            <tr>
+                                <td class="tblwords"><i>Z</i> 値:</td>
+                                <td class="tblbox"><input id="zv" type="text" class="adjustobox"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div id="XtoP" class="hidden">
-        <h2 class="subheader"><i>Χ<sup>2</sup></i> 値から <i>p</i> を計算する</h2>
-        <br>
-        <table id="Cohen_table">
-            <tr>
-                <td class="tblwords"><i>Χ<sup>2</sup></i> 値:</td>
-                <td class="tblbox"><input id="xv" type="text" class="adjustobox"></td>
-                <td class="tblwords">自由度（df）:</td>
-                <td class="tblbox"><input id="dfxv" type="text" class="adjustobox"></td>
-            </tr>
-        </table>
-        <br>
-        <p id="x_result" class="results">Results go here</p>
-        <br>
-        <div class="bcon"><button id="zbtn" class="button" onclick="GetX()">Calculate <i>p</i></button>
-        <br>
+        <div id="res1" class="w3-container">
+            <div class="border_help BG4">
+                <h4><b>For Results Section:</b></h4>
+                <p id="z_result" style="text-align: left; margin-left: 20px;">Your results will be printed here:</p>
+            </div>
+            <br><br>
         </div>
+        <br>
     </div>
-    <div id="QtoP" class="hidden">
-        <h2 class="subheader"><i>q</i> value to <i>p</i> Value Calculator</h2>
-        <br>
-        <table id="Cohen_table">
-            <tr>
-                <td class="tblwords"><i>q</i> 値:</td>
-                <td class="tblbox"><input id="xq" type="text" class="adjustobox"></td>
-                <td class="tblwords">グループ数（<i>k</i> 値）:</td>
-                <td class="tblbox"><input id="kq" type="text" class="adjustobox"></td>
-                <td class="tblwords">自由度（df）:</td>
-                <td class="tblbox"><input id="dfq" type="text" class="adjustobox"></td>
-            </tr>
-        </table>
-        <br>
-        <p id="q_result" class="results">Results go here</p>
-        <br>
-        <div class="bcon"><button id="qbtn" class="button" onclick="GetQ()">Calculate <i>p</i></button>
-        <br>
+    <div id="TtoP" style="display:none">
+        <div id="data_holder"class="w3-container BG2">
+            <h2 class="subheader"><i>t</i>値から<i>p</i>を計算する</h2>
+            <div class="w3-center border_help BG4" style="margin-bottom:15px; display:flex; justify-content: center;">
+                <div id="datasets" >
+                    <div id="jesus" style="margin-left: auto; margin-right: auto; text-align: center;">
+                        <button id="button" class="w3-button w3-indigo w3-round-xlarge w3-hover-grey" onclick="GetT()">Calculate <i>p</i></button>
+                        <br><br>
+                        <table id="Cohen_table">
+                            <tr>
+                                <td class="tblwords"><i>t</i> 値:</td>
+                                <td class="tblbox"><input id="tv" type="text" class="adjustobox"></td>
+                                <td class="tblwords">自由度（df）:</td>
+                                <td class="tblbox"><input id="dfv" type="text" class="adjustobox"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
+        <div id="res2" class="w3-container">
+            <div class="border_help BG4">
+                <h4><b>For Results Section:</b></h4>
+                <p id="t_result" style="text-align: left; margin-left: 20px;">Your results will be printed here:</p>
+            </div>
+            <br><br>
+        </div>
+        <br>
     </div>
+    <div id="XtoP" style="display:none">
+        <div id="data_holder"class="w3-container BG2">
+            <h2 class="subheader"><i>Χ<sup>2</sup></i> 値から <i>p</i> を計算する</h2>
+            <div class="w3-center border_help BG4" style="margin-bottom:15px; display:flex; justify-content: center;">
+                <div id="datasets" >
+                    <div id="jesus" style="margin-left: auto; margin-right: auto; text-align: center;">
+                        <button id="button" class="w3-button w3-indigo w3-round-xlarge w3-hover-grey" onclick="GetX()">Calculate <i>p</i></button>
+                        <br><br>
+                        <table id="Cohen_table">
+                            <tr>
+                                <td class="tblwords"><i>Χ<sup>2</sup></i> 値:</td>
+                                <td class="tblbox"><input id="xv" type="text" class="adjustobox"></td>
+                                <td class="tblwords">自由度（df）:</td>
+                                <td class="tblbox"><input id="dfxv" type="text" class="adjustobox"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="res3" class="w3-container">
+            <div class="border_help BG4">
+                <h4><b>For Results Section:</b></h4>
+                <p id="x_result" style="text-align: left; margin-left: 20px;">Your results will be printed here:</p>
+            </div>
+            <br><br>
+        </div>
+        <br>
+    </div>
+    <div id="QtoP" style="display:none">
+        <div id="data_holder"class="w3-container BG2">
+            <h2 class="subheader"><i>q</i> 値から <i>p</i> を計算する</h2>
+            <div class="w3-center border_help BG4" style="margin-bottom:15px; display:flex; justify-content: center;">
+                <div id="datasets" >
+                    <div id="jesus" style="margin-left: auto; margin-right: auto; text-align: center;">
+                        <button id="button" class="w3-button w3-indigo w3-round-xlarge w3-hover-grey" onclick="GetQ()">Calculate <i>p</i></button>
+                        <br><br>
+                        <table id="Cohen_table">
+                            <tr>
+                                <td class="tblwords"><i>q</i> 値:</td>
+                                <td class="tblbox"><input id="xq" type="text" class="adjustobox"></td>
+                                <td class="tblwords">グループ数（<i>k</i> 値）:</td>
+                                <td class="tblbox"><input id="kq" type="text" class="adjustobox"></td>
+                                <td class="tblwords">自由度（df）:</td>
+                                <td class="tblbox"><input id="dfq" type="text" class="adjustobox"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="res4" class="w3-container">
+            <div class="border_help BG4">
+                <h4><b>For Results Section:</b></h4>
+                <p id="q_result" style="text-align: left; margin-left: 20px;">Your results will be printed here:</p>
+            </div>
+            <br><br>
+        </div>
+        <br>
+    </div>
+    <div id="FtoP" style="display:none">
+        <div id="data_holder"class="w3-container BG2">
+            <h2 class="subheader"><i>F</i>値から <i>p</i> を計算する</h2>
+            <div class="w3-center border_help BG4" style="margin-bottom:15px; display:flex; justify-content: center;">
+                <div id="datasets">
+                    <div id="jesus" style="margin-left: auto; margin-right: auto; text-align: center;">
+                        <button id="button" class="w3-button w3-indigo w3-round-xlarge w3-hover-grey" onclick="GetF()">Calculate <i>p</i></button>
+                        <br><br>
+                        <table id="Cohen_table">
+                            <tr>
+                                <td class="tblwords"><i>F</i>値：</td>
+                                <td class="tblbox"><input id="fxq" type="text" class="adjustobox"></td>
+                                <td class="tblwords"><i>k</i>値：</td>
+                                <td class="tblbox"><input id="fkq" type="text" class="adjustobox"></td>
+                                <td class="tblwords">群間自由度（グループ間のばらつきに対応する自由度）：</td>
+                                <td class="tblbox"><input id="fdfbq" type="text" class="adjustobox"></td>
+                                <td class="tblwords">群内自由度（ループ内のばらつきに対応する自由度）：</td>
+                                <td class="tblbox"><input id="fdfwq" type="text" class="adjustobox"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="res5" class="w3-container">
+            <div class="border_help BG4">
+                <h4><b>For Results Section:</b></h4>
+                <p id="f_result" style="text-align: left; margin-left: 20px;">Your results will be printed here:</p>
+            </div>
+            <br><br>
+        </div>
+        <br>
     </div>
     <?php include 'citation.php'; ?>
 </body>
@@ -107,10 +198,15 @@
 
 function L_Change() {
     var language = document.getElementById('lang_s').value;
-    if (language = "jp") {
-        location.href = "../jp/p_finder_jp.html"
+    if (language = "en") {
+        location.href = "../en/p_finder.php"
     }
 }
+document.querySelectorAll('input[name="q1"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+        SetUp();
+    });
+});
 
 function SetUp() {
     var durr = document.querySelector("[name=q1]:checked");
@@ -218,6 +314,6 @@ function GimmietheP(x,n) {
     var k=n; while(k>=2) { p=p*x/k; k=k-2 } 
     var t=p; var a=n; while(t>0.0000000001*p) { a=a+2; t=t*x/a; p=p+t } 
     return 1-p 
-} 
+    } 
 
 </script>

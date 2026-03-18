@@ -1,18 +1,16 @@
 <html>
 <head>
-    <meta charset="UTF-8">
-    <link href="../css/chisq.css" rel="stylesheet" type="text/css">
-    <link href="../../apps/w3.css" rel="stylesheet" type="text/css">
+    <meta charset="UTF-8" lang="jp">
+    <link href="../css/stats.css" rel="stylesheet" type="text/css">
+    <link href="https://springsenglish.online/apps/w3.css" rel="stylesheet" type="text/css">
     <title>Comparing Counts of Non-numerial Data</title>
 </head>
 <body>
     <script src="chisq.js?v=1"></script>
     <?php include 'languagebar.php'; ?>
-    <div id="bigger">
+    <div id="bigger" class="w3-center w3-container BG3">
         <h1  id="Title" style="color:aliceblue">カテゴリー別の総数データの統計比較</h1>
-        <br>
         <h2 id="Subtitle" style="color:aliceblue">データについて、以下の質問に答えてください</h2>
-        <br>
         <div id="helpModal" class="w3-modal" onclick="this.style.display='none'">
             <div id="helpModalContent" class="w3-modal-content w3-animate-zoom" style="background-color: white; width: 80vw">
                 <span class="w3-button w3-hover-red w3-xlarge w3-display-topright" onclick="closeModal()">&times;</span>
@@ -48,25 +46,34 @@
         <div id="error_text" style="display: none"><p>Error will appear here.</p></div>
         <p id="small_text">*黒い？マークをクリックすると、説明が表示されます</p>
         <br>
-        <button id="SetUp" class="final_button" onclick="SetUp()">データ入力開始</button>
-        <br>
+        <button id="SetUp" class="w3-button w3-indigo w3-round-xlarge w3-hover-grey" onclick="SetUp()">データ入力開始</button>
+        <br><br>
     </div>
-    <div id="datasets" style="display: none">
-        <div id="d_container">
-        <h2>各グループ・カテゴリーの総数を入力してください*:</h2>
-        <p>*本検定では、「0」を入力してはいけない</p>
-        <div id="jesus"></div>
-        <div id="activate">
-            <button id="button" class="final_button" style="display: none" onclick="Calculate()">計算</button>
+    <div id="data_holder"class="w3-container BG2">
+        <div class="w3-center border_help BG4" style="margin-bottom:15px">
+            <div id="datasets" style="display: none">
+                <div id="jesus">
+                    <br>
+                    <h2>各グループ・カテゴリーの総数を入力してください*:</h2>
+                    <p>*本検定では、「0」を入力してはいけない</p>
+                    <button id="button" class="w3-button w3-indigo w3-round-xlarge w3-hover-grey" onclick="Calculate()">計算</button>
+                    <br><br>
+                    <div id="d_container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="results" class="w3-container">
+        <div class="border_help BG4">
+            <h4><b>研究方法（Methods）セクションで使用する文：</b></h4>
+            <p id="explain_bun" style="text-align: left; margin-left: 20px;">利用された検定の詳細はここに書かれます</p>
+            <br>
+            <h4><b>結果（Results）セクションで使用する文：</b></h4>
+            <p id="results_bun" style="text-align: left; margin-left: 20px;">結果はここに書かれます</p>
         </div>
         <br>
-        </div>
-    </div>
-    <div id="results">
-        <p id="explain_bun">利用された検定の詳細はここに書かれます</p>
-        <p id="results_bun">結果はここに書かれます</p>
-        <button id="reset" style="display: none" onclick="Reset()">Reset!</button>
-        <br>
+        <button id="reset" class="w3-button w3-red w3-round-xlarge w3-hover-grey" style="display:none" onclick="Reset()">やり直し</button>
+        <br><br>
     </div>
     <?php include 'citation.php'; ?>
 

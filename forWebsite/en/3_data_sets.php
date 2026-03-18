@@ -67,6 +67,7 @@
                 </div>
             </div>           
         </div>
+        
         <div id="error_text" style="display: none"><p>Error will appear here.</p></div>
         <p id="small_text">*Click on the black ? symbol for help</p>
         <br>

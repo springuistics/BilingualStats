@@ -1,6 +1,6 @@
     <div id="langauge_bar" class="w3-row BG1" style="display:flex; align-items:center;">
         <div style="flex: 1; text-align: left">
-            <a href="../index.html"><img class="picture" src="../css/back.png" alt="index"></a>
+            <a href="../index.php"><img class="picture" src="../css/back.png" alt="index"></a>
         </div>
         <div style="flex: 1; text-align: center">
             <h3 style="text-align: center; margin:0"><b>Multilingual Statistics</b></h3>

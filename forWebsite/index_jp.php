@@ -9,7 +9,7 @@
     <div id="langauge_bar" class="w3-row BG1" style="display:flex; justify-content:flex-end; align-items:center; position:relative;">
         <!-- Centered text -->
         <div style="flex:1; text-align:center; min-width:0; overflow:hidden; text-overflow:ellipsis;">
-            <h3><b>Multilingual Statistics</b></h3>
+            <h3><b>マルチリンガル統計分析</b></h3>
         </div>
         <div style="flex:0 1 auto; text-align:right; min-width:0; overflow:hidden; text-overflow:ellipsis; margin-right: 10px;">
             <select id="lang_s" onchange="L_Change()">

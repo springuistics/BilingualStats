@@ -7,7 +7,7 @@
 </head>
 <body>
 <?php include 'languagebar.php'; ?>
-<div id="bigger" class="w3-center w3-container BG3">
+    <div id="bigger" class="w3-center w3-container BG3">
         <h1  id="Title">Explanations and Sample Data</h1>
         <div>
             <div style="padding-left:5%;text-align: left;">

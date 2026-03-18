@@ -1,8 +1,8 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link href="../css/pp_testing.css" rel="stylesheet" type="text/css">
-    <link href="../../apps/w3.css" rel="stylesheet" type="text/css">
+    <link href="../css/stats.css" rel="stylesheet" type="text/css">
+    <link href="https://springsenglish.online/apps/w3.css" rel="stylesheet" type="text/css">
     <title>2 Groups Pre/Post Testing</title>
 </head>
 <body>
@@ -10,7 +10,7 @@
     <script src="../scripts/pp_testing_v1.js?v=5"></script>
     <script src="../scripts/modalHelp.js?v=1"></script>
 <?php include 'languagebar.php'; ?>
-    <div id="bigger">
+    <div id="bigger" class="w3-center w3-container BG3">
         <h1  id="Title">Pre/Post Testing of An Experimental and Control/Comparison Group</h1>
         <h2 id="Subtitle">Please be aware that your data should:</h2>
         <br>
@@ -34,52 +34,73 @@
             <p>2. Contain measuements for the same participants in the pre- and post-tests</p>
             <p>*Your data will automatically be checked for normality and an appropriate test will be selected</p>
         </div>
-    <div id="error_text" style="display: none"><p>Error will appear here.</p></div>
-    </div>
-    <div id="datasets">
+        <div id="error_text" style="display: none"><p>Error will appear here.</p></div>
+        <p id="small_text">*Click on the black ? symbol for help</p>
         <br>
-            <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('csv')">?</button><p style="font-size: 16px; display:inline"> Input Data Below or Click to Upload from CSV File:</p>
-            <br><label for="file-upload" class="custom-file-upload">Upload CSV</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)'><br>
-        <table id="table_me">
-            <tr>
-        <td><div id="data1">
-            <h3>Experiment Group <br> Pre-Test Data:</h3>
-            <br><input type="text" style="display:none" id="group_name_0" value="Group 1 (pre-test)">
-            <textarea id="data_set_0" class="txtarea" style="text-align: right" rows="30" columns="40" text-overflow="visible" placeholder="paste data here:&#10;1&#10;2&#10;3&#10;etc."></textarea>
-            <br>
-        </div></td>
-        <td><div id="data2">
-            <h3>Experiment Group <br> Post-Test Data:</h3>
-            <br><input type="text" style="display:none" id="group_name_1" value="Group 1 (post-test)">
-            <textarea id="data_set_1" class="txtarea" style="text-align: right" rows="30" columns="40" text-overflow="visible" placeholder="paste data here:&#10;1&#10;2&#10;3&#10;etc."></textarea>
-            <br>
-        </div></td>
-            </tr>
-            <tr>
-            <td><div id="data3">
-                <h3>Control Group <br> Pre-Test Data:</h3>
-                <br><input type="text" style="display:none" id="group_name_2" value="Group 2 (pre-test)">
-                <textarea id="data_set_2" class="txtarea" style="text-align: right" rows="30" columns="40" text-overflow="visible" placeholder="paste data here:&#10;1&#10;2&#10;3&#10;etc."></textarea>
-                <br>
-            </div></td>
-            <td><div id="data4">
-                <h3>Control Group <br> Post-Test Data:</h3>
-                <br><input type="text" style="display:none" id="group_name_3" value="Group 2 (post-test)">
-                <textarea id="data_set_3" class="txtarea" style="text-align: right" rows="30" columns="40" text-overflow="visible" placeholder="paste data here:&#10;1&#10;2&#10;3&#10;etc."></textarea>
-                <br>
-            </div></td>
-        </tr>
-        </table>
-        <div id="activate">
-            <button id="button" class="final_button" onclick="Calculate()">Calculate!</button>
+    </div>
+    <div id="data_holder"class="w3-container BG2">
+        <div class="w3-center border_help BG4" style="margin-bottom:15px; display:flex; justify-content: center;">
+            <div id="datasets" >
+                <div id="jesus" style="margin-left: auto; margin-right: auto; text-align: center;">
+                    <br>
+                        <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('csv')">?</button><p style="font-size: 16px; display:inline"> Input Data Below or Click to Upload from CSV File:</p>
+                        <br><label for="file-upload" class="w3-button w3-teal w3-round-xlarge w3-hover-grey">Upload CSV</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)' style="display:none"><span>   </span><button id="button" class="w3-button w3-indigo w3-round-xlarge w3-hover-grey" onclick="Calculate()">Calculate!</button><br>
+                        <div id="d_container" >
+                            <table id="table_me">
+                                <tr>
+                                    <td><div id="data1">
+                                        <h3>Experiment Group <br> Pre-Test Data:</h3>
+                                        <br><input type="text" style="display:none" id="group_name_0" value="Group 1 (pre-test)">
+                                        <textarea id="data_set_0" class="txtarea" style="text-align: right" rows="30" columns="40" text-overflow="visible" placeholder="paste data here:&#10;1&#10;2&#10;3&#10;etc."></textarea>
+                                        <br>
+                                    </div></td>
+                                    <td><div id="data2">
+                                        <h3>Experiment Group <br> Post-Test Data:</h3>
+                                        <br><input type="text" style="display:none" id="group_name_1" value="Group 1 (post-test)">
+                                        <textarea id="data_set_1" class="txtarea" style="text-align: right" rows="30" columns="40" text-overflow="visible" placeholder="paste data here:&#10;1&#10;2&#10;3&#10;etc."></textarea>
+                                        <br>
+                                    </div></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div id="data3">
+                                            <h3>Control Group <br> Pre-Test Data:</h3>
+                                            <br><input type="text" style="display:none" id="group_name_2" value="Group 2 (pre-test)">
+                                            <textarea id="data_set_2" class="txtarea" style="text-align: right" rows="30" columns="40" text-overflow="visible" placeholder="paste data here:&#10;1&#10;2&#10;3&#10;etc."></textarea>
+                                            <br>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div id="data4">
+                                            <h3>Control Group <br> Post-Test Data:</h3>
+                                            <br><input type="text" style="display:none" id="group_name_3" value="Group 2 (post-test)">
+                                            <textarea id="data_set_3" class="txtarea" style="text-align: right" rows="30" columns="40" text-overflow="visible" placeholder="paste data here:&#10;1&#10;2&#10;3&#10;etc."></textarea>
+                                            <br>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                </div>
+            </div>
         </div>
     </div>
-    <div id="results">
+    <div id="results" class="w3-container">
         <div id="descriptives">
 
         </div>
-        <p id="explain_bun">The description of your test will be printed here:</p>
-        <p id="results_bun">Your results will be printed here:</p>
+        <div class="border_help BG4">
+            <h4><b>For Methods Section:</b></h4>
+            <p id="explain_bun" style="text-align: left; margin-left: 20px;">The description of your test will be printed here:</p>
+            <br>
+            <h4><b>For Results Section:</b></h4>
+            <p id="results_bun" style="text-align: left; margin-left: 20px;">Your results will be printed here:</p>
+            <br>
+        </div>
+        <br>
+        <button id="reset" class="w3-button w3-red w3-round-xlarge w3-hover-grey" style="display:none" onclick="Reset()">Reset!</button>
+        <br><br>
     </div>
     <?php include 'citation.php'; ?>
     <div id='extra_fun'></div>

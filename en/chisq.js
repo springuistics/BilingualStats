@@ -41,7 +41,7 @@ function SetUp() {
                 let data = document.createElement("input");
                 data.type = "text";
                 data.id = "dataset_k" + j + "_g" + i;
-                data.classname = "dataset";
+                data.className = "chiSQdataset";
                 data.placeholder = "Group " + (i+1) + ", Answer " + (j+1);
                 row.appendChild(data);
             }

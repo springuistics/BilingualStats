@@ -1,24 +1,29 @@
 <html lang="jp">
 <head>
     <meta charset="UTF-8">
-    <link href="css/index.css" rel="stylesheet" type="text/css">
+    <link href="css/stats.css" rel="stylesheet" type="text/css">
     <link href="../apps/w3.css" rel="stylesheet" type="text/css">
     <title>Multilingual Stats for Language Studies</title>
 </head>
 <body>
-    <div id="langauge_bar">
-        <p id="lang_bun">言語設定：</p>
-        <select id="lang_s" onchange="L_Change()">
-            <option value="jp">日本語</option>
-            <option value="en">英語</option>
-        </select>
+    <div id="langauge_bar" class="w3-row BG1" style="display:flex; justify-content:flex-end; align-items:center; position:relative;">
+        <!-- Centered text -->
+        <div style="flex:1; text-align:center; min-width:0; overflow:hidden; text-overflow:ellipsis;">
+            <h3><b>Multilingual Statistics</b></h3>
+        </div>
+        <div style="flex:0 1 auto; text-align:right; min-width:0; overflow:hidden; text-overflow:ellipsis; margin-right: 10px;">
+            <select id="lang_s" onchange="L_Change()">
+                <option value="jp">日本語</option>
+                <option value="en">英語</option>
+            </select>
+        </div>
     </div>
-    <div id="title_stuff">
-    <h1 id="main_title">言語学・言語教育研究のためのマルチリンガル統計分析</h1>
-    <h3 id="instructions">以下の項目から計算とデータの種類を選んでください。</h3>
-    <h3 id="instructions">黒い？マークをクリックすると、説明と詳細が表示されます</h3>
-    <p><span style="color:red">新</span>　説明・サンプルデータ　<a href="jp/examples.html">ここをクリック</a></p>
-    <br>
+    <div id="title_stuff" class="w3-center w3-container BG3">
+        <h2>言語学・言語教育研究のためのマルチリンガル統計分析</h2>
+        <h3>"From Concept to Calculation"のコンパニオンサイト</h3>
+        <h4>言語の設定を上記で実施してください。以下の項目から計算とデータの種類を選んでください。黒い？マークをクリックすると、説明と詳細が表示されます。</h4>
+        <h5>無料E-bookのダウンロードは<a href="">こちら</a>です。紙版（有料）は<a href="">こちら</a>です。説明とサンプルデータは<a href="jp/examples.html">こちら</a>をご覧ください。</h5>
+        <br>
     </div>
     <div id="helpModal" class="w3-modal" onclick="this.style.display='none'">
         <div id="helpModalContent" class="w3-modal-content w3-animate-zoom" style="background-color: white; width: 80vw">
@@ -35,98 +40,111 @@
             <br><br>
         </div>
     </div>
-    <div id="tests">
+    <div class="w3-container BG2">
         <br>
-        <div id="border_help">
-            <h2 style="font:bold; font-size: 24px; color: white">統計テスト選定のガイダンス：</h3>
-            <button class="w3-button w3-large w3-circle w3-black" style="display: inline" onclick="getHelp('testHelp')">?</button><p style="font:bold; font-size: 20px; text-shadow: 2px 2px 6px rgb(255, 255, 255); display: inline">  検定の目的は？</p>
-            <div id="t_container">
-                <div id="differences" class="subcontainer">
-                    <p id="diff_text" class="subheading">グループの比較</p>
-                    <div id="chisq_cont" class="testContainer">
-                        <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('countsHelp')">?</button>
-                        <a href="jp/chisquare.php" class="linky" id="cmi">割合や総数の比較</a>
-                    </div>
-                    <div id="twocomps" class="testContainer">
-                        <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('2dataCompHelp')">?</button>
-                        <a href="jp/2_data_sets.php" class="linky" id="tc1">2組の数値データの比較</a>
-                    </div>
-                    <div id="multi_comps" class="testContainer">
-                        <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('3dataCompHelp')">?</button>
-                        <a href="jp/3_data_sets.php" class="linky" id="mc1">3組以上の数値データの比較</a>
-                    </div>
-                    <div id="multi_comps2" class="testContainer">
-                        <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('3measuresHelp')">?</button>
-                        <a href="jp/hotelling.php" class="linky" id="mc1">2組に対して、3つ以上の異なる尺度で測定した数値データ</a>
-                    </div>
-                    <div id="pre_post" class="testContainer">
-                        <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('PrePostHelp')">?</button>
-                        <a href="jp/pp_testing.php" class="linky"  id="pp2">実験群・対照群の事前・事後データ比較</a>
-                    </div>
-                    <div id="ancova" class="testContainer">
-                        <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('ancovaHelp')">?</button>
-                        <a href="jp/ancova.php" class="linky"  id="pp2">２つ以上の事後テスト、又は共変量がある場合の実験群・対照群の比較</a>
+        <div class="w3-center border_help BG4">
+            <h2 style="font:bold">統計テスト選定のガイダンス：</h3>
+            <button class="w3-button w3-large w3-circle w3-black" style="display: inline" onclick="getHelp('testHelp')">?</button><p style="font:bold; font-size: 20px; text-shadow: 2px 2px 6px rgb(255, 255, 255); display: inline">  What do you want to check?</p>
+            <br><br>
+            <div class="w3-row" style="display:flex; justify-content: center;">
+                <div class="w3-half stats-cell">
+                    <div id="differences" class="subcontainer">
+                        <h3 class="w3-center">グループの比較</h3>
+                        <div id="chisq_cont" class="testContainer">
+                            <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('countsHelp')">?</button>
+                            <a href="jp/chisquare.php" class="linky" id="cmi">割合や総数の比較</a>
+                        </div>
+                        <div id="twocomps" class="testContainer">
+                            <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('2dataCompHelp')">?</button>
+                            <a href="jp/2_data_sets.php" class="linky" id="tc1">2組の数値データの比較</a>
+                        </div>
+                        <div id="multi_comps" class="testContainer">
+                            <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('3dataCompHelp')">?</button>
+                            <a href="jp/3_data_sets.php" class="linky" id="mc1">3組以上の数値データの比較</a>
+                        </div>
+                        <div id="multi_comps2" class="testContainer">
+                            <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('3measuresHelp')">?</button>
+                            <a href="jp/hotelling.php" class="linky" id="mc1">2組に対して、3つ以上の異なる尺度で測定した数値データ</a>
+                        </div>
+                        <div id="pre_post" class="testContainer">
+                            <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('PrePostHelp')">?</button>
+                            <a href="jp/pp_testing.php" class="linky"  id="pp2">実験群・対照群の事前・事後データ比較</a>
+                        </div>
+                        <div id="ancova" class="testContainer">
+                            <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('ancovaHelp')">?</button>
+                            <a href="jp/ancova.php" class="linky"  id="pp2">２つ以上の事後テスト、又は共変量がある場合の実験群・対照群の比較</a>
+                        </div>
                     </div>
                 </div>
-                <div id="correls" class="subcontainer">
-                    <p id="correl_text" class="subheading">関連性の確認</p>
-                    <div class="testContainer">
-                        <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('corrHelp')">?</button>
-                        <a href="jp/correlation.php" class="linky" id="tc2">2組の数値データ</a>
-                    </div>
-                    <div id="cor_matrix" class="testContainer">
-                        <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('corrMatrixHelp')">?</button>
-                        <a href="jp/correlation_matrix.php" class="linky" id="corrM">相関行列</a>
-                    </div>
-                    <div id="multi_corrs" class="testContainer">
-                        <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('multiRegHelp')">?</button>
-                        <a href="jp/multi_correlation.php" class="linky" id="mc2">3組以上の数値データ</a>
+                <div class="w3-half stats-cell">
+                    <div id="correls" class="subcontainer">
+                        <h3 class="w3-center">関連性の確認</h3>
+                        <div class="testContainer">
+                            <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('corrHelp')">?</button>
+                            <a href="jp/correlation.php" class="linky" id="tc2">2組の数値データ</a>
+                        </div>
+                        <div id="cor_matrix" class="testContainer">
+                            <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('corrMatrixHelp')">?</button>
+                            <a href="jp/correlation_matrix.php" class="linky" id="corrM">相関行列</a>
+                        </div>
+                        <div id="multi_corrs" class="testContainer">
+                            <button class="w3-button w3-medium w3-circle w3-black" onclick="getHelp('multiRegHelp')">?</button>
+                            <a href="jp/multi_correlation.php" class="linky" id="mc2">3組以上の数値データ</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     
-        <div id="advanced">
-            <h3 style="font:bold; font-size: 20px; text-shadow: 2px 2px 6px grey">その他の検定</h3>
-            <div id="t_container">
-                <div id="advLeft" class="subcontainer">
-                    <button class="w3-button w3-medium w3-circle w3-black" style="display:inline" onclick="getHelp('reliabilityHelp')">?</button><p id="diff_text" class="subheading" style="display:inline">  評定（者）間信頼性</p>
-                    <br>
-                    <div id="chronbach" class="testContainer">
-                        <a href="jp/chronbach.php" class="linky" id="chbch">クロンバックのアルファ</a>
-                    </div>
-                    <div id="krippy" class="testContainer">
-                        <a href="jp/krippendorf.php" class="linky" id="krp">Krippendorfのアルファ</a>
+        <div id="advanced" class="w3-center border_help BG4" style="margin-bottom: 30px">
+            <h2 style="font:bold">その他の検定</h3>
+            <br>
+            <div class="w3-row">
+                <div class="w3-half stats-cell">
+                    <div class="subcontainer">
+                        <div id="advLeft" class="w3-center">
+                            <button class="w3-button w3-medium w3-circle w3-black" style="display:inline" onclick="getHelp('reliabilityHelp')">?</button><h3 style="display:inline-block; margin-left: 15px">評定（者）間信頼性</h3>
+                            <br>
+                        </div>
+                        <div id="chronbach" class="testContainer">
+                            <a href="jp/chronbach.php" class="linky" id="chbch">クロンバックのアルファ</a>
+                        </div>
+                        <div id="krippy" class="testContainer">
+                            <a href="jp/krippendorf.php" class="linky" id="krp">Krippendorfのアルファ</a>
+                        </div>
                     </div>
                 </div>
-                <div id="others" class="subcontainer">
-                    <button class="w3-button w3-medium w3-circle w3-black" style="display:inline" onclick="getHelp('otherTestsHelp')">?</button><p class="subheading" style="display:inline">  <i>p</i>値・効果量</p>
-                    <div class="testContainer">
-                        <a href="jp/descriptive_vizualization.php" class="linky">記述統計とデータの可視化</a>
-                    </div>
-                    <div class="testContainer">
-                        <a href="jp/effect_calc.php" class="linky">効果量 (<i>r</i> を <i>Z</i> と <i>N</i>から計算する）</a>
-                    </div>
-                    <div id="cohens" class="testContainer">
-                        <a href="jp/cohens_d.php" class="linky" id="cohbase">Cohen's dを計算する</a>
-                    </div>
-                    <div class="testContainer">
-                        <a href="jp/p_finder.php" class="linky"><i>p</i> 値を <i>Z</i>、<i>Χ<sup>2</sup></i>、<i>q</i>、あるいは <i>t</i> から計算する</a>
+                <div class="w3-half stats-cell">
+                    <div class="subcontainer">
+                        <div class="w3-center">
+                            <button class="w3-button w3-medium w3-circle w3-black" style="display:inline" onclick="getHelp('otherTestsHelp')">?</button><p class="subheading" style="display:inline">  <i>p</i>値・効果量</p>
+                        </div>
+                        <div class="testContainer">
+                            <a href="jp/descriptive_vizualization.php" class="linky">記述統計とデータの可視化</a>
+                        </div>
+                        <div class="testContainer">
+                            <a href="jp/effect_calc.php" class="linky">効果量 (<i>r</i> を <i>Z</i> と <i>N</i>から計算する）</a>
+                        </div>
+                        <div id="cohens" class="testContainer">
+                            <a href="jp/cohens_d.php" class="linky" id="cohbase">Cohen's dを計算する</a>
+                        </div>
+                        <div class="testContainer">
+                            <a href="jp/p_finder.php" class="linky"><i>p</i> 値を <i>Z</i>、<i>Χ<sup>2</sup></i>、<i>q</i>、あるいは <i>t</i> から計算する</a>
+                        </div>
                     </div>
                 </div>
             </div>           
         </div>
     </div>
 
-    <div id="citation">
-        <br>
+    <div id="citation" class="BG1">
         <h3 style="margin-top: 10px; width: 90%; margin: auto; text-align: center">計算方法や詳細が知りたい方は下記の論文をご参照ください。また、本プログラムや関連する説明文などを研究で使用する場合、下記の論文を引用してください。</h3>
-        <br>
-        <p id="paper">Spring, R. (2022) Free, Online, Multilingual Statistics for Linguistics and Language Education Researchers. <i>Center for Culture and Language Education, Tohoku University 2021 Nenpo, 8</i>, 32-38. https://doi.org/10.13140/RG.2.2.12037.63202</p>
-        <br>
-        <a id="paper_link" href="https://doi.org/10.13140/RG.2.2.12037.63202" class="linky">論文を読む</a>
-        <br>
-        <div id="personal_hp"><p >上記の検定や計算を活用した研究の実例を見る際は、本プログラムを作ったスプリング・ライアンの <a style="color: rgb(183, 255, 239); text-decoration: underline;" href="https://sites.google.com/view/ryanspring/home">研究ホームページ</a> に訪れる。</p>
+        <div style="margin-left: 10%">
+            <p class="paper">Spring, R. (2026). <i>From concept to calculation: Classical statistics in language education research</i>. TESL-EJ Publications.</p>
+            <h5>無料E-bookのダウンロードは<a href="">こちら</a>です。紙版（有料）は<a href="">こちら</a>です。説明とサンプルデータは<a href="jp/examples.html">こちら</a>をご覧ください。</h5>
+            div id="personal_hp"><p >上記の検定や計算を活用した研究の実例を見る際は、本プログラムを作ったスプリング・ライアンの <a style="color: rgb(183, 255, 239); text-decoration: underline;" href="https://sites.google.com/view/ryanspring/home">研究ホームページ</a> に訪れる。</p>
+            <br>
+        </div>
     </div>
 </body>
 <script>

@@ -896,9 +896,9 @@ function runAncova(data){
     for (let i = 0; i < XtX.length; i++) {
         XtX[i][i] += epsilon;
     }
-    const invXtX = invertMatrixUsingLU(XtX);
-    const theFullCovariateMatrixforSEs = scalarMultiplyMatrix(invXtX, MS_error);
-    console.log(theFullCovariateMatrixforSEs)
+    //const invXtX = invertMatrixUsingLU(XtX);
+    //const theFullCovariateMatrixforSEs = scalarMultiplyMatrix(invXtX, MS_error);
+    //console.log(theFullCovariateMatrixforSEs)
     
     
 

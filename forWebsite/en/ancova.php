@@ -1,16 +1,16 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link href="../css/style_3_sets.css" rel="stylesheet" type="text/css">
-    <link href="../../apps/w3.css" rel="stylesheet" type="text/css">
+    <link href="../css/stats.css" rel="stylesheet" type="text/css">
+    <link href="https://springsenglish.online/apps/w3.css" rel="stylesheet" type="text/css">
     <title>Multiple Post-tests or Covariates</title>
 </head>
 <body>
     <script src="../scripts/repeatTests_v1.js?v=1"></script>
-    <script src="../scripts/ancova.js?v=4"></script>
+    <script src="../scripts/ancova.js?v=5"></script>
     <script src="../scripts/modalHelp.js?v=1"></script>
 <?php include 'languagebar.php'; ?>
-    <div id="bigger">
+    <div id="bigger"class="w3-center w3-container BG3">
         <h1  id="Title">Comparison Groups with 2+ Post-tests and/or Covariates</h1>
         <h2 id="Subtitle">Answer the following questions about your data sets:</h2>
         <br>
@@ -52,7 +52,7 @@
                     <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('covariate')">?</button><p class="question" id="qq2" style="display:inline">  How many covariates do you have?*</p>
                 </div>
                 <div class="w3-cell w3-cell-middle w3-container w3-left-align" style="width: 50%; margin-top: 15px">
-                    <select class="w3-input w3-border-blue" id="noCovariates" style="width: 100px; text-align: center;">
+                    <select class="w3-input w3-border-blue" id="noCovariates" style="width: 100px">
                         <option value="x">--Select--</option>
                         <option value="0">0</option>
                         <option value="1">1</option>
@@ -66,34 +66,40 @@
         <div id="error_text" style="display: none"><p>Error will appear here.</p></div>
         <p id="small_text">*Click on the black ? symbol for help</p>
         <br>
-        <button id="SetUp" class="button" onclick="SetUp()">Set Up the Test</button>
-        <br>
+        <button id="SetUp" class="w3-button w3-indigo w3-round-xlarge w3-hover-grey" onclick="SetUp()">Set Up the Test</button>
+        <br><br>
     </div>
-    <div id="datasets" style="display: none">
-        <div id="jesus">
-            <br>
-            <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('csv')">?</button><p style="font-size: 16px; display:inline"> Input Data Below or Click to Upload from CSV File:</p>
-            <br><label for="file-upload" class="custom-file-upload">Upload CSV</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)'><br>
-            <div id="d_container1"></div>
-            <div id="d_container2"></div>
-            <div id="activate">
-                <button id="button" class="button" style="display: none" onclick="Calculate()">Calculate!</button>
-            </div>
+    <div id="data_holder"class="w3-container BG2">
+        <div class="w3-center border_help BG4" style="margin-bottom:15px">
+            <div id="datasets" style="display: none">
+                <div id="jesus">
+                    <br>
+                    <button class="w3-button w3-small w3-circle w3-black" style="display:inline" onclick="getHelp('csv')">?</button><p style="font-size: 16px; display:inline"> Input Data Below or Click to Upload from CSV File:</p>
+                    <br><label for="file-upload" class="w3-button w3-teal w3-round-xlarge w3-hover-grey">Upload CSV</label><input id="file-upload" type='file' accept='.csv' onchange='openFile(event)' style="display:none"><span>   </span><button id="button" class="w3-button w3-indigo w3-round-xlarge w3-hover-grey" onclick="Calculate()">Calculate!</button><br>
+                    <div id="d_container1"></div>
+                    <div id="d_container2"></div>
+                </div>
         </div>
     </div>
 
-    <div id="results">
+    <div id="results" class="w3-container">
         <div id="descriptives">
 
         </div>
-        <p id="explain_bun">The description of your test will be printed here:</p>
-        <p id="results_bun">Your results will be printed here:</p>
-        <div id="table_holder"></div>
+        <div class="border_help BG4">
+            <h4><b>For Methods Section:</b></h4>
+            <p id="explain_bun" style="text-align: left; margin-left: 20px;">The description of your test will be printed here:</p>
+            <br>
+            <h4><b>For Results Section:</b></h4>
+            <p id="results_bun" style="text-align: left; margin-left: 20px;">Your results will be printed here:</p>
+            <div id="table_holder"></div>
+            <br>
+            <div id="postHoc"></div>
+            <br>
+        </div>
         <br>
-        <div id="postHoc"></div>
-        <br>
-        <button id="reset" class="button" onclick="Reset()">Reset!</button>
-        <br>
+        <button id="reset" class="w3-button w3-red w3-round-xlarge w3-hover-grey" style="display:none" onclick="Reset()">Reset!</button>
+        <br><br>
     </div>
     <?php include 'citation.php'; ?>
     <div id='extra_fun'></div>

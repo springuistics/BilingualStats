@@ -1,16 +1,16 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link href="../css/chisq.css" rel="stylesheet" type="text/css">
-    <link href="../../apps/w3.css" rel="stylesheet" type="text/css">
+    <link href="../css/stats.css" rel="stylesheet" type="text/css">
+    <link href="https://springsenglish.online/apps/w3.css" rel="stylesheet" type="text/css">
     <title>Comparing Counts of Non-numerial Data</title>
 </head>
 <body>
-    <script src="chisq.js"></script>
-    <?php include 'languagebar.php?v=1'; ?>
-    <div id="bigger">
-        <h1  id="Title" style="color:aliceblue">Comparing Counts of Non-numerical Data with a Chi-Square Test</h1>
-        <h2 id="Subtitle" style="color:aliceblue">Answer the following questions about your data sets:</h2>
+    <script src="chisq.js?v=1"></script>
+    <?php include 'languagebar.php'; ?>
+    <div id="bigger" class="w3-center w3-container BG3">
+        <h1  id="Title">Comparing Counts of Non-numerical Data with a Chi-Square Test</h1>
+        <h2 id="Subtitle">Answer the following questions about your data sets:</h2>
         <br>
         <div id="helpModal" class="w3-modal" onclick="this.style.display='none'">
             <div id="helpModalContent" class="w3-modal-content w3-animate-zoom" style="background-color: white; width: 80vw">
@@ -45,27 +45,34 @@
             </div>        
         </div>
         <div id="error_text" style="display: none"><p>Error will appear here.</p></div>
-        <p id="small_text">*Mouse over questions for explanation</p>
+        <p id="small_text">*Click on the black ? symbol for help</p>
         <br>
-        <button id="SetUp" class="final_button" onclick="SetUp()">Set Up the Test</button>
-        <br>
+        <button id="SetUp" class="w3-button w3-indigo w3-round-xlarge w3-hover-grey" onclick="SetUp()">Set Up the Test</button>
+        <br><br>
     </div>
-    <div id="datasets" style="display: none">
-        <div id="d_container">
-        <h2>Insert your counts for each group and option below*:</h2>
-        <p>*You cannot enter values of 0</p>
-        <div id="jesus"></div>
-        <div id="activate">
-            <button id="button" class="final_button" style="display: none" onclick="Calculate()">Calculate!</button>
+    <div id="data_holder"class="w3-container BG2">
+        <div class="w3-center border_help BG4" style="margin-bottom:15px">
+            <div id="datasets" style="display: none">
+                <div id="jesus">
+                    <br>
+                    <button id="button" class="w3-button w3-indigo w3-round-xlarge w3-hover-grey" onclick="Calculate()">Calculate!</button>
+                    <br><br>
+                    <div id="d_container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="results" class="w3-container">
+        <div class="border_help BG4">
+            <h4><b>For Methods Section:</b></h4>
+            <p id="explain_bun" style="text-align: left; margin-left: 20px;">The description of your test will be printed here:</p>
+            <br>
+            <h4><b>For Results Section:</b></h4>
+            <p id="results_bun" style="text-align: left; margin-left: 20px;">Your results will be printed here:</p>
         </div>
         <br>
-        </div>
-    </div>
-    <div id="results">
-        <p id="explain_bun">The description of your test will be printed here:</p>
-        <p id="results_bun">Your results will be printed here:</p>
-        <button id="reset" style="display: none" onclick="Reset()">Reset!</button>
-        <br>
+        <button id="reset" class="w3-button w3-red w3-round-xlarge w3-hover-grey" style="display:none; margin:auto" onclick="Reset()">Reset!</button>
+        <br><br>
     </div>
     <?php include 'citation.php'; ?>
 

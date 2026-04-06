@@ -6,8 +6,8 @@
     <title>Multiple Post-tests or Covariates</title>
 </head>
 <body>
-    <script src="../scripts/repeatTests_v1.js?v=1"></script>
-    <script src="../scripts/ancova.js?v=5"></script>
+    <script src="../scripts/repeatTests_v1.js?v=2"></script>
+    <script src="../scripts/ancova.js?v=6"></script>
     <script src="../scripts/modalHelp.js?v=1"></script>
 <?php include 'languagebar.php'; ?>
     <div id="bigger"class="w3-center w3-container BG3">

@@ -175,6 +175,8 @@ function Calculate() {
     document.getElementById('descriptives').innerHTML = "";
     document.getElementById("error_text").innerHTML = "";
     document.getElementById('error_text').style.display = "none";
+    document.getElementById("table_holder").innerHTML = "";
+    document.getElementById("postHoc").innerHTML = "";
     if (language == "en"){
         document.getElementById('explain_bun').innerHTML = "The description of your test will be printed here:";
         document.getElementById('results_bun').innerHTML = "Your results will be printed here:";
@@ -902,44 +904,106 @@ function runAncova(data){
     
     
 
-    
-
-    function runCompsWcovs(data1, data2, adj1, adj2, isPaired){
-        const truedif = adj1 - adj2;
-        if (isPaired == true){
-            let differences = [];
-            for (let i = 0; i < data1.length; i++) {
-                differences.push(data2[i] - data1[i]);
+    function quadForm(L, M) {
+        let s = 0;
+        for (let i = 0; i < L.length; i++) {
+            for (let j = 0; j < L.length; j++) {
+                s += L[i] * M[i][j] * L[j];
             }
-            let meanDiff = average(differences);
-            let sdDiff = stdev(differences);
-            let n = differences.length;
-            const varianceDiff = variance(differences);
-            //let SE = Math.sqrt(varianceDiff / n + MS_error);
-            let SE = sdDiff / Math.sqrt(n);
-            let t = truedif / SE;
-            let p = getPfromT(t, (n-1));
-            let d = meanDiff / sdDiff;
-            return {'diff':truedif, 't':t, 'p':p, 'd':d}
-        } else {
-            const sd1 = stdev(data1);
-            const sd2 = stdev(data2);
-            const var1 = variance(data1);
-            const var2 = variance(data2);
-            const covarianceHere = covariance(data1,data2);
-            const n1 = data2.length;
-            const n2 = data1.length;
-            const pooledSD = Math.sqrt(((n1 - 1)*sd1**2 + (n2 - 1)*sd2**2) / (n1 + n2 - 2));
-            //const pooledSD2 = Math.sqrt(var1+var2-(2*covarianceHere)+MS_error);
-            //const SE2 = pooledSD * Math.sqrt(1/n1 + 1/n2);
-            const SE = Math.sqrt((var1 / n1) + (var2 / n2) + MS_error);
-            //console.log("SE: "+SE+", SE2:"+SE2)
-            const t = truedif / SE;
-            const df = n1 + n2 - 2;
-            const p = getPfromT(t, df);
-            const d = Math.abs(truedif / pooledSD);
-            return {'diff':truedif, 't':t, 'p':p, 'd':d}
         }
+        return s;
+    }
+
+    function buildL_betweenGroupsAtTime(t, p, T) {
+        // total number of coefficients in Bs
+        const a = T;
+        const b = p;
+        const c = (a - 1) * b;
+
+        const total =
+            1 +          // intercept
+            b +          // covariates
+            1 +          // group
+            (a - 1) +    // time dummies
+            c +          // cov×time
+            (a - 1);     // group×time
+
+        let L = Array(total).fill(0);
+        // index of group main effect
+        const groupIdx = b + 1;
+        // index where group×time block starts
+        const groupTimeStart = 1 + b + a + c;
+        // always include group main effect
+        L[groupIdx] = 1;
+        // if t is NOT the reference time (last time)
+        if (t < a - 1) {
+            L[groupTimeStart + t] = 1;
+        }
+        return L;
+    }
+
+    function buildL_withinGroupTimes(group, t1, t2, p, T, covMeans) {
+        const a = T;
+        const b = p;
+        const c = (a - 1) * b;
+        const total =
+            1 +          // intercept
+            b +          // covariates
+            1 +          // group
+            (a - 1) +    // time dummies
+            c +          // cov×time
+            (a - 1);     // group×time
+        console.log("p =", p, "T =", T, "total =", total);
+        let L = Array(total).fill(0);
+        const groupIdx       = b + 1;
+        const timeStart      = 2 + b;
+        const covTimeStart   = 1 + b + a;
+        const groupTimeStart = 1 + b + a + c;
+        // --- TIME MAIN EFFECTS ---
+        if (t1 < a - 1) L[timeStart + t1] -= 1;
+        if (t2 < a - 1) L[timeStart + t2] += 1;
+
+        // --- COV × TIME INTERACTIONS ---
+        for (let cov = 0; cov < p; cov++) {
+            if (t1 < a - 1) L[covTimeStart + t1 * p + cov] -= covMeans[cov];
+            if (t2 < a - 1) L[covTimeStart + t2 * p + cov] += covMeans[cov];
+        }
+
+        // --- GROUP × TIME INTERACTIONS (only for group 2) ---
+        if (group === 1) {
+            if (t1 < a - 1) L[groupTimeStart + t1] -= 1;
+            if (t2 < a - 1) L[groupTimeStart + t2] += 1;
+        }
+        return L;
+    }
+
+    function runCompsWcovs(L, model){
+        let beta = model.Bs;
+        let MSE = model.ResidualsMS;
+        let XtXinv = model.XtXinv;
+        let df = model.residuals;
+
+        // diff = L'β
+        let diff = dot(L, beta);
+
+        // SE = sqrt(MSE * L'(XtXinv)L)
+        let SE = Math.sqrt(
+            MSE * quadForm(L, XtXinv)
+        );
+
+        let t = diff / SE;
+        let p = getPfromT(t, df);
+        let d = diff / Math.sqrt(MSE);
+        return {'diff':diff, 't':t, 'p':p, 'd':d}
+    
+    }
+    
+    function dot(a, b) {
+        let s = 0;
+        for (let i = 0; i < a.length; i++) {
+            s += a[i] * b[i];
+        }
+        return s;
     }
     
     function runCompsWcovs4(data1, data2, ydata1, ydata2, adj1, adj2, isPaired, theMSE) {
@@ -1063,9 +1127,10 @@ function runAncova(data){
             thistest = runCompsNoCovs(dataframe[i],dataframe2[i],groupmeans[0][i], groupmeans[1][i], false);
             pairwise4.push(thistest);
         } else {
-            //thistest = runCompsWcovs(Ybars[0][i],Ybars[1][i], groupmeans[0][i], groupmeans[1][i],false);
+            let L = buildL_betweenGroupsAtTime(i, covariates.length, groupmeans[0].length);
+            let test3 = runCompsWcovs(L, m_complete);
             //let testtest = runCompsWcovs2(groupmeans[0][i], groupmeans[1][i], xConstructor2(0, i, dataframe.length, "between-group", completeModel), xConstructor2(1,i, dataframe2.length, "between-group", completeModel), false, theFullCovariateMatrixforSEs, dataframe[0].length, dataframe.length);
-            let test3 = runCompsWcovs4(dataframe[i],dataframe2[i], Ybars[0][i],Ybars[1][i], groupmeans[0][i], groupmeans[1][i],false, betweenGroupSE);
+            //let test3 = runCompsWcovs4(dataframe[i],dataframe2[i], Ybars[0][i],Ybars[1][i], groupmeans[0][i], groupmeans[1][i],false, betweenGroupSE);
             //pairwise2.push(testtest);
             pairwise4.push(test3);
         } 
@@ -1085,9 +1150,11 @@ function runAncova(data){
                         testResult = runCompsNoCovs(dataframe[j],dataframe[x],groupmeans[i][j], groupmeans[i][x], true);
                         pairwise4.push(testResult);
                     } else {
+                        let L = buildL_withinGroupTimes(i, j, x, covariates.length, groupmeans[0].length, covMeans);
+                        let test3 = runCompsWcovs(L, m_complete);
                         //testResult = runCompsWcovs(Ybars[i][j],Ybars[i][x], groupmeans[i][j], groupmeans[i][x],true);
                         //let testtest = runCompsWcovs2(groupmeans[i][j], groupmeans[i][x], xConstructor(i, j, covSums[i][j], dataframe.length, "within-group"), xConstructor(i,x, covSums[i][x], dataframe.length, "within-group"), true, theFullCovariateMatrixforSEs, dataframe[0].length, dataframe.length);
-                        let test3 = runCompsWcovs4(dataframe[j],dataframe[x], Ybars[i][j],Ybars[i][x], groupmeans[i][j], groupmeans[i][x],true, withinGroupSE);
+                        //let test3 = runCompsWcovs4(dataframe[j],dataframe[x], Ybars[i][j],Ybars[i][x], groupmeans[i][j], groupmeans[i][x],true, withinGroupSE);
                         testResult = test3;
                         //pairwise2.push(testtest);
                         pairwise4.push(test3);
@@ -1100,9 +1167,11 @@ function runAncova(data){
                         testResult = runCompsNoCovs(dataframe2[j],dataframe2[x], groupmeans[i][j], groupmeans[i][x], true);
                         pairwise4.push(testResult);
                     } else {
+                        let L = buildL_withinGroupTimes(i, j, x, covariates.length, groupmeans[0].length, covMeans);
+                        let test3 = runCompsWcovs(L, m_complete);
                         //testResult = runCompsWcovs(Ybars[i][j],Ybars[i][x], groupmeans[i][j], groupmeans[i][x],true);
                         //let testtest = runCompsWcovs2(groupmeans[i][j], groupmeans[i][x], xConstructor(i, j, covSums[i][j], dataframe2.length, "within-group"), xConstructor(i,x, covSums[i][x], dataframe2.length, "within-group"), true, theFullCovariateMatrixforSEs, dataframe[0].length, dataframe.length);
-                        let test3 = runCompsWcovs4(dataframe[j],dataframe[x], Ybars[i][j],Ybars[i][x], groupmeans[i][j], groupmeans[i][x],true, withinGroupSE);
+                        //let test3 = runCompsWcovs4(dataframe[j],dataframe[x], Ybars[i][j],Ybars[i][x], groupmeans[i][j], groupmeans[i][x],true, withinGroupSE);
                         //pairwise2.push(testtest);
                         pairwise4.push(test3);
                         testResult=test3;
@@ -1114,28 +1183,31 @@ function runAncova(data){
         }
         timepairwise.push(row);
     }
-    //console.log(pairwise);
-    //console.log(pairwise2);
-    //console.log(pairwise4);
     console.log(timepairwise);
     const finalPairwise = runHolmCorrection(pairwise4);
-    for (let i=0; i<timepairwise.length; i++){
-        for (let j=0; j<timepairwise[i].length; j++){
-            for (let q=0; q<finalPairwise.length; q++){
-                if (finalPairwise[q].t == timepairwise[i][j].t.toFixed(2) && finalPairwise[q].d == timepairwise[i][j].d.toFixed(2) && finalPairwise[q].diff == timepairwise[i][j].diff.toFixed(2)){
-                    timepairwise[i][j].p = finalPairwise[q].p;
-                }
-            }
+    let flatIndex = 0;
+    // Fill timepairwise with corrected p-values
+    for (let i = 0; i < timepairwise.length; i++) {
+        for (let j = 0; j < timepairwise[i].length; j++) {
+    
+            // assign corrected p-value
+            timepairwise[i][j].p = finalPairwise[flatIndex].p;
+    
+            flatIndex++;
         }
     }
-    for (let i=0; i<finalPairwise.length; i++){
-        if (finalPairwise[i].p <= 0){
+    // Format finalPairwise for display
+    for (let i = 0; i < finalPairwise.length; i++) {
+    
+        if (finalPairwise[i].p <= 0.01) {
             finalPairwise[i].p = "<0.01";
-        } else if (finalPairwise[i].p >= 1){
-            finalPairwise[i].p = "1.00";
+        } else {
+            finalPairwise[i].p = finalPairwise[i].p.toFixed(2);
         }
+    
         finalPairwise[i].d = Math.abs(finalPairwise[i].d);
     }
+
 
     var result1 = "";
     var result2 = "";
@@ -1665,11 +1737,11 @@ function runAncova(data){
                 } if (j==1){
                     item.innerHTML = (finalPairwise[i].diff.toFixed(2));
                 } if (j==2){
-                    item.innerHTML = (finalPairwise[i].t);
+                    item.innerHTML = (finalPairwise[i].t.toFixed(2));
                 } if (j==3){
                     item.innerHTML = (finalPairwise[i].p);
                 } if (j==4){
-                    item.innerHTML = (finalPairwise[i].d);
+                    item.innerHTML = (finalPairwise[i].d.toFixed(2));
                 }
                 row.appendChild(item);
             }
@@ -1769,11 +1841,11 @@ function runAncova(data){
                 } if (j==1){
                     item.innerHTML = (finalPairwise[x+groupComps+(i*timepairwise[i].length)].diff.toFixed(2));
                 } if (j==2){
-                    item.innerHTML = (finalPairwise[x+groupComps+(i*timepairwise[i].length)].t);
+                    item.innerHTML = (finalPairwise[x+groupComps+(i*timepairwise[i].length)].t.toFixed(2));
                 } if (j==3){
                     item.innerHTML = (finalPairwise[x+groupComps+(i*timepairwise[i].length)].p);
                 } if (j==4){
-                    item.innerHTML = (finalPairwise[x+groupComps+(i*timepairwise[i].length)].d);
+                    item.innerHTML = (finalPairwise[x+groupComps+(i*timepairwise[i].length)].d.toFixed(2));
                 }
                 row.appendChild(item);
             }
@@ -1886,32 +1958,40 @@ function indepTtest (data1, data2) {
     return {'t':t, 'p':p, 'd':d, 'se':Math.sqrt(ss1 + ss2)}
 }
 
-function runHolmCorrection(dataset){
-    let sorted = [];
-    let holms = [];
-    for (let i=0; i<dataset.length; i++){
-        holms.push({"index": i, "p":dataset[i].p, "rank":0, "t":dataset[i].t, "d":dataset[i].d, "diff":dataset[i].diff})
+function runHolmCorrection(dataset) {
+    // Step 1: extract p-values with original indices
+    let items = dataset.map((d, i) => ({
+        index: i,
+        p: d.p,
+        t: d.t,
+        dval: d.d,
+        diff: d.diff
+    }));
+
+    // Step 2: sort ascending by p-value
+    let sorted = [...items].sort((a, b) => a.p - b.p);
+
+    // Step 3: apply Holm correction
+    let m = sorted.length;
+    for (let i = 0; i < m; i++) {
+        let corrected = sorted[i].p * (m - i);
+        sorted[i].p_corrected = Math.min(corrected, 1);
     }
-    holms.forEach(function(number, index) {sorted.push(holms[index].p)});
-    let sorted2 = sorted.slice().sort((a, b) => b - a);
-    for (let i=0; i<sorted2.length; i++){
-        for (let j=0; j<holms.length; j++)
-        if (sorted2[i] == holms[j].p) {
-            holms[j].rank = (i+1);
-        }
+
+    // Step 4: restore original order
+    let final = Array(m);
+    for (let i = 0; i < m; i++) {
+        let idx = sorted[i].index;
+        final[idx] = {
+            p: sorted[i].p_corrected,
+            t: sorted[i].t,
+            d: sorted[i].dval,
+            diff: sorted[i].diff
+        };
     }
-    for (let i=0; i<holms.length; i++){
-        holms[i].p *= holms[i].rank;
-        holms[i].p = holms[i].p.toFixed(2);
-        holms[i].p = Math.abs(holms[i].p);
-        if (holms[i].p > 1){
-            holms[i].p = 1;
-        }
-        holms[i].t = holms[i].t.toFixed(2);
-        holms[i].d = holms[i].d.toFixed(2);
-    }
-    return holms;
+    return final;
 }
+
 
 function dotVecMat(vec, mat) {
     // vec is 1D array, mat is 2D array

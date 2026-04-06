@@ -92,25 +92,50 @@ function Calculate() {
                 }
                 rows.push(temp);
             }
-            var bigN = 0;
-            for (let i=0; i<cols.length; i++) {
-                bigN += cols[i]; 
-            }
+            // --- Grand total ---
+            var bigN = cols.reduce((a, b) => a + b, 0);
+
+            // --- Expected values ---
             var expected = [];
-            for (let i=0; i<cols.length; i++) {
-                for (let j=0; j<rows.length; j++) {
-                    let temp = cols[i] * rows[j] / bigN;
-                    expected.push(temp);
+            var hasZero = false;
+
+            for (let i = 0; i < k; i++) {
+                for (let j = 0; j < g; j++) {
+                    let E = (cols[i] * rows[j]) / bigN;
+                    expected.push(E);
+
+                    if (E === 0 || data[(i * g) + j] === 0) {
+                        hasZero = true;
+                    }
                 }
             }
-            var Chi = 0;
-            for (let i=0; i<data.length; i++) {
-                Chi += ((data[i] - expected[i])**2)/expected[i];
+
+            // --- Compute statistic ---
+            var stat = 0;
+            if (hasZero) {
+                // --- G-test (Likelihood Ratio Chi-Square) ---
+                for (let i = 0; i < data.length; i++) {
+                    let O = data[i];
+                    let E = expected[i];
+
+                    if (O > 0 && E > 0) {
+                        stat += 2 * O * Math.log(O / E);
+                    }
+                    // If O = 0, contribution is 0 automatically
+                }
+                deets = "名義尺度同士の変数であり、かつ理論的に統合が難しいゼロ値の回答が含まれていたため、有意性の検定には G 検定（尤度比カイ二乗検定）を用いた。効果量の指標として Cramer's V を算出し、Spring（2026）に従い自由度に基づいて動的に解釈を行った。";
+            } else {
+                // --- Pearson Chi-Square ---
+                for (let i = 0; i < data.length; i++) {
+                    stat += ((data[i] - expected[i]) ** 2) / expected[i];
+                }
+                deets = "名義尺度同士の変数であり、ゼロ値の回答が含まれていないため、有意性の検定にはカイ二乗検定を用いた。効果量の指標として Cramer's V を算出し、Spring（2026）に従い自由度に基づいて動的に解釈を行った。";
             }
+
             var df = (k-1)*(g-1);
-            var p = GimmietheP(Chi,df);
-            Chi = Chi.toFixed(2);
-            p = p.toFixed(2);
+            var p = GimmietheP(stat,df);
+            let Chi = stat.toFixed(2);
+
             if (p<.01) {
                 var result2 = " <i>Χ<sup>2</sup></i> (" + df + ", <i>N</i> = " + bigN + ")= " + Chi + ",  <i>p</i> < .01";
             } else {
@@ -122,16 +147,29 @@ function Calculate() {
             } else {
                 result1 = "総合的な有意差はありました（"
             }
-            var w = Math.sqrt(Chi / (bigN*df));
-            w = w.toFixed(2);
+
+            var V = Math.sqrt(stat / (bigN * df));   // stat = Chi or G
+            var Vrounded = V.toFixed(2);
+
+            // Compute dynamic thresholds
+            var minDim = Math.min(k - 1, g - 1);  // k = columns, g = rows
+            var small = 0.10 / Math.sqrt(minDim);
+            var medium = 0.30 / Math.sqrt(minDim);
+            var large = 0.50 / Math.sqrt(minDim);
+
+            // Interpret effect size
             var effect_size = "";
-            if (w<.20) {
-                effect_size = "）。また、 小さい効果が観察されました： <i>V</i> = " + w;
-            } else if (w<0.40) {
-                effect_size =  "）。また、中くらいの効果が観察されました： <i>V</i> = " + w;
-            } else if (w>=0.4) {
-                effect_size =  "）。また、大きい効果が観察されました： <i>V</i> = " + w;
+
+            if (V < small) {
+                effect_size = `）。また、 小さい効果が観察されました： <i>V</i> = ${Vrounded}`;
+            } else if (V < medium) {
+                effect_size = `）。また、小程度と中程度の中間の効果が観察されました： <i>V</i> =  ${Vrounded}`;
+            } else if (V < large) {
+                effect_size = `）。また、中くらいの効果が観察されました： <i>V</i> =  ${Vrounded}`;
+            } else {
+                effect_size = `）。また、大きい効果が観察されました： <i>V</i> =  ${Vrounded}`;
             }
+
             results_of_test = result1 + result2 + effect_size;
             document.getElementById("explain_bun").innerHTML = deets;
             document.getElementById("explain_bun").style.display="block";

@@ -6,7 +6,7 @@
     <title>Comparing Counts of Non-numerial Data</title>
 </head>
 <body>
-    <script src="chisq.js?v=1"></script>
+    <script src="chisq.js?v=2"></script>
     <?php include 'languagebar.php'; ?>
     <div id="bigger" class="w3-center w3-container BG3">
         <h1  id="Title">Comparing Counts of Non-numerical Data with a Chi-Square Test</h1>
@@ -56,7 +56,6 @@
                 <div id="jesus">
                     <br>
                     <h2>Please insert the total count for each group/answer pairing.</h2>
-                    <p>*This test does NOT allow counts of 0</p>
                     <button id="button" class="w3-button w3-indigo w3-round-xlarge w3-hover-grey" onclick="Calculate()">Calculate!</button>
                     <br><br>
                     <div id="d_container"></div>

@@ -2444,8 +2444,19 @@ function doRegression(data){
     for (let i=0; i<SEs.length; i++){
         betas.push(Bs[i+1]* ((Math.sqrt(variance(data[i+1]))) / (Math.sqrt(variance(data[0])))))
     }
+    let X = [];
+    for (let i = 0; i < N0; i++) {
+        let row = [1]; // intercept
+        for (let j = 1; j < data.length; j++) {
+            row.push(data[j][i]);
+        }
+        X.push(row);
+    }
+    let Xt = transposeMatrix(X);
+    let XtX = matMul(Xt, X);
+    let XtXinv = invertMatrix(XtX);
 
-    return {"F":F,"RegressionSS":SSM,"RegressionMS":MSM,"ResidualSS":SSE,"ResidualsMS":MSE,"df":data.length-1,"residuals":N0-data.length,"totalSS":SST, "totalN": N0-1, "Int": Bs[0], "R2":R2, "Bs":Bs, 'ts': tVals, 'ses': SEs}
+    return {"F":F,"RegressionSS":SSM,"RegressionMS":MSM,"ResidualSS":SSE,"ResidualsMS":MSE,"df":data.length-1,"residuals":N0-data.length,"totalSS":SST, "totalN": N0-1, "Int": Bs[0], "R2":R2, "Bs":Bs, 'ts': tVals, 'ses': SEs, 'XtXinv': XtXinv}
 }
 
 function reg2(data){
@@ -2634,4 +2645,46 @@ function findT2(nvalue, matrix1, matrix2){
     const mid = multiplyMatrices(matrix1,inner2);
     const final = multiplyMatrices(mid,inner1);
     return nvalue*final
+}
+
+function matMul(A, B) {
+    let result = Array(A.length).fill(null).map(() => Array(B[0].length).fill(0));
+    for (let i = 0; i < A.length; i++) {
+        for (let j = 0; j < B[0].length; j++) {
+            for (let k = 0; k < B.length; k++) {
+                result[i][j] += A[i][k] * B[k][j];
+            }
+        }
+    }
+    return result;
+}
+
+function invertMatrix(M) {
+    const n = M.length;
+    let A = M.map(row => row.slice());
+    let I = Array(n).fill(null).map((_, i) =>
+        Array(n).fill(0).map((_, j) => (i === j ? 1 : 0))
+    );
+
+    for (let i = 0; i < n; i++) {
+        let diag = A[i][i];
+        if (Math.abs(diag) < 1e-12) {
+            console.error("Matrix inversion failed: singular matrix");
+            return null;
+        }
+        for (let j = 0; j < n; j++) {
+            A[i][j] /= diag;
+            I[i][j] /= diag;
+        }
+        for (let k = 0; k < n; k++) {
+            if (k !== i) {
+                let factor = A[k][i];
+                for (let j = 0; j < n; j++) {
+                    A[k][j] -= factor * A[i][j];
+                    I[k][j] -= factor * I[i][j];
+                }
+            }
+        }
+    }
+    return I;
 }

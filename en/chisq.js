@@ -4,7 +4,7 @@ function L_Change() {
         location.href = "../jp/chisquare.html"
     }
 }
-var deets = "A Chi-Square test was used to check for significance due to the nominal nature of both variables.";
+var deets = "";
 var results_of_test = "";
 
 function SetUp() {
@@ -92,24 +92,49 @@ function Calculate() {
                 }
                 rows.push(temp);
             }
-            var bigN = 0;
-            for (let i=0; i<cols.length; i++) {
-                bigN += cols[i]; 
-            }
+            // --- Grand total ---
+            var bigN = cols.reduce((a, b) => a + b, 0);
+
+            // --- Expected values ---
             var expected = [];
-            for (let i=0; i<cols.length; i++) {
-                for (let j=0; j<rows.length; j++) {
-                    let temp = cols[i] * rows[j] / bigN;
-                    expected.push(temp);
+            var hasZero = false;
+
+            for (let i = 0; i < k; i++) {
+                for (let j = 0; j < g; j++) {
+                    let E = (cols[i] * rows[j]) / bigN;
+                    expected.push(E);
+
+                    if (E === 0 || data[(i * g) + j] === 0) {
+                        hasZero = true;
+                    }
                 }
             }
-            var Chi = 0;
-            for (let i=0; i<data.length; i++) {
-                Chi += ((data[i] - expected[i])**2)/expected[i];
+
+            // --- Compute statistic ---
+            var stat = 0;
+            if (hasZero) {
+                // --- G-test (Likelihood Ratio Chi-Square) ---
+                for (let i = 0; i < data.length; i++) {
+                    let O = data[i];
+                    let E = expected[i];
+
+                    if (O > 0 && E > 0) {
+                        stat += 2 * O * Math.log(O / E);
+                    }
+                    // If O = 0, contribution is 0 automatically
+                }
+                deets = "A G-test (Likelihood Ratio Chi-Square) was used to check for significance due to the nominal nature of both variables and the fact that there were zero-value responses that did not make sense to theoretically combine. Cramer's V was calculated as a measure of effect size and interpreted dynamically based on the degrees of freedom following Spring (2026).";
+            } else {
+                // --- Pearson Chi-Square ---
+                for (let i = 0; i < data.length; i++) {
+                    stat += ((data[i] - expected[i]) ** 2) / expected[i];
+                }
+                deets = "A Pearson Chi-Square test was used to check for significance due to the nominal nature of both variables and no zero-values. Cramer's V was calculated as a measure of effect size and interpreted dynamically based on the degrees of freedom following Spring (2026).";
             }
+
             var df = (k-1)*(g-1);
-            var p = GimmietheP(Chi,df);
-            Chi = Chi.toFixed(2);
+            var p = GimmietheP(stat,df);
+            let Chi = stat.toFixed(2);
             p = p.toFixed(2);
             if (p<.01) {
                 var result2 = " <i>Χ<sup>2</sup></i> (" + df + ", <i>N</i> = " + bigN + ")= " + Chi + ",  <i>p</i> < .01";
@@ -122,16 +147,28 @@ function Calculate() {
             } else {
                 result1 = "There was a significant difference between at least two of the groups; "
             }
-            var w = Math.sqrt(Chi / (bigN*df));
-            w = w.toFixed(2);
+            var V = Math.sqrt(stat / (bigN * df));   // stat = Chi or G
+            var Vrounded = V.toFixed(2);
+
+            // Compute dynamic thresholds
+            var minDim = Math.min(k - 1, g - 1);  // k = columns, g = rows
+            var small = 0.10 / Math.sqrt(minDim);
+            var medium = 0.30 / Math.sqrt(minDim);
+            var large = 0.50 / Math.sqrt(minDim);
+
+            // Interpret effect size
             var effect_size = "";
-            if (w<.20) {
-                effect_size = ". Furthermore, there was a small effect size; <i>V</i> = " + w;
-            } else if (w<0.40) {
-                effect_size =  ". Furthermore, there was a medium effect size; <i>V</i> = " + w;
-            } else if (w>=0.4) {
-                effect_size =  ". Furthermore, there was a large effect size; <i>V</i> = " + w;
+
+            if (V < small) {
+                effect_size = `. Furthermore, the effect size was small; <i>V</i> = ${Vrounded}`;
+            } else if (V < medium) {
+                effect_size = `. Furthermore, the effect size was between small and medium; <i>V</i> = ${Vrounded}`;
+            } else if (V < large) {
+                effect_size = `. Furthermore, the effect size was medium; <i>V</i> = ${Vrounded}`;
+            } else {
+                effect_size = `. Furthermore, the effect size was large; <i>V</i> = ${Vrounded}`;
             }
+
             results_of_test = result1 + result2 + effect_size;
             document.getElementById("explain_bun").innerHTML = deets;
             document.getElementById("explain_bun").style.display="block";

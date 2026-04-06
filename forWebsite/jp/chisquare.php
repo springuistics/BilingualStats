@@ -6,7 +6,7 @@
     <title>Comparing Counts of Non-numerial Data</title>
 </head>
 <body>
-    <script src="chisq.js?v=1"></script>
+    <script src="chisq.js?v=2"></script>
     <?php include 'languagebar.php'; ?>
     <div id="bigger" class="w3-center w3-container BG3">
         <h1  id="Title" style="color:aliceblue">カテゴリー別の総数データの統計比較</h1>
@@ -55,7 +55,6 @@
                 <div id="jesus">
                     <br>
                     <h2>各グループ・カテゴリーの総数を入力してください*:</h2>
-                    <p>*本検定では、「0」を入力してはいけない</p>
                     <button id="button" class="w3-button w3-indigo w3-round-xlarge w3-hover-grey" onclick="Calculate()">計算</button>
                     <br><br>
                     <div id="d_container"></div>

@@ -240,6 +240,7 @@ function runAncova(data){
         dataframe.push(data[i]);
         dataframe2.push(data[i+onefullK]);
     }
+    let noSubjects = dataframe[0].length+dataframe2[0].length;
     if (covariatesK !=0){
         for (let i=0; i<covariatesK; i++){
             extra.push(data[oneGrpk+i]);
@@ -466,7 +467,7 @@ function runAncova(data){
     let covatiateInteractionModels = [];
     let groupInteractionmodel = [];
     let y_andAllCovariateModel = [];
-    let newcovariateInteractionMethod = [];
+    let subjectFixedEffectsModel = [];
     let groups_cov_model = [];
 
     //set up models that require it
@@ -479,7 +480,6 @@ function runAncova(data){
     //variables to help control the above models that need groups added post-hoc
     let ifgcCount = covariates.length;
     var end = covatiateInteractionModels.length-1;
-
 
     //All take y
     completeModel.push(suby);
@@ -597,14 +597,11 @@ function runAncova(data){
     }
 
 
-
     //Get regression models for necessary variables    
     let m_full = doRegression(fullModel);
     let m_complete = doRegression(completeModel);
-    //let m_groups_cov = doRegression(groups_cov_model);
     let m_interaction = doRegression(IntertactionModel);
     let m_noInteraction = doRegression(noInteractionModel);
-    //let m_groupInteraction = doRegression(groupInteractionmodel);
     let m_covariateInteraction = [];
     for (let i=0; i<covatiateInteractionModels.length; i++){
         m_covariateInteraction.push(doRegression(covatiateInteractionModels[i]));
@@ -678,8 +675,6 @@ function runAncova(data){
     let time_covariatesSS = [];
     let withinGroupSE = Math.sqrt((MS_error * (1-m_complete.R2+m_full.R2))/dataframe[0].length);
     let betweenGroupSE = Math.sqrt((MS_interaction * (1-m_complete.R2+m_noInteraction.R2))/(dataframe[0].length+dataframe2[0].length));
-    console.log(withinGroupSE)
-    console.log(betweenGroupSE)
     for (let i=0; i<m_covariateInteraction.length; i++){
             time_covariatesSS.push(m_complete.RegressionSS - m_covariateInteraction[i].RegressionSS)
     }
@@ -809,6 +804,37 @@ function runAncova(data){
             }
         }
     }
+
+    let completeModel_rowMajor = transposeMatrix(completeModel);
+
+    // 1. Base predictor matrix (no DV)
+    let X_base = completeModel_rowMajor.map(row => {
+    const cov  = row[1];
+    const grp  = row[2];
+    const t1   = row[3];
+    const t2   = row[4];
+    const c_t1 = row[5];
+    const c_t2 = row[6];
+    const g_t1 = row[7];
+    const g_t2 = row[8];
+
+        return [
+            1,      // intercept
+            cov,    // covariate
+            grp,    // group
+            t1,     // time1
+            t2,     // time2
+            c_t1,   // cov×time1
+            c_t2,   // cov×time2
+            g_t1,   // group×time1
+            g_t2    // group×time2
+        ];
+    });
+    // 1. Extract y
+    let thisY = completeModel_rowMajor.map(row => row[0]);
+    console.log("X_complete[0]:", X_base[0]);
+    let m_subjectFixedEffects = doRegression2(X_base, thisY);
+    
     // Initialize arrays to hold adjusted Y values and standard errors for each group
     let Ybars = [
         [], // Group 1
@@ -897,12 +923,7 @@ function runAncova(data){
     const epsilon = 1e-10; // Small value to stabilize inversion
     for (let i = 0; i < XtX.length; i++) {
         XtX[i][i] += epsilon;
-    }
-    //const invXtX = invertMatrixUsingLU(XtX);
-    //const theFullCovariateMatrixforSEs = scalarMultiplyMatrix(invXtX, MS_error);
-    //console.log(theFullCovariateMatrixforSEs)
-    
-    
+    }    
 
     function quadForm(L, M) {
         let s = 0;
@@ -943,38 +964,42 @@ function runAncova(data){
     }
 
     function buildL_withinGroupTimes(group, t1, t2, p, T, covMeans) {
-        const a = T;
-        const b = p;
-        const c = (a - 1) * b;
+        const numTimeDummies = T - 1;
         const total =
-            1 +          // intercept
-            b +          // covariates
-            1 +          // group
-            (a - 1) +    // time dummies
-            c +          // cov×time
-            (a - 1);     // group×time
-        console.log("p =", p, "T =", T, "total =", total);
+            1 +                  // intercept
+            p +                  // covariates
+            1 +                  // group
+            numTimeDummies +     // time dummies
+            p * numTimeDummies + // cov×time
+            numTimeDummies;      // group×time
+
         let L = Array(total).fill(0);
-        const groupIdx       = b + 1;
-        const timeStart      = 2 + b;
-        const covTimeStart   = 1 + b + a;
-        const groupTimeStart = 1 + b + a + c;
-        // --- TIME MAIN EFFECTS ---
-        if (t1 < a - 1) L[timeStart + t1] -= 1;
-        if (t2 < a - 1) L[timeStart + t2] += 1;
 
-        // --- COV × TIME INTERACTIONS ---
-        for (let cov = 0; cov < p; cov++) {
-            if (t1 < a - 1) L[covTimeStart + t1 * p + cov] -= covMeans[cov];
-            if (t2 < a - 1) L[covTimeStart + t2 * p + cov] += covMeans[cov];
+        const interceptStart = 0;
+        const covStart       = 1;
+        const groupIdx       = covStart + p;
+        const timeStart      = groupIdx + 1;
+        const covTimeStart   = timeStart + numTimeDummies;
+        const groupTimeStart = covTimeStart + p * numTimeDummies;
+
+        // TIME MAIN EFFECTS
+        if (t1 < T - 1) L[timeStart + t1] -= 1;
+        if (t2 < T - 1) L[timeStart + t2] += 1;
+
+        // COV × TIME
+        for (let c = 0; c < p; c++) {
+            if (t1 < T - 1) L[covTimeStart + t1 * p + c] -= covMeans[c];
+            if (t2 < T - 1) L[covTimeStart + t2 * p + c] += covMeans[c];
         }
 
-        // --- GROUP × TIME INTERACTIONS (only for group 2) ---
+        // GROUP × TIME (only for group 1)
         if (group === 1) {
-            if (t1 < a - 1) L[groupTimeStart + t1] -= 1;
-            if (t2 < a - 1) L[groupTimeStart + t2] += 1;
+            if (t1 < T - 1) L[groupTimeStart + t1] -= 1;
+            if (t2 < T - 1) L[groupTimeStart + t2] += 1;
         }
+
         return L;
+
     }
 
     function runCompsWcovs(L, model){
@@ -990,6 +1015,8 @@ function runAncova(data){
         let SE = Math.sqrt(
             MSE * quadForm(L, XtXinv)
         );
+        console.log("L:", L);
+        console.log("quad:", quadForm(L, XtXinv));
 
         let t = diff / SE;
         let p = getPfromT(t, df);
@@ -1117,8 +1144,6 @@ function runAncova(data){
         return {'diff':truedif, 't':testresults.t, 'p':testresults.p, 'd':testresults.d, 'se':testresults.se}
     }
 
-    let pairwise = [];
-    let pairwise2 = [];
     let pairwise4 = [];
     let groupComps = 0;
     for (let i=0; i<Ybars[0].length; i++){
@@ -1129,15 +1154,12 @@ function runAncova(data){
         } else {
             let L = buildL_betweenGroupsAtTime(i, covariates.length, groupmeans[0].length);
             let test3 = runCompsWcovs(L, m_complete);
-            //let testtest = runCompsWcovs2(groupmeans[0][i], groupmeans[1][i], xConstructor2(0, i, dataframe.length, "between-group", completeModel), xConstructor2(1,i, dataframe2.length, "between-group", completeModel), false, theFullCovariateMatrixforSEs, dataframe[0].length, dataframe.length);
-            //let test3 = runCompsWcovs4(dataframe[i],dataframe2[i], Ybars[0][i],Ybars[1][i], groupmeans[0][i], groupmeans[1][i],false, betweenGroupSE);
-            //pairwise2.push(testtest);
             pairwise4.push(test3);
         } 
-        //pairwise.push(thistest);
         groupComps +=1;
     }
     console.log(pairwise4);
+    console.log(subjectFixedEffectsModel[0]);
 
     let timepairwise = [];
     for (let i=0; i<groupmeans.length; i++){
@@ -1152,15 +1174,11 @@ function runAncova(data){
                     } else {
                         let L = buildL_withinGroupTimes(i, j, x, covariates.length, groupmeans[0].length, covMeans);
                         let test3 = runCompsWcovs(L, m_complete);
-                        //testResult = runCompsWcovs(Ybars[i][j],Ybars[i][x], groupmeans[i][j], groupmeans[i][x],true);
-                        //let testtest = runCompsWcovs2(groupmeans[i][j], groupmeans[i][x], xConstructor(i, j, covSums[i][j], dataframe.length, "within-group"), xConstructor(i,x, covSums[i][x], dataframe.length, "within-group"), true, theFullCovariateMatrixforSEs, dataframe[0].length, dataframe.length);
-                        //let test3 = runCompsWcovs4(dataframe[j],dataframe[x], Ybars[i][j],Ybars[i][x], groupmeans[i][j], groupmeans[i][x],true, withinGroupSE);
                         testResult = test3;
-                        //pairwise2.push(testtest);
                         pairwise4.push(test3);
                     } 
-                    row.push(testResult)
-                    //pairwise.push(testResult);
+                    row.push(testResult);
+
                 } else if (i==1) {
                     let testResult;
                     if (parseInt(document.getElementById('noCovariates').value) == 0){
@@ -1169,15 +1187,10 @@ function runAncova(data){
                     } else {
                         let L = buildL_withinGroupTimes(i, j, x, covariates.length, groupmeans[0].length, covMeans);
                         let test3 = runCompsWcovs(L, m_complete);
-                        //testResult = runCompsWcovs(Ybars[i][j],Ybars[i][x], groupmeans[i][j], groupmeans[i][x],true);
-                        //let testtest = runCompsWcovs2(groupmeans[i][j], groupmeans[i][x], xConstructor(i, j, covSums[i][j], dataframe2.length, "within-group"), xConstructor(i,x, covSums[i][x], dataframe2.length, "within-group"), true, theFullCovariateMatrixforSEs, dataframe[0].length, dataframe.length);
-                        //let test3 = runCompsWcovs4(dataframe[j],dataframe[x], Ybars[i][j],Ybars[i][x], groupmeans[i][j], groupmeans[i][x],true, withinGroupSE);
-                        //pairwise2.push(testtest);
                         pairwise4.push(test3);
                         testResult=test3;
                     } 
                     row.push(testResult);
-                    //pairwise.push(testResult);
                 }
             }
         }
@@ -2268,4 +2281,60 @@ function xConstructor2(group, time, n, comparisonType, completeModel) {
     }
 
     return final;
+}
+
+
+function doRegression2(X, y) {
+    // X: m×n matrix (predictors only)
+    // y: length m vector (DV)
+    const m = X.length;
+    const n = X[0].length;
+
+    // 1. Compute SVD
+    const svd = numeric.svd(X);
+    const U = svd.U;
+    const S = svd.S;
+    const V = svd.V;
+
+    // 2. Compute S⁺ (pseudo-inverse of singular values)
+    let S_inv = numeric.diag(S.map(s => (s > 1e-10 ? 1 / s : 0)));
+
+    // 3. Compute β = V * S⁺ * Uᵀ * y
+    let Ut_y = numeric.dot(numeric.transpose(U), y);
+    let S_inv_Ut_y = numeric.dot(S_inv, Ut_y);
+    let beta = numeric.dot(V, S_inv_Ut_y);
+
+    // 4. Compute residuals
+    let yhat = numeric.dot(X, beta);
+    let residuals = numeric.sub(y, yhat);
+
+    // 5. Residual variance (MSE)
+    let df = m - numeric.sum(S.map(s => (s > 1e-10 ? 1 : 0))); // effective rank
+    let SSE = numeric.dot(residuals, residuals);
+    let MSE = SSE / df;
+
+    // 6. Compute XtXinv = V * S⁺² * Vᵀ
+    let S_inv_sq = numeric.diag(S.map(s => (s > 1e-10 ? 1 / (s * s) : 0)));
+    let XtXinv = numeric.dot(V, numeric.dot(S_inv_sq, numeric.transpose(V)));
+
+    // 7. Standard errors
+    let SE = [];
+    for (let i = 0; i < n; i++) {
+        SE.push(Math.sqrt(MSE * XtXinv[i][i]));
+    }
+
+    // 8. t-values
+    let tVals = beta.map((b, i) => b / SE[i]);
+
+    return {
+        Bs: beta,
+        SEs: SE,
+        tVals: tVals,
+        XtXinv: XtXinv,
+        ResidualsMS: MSE,
+        df: df,
+        yhat: yhat,
+        residuals: residuals
+    };
+
 }
